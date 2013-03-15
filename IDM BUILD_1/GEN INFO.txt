@@ -1,0 +1,37 @@
+http://www.5star-shareware.com/docs/submit.html
+http://www.softpedia.com/
+http://upload.cnet.com/
+http://author.brothersoft.com/
+https://developer.softonic.com/software-new
+
+Developer Name: Gajjar Tejas
+Developer site:	http://gajjartejas26.blogspot.com/   http://gajjartejas26.blogspot.in/p/downloads.html
+Developer emai: gajjartejas26@gmail.com
+
+Program name: IDM Backup Manager v0.9.1(Beta)
+Program Version: 0.9.1
+Category: Backup and restore
+File size: 1.25mb
+Supported operating systems:9x,vista,xp,7,8
+
+License:Freeware
+32x32 Icon URL:http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/icon32x32.gif
+Screenshot URL:http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/IDM%20Backup%20Manager%20v0.9.1(Beta).png
+Download links:
+http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/IDM%20Backup%20Manager%200.9.1%20Setup%20x86.zip
+https://www.opendrive.com/files?58358460_nKjqk
+
+Short description:Backup files from InternetDownload Manager and Restore then later.
+Long description:
+About:
+IDM Backup Manager is a free software that can backup files from Internet Download Manager and restore then later when you want.
+
+Features:
+1. Backup Internet Download Manager(Including setting and fragment downloaded files)
+2. Restore Internet Download Manager(Including setting and fragment downloaded files)
+3. Oneclick Backup and Restore
+4. Simple and Easy to use interface
+
+Special requirements:Internet Download Manager (5xx up version)
+
+Changes:Initially Release(v 0.9.1Beta)

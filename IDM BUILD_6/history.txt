@@ -1,0 +1,39 @@
+v0.9.6 November 21th, 2012
+
+· Added List Backup Mode Without Data Backup
+· Added associate IDM Backup File (*.ibf)
+· Some Minor Change
+
+v0.9.5 November 23rd, 2012
+
+· Added x64 bit Operating System Support
+· Some Minor Change
+
+v0.9.4 November 11th, 2012
+
+· Removed UAC.(Multi user now supported)
+· Added icons.
+· Added Menubar to IDM List Manager.
+· Added Filter By Downloads and By Categories to IDM List Manager.
+· Added Search Functionality to IDM List Manager.
+
+v0.9.3 October 20nd, 2012
+
+· Added Custom Element For Backup.
+· Added Added Password Protected Backup File.
+· Added Variable compresion rate, with six compression Level.
+· Added Profile Conversion.
+· Added IDM Cleaner.
+· Added IDM List Manager.
+· Removed Fade in\out Windows
+· Recoded
+
+v0.9.2 June 30th, 2012
+
+· Fixed Some Bugs
+· Added Fade in/out Transparent Windows
+· Improved Functionality
+
+v0.9.1 June 25th, 2012
+
+· Intial Release

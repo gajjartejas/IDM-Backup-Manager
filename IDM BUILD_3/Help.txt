@@ -1,0 +1,106 @@
+﻿IDM Backup Manager v0.9.1(Beta) 2:54 PM 21-06-12(IN)
+Please Remember This is Beta Version.
+Copyright © 2012 Gajjar Tejas
+
+================ Help Content ================
+1.Introduction
+2.Features
+3.System Requirement
+4.Using IDM Backup Manager
+	1.Backingup IDM
+		1.Full Backup
+		2.Custom Backup
+		3.List Backup
+	2.Restoring IDM
+	3.IDM List Manager
+		1.Analyzing The File
+		2.Joining File
+		3.Removing File
+		4.Experting List
+	4.IDM Cleaner
+		1.Custom Clean
+		2.Full Clean
+5.FAQS and Importent Notes
+6.Support, Contact & Bug Reporting
+
+
+1.Introduction
+IDM Backup Manager is free software that can backup files from Internet Download Manager and restore then later when you want. Also include cleaner and IDM List Manager. IDM List manager expert report in various format and allow force to join unfinished downloaded file.
+
+2.Features :
+	1.Backup and Restore Whole Internet Download Manager
+	2.Backup Custom elements for Backup like Setting,Unfinished Downloded parts, Grabber data etc
+	3.Password protection for backup file.
+	4.Variable compresion rate, with six compression Level.
+	4.Oneclick Backup and Restore
+	5.Profile Conversion Support so it can be used with different Computer for backup and restore
+	6.Clean History, Logs and Unfinished Download Data.
+	7.Download List Manager is allow to use Force to Join Unfinished Downloaded Files, Expert in various format, Remove Download From Lisr and much more
+
+3.System Requirement :
+	1.Windows 98, Windows xp, Windows vista and Windows 7 (x86 only)
+	2.Intel Pentium 166MHz or above.
+	3.64MB memory.
+	4.At least 10MB free hard disk space.
+
+4.Using IDM Backup Manager
+	1.Backingup IDM
+		1.Full Backup
+			Open IDM Backup Manager and select Backup tab
+			1.Choose Folder you wish to save backup files
+			2.Check Checkbox Full Backup
+			3.Fill Password (optional)
+			4.Choose Compression Level (optional)
+		2.Custom Backup
+			1.Choose Folder you wish to save backup files
+			2.For Custom Backup just uncheck Full Backup and Check as you want to backup shown in screenshot.
+			3.Fill Password (optional)
+			4.Choose Compression Level (optional)
+		3.List Backup
+			1.Choose Folder you wish to save backup files
+			2.For List Backup just uncheck all item as shown in figure. Please remember that in this backup mode no data will backup only IDM List will be backup.
+			3.Fill Password (optional)
+			4.Choose Compression Level (optional)
+	2.Restoring IDM
+	Open IDM Backup Manager and select Restore tab
+		1.Choose Folder where backup file exists. Make a sure backup file’s name is IDMbackup.7z.
+		2.Choose password if it is encrypted.
+		3.Choose Convert Profile options if backup is from another computer or OS. You do not need to convert your native backup.
+	3.IDM List Manager
+		Go to Tools Menu and run IDM List Manager. It may take some time to analyze IDM List.Screenshots of IDM List Manager is shown below:
+		1.Analyzing The File
+		Press Analyze button file to refresh status:
+			1.List All Download and 
+			2.List Only Unfinished Download
+		2.Joining File
+			Point to List Only Unfinished Download and analyze then right click appropriate item force to join it as shown below screen shot.
+		3.Removing File
+			Right click and Press remove selected file and entry will be deleted. Be Careful!
+		4.Experting List
+		Select: (as per requirement)
+			1.List All Download and 
+			2.List Only Unfinished Download
+		And then analyze. Then Click on Expert Button There are Four Mode as Shown in menu:
+			1.AS html Report File
+			2.As csv Report File
+			3.To IDM Export File
+			4.To IDM Text File
+	4.IDM Cleaner
+		1.Custom Clean
+			Go to Tools Menu and run IDM Cleaner. IDM Cleaner is cleans the unfinished download, grabber data and History and Logs. IDM Cleaner will not remove IDM List. Be Careful!
+		2.Full Clean
+			Clean Whole Folder. A conformation dialog will appear Press Yes To clean.
+			
+5.FAQS and Importent Notes
+	1.Close IDM then run backup/restore.
+	2.Default there will be no compression
+	3.When you reinstall os, other os/pc backup file you need to convert profile.
+	4.Make a sure backup file have correct name while browswing IDMbackup.7z
+	5.Is admin mode required for backup and restore data?
+	
+6.Support, Contact and Bug Reporting
+	Email:     gajjartejas26#gmail.com
+	Website:   http://gajjartejas26.blogspot.com
+	Forum:     http://official-forum-of-technology-and-software-blog-by-gajjar-tejas.1067081.n5.nabble.com/IDM-Backup-Manager-f3.html
+	Bugreport: http://official-forum-of-technology-and-software-blog-by-gajjar-tejas.1067081.n5.nabble.com/Bug-Reports-f7.html
+	

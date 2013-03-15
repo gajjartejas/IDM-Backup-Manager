@@ -1,0 +1,31 @@
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Version=Beta
+#AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
+#AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.7.0
+#AutoIt3Wrapper_Res_Description=IDM Backup Manager 0.9.7.0
+#AutoIt3Wrapper_Res_Fileversion=0.9.7.0
+#AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-2013
+#AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
+;																;__AET_ButtonSetIcon  |GUICtrlSetImage  |
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Backup.ico				;4					  |-5				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico 					;5					  |-6				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Forum.ico					;6					  |-7				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Help.ico					;7					  |-8				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\icon.ico					;8					  |-9				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Internet.ico				;9					  |-10				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\License.ico				;10					  |-11				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\History.ico				;11					  |-12				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Ok.ico					;12					  |-13				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\ok32.ico					;13					  |-14				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Restore.ico				;14					  |-15				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Run.ico					;15					  |-16				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\search.ico				;16					  |-17				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Tool.ico					;17					  |-18				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Update.ico				;18					  |-19				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\FileType.ico				;19					  |-20				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Save.ico					;20					  |-21				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico				;21					  |-22				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico				;22					  |-23				|
+#AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****

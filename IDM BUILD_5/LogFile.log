@@ -1,0 +1,134 @@
+
+============================= New Session Started at 2012-11-25 10:16:00 --> =============================
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.5(Beta)
+Module Path: C:\Users\Tejas\Desktop\project\IDM\IDM BUILD_5\IDM Backup Manager.exe
+OS Type: WIN32_NT
+OS Version: WIN_7
+Service Package: 
+Total Memory: 1302072
+Available Memory: 600864
+
+============================= Variable Assignment =============================
+2012-11-25 10:16:00 --> Internet Download Manager Is Running Now...User Selected No
+2012-11-25 10:16:01 --> $AppDataIDMFolder = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-11-25 10:16:01 --> $TempPath = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-11-25 10:16:01 --> Finilized Path $AppDataIDMFolder= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-11-25 10:16:01 --> Finilized Path $TempPath= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-11-25 10:16:02 --> Window Created: IDM Backup Manager0.9.5(Beta) With Error Code: 0
+
+============================= New Session Started at 2012-11-25 13:36:51 --> =============================
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.5(Beta)
+Module Path: C:\Users\Tejas\Desktop\project\IDM\IDM BUILD_5\IDM Backup Manager.exe
+OS Type: WIN32_NT
+OS Version: WIN_XP
+Service Package: Service Pack 3
+Total Memory: 1302000
+Available Memory: 936492
+
+============================= Variable Assignment =============================
+2012-11-25 13:36:51 --> $AppDataIDMFolder = ""  Error Code:0
+2012-11-25 13:36:51 --> $TempPath = ""  Error Code:0
+2012-11-25 13:36:51 --> Not Found $TempPath: ""
+2012-11-25 13:36:51 --> Auto assign $TempPath: "D:\Documents and Settings\Tejas\Application Data\IDM\"
+2012-11-25 13:36:51 --> Not Found $AppDataIDMFolder: ""
+2012-11-25 13:36:51 --> Auto assign $TempPath: "D:\Documents and Settings\Tejas\Application Data\IDM\"
+2012-11-25 13:36:51 --> Window Created: IDM Backup Manager0.9.5(Beta) With Error Code: 0
+
+============================= New Session Started at 2012-11-30 18:10:19 --> =============================
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.5(Beta)
+Module Path: C:\Users\Tejas\Desktop\project\IDM\IDM BUILD_5\IDM Backup Manager.exe
+OS Type: WIN32_NT
+OS Version: WIN_7
+Service Package: Service Pack 1
+Total Memory: 1302072
+Available Memory: 667824
+
+============================= Variable Assignment =============================
+2012-11-30 18:10:20 --> Internet Download Manager Is Running Now...User Selected No
+2012-11-30 18:10:20 --> $AppDataIDMFolder = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-11-30 18:10:20 --> $TempPath = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-11-30 18:10:20 --> Finilized Path $AppDataIDMFolder= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-11-30 18:10:20 --> Finilized Path $TempPath= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-11-30 18:10:21 --> Window Created: IDM Backup Manager0.9.5(Beta) With Error Code: 0
+
+============================= New Session Started at 2012-12-06 12:54:16 --> =============================
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.5(Beta)
+Module Path: C:\Users\Tejas\Desktop\project\IDM\IDM BUILD_5\IDM Backup Manager.au3
+OS Type: WIN32_NT
+OS Version: WIN_7
+Service Package: Service Pack 1
+Total Memory: 1302072
+Available Memory: 691684
+
+============================= Variable Assignment =============================
+2012-12-06 12:54:17 --> Internet Download Manager Is Running Now...User Selected No
+2012-12-06 12:54:17 --> $AppDataIDMFolder = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-12-06 12:54:17 --> $TempPath = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-12-06 12:54:17 --> Finilized Path $AppDataIDMFolder= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-12-06 12:54:17 --> Finilized Path $TempPath= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-12-06 12:54:18 --> Window Created: IDM Backup Manager0.9.5(Beta) With Error Code: 0
+
+============================= New Session Started at 2012-12-06 12:58:36 --> =============================
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.5(Beta)
+Module Path: C:\Users\Tejas\Desktop\project\IDM\IDM BUILD_5\IDM Backup Manager.au3
+OS Type: WIN32_NT
+OS Version: WIN_7
+Service Package: Service Pack 1
+Total Memory: 1302072
+Available Memory: 663264
+
+============================= Variable Assignment =============================
+2012-12-06 12:58:37 --> Internet Download Manager Is Running Now...User Selected No
+2012-12-06 12:58:38 --> $AppDataIDMFolder = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-12-06 12:58:38 --> $TempPath = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-12-06 12:58:38 --> Finilized Path $AppDataIDMFolder= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-12-06 12:58:38 --> Finilized Path $TempPath= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-12-06 12:58:38 --> Window Created: IDM Backup Manager0.9.5(Beta) With Error Code: 0
+
+============================= New Session Started at 2012-12-31 17:33:44 --> =============================
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.5(Beta)
+Module Path: C:\Users\Tejas\Desktop\project\IDM\IDM BUILD_5\IDM Backup Manager.exe
+OS Type: WIN32_NT
+OS Version: WIN_7
+Service Package: Service Pack 1
+Total Memory: 1302072
+Available Memory: 634036
+
+============================= Variable Assignment =============================
+2012-12-31 17:33:45 --> Internet Download Manager Is Running Now...User Selected No
+2012-12-31 17:33:45 --> $AppDataIDMFolder = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-12-31 17:33:45 --> $TempPath = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2012-12-31 17:33:45 --> Finilized Path $AppDataIDMFolder= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-12-31 17:33:45 --> Finilized Path $TempPath= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2012-12-31 17:33:46 --> Window Created: IDM Backup Manager0.9.5(Beta) With Error Code: 0
+
+============================= New Session Started at 2013-01-07 15:28:11 --> =============================
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.5(Beta)
+Module Path: C:\Users\Tejas\Desktop\project\IDM\IDM BUILD_5\IDM Backup Manager.au3
+OS Type: WIN32_NT
+OS Version: WIN_7
+Service Package: Service Pack 1
+Total Memory: 1302072
+Available Memory: 824456
+
+============================= Variable Assignment =============================
+2013-01-07 15:28:12 --> Internet Download Manager Is Running Now...User Selected No
+2013-01-07 15:28:12 --> $AppDataIDMFolder = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2013-01-07 15:28:12 --> $TempPath = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2013-01-07 15:28:12 --> Finilized Path $AppDataIDMFolder= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2013-01-07 15:28:12 --> Finilized Path $TempPath= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2013-01-07 15:28:13 --> Window Created: IDM Backup Manager0.9.5(Beta) With Error Code: 0

@@ -1693,7 +1693,6 @@ Func _More_Setting_GUI()
 	$h_Close = GUICtrlCreateButton("Close", 256, 80, 75, 25)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUISetState(@SW_SHOW)
-
 	#endregion ### END Koda GUI section ###
 
 	While 1

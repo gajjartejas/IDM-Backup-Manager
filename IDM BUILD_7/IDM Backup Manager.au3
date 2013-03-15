@@ -1330,7 +1330,7 @@ While 1
 
 		Case $h_Button_Update_Help
 			GUICtrlSetData($h_Label_Info, "INFO: Checking Update Please Wait...")
-			If _IsInternetConnected() = "True" Then
+;~ 			If _IsInternetConnected() = "True" Then
 				Local $Update_VER = InetRead("http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/update.txt", 1)
 				Switch BinaryToString($Update_VER)
 					Case ""
@@ -1341,9 +1341,9 @@ While 1
 						GUICtrlSetData($h_Label_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
 						ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
 				EndSwitch
-			Else
-				GUICtrlSetData($h_Label_Info, "Error: Internet Connection Could Not Found")
-			EndIf
+;~ 			Else
+;~ 				GUICtrlSetData($h_Label_Info, "Error: Internet Connection Could Not Found")
+;~ 			EndIf
 
 		Case $h_Button_Help_Help
 			If FileExists(@ScriptDir & "\Help.chm") Then
@@ -1644,13 +1644,13 @@ EndFunc   ;==>_sPath_Last_Remove
 #endregion file, string Functions
 
 #region Misc Functions
-Func _IsInternetConnected()
-	Local $aReturn = DllCall('connect.dll', 'long', 'IsInternetConnected')
-	If @error Then
-		Return SetError(1, 0, False)
-	EndIf
-	Return $aReturn[0] = 0
-EndFunc   ;==>_IsInternetConnected
+;~ Func _IsInternetConnected()
+;~ 	Local $aReturn = DllCall('connect.dll', 'long', 'IsInternetConnected')
+;~ 	If @error Then
+;~ 		Return SetError(1, 0, False)
+;~ 	EndIf
+;~ 	Return $aReturn[0] = 0
+;~ EndFunc   ;==>_IsInternetConnected
 #endregion Misc Functions
 
 #region Parent GUI Functions

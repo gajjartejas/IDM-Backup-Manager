@@ -58,7 +58,6 @@
 #include <Memory.au3>
 #include <GuiImageList.au3>
 #include <Misc.au3>
-#include <WinAPIEx.au3>
 
 #include "_resources.au3"
 #include "_FileIsPathValid.au3"
@@ -1338,7 +1337,7 @@ While 1
 				Switch BinaryToString($Update_VER)
 					Case ""
 						GUICtrlSetData($h_Label_Info, "INFO: Time Out! or server May be Unavaible.")
-					Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6",$s_Current_Version
+					Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", $s_Current_Version
 						GUICtrlSetData($h_Label_Info, "INFO: You Have Most Recent Version.")
 					Case Else
 						GUICtrlSetData($h_Label_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
@@ -1438,10 +1437,27 @@ Func _7Zip_Extract_File($sZipFile, $sDestinationFolder, $sFile_To_Extracr, $sPas
 		DirCreate($sDestinationFolder)
 	EndIf
 
+	If _IsDir($sZipFile) Then
+		$iData_Size = DirGetSize($sZipFile)
+	Else
+		$iData_Size = FileGetSize($sZipFile)
+	EndIf
+
 	$sPassword = "-p" & '"' & $sPassword & '" '
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Command Line: " & $s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r")
-	Return RunWait($s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r", "", @SW_HIDE)
+
+	$pid = Run($s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r", "", @SW_HIDE)
+
+	$hRun = _ProcessGetHandle($pid)
+
+	While ProcessExists($pid)
+		$stas = ProcessGetStats($pid, 1)
+		GUICtrlSetData($h_Label_Info, "Info: Restoring..." & Round($stas[3] / $iData_Size * 100) & "%")
+		Sleep(100)
+	WEnd
+
+	Return _ProcessGetExitCode($hRun)
 
 EndFunc   ;==>_7Zip_Extract_File
 

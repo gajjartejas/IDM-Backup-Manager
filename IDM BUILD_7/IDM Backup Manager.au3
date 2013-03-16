@@ -1,5 +1,5 @@
 #NoTrayIcon
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Version=beta
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
@@ -40,7 +40,7 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <ButtonConstants.au3>
 #include <EditConstants.au3>
@@ -1333,7 +1333,7 @@ While 1
 
 		Case $h_Button_Update_Help
 			GUICtrlSetData($h_Label_Info, "INFO: Checking Update Please Wait...")
-;~ 			If _IsInternetConnected() = "True" Then
+			If _IsInternetConnectedEx() Then
 				Local $Update_VER = InetRead("http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/update.txt", 1)
 				Switch BinaryToString($Update_VER)
 					Case ""
@@ -1344,9 +1344,9 @@ While 1
 						GUICtrlSetData($h_Label_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
 						ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
 				EndSwitch
-;~ 			Else
-;~ 				GUICtrlSetData($h_Label_Info, "Error: Internet Connection Could Not Found")
-;~ 			EndIf
+			Else
+				GUICtrlSetData($h_Label_Info, "Error: Internet Connection Could Not Found")
+			EndIf
 
 		Case $h_Button_Help_Help
 			If FileExists(@ScriptDir & "\Help.chm") Then
@@ -1473,14 +1473,14 @@ EndFunc   ;==>_7z_Errors
 ;_regbackup(@TempDir & "\" & "Scheduler.reg", $s_regpath_IDM & "\Scheduler")
 Func _RegBackup($s7z_File_Save_Name, $regkey)
 	ShellExecuteWait('regedit.exe', '/e "' & $s7z_File_Save_Name & '"' & " " & $regkey)
-EndFunc   ;==>_regbackup
+EndFunc   ;==>_RegBackup
 
 ;_regbackup(c:\path\name1.reg")
 ;_regbackup(@TempDir & "\" & "Scheduler.reg")
 Func _Reg_Import($s7z_File_Save_Name)
 	If ProcessExists('regedit.exe') Then ProcessClose('regedit.exe')
 	ShellExecuteWait('regedit.exe', "/s /c " & $s7z_File_Save_Name)
-EndFunc   ;==>_reg_import
+EndFunc   ;==>_Reg_Import
 #endregion Registry Functions
 
 #region control Functions
@@ -1525,7 +1525,7 @@ Func _Control_Update_Busy()
 
 	GUICtrlSetState($h_Button_Restore, $GUI_DISABLE)
 	#endregion  ;for Restore
-EndFunc   ;==>_control_update_busy
+EndFunc   ;==>_Control_Update_Busy
 
 Func _Control_Update_Default()
 	GUICtrlSetState($h_Tab1, $GUI_ENABLE)
@@ -1583,7 +1583,7 @@ Func _Control_Update_Default()
 
 	If FileExists($s_Restore_File) Then GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
 	#endregion ;for restore
-EndFunc   ;==>_control_update_default
+EndFunc   ;==>_Control_Update_Default
 
 Func _ProgressMarquee_Start($iControlID)
 	GUICtrlSetStyle($iControlID, BitOR($PBS_SMOOTH, $PBS_MARQUEE, $WS_TABSTOP))
@@ -1647,13 +1647,11 @@ EndFunc   ;==>_sPath_Last_Remove
 #endregion file, string Functions
 
 #region Misc Functions
-;~ Func _IsInternetConnected()
-;~ 	Local $aReturn = DllCall('connect.dll', 'long', 'IsInternetConnected')
-;~ 	If @error Then
-;~ 		Return SetError(1, 0, False)
-;~ 	EndIf
-;~ 	Return $aReturn[0] = 0
-;~ EndFunc   ;==>_IsInternetConnected
+Func _IsInternetConnectedEx() ; Returns 1 = ON or 0 = OFF
+	Local $is_Return = DllCall("wininet.dll", "int", "InternetGetConnectedState", "int", 0, "int", 0)
+	If (@error) Or ($is_Return[0] = 0) Then Return SetError(1, 0, 0)
+	Return 1
+EndFunc   ;==>_IsInternetConnectedEx
 #endregion Misc Functions
 
 #region Parent GUI Functions

@@ -18,6 +18,7 @@
 #AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager.exe
 #AutoIt3Wrapper_Res_Field=Product Name|IDM Backup Manager
 #AutoIt3Wrapper_Res_Field=Product Version|0.9.7 beta
+#AutoIt3Wrapper_Res_Field=Total Commits|292
 
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Backup.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico

@@ -5,11 +5,12 @@
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_UseUpx=n
+#AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
+
 #AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.7.0
 #AutoIt3Wrapper_Res_Description=IDM Backup Manager 0.9.7.0
 #AutoIt3Wrapper_Res_Fileversion=0.9.7.0
 #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-2013
-#AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
 #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
 #AutoIt3Wrapper_Res_Field=Company|Gajjar Tejas
 #AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
@@ -17,6 +18,7 @@
 #AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager.exe
 #AutoIt3Wrapper_Res_Field=Product Name|IDM Backup Manager
 #AutoIt3Wrapper_Res_Field=Product Version|0.9.7 beta
+
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Backup.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Forum.ico

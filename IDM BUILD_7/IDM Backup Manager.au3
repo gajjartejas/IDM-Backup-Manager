@@ -1338,7 +1338,7 @@ While 1
 				Switch BinaryToString($Update_VER)
 					Case ""
 						GUICtrlSetData($h_Label_Info, "INFO: Time Out! or server May be Unavaible.")
-					Case $s_Current_Version
+					Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6",$s_Current_Version
 						GUICtrlSetData($h_Label_Info, "INFO: You Have Most Recent Version.")
 					Case Else
 						GUICtrlSetData($h_Label_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))

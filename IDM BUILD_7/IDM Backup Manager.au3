@@ -1417,7 +1417,7 @@ Func _7Zip_Add_Array($s7z_File_Save_Name, $aDestinationFolders, $sCompression, $
 	While ProcessExists($pid)
 		$stas = ProcessGetStats($pid, 1)
 		GUICtrlSetData($h_Label_Info, "Info: Adding..." & Round($stas[3] / $iData_Size * 100) & "%")
-		Sleep(200)
+		Sleep(100)
 	WEnd
 
 	Return _ProcessGetExitCode($hRun)

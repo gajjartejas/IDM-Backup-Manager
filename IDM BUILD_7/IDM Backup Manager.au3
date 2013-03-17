@@ -333,7 +333,8 @@ $h_Button_Update_Help = GUICtrlCreateButton("  Update", 146, 126, 100, 30, $BS_l
 __AET_ButtonSetIcon(-1, 18, 24, 24, 0)
 
 $h_Pic_Help = GUICtrlCreatePic("", 260, 55, 150, 145)
-_ResourceSetImageToCtrl($h_Pic_Help, "contactme")
+GUICtrlSetTip(-1, "Dedicated to my lovely classmets who never in my life!" & @CRLF & "", "Love You!", 1, 1)
+_ResourceSetImageToCtrl(-1, "contactme")
 
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 #endregion Help ;============================================================================================== Help:

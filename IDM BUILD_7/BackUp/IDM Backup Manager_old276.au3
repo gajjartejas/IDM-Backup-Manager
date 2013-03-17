@@ -1,14 +1,16 @@
 #NoTrayIcon
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Version=beta
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
 #AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_UseUpx=n
+#AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
+
 #AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.7.0
 #AutoIt3Wrapper_Res_Description=IDM Backup Manager 0.9.7.0
 #AutoIt3Wrapper_Res_Fileversion=0.9.7.0
 #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-2013
-#AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
 #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
 #AutoIt3Wrapper_Res_Field=Company|Gajjar Tejas
 #AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
@@ -17,6 +19,7 @@
 #AutoIt3Wrapper_Res_Field=Product Name|IDM Backup Manager
 #AutoIt3Wrapper_Res_Field=Product Version|0.9.7 beta
 #AutoIt3Wrapper_Res_Field=Total Commits|292
+
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Backup.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Forum.ico
@@ -37,7 +40,7 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <ButtonConstants.au3>
 #include <EditConstants.au3>
@@ -55,6 +58,7 @@
 #include <Memory.au3>
 #include <GuiImageList.au3>
 #include <Misc.au3>
+#include <WinAPIEx.au3>
 
 #include "_resources.au3"
 #include "_FileIsPathValid.au3"
@@ -330,8 +334,7 @@ $h_Button_Update_Help = GUICtrlCreateButton("  Update", 146, 126, 100, 30, $BS_l
 __AET_ButtonSetIcon(-1, 18, 24, 24, 0)
 
 $h_Pic_Help = GUICtrlCreatePic("", 260, 55, 150, 145)
-GUICtrlSetTip(-1, "Dedicated to my lovely classmets who never in my life!" & @CRLF & "", "Love You!", 1, 1)
-_ResourceSetImageToCtrl(-1, "contactme")
+_ResourceSetImageToCtrl($h_Pic_Help, "contactme")
 
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 #endregion Help ;============================================================================================== Help:
@@ -1335,7 +1338,7 @@ While 1
 				Switch BinaryToString($Update_VER)
 					Case ""
 						GUICtrlSetData($h_Label_Info, "INFO: Time Out! or server May be Unavaible.")
-					Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", $s_Current_Version
+					Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6",$s_Current_Version
 						GUICtrlSetData($h_Label_Info, "INFO: You Have Most Recent Version.")
 					Case Else
 						GUICtrlSetData($h_Label_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
@@ -1435,17 +1438,11 @@ Func _7Zip_Extract_File($sZipFile, $sDestinationFolder, $sFile_To_Extracr, $sPas
 		DirCreate($sDestinationFolder)
 	EndIf
 
-	If _IsDir($sZipFile) Then
-		$iData_Size = DirGetSize($sZipFile)
-	Else
-		$iData_Size = FileGetSize($sZipFile)
-	EndIf
-
 	$sPassword = "-p" & '"' & $sPassword & '" '
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Command Line: " & $s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r")
 
-	$pid = Run($s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r", "", @SW_HIDE)
+		$pid = Run($s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r", "", @SW_HIDE)
 
 	$hRun = _ProcessGetHandle($pid)
 

@@ -1792,6 +1792,7 @@ Func _Clean_GUI_Child()
 				GUICtrlSetState($Clean_HL, $GUI_DISABLE)
 
 			Case $Button_Analyze
+				_ProgressMarquee_Start($Progress1)
 				Local $size = 0
 				If GUICtrlRead($Full_Clean) = $GUI_CHECKED Then
 					$size += DirGetSize($s_DwnlData_Folder)
@@ -1802,6 +1803,7 @@ Func _Clean_GUI_Child()
 					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then $size += DirGetSize($GrabberData_Folder)
 					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $size += DirGetSize($Scheduler_Folder)
 				EndIf ;==>clean
+				_ProgressMarquee_Stop($Progress1, 1)
 				MsgBox(64, "Info", _File_Size($size) & " Will Removed.", 0, $clean)
 
 			Case $Button_Clean

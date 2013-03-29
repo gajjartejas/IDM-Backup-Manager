@@ -1,5 +1,5 @@
 #NoTrayIcon
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Version=beta
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
@@ -37,25 +37,18 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#include <ButtonConstants.au3>
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
 #include <GuiButton.au3>
 #include <ComboConstants.au3>
-#include <StaticConstants.au3>
-#include <TabConstants.au3>
 #include <WindowsConstants.au3>
-#include <Constants.au3>
 #include <ProgressConstants.au3>
 #include <String.au3>
 #include <File.au3>
-#include <GuiListView.au3>
-#include <Memory.au3>
 #include <GuiImageList.au3>
 #include <Misc.au3>
-
 #include "_resources.au3"
 #include "_FileIsPathValid.au3"
 #include "_RegFunc.au3"
@@ -1672,7 +1665,7 @@ EndFunc   ;==>_IsInternetConnectedEx
 Func _SW_EDIT_GUI($sTXTFile, $s_Title)
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	$Help_GUI = GUICreate($s_Title, 491, 310, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), -1, $h_IDMBM)
+	$Help_GUI = GUICreate($s_Title, 491, 310, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 
 	$Edit1 = GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $ES_READONLY, $ES_WANTRETURN, $WS_VSCROLL))
 	GUICtrlSetData(-1, FileRead($sTXTFile))
@@ -1697,7 +1690,7 @@ Func _More_Setting_GUI()
 	#region ### START Koda GUI section ###
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	Local $More_Setting_GUI = GUICreate("More Setting", 351, 121, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), -1, $h_IDMBM)
+	Local $More_Setting_GUI = GUICreate("More Setting", 351, 121, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 	GUISetIcon(@ScriptFullPath, 0, $More_Setting_GUI)
 
 	$h_group_Setting = GUICtrlCreateGroup("Setting", 10, 10, 330, 100)
@@ -1746,7 +1739,7 @@ EndFunc   ;==>_More_Setting_GUI
 Func _Clean_GUI_Child()
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), -1, $h_IDMBM)
+	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 	GUISetIcon(@ScriptFullPath, 0, $clean)
 
 	$Group1 = GUICtrlCreateGroup("Options", 5, 60, 190, 150)

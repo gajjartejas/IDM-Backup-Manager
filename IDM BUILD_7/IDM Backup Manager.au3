@@ -1,9 +1,10 @@
 #NoTrayIcon
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Version=beta
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
 #AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.7.0
 #AutoIt3Wrapper_Res_Description=IDM Backup Manager 0.9.7.0
 #AutoIt3Wrapper_Res_Fileversion=0.9.7.0
@@ -37,7 +38,7 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
@@ -49,6 +50,7 @@
 #include <File.au3>
 #include <GuiImageList.au3>
 #include <Misc.au3>
+
 #include "_resources.au3"
 #include "_FileIsPathValid.au3"
 #include "_RegFunc.au3"

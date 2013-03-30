@@ -1,5 +1,5 @@
 #NoTrayIcon
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Version=beta
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
@@ -38,7 +38,7 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
@@ -62,8 +62,10 @@ Global $Data[14]
 Global Const $s_Current_Version = "0.9.7"
 Global Const $s_Win_Title = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
-Global $i_xWinPos = (@DesktopWidth - 439) / 2
-Global $i_yWinPos = (@DesktopHeight - 276) / 2
+Global $i_xWidth = 439
+Global $i_yHight = 276
+Global $i_xWinPos = (@DesktopWidth - $i_xWidth) / 2
+Global $i_yWinPos = (@DesktopHeight - $i_yHight) / 2
 
 Global Const $s_7zexe_Path = @ScriptDir & '\7z.exe'
 Global Const $s_History_File = @ScriptDir & "\history.txt"
@@ -260,6 +262,10 @@ GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloa
 
 $h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Run Cleaner", 144, 64, 97, 73)
 GUICtrlSetTip(-1, "Clean History, Logs and Unfinished Download Data.")
+
+$h_Button_Clean_Password_Tools = GUICtrlCreateButton("Password Cleaner", 249, 64, 97, 73, $BS_MULTILINE)
+GUICtrlSetTip(-1, "Clean Password")
+
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 #endregion Tools ;============================================================================================== Tools:
 
@@ -1306,6 +1312,9 @@ While 1
 		Case $h_Button_More_Setting
 			_More_Setting_GUI()
 
+		Case $h_Button_Clean_Password_Tools
+			_Password_Cleaner_GUI()
+
 		Case $h_Button_Version_History_Help
 			If FileExists($s_History_File) Then
 				_SW_EDIT_GUI($s_History_File, "Version History")
@@ -1882,6 +1891,36 @@ Func _Clean_GUI_Child()
 	GUISetState(@SW_ENABLE, $h_IDMBM)
 	GUIDelete($clean)
 EndFunc   ;==>_Clean_GUI_Child
+
+Func _Password_Cleaner_GUI()
+	GUISetState(@SW_DISABLE, $h_IDMBM)
+	Local $size = WinGetPos($s_Win_Title)
+	$pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth / 2 - 178 / 2, $size[1] + $i_yHight / 2 - 60 / 2, -1, BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE))
+	$k = 1
+	While 1
+		$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
+		If @error <> 0 Then ExitLoop
+		If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then $k += 1
+		$sInfoLabelText = "Total " & $k - 1 & " Password Found."
+	WEnd
+	$h_Lable_Info_pwCleaner = GUICtrlCreateLabel($sInfoLabelText, 10, 6, 155, 17)
+	$h_Button_ClearAll_pwCleaner = GUICtrlCreateButton("Clear All", 10, 24, 75, 25)
+	$h_Button_Close_pwCleaner = GUICtrlCreateButton("Close", 90, 24, 75, 25)
+	GUISetState(@SW_SHOW)
+
+	While 1
+		$nMsg = GUIGetMsg()
+		Switch $nMsg
+			Case $GUI_EVENT_CLOSE, $h_Button_Close_pwCleaner
+				ExitLoop
+			Case $h_Button_ClearAll_pwCleaner
+
+		EndSwitch
+	WEnd
+
+	GUISetState(@SW_ENABLE, $h_IDMBM)
+	GUIDelete($pwCleaner_GUI)
+EndFunc   ;==>_Password_Cleaner_GUI
 #endregion Parent GUI Functions
 
 #region app & envt Functions

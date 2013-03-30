@@ -76,7 +76,7 @@ Global Const $s_reg_File = @TempDir & "\IDMregistry.reg"
 ;~ Global $s_Log_File = @ScriptDir & "\LogFile.log" ;for portable
 Global Const $s_Setting_File = @AppDataDir & "\IDM Backup Manager" & "\SettingFile.ini" ;for installer
 Global $s_Log_File = @AppDataDir & "\IDM Backup Manager" & "\LogFile.log" ;for installer
-Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files"
+Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
 
 Global $b_AppendLog_File = 1
 Global $b_RestartIDM = 0

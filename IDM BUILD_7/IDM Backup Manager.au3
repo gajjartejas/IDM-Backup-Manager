@@ -120,7 +120,7 @@ If FileExists($s_Setting_File) Then
 
 	$b_RestartIDM = IniRead($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM)
 Else
-	If Not BitOR(FileExists(@AppDataDir & "\IDM Backup Manager"), DirCreate(@AppDataDir & "\IDM Backup Manager")) Then MsgBox(16, "Warning", "Log File NOT Created. Please Choose Other Location.(Setting--> LogFile)")
+	If Not BitOR(FileExists(@AppDataDir & "\IDM Backup Manager"), DirCreate(@AppDataDir & "\IDM Backup Manager")) Then MsgBox(16, "Warning", "Log File NOT Created. Please Choose Other Location. (Setting--> LogFile)")
 
 	IniWrite($s_Setting_File, "Position", "x", $i_xWinPos)
 	IniWrite($s_Setting_File, "Position", "y", $i_yWinPos)
@@ -144,7 +144,7 @@ _log_Profile_Paths()
 
 #region ### START Koda GUI section ###
 
-$h_IDMBM = GUICreate($s_Win_Title, 439, 276, $i_xWinPos, $i_yWinPos)
+$h_IDMBM = GUICreate($s_Win_Title, $i_xWidth, $i_yHight, $i_xWinPos, $i_yWinPos)
 
 $h_Tab1 = GUICtrlCreateTab(10, 10, 420, 240)
 
@@ -230,13 +230,13 @@ GUICtrlSetTip(-1, "Choose Yes If Your backup is Encrypted", "Restore Encryption"
 $h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("", 39, 159, 12, 17)
 GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
 		"EXAMPLE:" & @CRLF & _
-		"Incase of If You Want To Restore Backup of Cybercafe to Your Home PC", "Convert Profile", 1, 1)
+		"In case of If You Want To Restore Backup of Cybercafé to Your Home PC", "Convert Profile", 1, 1)
 
 $h_Label_Convert_Registry_Restore = GUICtrlCreateLabel("Convert Profile", 60, 160, 73, 17)
 GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
 		"EXAMPLE:" & @CRLF & _
-		"Incase of If You Want To Restore Backup of Cybercafe to Your Home PC", "Convert Profile", 1, 1)
+		"In case of If You Want To Restore Backup of Cybercafé to Your Home PC", "Convert Profile", 1, 1)
 
 $h_Checkbox_NoRestore_Registry = GUICtrlCreateCheckbox("Do Not Restore List of Downloads", 200, 128, 209, 17)
 $h_Checkbox_NoRestore_Data = GUICtrlCreateCheckbox("Do Not Restore Data", 200, 149, 209, 17)
@@ -256,16 +256,18 @@ GUICtrlSetImage(-1, @ScriptFullPath, -18)
 $Group4 = GUICtrlCreateGroup("Tools", 24, 44, 390, 160)
 GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
-$h_Button_List_Manager_Tools = GUICtrlCreateButton("Downloads List Manager", 39, 64, 97, 73, $BS_MULTILINE)
+$h_Button_List_Manager_Tools = GUICtrlCreateButton("Downloads List Manager", 39, 64, 80, 60, $BS_MULTILINE)
 If Not FileExists(@ScriptDir & "\IDM List Manager.exe") Then GUICtrlSetState(-1, $GUI_DISABLE)
-GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloaded Files, Remove Download From Lisr and much more")
+GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloaded Files, Remove Download From List and much more.")
 
-$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Run Cleaner", 144, 64, 97, 73)
+$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Data Cleaner", 129, 64, 80, 60, $BS_MULTILINE)
 GUICtrlSetTip(-1, "Clean History, Logs and Unfinished Download Data.")
 
-$h_Button_Clean_Password_Tools = GUICtrlCreateButton("Password Cleaner", 249, 64, 97, 73, $BS_MULTILINE)
-GUICtrlSetTip(-1, "Clean Password")
+$h_Button_Clean_Password_Tools = GUICtrlCreateButton("Password Cleaner", 219, 64, 80, 60, $BS_MULTILINE)
+GUICtrlSetTip(-1, "Clean Password For Server/Sites.")
 
+$h_Button_Cat_Tools = GUICtrlCreateButton("Add Extra File Types in Categories", 309, 64, 80, 60, $BS_MULTILINE)
+GUICtrlSetTip(-1, "Add Extra File Types in Categories")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 #endregion Tools ;============================================================================================== Tools:
 
@@ -331,7 +333,7 @@ $h_Button_Update_Help = GUICtrlCreateButton("  Update", 146, 126, 100, 30, $BS_l
 __AET_ButtonSetIcon(-1, 18, 24, 24, 0)
 
 $h_Pic_Help = GUICtrlCreatePic("", 260, 55, 150, 145)
-GUICtrlSetTip(-1, "modified Dedicated to my lovely classmates!", "Love You!", 1, 1)
+GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
 _ResourceSetImageToCtrl(-1, "contactme")
 
 GUICtrlCreateGroup("", -99, -99, 1, 1)
@@ -671,10 +673,10 @@ While 1
 
 			GUICtrlSetData($h_Label_Info, "Checking : Drive Space Please Wait...")
 			If DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) < DirGetSize($s_AppDataIDMFolder) / 1024 / 1024 Then
-				GUICtrlSetData($h_Label_Info, "Error: Not Enought Free Space on Drive. +" & _File_Size(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024) & " Required")
+				GUICtrlSetData($h_Label_Info, "Error: Not Enough  Free Space on Drive. +" & _File_Size(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024) & " Required")
 
 				FileWriteLine($s_Log_File, _Current_Moment() & _
-						"Error: Not Enought Free Space on Drive " & _Drive_Get_From_Path($s_Backup_File) & _
+						"Error: Not Enough  Free Space on Drive " & _Drive_Get_From_Path($s_Backup_File) & _
 						" Free Space:" & _File_Size((DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024)) & _
 						". At Least " & _File_Size(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024) & "Required")
 				_control_update_default()
@@ -920,7 +922,7 @@ While 1
 
 		Case $h_Button_Browse_Restore
 			GUICtrlSetData($h_Label_Info, "INFO: Ready")
-			$s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)", 3, "*.ibf", $h_IDMBM)
+			$s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 3, "*.ibf", $h_IDMBM)
 			If @error Then
 				GUICtrlSetData($h_Label_Info, "INFO: Ready")
 			Else
@@ -975,7 +977,7 @@ While 1
 						ContinueLoop
 					Else
 						GUICtrlSetData($h_Label_Info, "Error: Incorrect Password or File May Be Damaged.")
-						FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged !")
+						FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
 						_control_update_default()
 						ContinueLoop
 					EndIf
@@ -1214,13 +1216,13 @@ While 1
 			If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then _reg_import($s_reg_File)
 			#endregion ;/Restore Guest Registry-->
 
-			#region ;/Restore Host Registry from stored in tmp Registory--->
-			GUICtrlSetData($h_Label_Info, "Restoring: Host Registry To tmp Registory Please Wait...")
+			#region ;/Restore Host Registry from stored in tmp Registry--->
+			GUICtrlSetData($h_Label_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
 
 			If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then
 				If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 					If _RegKeyExists($s_regpath_IDM & "_tmp") Then
-						FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Host Registry From Stored in tmp Registory Please Wait...")
+						FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Host Registry From Stored in tmp Registry  Please Wait...")
 						FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry Exists " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ')
 
 						_RegCopyKey1($s_regpath_IDM & "_tmp", $s_regpath_IDM)
@@ -1291,7 +1293,7 @@ While 1
 
 			_RegWrite($s_regpath_IDM, "AppDataIDMFolder", $REG_SZ, $s_AppDataIDMFolder)
 			_RegWrite($s_regpath_IDM, "TempPath", $REG_SZ, $s_DwnlData_Folder_)
-			#endregion ;/Restore Host Registry from stored in tmp Registory--->
+			#endregion ;/Restore Host Registry from stored in tmp Registry--->
 
 			#region ;/Remove tmp Registry--->
 			GUICtrlSetData($h_Label_Info, "Removing: Temp Registry Please Wait...")
@@ -1338,7 +1340,7 @@ While 1
 				Local $Update_VER = InetRead("http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/update.txt", 1)
 				Switch BinaryToString($Update_VER)
 					Case ""
-						GUICtrlSetData($h_Label_Info, "INFO: Time Out! or server May be Unavaible.")
+						GUICtrlSetData($h_Label_Info, "INFO: Time Out! Or server May be Unviable")
 					Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", $s_Current_Version
 						GUICtrlSetData($h_Label_Info, "INFO: You Have Most Recent Version.")
 					Case Else
@@ -1465,7 +1467,7 @@ EndFunc   ;==>_7Zip_Extract_File
 
 Func _7z_Errors($foo)
 	If $foo = 1 Then
-		Return "1 Warning (Non fatal error(s)) For example, one or more files were locked by some other application, so they were not compressed."
+		Return "1 Warning (Non-fatal error(s)) For example, one or more files were locked by some other application, so they were not compressed."
 	ElseIf $foo = 2 Then
 		Return "2 Fatal Error"
 	ElseIf $foo = 3 Then
@@ -1477,7 +1479,7 @@ Func _7z_Errors($foo)
 	ElseIf $foo = 8 Then
 		Return "8 Not enough memory for operation"
 	ElseIf $foo = 255 Then
-		Return "255 Operation Canclled"
+		Return "255 Operation Cancelled"
 	ElseIf $foo = 0 Then
 		Return "0 Done"
 	Else
@@ -1707,7 +1709,7 @@ Func _More_Setting_GUI()
 	$h_group_Setting = GUICtrlCreateGroup("Setting", 10, 10, 330, 100)
 	$h_AppendLog_Setting = GUICtrlCreateCheckbox("Append Log", 20, 30, 313, 17)
 	If $b_AppendLog_File = 1 Then GUICtrlSetState($h_AppendLog_Setting, $GUI_CHECKED)
-	$h_RestortIDM_Setting = GUICtrlCreateCheckbox("Restart IDM after Restore", 20, 50, 313, 17)
+	$h_RestortIDM_Setting = GUICtrlCreateCheckbox("Auto Restart IDM after Restore/Clean", 20, 50, 313, 17)
 	If $b_RestartIDM = 1 Then GUICtrlSetState($h_RestortIDM_Setting, $GUI_CHECKED)
 	$h_Close = GUICtrlCreateButton("Close", 256, 80, 75, 25)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
@@ -1882,6 +1884,7 @@ Func _Clean_GUI_Child()
 							FileDelete($sts_list_dat_File)
 							FileDelete($cnlurllist_dat_File)
 						EndIf
+						If $b_RestartIDM = 1 Then _sRun_IDMexe()
 						MsgBox(64, "Done", "Done.", 0, $clean)
 					EndIf
 					_ProgressMarquee_Stop($Progress1, 1)
@@ -1895,13 +1898,15 @@ EndFunc   ;==>_Clean_GUI_Child
 Func _Password_Cleaner_GUI()
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	$pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth / 2 - 178 / 2, $size[1] + $i_yHight / 2 - 60 / 2, -1, BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE))
+	$pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth / 2 - 178 / 2, $size[1] + $i_yHight / 2 - 60 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 	$k = 1
+	$j = 0
 	While 1
 		$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
 		If @error <> 0 Then ExitLoop
-		If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then $k += 1
-		$sInfoLabelText = "Total " & $k - 1 & " Password Found."
+		If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then $j += 1
+		$sInfoLabelText = "Total " & $j & " Password Found."
+		$k += 1
 	WEnd
 	$h_Lable_Info_pwCleaner = GUICtrlCreateLabel($sInfoLabelText, 10, 6, 155, 17)
 	$h_Button_ClearAll_pwCleaner = GUICtrlCreateButton("Clear All", 10, 24, 75, 25)
@@ -1914,7 +1919,23 @@ Func _Password_Cleaner_GUI()
 			Case $GUI_EVENT_CLOSE, $h_Button_Close_pwCleaner
 				ExitLoop
 			Case $h_Button_ClearAll_pwCleaner
+				$k = 1
+				$j = 0
+				While 1
+					$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
+					If @error <> 0 Then ExitLoop
+					If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then
+						_RegDelete($s_regpath_IDM & "\Passwords\" & $var, "EncPassword")
+						$j += 1
+					EndIf
+					$sInfoLabelText = "Removing " & $k - 1 & " Password."
+					GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
+					$k += 1
+				WEnd
+				$sInfoLabelText = "Total " & $j & " Password Removed."
+				GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
 
+				If $b_RestartIDM = 1 Then _sRun_IDMexe()
 		EndSwitch
 	WEnd
 

@@ -1317,6 +1317,9 @@ While 1
 		Case $h_Button_Clean_Password_Tools
 			_Password_Cleaner_GUI()
 
+		Case $h_Button_Cat_Tools
+			_File_Type_GUI()
+
 		Case $h_Button_Version_History_Help
 			If FileExists($s_History_File) Then
 				_SW_EDIT_GUI($s_History_File, "Version History")
@@ -1678,7 +1681,7 @@ EndFunc   ;==>_IsInternetConnectedEx
 Func _SW_EDIT_GUI($sTXTFile, $s_Title)
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	$Help_GUI = GUICreate($s_Title, 491, 310, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	$Help_GUI = GUICreate($s_Title, 491, 310, $size[0] + $i_xWidth / 2 - 491 / 2, $size[1] + $i_yHight / 2 - 310 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 
 	$Edit1 = GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $ES_READONLY, $ES_WANTRETURN, $WS_VSCROLL))
 	GUICtrlSetData(-1, FileRead($sTXTFile))
@@ -1703,7 +1706,7 @@ Func _More_Setting_GUI()
 	#region ### START Koda GUI section ###
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	Local $More_Setting_GUI = GUICreate("More Setting", 351, 121, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	Local $More_Setting_GUI = GUICreate("More Setting", 351, 121, $size[0] + $i_xWidth / 2 - 351 / 2, $size[1] + $i_yHight / 2 - 121 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 	GUISetIcon(@ScriptFullPath, 0, $More_Setting_GUI)
 
 	$h_group_Setting = GUICtrlCreateGroup("Setting", 10, 10, 330, 100)
@@ -1752,7 +1755,7 @@ EndFunc   ;==>_More_Setting_GUI
 Func _Clean_GUI_Child()
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0] + $i_xWidth / 2 - 202 / 2, $size[1] + $i_yHight / 2 - 259 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 	GUISetIcon(@ScriptFullPath, 0, $clean)
 
 	$Group1 = GUICtrlCreateGroup("Options", 5, 60, 190, 150)
@@ -1942,6 +1945,122 @@ Func _Password_Cleaner_GUI()
 	GUISetState(@SW_ENABLE, $h_IDMBM)
 	GUIDelete($pwCleaner_GUI)
 EndFunc   ;==>_Password_Cleaner_GUI
+
+Func _File_Type_GUI()
+	GUISetState(@SW_DISABLE, $h_IDMBM)
+	Local $size = WinGetPos($s_Win_Title)
+	$FileTypeGUI = GUICreate("Add Extra Filetype By Categories", 477, 218, $size[0] + $i_xWidth / 2 - 477 / 2, $size[1] + $i_yHight / 2 - 218 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+
+	$s_Default_Compressed_FileTypeGUI = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
+	$s_Default_Documents_FileTypeGUI = "doc pdf ppt pps docx pptx"
+	$s_Default_Music_FileTypeGUI = "mp3 wav wma mpa ram ra aac aif m4a"
+	$s_Default_Programs_FileTypeGUI = "exe msi"
+	$s_Default_Video_FileTypeGUI = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg"
+
+	$s_Enhance_Compressed_FileTypeGUI = $s_Default_Compressed_FileTypeGUI & " 001 cab xz txz lzma tar cpio bzip2 tbz2 tbz gzip tgz tpz z taz lzh lha rpm deb vhd wim swm fat ntfs xar squashfs ifu ifc dgca yz1 rk miniso iso isz bin cue mds mdf nrg ashdisc b6t b6i b5t b5i bwt bwi lcd ccd img dvd 000 daa cdi cif xmf xmd pdi dmg timg hfs ncd pxi p2i rif rdf gi uif vc4 fcd vcd ima bif flp c2d dao tao p01 md1 xa VaporCD gcd ixa vdi"
+	$s_Enhance_Documents_FileTypeGUI = $s_Default_Documents_FileTypeGUI & " docm dotx dotm rtf odt wri wpd wps xps djvu ps chm accdb mdb adp mda accda mde accde ade xl* xlsx xlsm xlsb xlam xltx xltm xls xlt xla xlw xsn xsf infopathxml onetoc2 one onepkg pptm ppsx ppsm potx pot potm odp thmx pub"
+	$s_Enhance_Music_FileTypeGUI = $s_Default_Music_FileTypeGUI & " 3ga 669 a52 ac3 adt adts aifc aiff amr aob ape awb caf cda dts flac it m4p mid mka mlp mod mp1 mp2 mpc oga oma qcp rmi s3m spx thd tta voc vqf w64 wv xm"
+	$s_Enhance_Programs_FileTypeGUI = $s_Default_Programs_FileTypeGUI & " jar jad dll bpl cpl scr ocx msstyles mui"
+	$s_Enhance_Video_FileTypeGUI = $s_Default_Video_FileTypeGUI & " 3g2 3gp 3gp2 3gpp amv divx drc dv f4v gxf m1v m2v m2t m2ts mkv mp2v mp4v mpeg1 mpeg2 mpeg4 mpv2 mts mtv mxf mxg nsv nuv ogg ogm ogx rec rmvb tod ts tts vob vro"
+
+	$s_Current_Compressed_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Compressed", "mask")
+	If @error Then $s_Current_Compressed_FileTypeGUI = ""
+	$s_Current_Documents_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Documents", "mask")
+	If @error Then $s_Current_Documents_FileTypeGUI = ""
+	$s_Current_Music_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Music", "mask")
+	If @error Then $s_Current_Music_FileTypeGUI = ""
+	$s_Current_Programs_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Programs", "mask")
+	If @error Then $s_Current_Programs_FileTypeGUI = ""
+	$s_Current_Video_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Video", "mask")
+	If @error Then $s_Current_Video_FileTypeGUI = ""
+
+	$h_Checkbox_Compressed_FileTypeGUI = GUICtrlCreateCheckbox("Compressed", 15, 12, 97, 17)
+	$h_Checkbox_Documents_FileTypeGUI = GUICtrlCreateCheckbox("Documents", 15, 42, 97, 17)
+	$h_Checkbox_Music_FileTypeGUI = GUICtrlCreateCheckbox("Music", 15, 72, 97, 17)
+	$h_Checkbox_Programs_FileTypeGUI = GUICtrlCreateCheckbox("Programs", 15, 102, 97, 17)
+	$h_Checkbox_Video_FileTypeGUI = GUICtrlCreateCheckbox("Video", 15, 132, 97, 17)
+
+	$h_Input_Compressed_FileTypeGUI = GUICtrlCreateInput($s_Current_Compressed_FileTypeGUI, 115, 12, 351, 21)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Input_Documents_FileTypeGUI = GUICtrlCreateInput($s_Current_Documents_FileTypeGUI, 115, 42, 351, 21)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Input_Music_FileTypeGUI = GUICtrlCreateInput($s_Current_Music_FileTypeGUI, 115, 72, 351, 21)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Input_Programs_FileTypeGUI = GUICtrlCreateInput($s_Current_Programs_FileTypeGUI, 115, 102, 351, 21)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Input_Video_FileTypeGUI = GUICtrlCreateInput($s_Current_Video_FileTypeGUI, 115, 132, 351, 21)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+
+	$h_Button_Save_FileTypeGUI = GUICtrlCreateButton("Save Checked", 15, 162, 110, 43)
+	$h_Button_Enhance_FileTypeGUI = GUICtrlCreateButton("Add/Enhance Extra File Types", 130, 162, 110, 43, $BS_MULTILINE)
+	$h_Button_Default_FileTypeGUI = GUICtrlCreateButton("Restore Default File Types", 245, 162, 110, 43, $BS_MULTILINE)
+	$h_Button_Close_FileTypeGUI = GUICtrlCreateButton("Close", 358, 162, 110, 43, $BS_MULTILINE)
+	GUISetState(@SW_SHOW)
+
+	While 1
+		$nMsg = GUIGetMsg()
+		Switch $nMsg
+			Case $GUI_EVENT_CLOSE, $h_Button_Close_FileTypeGUI
+				ExitLoop
+
+			Case $h_Checkbox_Compressed_FileTypeGUI
+				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Compressed_FileTypeGUI, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Compressed_FileTypeGUI, $GUI_DISABLE)
+				EndIf
+			Case $h_Checkbox_Documents_FileTypeGUI
+				If GUICtrlRead($h_Checkbox_Documents_FileTypeGUI) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Documents_FileTypeGUI, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Documents_FileTypeGUI, $GUI_DISABLE)
+				EndIf
+			Case $h_Checkbox_Music_FileTypeGUI
+				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Music_FileTypeGUI, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Music_FileTypeGUI, $GUI_DISABLE)
+				EndIf
+			Case $h_Checkbox_Programs_FileTypeGUI
+				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Programs_FileTypeGUI, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Programs_FileTypeGUI, $GUI_DISABLE)
+				EndIf
+			Case $h_Checkbox_Video_FileTypeGUI
+				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Video_FileTypeGUI, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Video_FileTypeGUI, $GUI_DISABLE)
+				EndIf
+
+			Case $h_Button_Save_FileTypeGUI
+				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Compressed\", "mask", $REG_SZ, GUICtrlRead($h_Input_Compressed_FileTypeGUI))
+				If GUICtrlRead($h_Checkbox_Documents_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Documents\", "mask", $REG_SZ, GUICtrlRead($h_Input_Documents_FileTypeGUI))
+				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Music\", "mask", $REG_SZ, GUICtrlRead($h_Input_Music_FileTypeGUI))
+				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Programs\", "mask", $REG_SZ, GUICtrlRead($h_Input_Programs_FileTypeGUI))
+				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Video\", "mask", $REG_SZ, GUICtrlRead($h_Input_Video_FileTypeGUI))
+
+			Case $h_Button_Enhance_FileTypeGUI
+				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Compressed_FileTypeGUI, $s_Enhance_Compressed_FileTypeGUI)
+				If GUICtrlRead($h_Checkbox_Documents_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Documents_FileTypeGUI, $s_Enhance_Documents_FileTypeGUI)
+				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Music_FileTypeGUI, $s_Enhance_Music_FileTypeGUI)
+				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Programs_FileTypeGUI, $s_Enhance_Programs_FileTypeGUI)
+				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Video_FileTypeGUI, $s_Enhance_Video_FileTypeGUI)
+
+			Case $h_Button_Default_FileTypeGUI
+				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Compressed_FileTypeGUI, $s_Default_Compressed_FileTypeGUI)
+				If GUICtrlRead($h_Checkbox_Documents_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Documents_FileTypeGUI, $s_Default_Documents_FileTypeGUI)
+				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Music_FileTypeGUI, $s_Default_Music_FileTypeGUI)
+				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Programs_FileTypeGUI, $s_Default_Programs_FileTypeGUI)
+				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Video_FileTypeGUI, $s_Default_Video_FileTypeGUI)
+
+		EndSwitch
+	WEnd
+
+	GUISetState(@SW_ENABLE, $h_IDMBM)
+	GUIDelete($FileTypeGUI)
+EndFunc   ;==>_File_Type_GUI
 #endregion Parent GUI Functions
 
 #region app & envt Functions

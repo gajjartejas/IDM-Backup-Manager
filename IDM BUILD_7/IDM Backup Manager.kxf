@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <object type="TAForm" name="Form2_1">
 	<properties>
-		<property name="Left" vt="Int16">522</property>
-		<property name="Top" vt="Int16">273</property>
-		<property name="Width" vt="Int16">456</property>
-		<property name="Height" vt="Int16">308</property>
+		<property name="Left" vt="Int16">410</property>
+		<property name="Top" vt="Int16">263</property>
+		<property name="Width" vt="Int16">447</property>
+		<property name="Height" vt="Int16">310</property>
 		<property name="Caption" vt="String">Form2</property>
 		<property name="Color" vt="Ident">clBtnFace</property>
 		<property name="Font.Charset" vt="Ident">DEFAULT_CHARSET</property>
@@ -36,7 +36,7 @@
 				<property name="Top" vt="Int8">10</property>
 				<property name="Width" vt="Int16">420</property>
 				<property name="Height" vt="Int16">240</property>
-				<property name="ActivePage" vt="Ident">TabSheet3</property>
+				<property name="ActivePage" vt="Ident">TabSheet1</property>
 				<property name="Font.Charset" vt="Ident">ANSI_CHARSET</property>
 				<property name="Font.Color" vt="Ident">clWindowText</property>
 				<property name="Font.Height" vt="Int8">-11</property>
@@ -624,12 +624,12 @@
 								<property name="Resizing" vt="Set"/>
 							</properties>
 							<components>
-								<object type="TAButton" name="join_expand">
+								<object type="TAButton" name="h_Button_List_Manager_Tools">
 									<properties>
 										<property name="Left" vt="Int8">15</property>
 										<property name="Top" vt="Int8">20</property>
-										<property name="Width" vt="Int8">81</property>
-										<property name="Height" vt="Int8">73</property>
+										<property name="Width" vt="Int8">80</property>
+										<property name="Height" vt="Int8">60</property>
 										<property name="Hint" vt="String">Download List Manager is allow to use Join Unfinished Downloaded Files, Remove Download From Lisr and much more</property>
 										<property name="Caption" vt="String">Downloads List Manager</property>
 										<property name="TabOrder" vt="Int8">0</property>
@@ -640,12 +640,12 @@
 									</properties>
 									<components/>
 								</object>
-								<object type="TAButton" name="Button2">
+								<object type="TAButton" name="h_Button_Clean_Manager_Tools">
 									<properties>
 										<property name="Left" vt="Int8">104</property>
 										<property name="Top" vt="Int8">20</property>
-										<property name="Width" vt="Int8">81</property>
-										<property name="Height" vt="Int8">73</property>
+										<property name="Width" vt="Int8">80</property>
+										<property name="Height" vt="Int8">60</property>
 										<property name="Hint" vt="String">Clean History, Logs and Unfinished Download Data.</property>
 										<property name="Caption" vt="String">Data Cleaner</property>
 										<property name="TabOrder" vt="Int8">1</property>
@@ -656,14 +656,29 @@
 									</properties>
 									<components/>
 								</object>
-								<object type="TAButton" name="Button4">
+								<object type="TAButton" name="h_Button_Clean_Password_Tools">
 									<properties>
 										<property name="Left" vt="Int16">192</property>
 										<property name="Top" vt="Int8">20</property>
-										<property name="Width" vt="Int8">81</property>
-										<property name="Height" vt="Int8">73</property>
+										<property name="Width" vt="Int8">80</property>
+										<property name="Height" vt="Int8">60</property>
 										<property name="Caption" vt="String">Password Cleaner</property>
 										<property name="TabOrder" vt="Int8">2</property>
+										<property name="Color" vt="Ident">clBtnFace</property>
+										<property name="CtrlStyle" vt="Int32">1342382080</property>
+										<property name="CtrlExStyle" vt="Int8">0</property>
+										<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+									</properties>
+									<components/>
+								</object>
+								<object type="TAButton" name="h_Button_Cat_Tools">
+									<properties>
+										<property name="Left" vt="Int16">281</property>
+										<property name="Top" vt="Int8">22</property>
+										<property name="Width" vt="Int8">80</property>
+										<property name="Height" vt="Int8">55</property>
+										<property name="Caption" vt="String">Add Extra File Types in Categories</property>
+										<property name="TabOrder" vt="Int8">3</property>
 										<property name="Color" vt="Ident">clBtnFace</property>
 										<property name="CtrlStyle" vt="Int32">1342382080</property>
 										<property name="CtrlExStyle" vt="Int8">0</property>

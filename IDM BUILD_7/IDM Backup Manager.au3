@@ -1,12 +1,14 @@
 #NoTrayIcon
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Version=beta
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_UseUpx=n
+#AutoIt3Wrapper_Run_Obfuscator=y
+#Obfuscator_Parameters=/striponly
+#AutoIt3Wrapper_Run_cvsWrapper=v
 #AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.7.0
-#AutoIt3Wrapper_Res_Description=IDM Backup Manager 0.9.7.0
+#AutoIt3Wrapper_Res_Description=Backup and Restore Internet Download Manager
 #AutoIt3Wrapper_Res_Fileversion=0.9.7.0
 #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-2013
 #AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
@@ -51,9 +53,9 @@
 #include <GuiImageList.au3>
 #include <Misc.au3>
 
-#include "_resources.au3"
-#include "_FileIsPathValid.au3"
-#include "_RegFunc.au3"
+#include "Includes\_Resources.au3"
+#include "Includes\_FileIsPathValid.au3"
+#include "Includes\_RegFunc.au3"
 
 #region global Variables
 Global $h_IDMBM
@@ -275,7 +277,7 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 $TabSheet5 = GUICtrlCreateTabItem("Setting")
 GUICtrlSetImage(-1, @ScriptFullPath, -22)
 
-$Group4 = GUICtrlCreateGroup("Default Path", 24, 44, 390, 80)
+$Group4 = GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
 $h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 144, 64, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 $h_Button_BrowseLogFile_Setting = GUICtrlCreateButton("Log File Path:", 32, 60, 107, 25)
 
@@ -284,7 +286,7 @@ $h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton("Backup Folder:",
 
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-$Group5 = GUICtrlCreateGroup("Default Profile", 24, 128, 393, 81)
+$Group5 = GUICtrlCreateGroup("Default IDM Profile", 24, 128, 393, 81)
 $h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 144, 150, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 $h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton("AppData Folder:", 32, 146, 107, 25)
 $h_Label_DwnlDataFolder_Setting = GUICtrlCreateInput($s_DwnlData_Folder, 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))

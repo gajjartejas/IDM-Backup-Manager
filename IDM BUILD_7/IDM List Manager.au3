@@ -1,13 +1,24 @@
 #NoTrayIcon
-
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\IDM BUILD_2\icon.ico
-#AutoIt3Wrapper_Outfile=IDM List Manager.exe
+#AutoIt3Wrapper_Outfile=IDM List Manager 0.9.7.exe
 #AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_UseUpx=n
+#AutoIt3Wrapper_Run_Obfuscator=y
+#Obfuscator_Parameters=/striponly
+#AutoIt3Wrapper_Run_cvsWrapper=v
 #AutoIt3Wrapper_Res_Comment=IDM List Manager 0.9.7.0
-#AutoIt3Wrapper_Res_Description=IDM List Manager 0.9.7.0
+#AutoIt3Wrapper_Res_Description=Join Unfinished Downloaded Files, Remove Download From List and much more.
 #AutoIt3Wrapper_Res_Fileversion=0.9.7.0
 #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-13
+#AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
+#AutoIt3Wrapper_Res_Field=Company|Gajjar Tejas
+#AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
+#AutoIt3Wrapper_Res_Field=Internal Name|IDM List Manager
+#AutoIt3Wrapper_Res_Field=Internal Name|IDM List Manager.exe
+#AutoIt3Wrapper_Res_Field=Product Name|IDM List Manager
+#AutoIt3Wrapper_Res_Field=Product Version|0.9.7 beta
+#AutoIt3Wrapper_Res_Field=Total Commits|292
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <StructureConstants.au3>
@@ -29,10 +40,10 @@
 #include <GuiImageList.au3>
 #include <Array.au3>
 
-#include "_FileIsPathValid.au3"
-#include "_RegFunc.au3"
-#include "_GUICtrlListView_SaveHTML.au3"
-#include "_GUICtrlListView_SaveCSV.au3"
+#include "Includes\_FileIsPathValid.au3"
+#include "Includes\_RegFunc.au3"
+#include "Includes\_GUICtrlListView_SaveHTML.au3"
+#include "Includes\_GUICtrlListView_SaveCSV.au3"
 
 #region global Variables
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto

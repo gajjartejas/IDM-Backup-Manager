@@ -12,7 +12,6 @@
 #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
 #AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas's Blog
 #AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
-#AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager
 #AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager.exe
 #AutoIt3Wrapper_Res_Field=Product Name|IDM Backup Manager
 #AutoIt3Wrapper_Res_Field=Product Version|0.9.7 beta

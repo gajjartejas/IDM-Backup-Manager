@@ -43,6 +43,7 @@
 #AutoIt3Wrapper_Run_cvsWrapper=v
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
+#Region    ;************ Includes ************
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
 #include <GuiButton.au3>
@@ -52,11 +53,11 @@
 #include <String.au3>
 #include <File.au3>
 #include <GuiImageList.au3>
-#include <Misc.au3>
-
 #include "Includes\_Resources.au3"
 #include "Includes\_FileIsPathValid.au3"
 #include "Includes\_RegFunc.au3"
+#EndRegion ;************ Includes ************
+
 
 #region global Variables
 Global $h_IDMBM

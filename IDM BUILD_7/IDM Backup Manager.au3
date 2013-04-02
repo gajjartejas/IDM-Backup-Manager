@@ -1,5 +1,5 @@
 #NoTrayIcon
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
 #AutoIt3Wrapper_Compression=4
@@ -10,7 +10,7 @@
 #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-2013
 #AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
 #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
-#AutoIt3Wrapper_Res_Field=Company|Gajjar Tejas
+#AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas's Blog
 #AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
 #AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager
 #AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager.exe
@@ -41,7 +41,7 @@
 #AutoIt3Wrapper_Run_Obfuscator=y
 #Obfuscator_Parameters=/striponly
 #AutoIt3Wrapper_Run_cvsWrapper=v
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
@@ -2287,10 +2287,8 @@ Func _onExit()
 EndFunc   ;==>_onExit
 
 Func _SelfProcessCheck()
-	If _Singleton("test", 1) = 0 Then
-		If Not WinActive(@ScriptName) Then
-			If Not WinActivate($s_Win_Title) = 0 Then Exit
-		EndIf
+	If Not WinActive($s_Win_Title) Then
+		If Not WinActivate($s_Win_Title) = 0 Then Exit
 	EndIf
 EndFunc   ;==>_SelfProcessCheck
 

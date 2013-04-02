@@ -12,38 +12,27 @@
 #AutoIt3Wrapper_Res_Fileversion=0.9.7.0
 #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-13
 #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
-#AutoIt3Wrapper_Res_Field=Company|Gajjar Tejas
+#AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas
 #AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
-#AutoIt3Wrapper_Res_Field=Internal Name|IDM List Manager
 #AutoIt3Wrapper_Res_Field=Internal Name|IDM List Manager.exe
 #AutoIt3Wrapper_Res_Field=Product Name|IDM List Manager
 #AutoIt3Wrapper_Res_Field=Product Version|0.9.7 beta
 #AutoIt3Wrapper_Res_Field=Total Commits|292
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#include <StructureConstants.au3>
-#include <ButtonConstants.au3>
+#region    ;************ Includes ************
 #include <GUIConstantsEx.au3>
-#include <ListViewConstants.au3>
 #include <WindowsConstants.au3>
 #include <EditConstants.au3>
 #include <GuiButton.au3>
-#include <ComboConstants.au3>
-#include <StaticConstants.au3>
-#include <TabConstants.au3>
-#include <Constants.au3>
-#include <ProgressConstants.au3>
-#include <String.au3>
 #include <File.au3>
 #include <GuiListView.au3>
 #include <GuiMenu.au3>
-#include <GuiImageList.au3>
-#include <Array.au3>
-
-#include "Includes\_FileIsPathValid.au3"
+#include <GuiImageList.au3
 #include "Includes\_RegFunc.au3"
 #include "Includes\_GUICtrlListView_SaveHTML.au3"
 #include "Includes\_GUICtrlListView_SaveCSV.au3"
+#endregion    ;************ Includes ************
 
 #region global Variables
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto

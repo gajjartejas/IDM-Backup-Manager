@@ -1,12 +1,9 @@
 #NoTrayIcon
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_UseUpx=n
-#AutoIt3Wrapper_Run_Obfuscator=y
-#Obfuscator_Parameters=/striponly
-#AutoIt3Wrapper_Run_cvsWrapper=v
 #AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.7.0
 #AutoIt3Wrapper_Res_Description=Backup and Restore Internet Download Manager
 #AutoIt3Wrapper_Res_Fileversion=0.9.7.0
@@ -40,7 +37,11 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
+#AutoIt3Wrapper_Run_Obfuscator=y
+#Obfuscator_Parameters=/striponly
+#AutoIt3Wrapper_Run_cvsWrapper=v
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>

@@ -28,7 +28,7 @@
 #include <File.au3>
 #include <GuiListView.au3>
 #include <GuiMenu.au3>
-#include <GuiImageList.au3
+#include <GuiImageList.au3>
 #include "Includes\_RegFunc.au3"
 #include "Includes\_GUICtrlListView_SaveHTML.au3"
 #include "Includes\_GUICtrlListView_SaveCSV.au3"
@@ -36,18 +36,14 @@
 
 #region global Variables
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
-Global $B_DESCENDING
-Global $a[3], $fChange = False
-Global Const $WS_RESIZABLE = 0x00070000 ; Resizing Style
-Global $GUIMINWID = 701; Resizing / minimum width
-Global $GUIMINHT = 313; Resizing / minimum hight
-Global $hGUI, $MenuItem_list_Catagories_[1000]
+Global $GUIMINWID = 701, $GUIMINHT = 313
+Global $hGUI, $MenuItem_list_Catagories_[1000], $fChange = False
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
 #endregion global Variables
 
 #region ### START Koda GUI section ### main gui
 
-$hGUI = GUICreate("IDM List Manager", $GUIMINWID, $GUIMINHT, -1, -1, BitOR($WS_RESIZABLE, $WS_CAPTION, $WS_POPUP))
+$hGUI = GUICreate("IDM List Manager", $GUIMINWID, $GUIMINHT, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_THICKFRAME, $WS_TABSTOP))
 
 #region Menu
 $MenuItem_File = GUICtrlCreateMenu("&File")
@@ -135,11 +131,6 @@ GUIRegisterMsg($WM_SIZE, "MY_WM_SIZE")
 GUISetState(@SW_SHOW)
 #endregion ### END Koda GUI section ###
 
-;~  If _Analyze() = 0 Then
-;~  MsgBox(0, "Info", "No download found", 0, $hGUI)
-;~  _Disable_Button()
-;~  EndIf
-
 While 1
 	$nMsg = GUIGetMsg()
 
@@ -157,23 +148,13 @@ While 1
 			_Goto()
 
 		Case $MenuItem_Edit_Find
-			GUICtrlSetState($Button_Go, $GUI_SHOW)
-			GUICtrlSetState($Input_Find, $GUI_SHOW)
-			GUICtrlSetState($Button_x, $GUI_SHOW)
+			_Find()
 
 		Case $Button_x
-			If GUICtrlRead($Input_Find) = "" Then
-				GUICtrlSetState($Button_Go, $GUI_HIDE)
-				GUICtrlSetState($Input_Find, $GUI_HIDE)
-				GUICtrlSetState($Button_x, $GUI_HIDE)
-				GUICtrlSetData($JoinFile_Lable_Info, "Ready")
-			Else
-				GUICtrlSetData($Input_Find, "")
-				GUICtrlSetData($JoinFile_Lable_Info, "Ready")
-			EndIf
+			_Cancel_Find()
 
 		Case $Button_Go
-			_find()
+			_SwFind()
 
 		Case $MenuItem_Edit_Remove
 			_GUICtrlListView_DeleteItemsSelected($hListView)
@@ -218,6 +199,23 @@ While 1
 	EndSwitch
 	_Disable_Button()
 WEnd
+
+Func _SwFind()
+	GUICtrlSetState($Button_Go, $GUI_SHOW)
+	GUICtrlSetState($Input_Find, $GUI_SHOW)
+	GUICtrlSetState($Button_x, $GUI_SHOW)
+EndFunc   ;==>_SwFind
+
+Func _Cancel_Find()
+	If GUICtrlRead($Input_Find) = "" Then
+		GUICtrlSetState($Button_Go, $GUI_HIDE)
+		GUICtrlSetState($Input_Find, $GUI_HIDE)
+		GUICtrlSetState($Button_x, $GUI_HIDE)
+	Else
+		GUICtrlSetData($Input_Find, "")
+	EndIf
+	GUICtrlSetData($JoinFile_Lable_Info, "Ready")
+EndFunc   ;==>_Cancel_Find
 
 Func ListView_RClick()
 	Local $aHit
@@ -276,7 +274,7 @@ EndFunc   ;==>ListView_RClick
 
 Func WM_NOTIFY($hWnd, $iMsg, $iwParam, $ilParam)
 	#forceref $hWnd, $iMsg, $iwParam
-	Local $hWndFrom, $iIDFrom, $iCode, $tNMHDR, $hWndListView, $tInfo
+	Local $hWndFrom, $iIDFrom, $iCode, $tNMHDR, $hWndListView, $tInfo, $B_DESCENDING
 	$hWndListView = $hListView
 	If Not IsHWnd($hListView) Then $hWndListView = GUICtrlGetHandle($hListView)
 
@@ -426,18 +424,15 @@ Func _Analyze()
 	_GUICtrlListView_DeleteAllItems($ListView1)
 	Local $i = 0
 	Local $no = 1
-	Local $Flag1 = 0
 	Local $s_current_selectde_cat = _get_selected_cat()
 	Local $i_TotalKey = _CountKey()
 
 	While 1
-		GUICtrlSetData($JoinFile_Lable_Info, "Analyzing: " & $i & " " & "Please Wait..." & Round($i / $i_TotalKey * 100) & "%")
+		GUICtrlSetData($JoinFile_Lable_Info, "Analyzing: " & "Please Wait..." & Round($i / $i_TotalKey * 100) & "%")
 		GUICtrlSetData($progressbar1, $i / $i_TotalKey * 100)
 
 		Local $var = _RegEnumKey($s_regpath_IDM, $i)
 		If @error <> 0 Then ExitLoop
-
-		Local $var_MIME = _RegRead($s_regpath_IDM & "\" & $var, "FRCType")
 
 		Local $LocalFileName = _RegRead($s_regpath_IDM & "\" & $var, "LocalFileName")
 		If @error <> 0 Then
@@ -445,6 +440,7 @@ Func _Analyze()
 			ContinueLoop
 		EndIf
 
+		Local $var_MIME = _RegRead($s_regpath_IDM & "\" & $var, "FRCType")
 		Local $FileSize = Number(_RegRead($s_regpath_IDM & "\" & $var, "FileSize"))
 		Local $var_Url0 = _RegRead($s_regpath_IDM & "\" & $var, "Url0")
 		Local $cat_id = _RegRead($s_regpath_IDM & "\" & $var, "categoryID")
@@ -774,13 +770,6 @@ Func _Auto_Arrange()
 	_GUICtrlListView_SetColumnWidth($ListView1, 3, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
 	_GUICtrlListView_SetColumnWidth($ListView1, 4, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
 EndFunc   ;==>_Auto_Arrange
-
-Func __AET_ButtonSetIcon($hWnd, $iIndex, $iWidth = 16, $iHeight = 16, $iAlign = 0, $sDll = "Shell32.dll")
-	Local $hImageList
-	$hImageList = _GUIImageList_Create($iWidth, $iHeight, 5, 3)
-	_GUIImageList_AddIcon($hImageList, @SystemDir & "\" & $sDll, $iIndex, True)
-	_GUICtrlButton_SetImageList($hWnd, $hImageList, $iAlign)
-EndFunc   ;==>__AET_ButtonSetIcon
 
 Func _CountKey()
 	Local $k = 1

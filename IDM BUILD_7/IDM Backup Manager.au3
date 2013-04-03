@@ -42,7 +42,7 @@
 #AutoIt3Wrapper_Run_cvsWrapper=v
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#Region    ;************ Includes ************
+#region    ;************ Includes ************
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
 #include <GuiButton.au3>
@@ -55,7 +55,7 @@
 #include "Includes\_Resources.au3"
 #include "Includes\_FileIsPathValid.au3"
 #include "Includes\_RegFunc.au3"
-#EndRegion ;************ Includes ************
+#endregion    ;************ Includes ************
 
 
 #region global Variables
@@ -266,7 +266,7 @@ GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloa
 $h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Data Cleaner", 129, 64, 80, 60, $BS_MULTILINE)
 GUICtrlSetTip(-1, "Clean History, Logs and Unfinished Download Data.")
 
-$h_Button_Clean_Password_Tools = GUICtrlCreateButton("Password Cleaner", 219, 64, 80, 60, $BS_MULTILINE)
+$h_Button_Clean_Password_Tools = GUICtrlCreateButton("Sites Logins Password Cleaner", 219, 64, 80, 60, $BS_MULTILINE)
 GUICtrlSetTip(-1, "Clean Password For Server/Sites.")
 
 $h_Button_Cat_Tools = GUICtrlCreateButton("Add Extra File Types in Categories", 309, 64, 80, 60, $BS_MULTILINE)
@@ -1916,6 +1916,7 @@ Func _Password_Cleaner_GUI()
 	WEnd
 	$h_Lable_Info_pwCleaner = GUICtrlCreateLabel($sInfoLabelText, 10, 6, 155, 17)
 	$h_Button_ClearAll_pwCleaner = GUICtrlCreateButton("Clear All", 10, 24, 75, 25)
+	If $j = 0 Then GUICtrlSetState(-1, $GUI_DISABLE)
 	$h_Button_Close_pwCleaner = GUICtrlCreateButton("Close", 90, 24, 75, 25)
 	GUISetState(@SW_SHOW)
 
@@ -1934,13 +1935,13 @@ Func _Password_Cleaner_GUI()
 						_RegDelete($s_regpath_IDM & "\Passwords\" & $var, "EncPassword")
 						$j += 1
 					EndIf
-					$sInfoLabelText = "Removing " & $k - 1 & " Password."
+					$sInfoLabelText = "Removing " & $k - 1 & " Password(s)."
 					GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
 					$k += 1
 				WEnd
-				$sInfoLabelText = "Total " & $j & " Password Removed."
+				$sInfoLabelText = "Total " & $j & " Password(s) Removed."
 				GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
-
+				GUICtrlSetState($h_Button_ClearAll_pwCleaner, $GUI_DISABLE)
 				If $b_RestartIDM = 1 Then _sRun_IDMexe()
 		EndSwitch
 	WEnd

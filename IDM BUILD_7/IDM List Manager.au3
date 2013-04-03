@@ -35,10 +35,10 @@
 #endregion    ;************ Includes ************
 
 #region global Variables
+Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
 Global $GUIMINWID = 701, $GUIMINHT = 313
-Global $hGUI, $MenuItem_list_Catagories_[1000], $fChange = False
-Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
+Global $hGUI, $MenuItem_list_Catagories_[_CountKey($s_regpath_IDM)], $fChange = False
 #endregion global Variables
 
 #region ### START Koda GUI section ### main gui
@@ -190,15 +190,19 @@ While 1
 			_Expert_IDM_LIST()
 
 		Case $MenuItem_Help_h
-			If FileExists(@ScriptDir & "\Help.chm") Then
-				ShellExecute(@ScriptDir & "\Help.chm")
-			Else
-				ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
-			EndIf
+			_SwHelp()
 
 	EndSwitch
 	_Disable_Button()
 WEnd
+
+Func _SwHelp()
+	If FileExists(@ScriptDir & "\Help.chm") Then
+		ShellExecute(@ScriptDir & "\Help.chm")
+	Else
+		ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
+	EndIf
+EndFunc   ;==>_SwHelp
 
 Func _SwFind()
 	GUICtrlSetState($Button_Go, $GUI_SHOW)
@@ -217,118 +221,23 @@ Func _Cancel_Find()
 	GUICtrlSetData($JoinFile_Lable_Info, "Ready")
 EndFunc   ;==>_Cancel_Find
 
-Func ListView_RClick()
-	Local $aHit
-	$aHit = _GUICtrlListView_SubItemHitTest($hListView)
-	If ($aHit[0] <> -1) Then
-		; Create a standard popup menu
-		; -------------------- To Do --------------------
-		$hMenu = _GUICtrlMenu_CreatePopup()
-		_GUICtrlMenu_AddMenuItem($hMenu, "Explore Folder", $idExplore)
-		_GUICtrlMenu_AddMenuItem($hMenu, "Force Join", $idJoin)
-		_GUICtrlMenu_AddMenuItem($hMenu, "Remove", $idRemove)
-		_GUICtrlMenu_AddMenuItem($hMenu, "Goto", $idGoto)
-		_GUICtrlMenu_AddMenuItem($hMenu, "Properties", $idDetails)
-
-		; ========================================================================
-		; goto action
-		; ========================================================================
-		Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
-		Local $owWPage = _RegRead($s_regpath_IDM & "\" & $ID[5], "owWPage")
-		Local $Referer = _RegRead($s_regpath_IDM & "\" & $ID[5], "Referer")
-		Local $FileName = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
-		Local $LocalFileName = _Name_Get_From_Path(_RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName"))
-		Local $FileExt = _Ext_Get_From_Path(_RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName"))
-		Local $LocalPath = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
-
-		If $owWPage = "" And $Referer = "" Then
-			_GUICtrlMenu_SetItemDisabled($hMenu, 3)
-		Else
-			If $owWPage <> "" Then _GUICtrlMenu_SetItemText($hMenu, 3, _Resize_Text($owWPage))
-			If $Referer <> "" Then _GUICtrlMenu_SetItemText($hMenu, 3, _Resize_Text($Referer))
-		EndIf
-
-		If FileExists($FileName) = 0 Then _GUICtrlMenu_SetItemDisabled($hMenu, 0)
-
-		Local $search = FileFindFirstFile($LocalPath & $LocalFileName & $FileExt & "*")
-		If $search = -1 Then _GUICtrlMenu_SetItemDisabled($hMenu, 1)
-
-		; ========================================================================
-		; Shows how to capture the context menu selections
-		; ========================================================================
-		Switch _GUICtrlMenu_TrackPopupMenu($hMenu, $hListView, -1, -1, 1, 1, 2)
-			Case $idExplore
-				_Open_Folder()
-			Case $idJoin
-				If _Join_Fragments() = -2 Then MsgBox(48, "Error", "At Least 2 Fragment Required To Join It.", 0, $hGUI)
-			Case $idDetails
-				_Details()
-			Case $idRemove
-				_Remove()
-			Case $idGoto
-				_Goto()
-		EndSwitch
-		_GUICtrlMenu_DestroyMenu($hMenu)
+Func _sw_Grid()
+	If BitAND(GUICtrlRead($MenuItem_Setting_SwGrid), $GUI_CHECKED) Then
+		GUICtrlSetState($MenuItem_Setting_SwGrid, $GUI_UNCHECKED)
+		_GUICtrlListView_SetExtendedListViewStyle($ListView1, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
+	Else
+		_GUICtrlListView_SetExtendedListViewStyle($ListView1, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
+		GUICtrlSetState($MenuItem_Setting_SwGrid, $GUI_CHECKED)
 	EndIf
-EndFunc   ;==>ListView_RClick
+EndFunc   ;==>_sw_Grid
 
-Func WM_NOTIFY($hWnd, $iMsg, $iwParam, $ilParam)
-	#forceref $hWnd, $iMsg, $iwParam
-	Local $hWndFrom, $iIDFrom, $iCode, $tNMHDR, $hWndListView, $tInfo, $B_DESCENDING
-	$hWndListView = $hListView
-	If Not IsHWnd($hListView) Then $hWndListView = GUICtrlGetHandle($hListView)
-
-	$tNMHDR = DllStructCreate($tagNMHDR, $ilParam)
-	$hWndFrom = HWnd(DllStructGetData($tNMHDR, "hWndFrom"))
-	$iIDFrom = DllStructGetData($tNMHDR, "IDFrom")
-	$iCode = DllStructGetData($tNMHDR, "Code")
-	Switch $hWndFrom
-		Case $hWndListView
-			Switch $iCode
-
-				Case $LVN_ITEMCHANGING
-					$fChange = True
-
-				Case $LVN_COLUMNCLICK ; A column was clicked
-					$tInfo = DllStructCreate($tagNMLISTVIEW, $ilParam)
-					_GUICtrlListView_SimpleSort($hWndListView, $B_DESCENDING, DllStructGetData($tInfo, "SubItem"))
-					; No return value
-
-				Case $LVN_KEYDOWN ; A key has been pressed
-					$tInfo = DllStructCreate($tagNMLVKEYDOWN, $ilParam)
-					; No return value
-
-				Case $NM_CLICK ; Sent by a list-view control when the user clicks an item with the left mouse button
-					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
-					; No return value
-
-				Case $NM_DBLCLK ; Sent by a list-view control when the user double-clicks an item with the left mouse button
-					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
-					_Open_Folder()
-
-					; No return value
-				Case $NM_KILLFOCUS ; The control has lost the input focus
-					; No return value
-
-				Case $NM_RCLICK ; Sent by a list-view control when the user clicks an item with the right mouse button
-					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
-					ListView_RClick()
-
-					Return 0 ; allow the default processing
-				Case $NM_RDBLCLK ; Sent by a list-view control when the user double-clicks an item with the right mouse button
-					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
-
-					; No return value
-				Case $NM_RETURN ; The control has the input focus and that the user has pressed the ENTER key
-
-					; No return value
-				Case $NM_SETFOCUS ; The control has received the input focus
-
-					; No return value
-			EndSwitch
-	EndSwitch
-	Return $GUI_RUNDEFMSG
-EndFunc   ;==>WM_NOTIFY
+Func _Auto_Arrange()
+	_GUICtrlListView_SetColumnWidth($ListView1, 0, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($ListView1, 1, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($ListView1, 2, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($ListView1, 3, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($ListView1, 4, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+EndFunc   ;==>_Auto_Arrange
 
 Func _Join_Fragments()
 	_Disable_Controls()
@@ -425,7 +334,7 @@ Func _Analyze()
 	Local $i = 0
 	Local $no = 1
 	Local $s_current_selectde_cat = _get_selected_cat()
-	Local $i_TotalKey = _CountKey()
+	Local $i_TotalKey = _CountKey($s_regpath_IDM)
 
 	While 1
 		GUICtrlSetData($JoinFile_Lable_Info, "Analyzing: " & "Please Wait..." & Round($i / $i_TotalKey * 100) & "%")
@@ -586,6 +495,16 @@ EndFunc   ;==>_Resize_Text
 Func _Expert_HTML()
 	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "webpage (*.htm)", 16, "Download_List.htm")
 	If @error Then Return -1
+	If $join_file <> "" And StringRight($join_file, 4) <> ".htm" Then $join_file &= ".htm"
+
+	If FileExists($join_file) Then
+		If FileDelete($join_file) = 0 Then
+			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
+			_Expert_HTML()
+		EndIf
+	EndIf
+	_Disable_Controls()
+
 	_GUICtrlListView_DeleteColumn($hListView, 0)
 	_GUICtrlListView_SaveHTML($hListView, $join_file, "")
 	ShellExecute($join_file)
@@ -594,8 +513,18 @@ Func _Expert_HTML()
 EndFunc   ;==>_Expert_HTML
 
 Func _Expert_csv()
-	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "Comma Separated Values (*csv)", 16, "Download_List.csv")
+	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "Comma Separated Values (*.csv)", 16, "Download_List.csv")
 	If @error Then Return -1
+	If $join_file <> "" And StringRight($join_file, 4) <> ".csv" Then $join_file &= ".csv"
+
+	If FileExists($join_file) Then
+		If FileDelete($join_file) = 0 Then
+			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
+			_Expert_csv()
+		EndIf
+	EndIf
+	_Disable_Controls()
+
 	_GUICtrlListView_DeleteColumn($hListView, 0)
 	_GUICtrlListView_SaveCSV($hListView, $join_file)
 	ShellExecute($join_file)
@@ -604,8 +533,9 @@ Func _Expert_csv()
 EndFunc   ;==>_Expert_csv
 
 Func _Expert_IDM_LIST()
-	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "IDM Export File (*ef2)", 16, "Download_List.ef2")
+	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "IDM Export File (*.ef2)", 16, "Download_List.ef2")
 	If @error Then Return -1
+	If $join_file <> "" And StringRight($join_file, 4) <> ".ef2" Then $join_file &= ".ef2"
 
 	If FileExists($join_file) Then
 		If FileDelete($join_file) = 0 Then
@@ -641,6 +571,7 @@ EndFunc   ;==>_Expert_IDM_LIST
 Func _expert_IDM_TXT()
 	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "Plain Text File (*txt)", 16, "Download_List.txt")
 	If @error Then Return -1
+	If $join_file <> "" And StringRight($join_file, 4) <> ".txt" Then $join_file &= ".txt"
 
 	If FileExists($join_file) Then
 		If FileDelete($join_file) = 0 Then
@@ -742,6 +673,119 @@ Func _Enable_Controls()
 	GUICtrlSetState($ListView1, $GUI_ENABLE)
 EndFunc   ;==>_Enable_Controls
 
+Func ListView_RClick()
+	Local $aHit
+	$aHit = _GUICtrlListView_SubItemHitTest($hListView)
+	If ($aHit[0] <> -1) Then
+		; Create a standard popup menu
+		; -------------------- To Do --------------------
+		$hMenu = _GUICtrlMenu_CreatePopup()
+		_GUICtrlMenu_AddMenuItem($hMenu, "Explore Folder", $idExplore)
+		_GUICtrlMenu_AddMenuItem($hMenu, "Force Join", $idJoin)
+		_GUICtrlMenu_AddMenuItem($hMenu, "Remove", $idRemove)
+		_GUICtrlMenu_AddMenuItem($hMenu, "Goto", $idGoto)
+		_GUICtrlMenu_AddMenuItem($hMenu, "Properties", $idDetails)
+
+		; ========================================================================
+		; goto action
+		; ========================================================================
+		Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
+		Local $owWPage = _RegRead($s_regpath_IDM & "\" & $ID[5], "owWPage")
+		Local $Referer = _RegRead($s_regpath_IDM & "\" & $ID[5], "Referer")
+		Local $FileName = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
+		Local $LocalFileName = _Name_Get_From_Path(_RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName"))
+		Local $FileExt = _Ext_Get_From_Path(_RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName"))
+		Local $LocalPath = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
+
+		If $owWPage = "" And $Referer = "" Then
+			_GUICtrlMenu_SetItemDisabled($hMenu, 3)
+		Else
+			If $owWPage <> "" Then _GUICtrlMenu_SetItemText($hMenu, 3, _Resize_Text($owWPage))
+			If $Referer <> "" Then _GUICtrlMenu_SetItemText($hMenu, 3, _Resize_Text($Referer))
+		EndIf
+
+		If FileExists($FileName) = 0 Then _GUICtrlMenu_SetItemDisabled($hMenu, 0)
+
+		Local $search = FileFindFirstFile($LocalPath & $LocalFileName & $FileExt & "*")
+		If $search = -1 Then _GUICtrlMenu_SetItemDisabled($hMenu, 1)
+
+		; ========================================================================
+		; Shows how to capture the context menu selections
+		; ========================================================================
+		Switch _GUICtrlMenu_TrackPopupMenu($hMenu, $hListView, -1, -1, 1, 1, 2)
+			Case $idExplore
+				_Open_Folder()
+			Case $idJoin
+				If _Join_Fragments() = -2 Then MsgBox(48, "Error", "At Least 2 Fragment Required To Join It.", 0, $hGUI)
+			Case $idDetails
+				_Details()
+			Case $idRemove
+				_Remove()
+			Case $idGoto
+				_Goto()
+		EndSwitch
+		_GUICtrlMenu_DestroyMenu($hMenu)
+	EndIf
+EndFunc   ;==>ListView_RClick
+
+Func WM_NOTIFY($hWnd, $iMsg, $iwParam, $ilParam)
+	#forceref $hWnd, $iMsg, $iwParam
+	Local $hWndFrom, $iIDFrom, $iCode, $tNMHDR, $hWndListView, $tInfo, $B_DESCENDING
+	$hWndListView = $hListView
+	If Not IsHWnd($hListView) Then $hWndListView = GUICtrlGetHandle($hListView)
+
+	$tNMHDR = DllStructCreate($tagNMHDR, $ilParam)
+	$hWndFrom = HWnd(DllStructGetData($tNMHDR, "hWndFrom"))
+	$iIDFrom = DllStructGetData($tNMHDR, "IDFrom")
+	$iCode = DllStructGetData($tNMHDR, "Code")
+	Switch $hWndFrom
+		Case $hWndListView
+			Switch $iCode
+
+				Case $LVN_ITEMCHANGING
+					$fChange = True
+
+				Case $LVN_COLUMNCLICK ; A column was clicked
+					$tInfo = DllStructCreate($tagNMLISTVIEW, $ilParam)
+					_GUICtrlListView_SimpleSort($hWndListView, $B_DESCENDING, DllStructGetData($tInfo, "SubItem"))
+					; No return value
+
+				Case $LVN_KEYDOWN ; A key has been pressed
+					$tInfo = DllStructCreate($tagNMLVKEYDOWN, $ilParam)
+					; No return value
+
+				Case $NM_CLICK ; Sent by a list-view control when the user clicks an item with the left mouse button
+					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
+					; No return value
+
+				Case $NM_DBLCLK ; Sent by a list-view control when the user double-clicks an item with the left mouse button
+					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
+					_Open_Folder()
+
+					; No return value
+				Case $NM_KILLFOCUS ; The control has lost the input focus
+					; No return value
+
+				Case $NM_RCLICK ; Sent by a list-view control when the user clicks an item with the right mouse button
+					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
+					ListView_RClick()
+
+					Return 0 ; allow the default processing
+				Case $NM_RDBLCLK ; Sent by a list-view control when the user double-clicks an item with the right mouse button
+					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
+
+					; No return value
+				Case $NM_RETURN ; The control has the input focus and that the user has pressed the ENTER key
+
+					; No return value
+				Case $NM_SETFOCUS ; The control has received the input focus
+
+					; No return value
+			EndSwitch
+	EndSwitch
+	Return $GUI_RUNDEFMSG
+EndFunc   ;==>WM_NOTIFY
+
 Func WM_GETMINMAXINFO($hWnd, $Msg, $WPARAM, $lParam)
 	Local $tagMaxinfo = DllStructCreate("int;int;int;int;int;int;int;int;int;int", $lParam)
 	DllStructSetData($tagMaxinfo, 7, $GUIMINWID / 1.2) ; min X
@@ -753,30 +797,12 @@ Func MY_WM_SIZE($hWnd, $iMsg, $iwParam, $ilParam)
 	Return 'GUI_RUNDEFMSG'
 EndFunc   ;==>MY_WM_SIZE
 
-Func _sw_Grid()
-	If BitAND(GUICtrlRead($MenuItem_Setting_SwGrid), $GUI_CHECKED) Then
-		GUICtrlSetState($MenuItem_Setting_SwGrid, $GUI_UNCHECKED)
-		_GUICtrlListView_SetExtendedListViewStyle($ListView1, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
-	Else
-		_GUICtrlListView_SetExtendedListViewStyle($ListView1, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
-		GUICtrlSetState($MenuItem_Setting_SwGrid, $GUI_CHECKED)
-	EndIf
-EndFunc   ;==>_sw_Grid
-
-Func _Auto_Arrange()
-	_GUICtrlListView_SetColumnWidth($ListView1, 0, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-	_GUICtrlListView_SetColumnWidth($ListView1, 1, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-	_GUICtrlListView_SetColumnWidth($ListView1, 2, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-	_GUICtrlListView_SetColumnWidth($ListView1, 3, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-	_GUICtrlListView_SetColumnWidth($ListView1, 4, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-EndFunc   ;==>_Auto_Arrange
-
-Func _CountKey()
+Func _CountKey($sRegpath)
 	Local $k = 1
 	While 1
-		$var = RegEnumKey($s_regpath_IDM, $k)
+		$var = RegEnumKey($sRegpath, $k)
 		If @error <> 0 Then ExitLoop
 		$k += 1
 	WEnd
-	Return $k
+	Return $k - 1
 EndFunc   ;==>_CountKey

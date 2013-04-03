@@ -2291,6 +2291,9 @@ Func _SelfProcessCheck()
 	If Not WinActive($s_Win_Title) Then
 		If Not WinActivate($s_Win_Title) = 0 Then Exit
 	EndIf
+	If ProcessExists(@ScriptName) Then
+		If Not WinActivate($s_Win_Title) = 0 Then Exit
+	EndIf
 EndFunc   ;==>_SelfProcessCheck
 
 Func _CleanINInReg()

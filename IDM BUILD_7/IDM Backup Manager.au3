@@ -574,8 +574,8 @@ While 1
 			EndIf
 
 		Case $Button_RestoreDefault_Setting
-			$i_xWinPos = (@DesktopWidth - 439) / 2
-			$i_yWinPos = (@DesktopHeight - 276) / 2
+			$i_xWinPos = (@DesktopWidth - $i_xWidth) / 2
+			$i_yWinPos = (@DesktopHeight - $i_yHight) / 2
 
 			$s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files"
 			$s_Log_File = @AppDataDir & "\IDM Backup Manager" & "\LogFile.log" ;for installer
@@ -798,7 +798,7 @@ While 1
 			If $b_Scheduler_Folder = True Then
 				If FileExists($Scheduler_Folder) Then
 					$Data[3] = $Scheduler_Folder
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Scheduler_Folder " & "=" & ' "' & $GrabberData_Folder & '" ')
+					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Scheduler_Folder " & "=" & ' "' & $Scheduler_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "Scheduler_Folder", True)
 				Else
 					$Data[3] = ""
@@ -1505,7 +1505,7 @@ EndFunc   ;==>_RegBackup
 ;_regbackup(@TempDir & "\" & "Scheduler.reg")
 Func _Reg_Import($s7z_File_Save_Name)
 	If ProcessExists('regedit.exe') Then ProcessClose('regedit.exe')
-	ShellExecuteWait('regedit.exe', "/s /c " & $s7z_File_Save_Name)
+	ShellExecuteWait('regedit.exe', "/s /c " & '"' & $s7z_File_Save_Name & '"')
 EndFunc   ;==>_Reg_Import
 #endregion Registry Functions
 

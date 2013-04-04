@@ -50,9 +50,9 @@ Global Const $__g_RF_Is64BitOS = (StringInStr(@OSArch, "64") <> 0)
 	unconditionally reference the 64-bit registry view.
 
 	Examples:
-		HKEY_LOCAL_MACHINE32
-		HKEY_CURRENT_USER64
-		HKU32
+	HKEY_LOCAL_MACHINE32
+	HKEY_CURRENT_USER64
+	HKU32
 #ce
 
 ; #FUNCTION# ====================================================================================================
@@ -583,7 +583,7 @@ EndFunc   ;==>_RegCopyValue
 
 ; #FUNCTION# ====================================================================================================
 ; Name...........:	_RegCopyValue
-; Description....:	Copy a single registry value without Subkey
+; Description....:	Copy a single registry value without Subkey(Tree)
 ; Syntax.........:	_RegCopyValue($s_key, $s_val[, $d_key = Default[, $d_val = Default]])
 ; Parameters.....:	$s_key	- Source key
 ;					$s_val	- Source value
@@ -604,7 +604,7 @@ EndFunc   ;==>_RegCopyValue
 ; Link...........:
 ; Example........:
 ; ===============================================================================================================
-Func _RegCopyKey1($s_key, $d_key, $delete = False)
+Func _RegCopyKeyNoTree($s_key, $d_key, $delete = False)
 	If $s_key = $d_key Then Return SetError(-1, 0, 0) ; destination is the same as source
 	If Not _RegKeyExists($s_key) Then Return SetError(1, 0, 0)
 	_RegWrite($d_key) ; write destination key in case source key empty
@@ -621,25 +621,8 @@ Func _RegCopyKey1($s_key, $d_key, $delete = False)
 		EndIf
 		$i += 1
 	WEnd
-;~ 	; key loop
-;~ 	Local $key
-;~ 	$i = 0
-;~ 	While 1
-;~ 		$key = _RegEnumKey($s_key, $i)
-;~ 		If @error Then ExitLoop ; no more keys
-;~ 		_RegCopyKey($s_key & "\" & $key, $d_key & "\" & $key) ; recurse
-;~ 		If @error = 3 Then $err = 3 ; test for errors reading subkey values
-;~ 		$i += 1
-;~ 	WEnd
-;~ 	If $err Then Return SetError($err, 0, 0) ; error(s) reading value(s) or subkey value(s)
-;~ 	; move key
-;~ 	If $delete Then
-;~ 		; delete source key only if copy was entirely successful
-;~ 		_RegDelete($s_key)
-;~ 		If @error Then Return SetError(4, @error, 0) ; error deleting source key
-;~ 	EndIf
 	Return SetError(0, 0, 1)
-EndFunc   ;==>_RegCopyKey
+EndFunc   ;==>_RegCopyKeyNoTree
 
 
 ; #FUNCTION# ====================================================================================================

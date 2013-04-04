@@ -522,6 +522,7 @@ While 1
 
 		Case $h_Button_BrowseDataBackupFolder_Setting
 			If Not FileExists($s_Backup_Dir) Then DirCreate($s_Backup_Dir)
+
 			$s_Backup_Dir = FileSelectFolder("Choose a folder to save file...", "", 7, $s_Backup_Dir, $h_IDMBM)
 			If StringRight($s_Backup_Dir, 1) <> "\" Then $s_Backup_Dir &= "\"
 
@@ -998,59 +999,27 @@ While 1
 			#region ;/Remove TempPath--->
 			If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then ;Pre Delete as per Componments
 				GUICtrlSetData($h_Label_Info, "Removing: TempPath Please Wait...")
-				If $Guest_DwnlData_Folder = "True" Then
-					If FileExists($s_DwnlData_Folder) Then
-						If Not DirRemove($s_DwnlData_Folder, 1) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $s_DwnlData_Folder & '" ' & "Error Code:1")
-					EndIf
-				EndIf
+				If $Guest_DwnlData_Folder = "True" Then _FileOrFolderDeleteWithLog($s_DwnlData_Folder)
 
 				GUICtrlSetData($h_Label_Info, "Removing: Grabber Folder Please Wait...")
-				If $Guest_Grabber_Folder = "True" Then
-					If FileExists($Grabber_Folder) Then
-						If Not DirRemove($Grabber_Folder, 1) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $Grabber_Folder & '" ' & "Error Code:1")
-					EndIf
-				EndIf
+				If $Guest_Grabber_Folder = "True" Then _FileOrFolderDeleteWithLog($Grabber_Folder)
 
 				GUICtrlSetData($h_Label_Info, "Removing: GrabberData Folder Please Wait...")
-				If $Guest_GrabberData_Folder = "True" Then
-					If FileExists($GrabberData_Folder) Then
-						If Not DirRemove($GrabberData_Folder, 1) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $GrabberData_Folder & '" ' & "Error Code:1")
-					EndIf
-				EndIf
+				If $Guest_GrabberData_Folder = "True" Then _FileOrFolderDeleteWithLog($GrabberData_Folder)
 
 				GUICtrlSetData($h_Label_Info, "Removing: Scheduler Folder Please Wait...")
-				If $Guest_Scheduler_Folder = "True" Then
-					If FileExists($Scheduler_Folder) Then
-						If Not DirRemove($Scheduler_Folder, 1) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $Scheduler_Folder & '" ' & "Error Code:1")
-					EndIf
-				EndIf
+				If $Guest_Scheduler_Folder = "True" Then _FileOrFolderDeleteWithLog($Scheduler_Folder)
 
-				GUICtrlSetData($h_Label_Info, "Removing: GrabberData Folder Please Wait...")
+				GUICtrlSetData($h_Label_Info, "Removing: History And Logs Please Wait...")
 				If $Guest_History_Files = "True" Then
-					If FileExists($UrlHistory_txt_File) Then
-						If Not FileDelete($UrlHistory_txt_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $UrlHistory_txt_File & '" ' & "Error Code:1")
-					EndIf
-					If FileExists($UrlHistory2_txt_File) Then
-						If Not FileDelete($UrlHistory2_txt_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $UrlHistory2_txt_File & '" ' & "Error Code:1")
-					EndIf
-					If FileExists($GlobalErrors_log_File) Then
-						If Not FileDelete($GlobalErrors_log_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $GlobalErrors_log_File & '" ' & "Error Code:1")
-					EndIf
-					If FileExists($urlexclist_dat_File) Then
-						If Not FileDelete($urlexclist_dat_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $urlexclist_dat_File & '" ' & "Error Code:1")
-					EndIf
-					If FileExists($defextmap_dat_File) Then
-						If Not FileDelete($defextmap_dat_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $defextmap_dat_File & '" ' & "Error Code:1")
-					EndIf
-					If FileExists($foldresHistory_txt_File) Then
-						If Not FileDelete($foldresHistory_txt_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $foldresHistory_txt_File & '" ' & "Error Code:1")
-					EndIf
-					If FileExists($sts_list_dat_File) Then
-						If Not FileDelete($sts_list_dat_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $sts_list_dat_File & '" ' & "Error Code:1")
-					EndIf
-					If FileExists($cnlurllist_dat_File) Then
-						If Not FileDelete($cnlurllist_dat_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $cnlurllist_dat_File & '" ' & "Error Code:1")
-					EndIf
+					_FileOrFolderDeleteWithLog($UrlHistory_txt_File)
+					_FileOrFolderDeleteWithLog($UrlHistory2_txt_File)
+					_FileOrFolderDeleteWithLog($GlobalErrors_log_File)
+					_FileOrFolderDeleteWithLog($urlexclist_dat_File)
+					_FileOrFolderDeleteWithLog($defextmap_dat_File)
+					_FileOrFolderDeleteWithLog($foldresHistory_txt_File)
+					_FileOrFolderDeleteWithLog($sts_list_dat_File)
+					_FileOrFolderDeleteWithLog($cnlurllist_dat_File)
 				EndIf
 			EndIf
 			#endregion ;/Remove TempPath--->
@@ -1138,7 +1107,7 @@ While 1
 
 			#region ;/Convert Profile--->
 			If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
-				If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then;Restore Reg
+				If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then ; Restore Registry Enable
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Registry Profile")
 
 					GUICtrlSetData($h_Label_Info, "Converting: Profile Please Wait...")
@@ -1155,7 +1124,7 @@ While 1
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_AppDataIDMFolder, "\", "\\") & " Error Code" & @error)
 				EndIf
 
-				If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then;Restore Data
+				If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then ; Restore Data Enable
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
 
 					DirMove($s_DwnlData_Folder & $Guest_Username, $s_DwnlData_Folder & @UserName)
@@ -1178,10 +1147,10 @@ While 1
 			EndIf
 			#endregion ;/Remove Temp Registry File--->
 
-			#region ;/Read Host Registry and store in tmp Registory--->
+			#region ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
 			If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
-				GUICtrlSetData($h_Label_Info, "Backingup: Temp Registry Please Wait...")
-				If _RegKeyExists($s_regpath_IDM) Then _RegCopyKey1($s_regpath_IDM, $s_regpath_IDM & "_tmp")
+				GUICtrlSetData($h_Label_Info, "Creating: Temp Registry Please Wait...")
+				If _RegKeyExists($s_regpath_IDM) Then _RegCopyKeyNoTree($s_regpath_IDM, $s_regpath_IDM & "_tmp")
 
 				If _RegKeyExists($s_regpath_IDM & "\" & "ConfigTime") Then _RegCopyKey($s_regpath_IDM & "\" & "ConfigTime", $s_regpath_IDM & "_tmp" & "\" & "ConfigTime")
 				If _RegKeyExists($s_regpath_IDM & "\" & "DwnlPanel") Then _RegCopyKey($s_regpath_IDM & "\" & "DwnlPanel", $s_regpath_IDM & "_tmp" & "\" & "DwnlPanel")
@@ -1205,7 +1174,7 @@ While 1
 				EndIf
 				If _RegKeyExists($s_regpath_IDM & "\" & "SpecialKeys") Then _RegCopyKey($s_regpath_IDM & "\" & "SpecialKeys", $s_regpath_IDM & "_tmp" & "\" & "SpecialKeys")
 			EndIf
-			#endregion ;/Read Host Registry and store in tmp Registory--->
+			#endregion ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
 
 			#region ;/Remove Host Registry--->
 			GUICtrlSetData($h_Label_Info, "Removing: Registry Please Wait...")
@@ -1222,63 +1191,21 @@ While 1
 			#region ;/Restore Host Registry from stored in tmp Registry--->
 			GUICtrlSetData($h_Label_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
 
-			If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then
-				If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
-					If _RegKeyExists($s_regpath_IDM & "_tmp") Then
-						FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Host Registry From Stored in tmp Registry  Please Wait...")
-						FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry Exists " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ')
+			If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then ; Restore Registry Enable
+				If _RegKeyExists($s_regpath_IDM & "_tmp") Then
+					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Host Registry From Stored in tmp Registry")
+					FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ')
 
-						_RegCopyKey1($s_regpath_IDM & "_tmp", $s_regpath_IDM)
-						FileWriteLine($s_Log_File, _Current_Moment() & "Info: Copied Registry Key " & "=" & ' "' & $s_regpath_IDM & "_tmp" & " to " & $s_regpath_IDM & '" ' & "Error Code:" & @error)
+					_RegCopyKeyNoTree($s_regpath_IDM & "_tmp", $s_regpath_IDM)
+					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Copied Registry Key " & "=" & ' "' & $s_regpath_IDM & "_tmp" & " to " & $s_regpath_IDM & '" ' & "Error Code:" & @error)
 
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "ConfigTime", $s_regpath_IDM & "\" & "ConfigTime")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "DwnlPanel", $s_regpath_IDM & "\" & "DwnlPanel")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "DwnlSelPanel", $s_regpath_IDM & "\" & "DwnlSelPanel")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "ConfigTime", $s_regpath_IDM & "\" & "ConfigTime")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "DwnlPanel", $s_regpath_IDM & "\" & "DwnlPanel")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "DwnlSelPanel", $s_regpath_IDM & "\" & "DwnlSelPanel")
 
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "FoldersTree", $s_regpath_IDM & "\" & "FoldersTree")
-						If Not _RegKeyExists($s_regpath_IDM & "_tmp" & "\" & "FoldersTree") Then
-							$i = 1
-							While 1
-								$key = RegEnumKey($s_regpath_IDM & "\FoldersTree\", $i)
-								If @error <> 0 Then ExitLoop
-
-								If _RegValueExists($s_regpath_IDM & "\FoldersTree\" & $key, "pathW") Then
-									If Not _RegDeleteValue($s_regpath_IDM & "\FoldersTree\" & $key, "pathW") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "\FoldersTree\" & $key & "-->" & "pathW" & '" ' & "Error Code:" & @error)
-								EndIf
-
-								$i += 1
-							WEnd
-						EndIf
-
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "GetAllDlgLS", $s_regpath_IDM & "\" & "GetAllDlgLS")
-
-						If $Guest_GrabberData_Folder = "False" Then
-							_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "GrabberDlgLS", $s_regpath_IDM & "\" & "GrabberDlgLS")
-							_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "GrabberSts", $s_regpath_IDM & "\" & "GrabberSts")
-						EndIf
-
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "IDMBI", $s_regpath_IDM & "\" & "IDMBI")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "ListSettings", $s_regpath_IDM & "\" & "ListSettings")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "maxID", $s_regpath_IDM & "\" & "maxID")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "MCN", $s_regpath_IDM & "\" & "MCN")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "menuExt", $s_regpath_IDM & "\" & "menuExt")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "netApps", $s_regpath_IDM & "\" & "netApps")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "Passwords", $s_regpath_IDM & "\" & "Passwords")
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "Queue", $s_regpath_IDM & "\" & "Queue")
-
-						If $Guest_Scheduler_Folder = "False" Then
-							_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "Scheduler", $s_regpath_IDM & "\" & "Scheduler")
-						EndIf
-
-						_CopyRegTempKey($s_regpath_IDM & "_tmp" & "\" & "SpecialKeys", $s_regpath_IDM & "\" & "SpecialKeys")
-					Else
-						FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry Not Exists " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ')
-						FileWriteLine($s_Log_File, _Current_Moment() & "Info: Removing Some Un Used Registry Key...")
-
-						If _RegValueExists($s_regpath_IDM, "LocalPathW") Then
-							If Not _RegDeleteValue($s_regpath_IDM, "LocalPathW") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "-->" & "LocalPathW" & '" ' & "Error Code:" & @error)
-						EndIf
-
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "FoldersTree", $s_regpath_IDM & "\" & "FoldersTree")
+					If Not _RegKeyExists($s_regpath_IDM & "_tmp" & "\" & "FoldersTree") Then
+						FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found" & "=" & ' "' & $s_regpath_IDM & "_tmp" & "\" & "FoldersTree" & '" ')
 						$i = 1
 						While 1
 							$key = RegEnumKey($s_regpath_IDM & "\FoldersTree\", $i)
@@ -1290,9 +1217,50 @@ While 1
 
 							$i += 1
 						WEnd
-					EndIf;do log here
-				EndIf;do log here
-			EndIf;do log here
+					EndIf
+
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "GetAllDlgLS", $s_regpath_IDM & "\" & "GetAllDlgLS")
+
+					If $Guest_GrabberData_Folder = "False" Then
+						_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "GrabberDlgLS", $s_regpath_IDM & "\" & "GrabberDlgLS")
+						_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "GrabberSts", $s_regpath_IDM & "\" & "GrabberSts")
+					EndIf
+
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "IDMBI", $s_regpath_IDM & "\" & "IDMBI")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "ListSettings", $s_regpath_IDM & "\" & "ListSettings")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "maxID", $s_regpath_IDM & "\" & "maxID")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "MCN", $s_regpath_IDM & "\" & "MCN")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "menuExt", $s_regpath_IDM & "\" & "menuExt")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "netApps", $s_regpath_IDM & "\" & "netApps")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "Passwords", $s_regpath_IDM & "\" & "Passwords")
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "Queue", $s_regpath_IDM & "\" & "Queue")
+
+					If $Guest_Scheduler_Folder = "False" Then
+						_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "Scheduler", $s_regpath_IDM & "\" & "Scheduler")
+					EndIf
+
+					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "SpecialKeys", $s_regpath_IDM & "\" & "SpecialKeys")
+				Else
+					FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry Not Exists " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ')
+					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Removing Some Un Used Registry Key...")
+
+					If _RegValueExists($s_regpath_IDM, "LocalPathW") Then
+						If Not _RegDeleteValue($s_regpath_IDM, "LocalPathW") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "-->" & "LocalPathW" & '" ' & "Error Code:" & @error)
+					EndIf
+
+					$i = 1
+					While 1
+						$key = RegEnumKey($s_regpath_IDM & "\FoldersTree\", $i)
+						If @error <> 0 Then ExitLoop
+
+						If _RegValueExists($s_regpath_IDM & "\FoldersTree\" & $key, "pathW") Then
+							If Not _RegDeleteValue($s_regpath_IDM & "\FoldersTree\" & $key, "pathW") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "\FoldersTree\" & $key & "-->" & "pathW" & '" ' & "Error Code:" & @error)
+						EndIf
+
+						$i += 1
+					WEnd
+				EndIf
+			EndIf
 
 			_RegWrite($s_regpath_IDM, "AppDataIDMFolder", $REG_SZ, $s_AppDataIDMFolder)
 			_RegWrite($s_regpath_IDM, "TempPath", $REG_SZ, $s_DwnlData_Folder_)
@@ -1419,7 +1387,7 @@ Func _7Zip_Add_Array($s7z_File_Save_Name, $aDestinationFolders, $sCompression, $
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Command Line: " & $s_7zexe_Path & " " & "a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA)
 
-	$pid = Run($s_7zexe_Path & " a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA, "")
+	$pid = Run($s_7zexe_Path & " a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA, "", @SW_HIDE))
 
 	$hRun = _ProcessGetHandle($pid)
 
@@ -1457,17 +1425,17 @@ Func _7Zip_Extract_File($sZipFile, $sDestinationFolder, $sFile_To_Extracr, $sPas
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Command Line: " & $s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r")
 
-	$pid = Run($s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r", "", @SW_HIDE)
+	$pid = RunWait($s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r", "", @SW_HIDE)
 
-	$hRun = _ProcessGetHandle($pid)
+;~ 	$hRun = _ProcessGetHandle($pid)
+;~ 	While ProcessExists($pid)
+;~ 		$stas = ProcessGetStats($pid, 1)
+;~ 		GUICtrlSetData($h_Label_Info, "Info: Restoring..." & Round($stas[3] / $iData_Size * 100) & "%")
+;~ 		Sleep(100)
+;~ 	WEnd
+;~ 	Return _ProcessGetExitCode($hRun)
 
-	While ProcessExists($pid)
-		$stas = ProcessGetStats($pid, 1)
-		GUICtrlSetData($h_Label_Info, "Info: Restoring..." & Round($stas[3] / $iData_Size * 100) & "%")
-		Sleep(100)
-	WEnd
-
-	Return _ProcessGetExitCode($hRun)
+	Return $pid
 
 EndFunc   ;==>_7Zip_Extract_File
 
@@ -1670,6 +1638,16 @@ Func _sPath_Last_Remove($sPath)
 		Return $d_Saved_Path
 	EndIf
 EndFunc   ;==>_sPath_Last_Remove
+
+Func _FileOrFolderDeleteWithLog($sFile)
+	If FileExists($sFile) Then
+		If _IsDir($sFile) Then
+			If Not DirRemove($sFile, 1) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $sFile & '" ' & "Error Code:1")
+		Else
+			If Not FileDelete($sFile) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $sFile & '" ' & "Error Code:1")
+		EndIf
+	EndIf
+EndFunc   ;==>_FileOrFolderDeleteWithLog
 #endregion file, string Functions
 
 #region Misc Functions
@@ -2306,7 +2284,7 @@ Func _CleanINInReg()
 	EndIf
 EndFunc   ;==>_CleanINInReg
 
-Func _CopyRegTempKey($sSrcKey, $sDestKey)
+Func _CopyRegTempKeyWithLog($sSrcKey, $sDestKey)
 	If _RegKeyExists($sSrcKey) Then
 		If _RegCopyKey($sSrcKey, $sDestKey) Then
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Sub Registry Copied" & "=" & ' "' & $sSrcKey & '" ' & "Error Code:" & @error)
@@ -2316,7 +2294,7 @@ Func _CopyRegTempKey($sSrcKey, $sDestKey)
 	Else
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry Key Not Exists= " & '"' & $sSrcKey & '"')
 	EndIf
-EndFunc   ;==>_CopyRegTempKey
+EndFunc   ;==>_CopyRegTempKeyWithLog
 
 ; Return handle of given PID
 Func _ProcessGetHandle($iPID)

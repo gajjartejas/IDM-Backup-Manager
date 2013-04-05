@@ -65,8 +65,8 @@ Global $Data[14]
 Global Const $s_Current_Version = "0.9.7"
 Global Const $s_Win_Title = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
-Global $i_xWidth = 439
-Global $i_yHight = 276
+Global Const $i_xWidth = 439
+Global Const $i_yHight = 276
 Global $i_xWinPos = (@DesktopWidth - $i_xWidth) / 2
 Global $i_yWinPos = (@DesktopHeight - $i_yHight) / 2
 

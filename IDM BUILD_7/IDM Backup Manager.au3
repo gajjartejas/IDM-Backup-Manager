@@ -168,7 +168,7 @@ GUICtrlSetTip(-1, "Browse For Backup File")
 $h_Group2 = GUICtrlCreateGroup("Options", 24, 104, 390, 100)
 GUICtrlSetFont(-1, 1, 800, 0, "MS Sans Serif")
 
-$h_Checkbox_Password_Backup = GUICtrlCreateCheckbox("", 38, 130, 12, 17)
+$h_Checkbox_Password_Backup = GUICtrlCreateCheckbox("", 38, 130, 13, 17)
 GUICtrlSetTip(-1, "Choose Yes If You Want Encryption of Your Backup Files Which Is Required Strong Password", "Backup Password", 1, 1)
 
 $h_Input_Password_Backup = GUICtrlCreateInput("Password", 54, 128, 130, 21, $ES_PASSWORD)
@@ -176,7 +176,7 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password")
 GUICtrlSetTip(-1, "Choose Yes If You Want Encryption of Your Backup Files Which Is Required Strong Password", "Backup Password", 1, 1)
 
-$h_Checkbox_Compression_Level_Backup = GUICtrlCreateCheckbox("", 39, 159, 12, 17)
+$h_Checkbox_Compression_Level_Backup = GUICtrlCreateCheckbox("", 38, 159, 13, 17)
 GUICtrlSetTip(-1, "Here You Can Set The Compression Level of The Backup Files" & @CRLF & "", "Compression Level", 1, 1)
 
 $h_Combo_Compression_Level_Backup = GUICtrlCreateCombo("1-No Compression", 54, 157, 130, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -222,7 +222,7 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 $Group7 = GUICtrlCreateGroup("Options", 24, 104, 390, 100)
 GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
-$h_Checkbox_Password_Restore = GUICtrlCreateCheckbox("", 38, 130, 12, 17)
+$h_Checkbox_Password_Restore = GUICtrlCreateCheckbox("", 38, 130, 13, 17)
 GUICtrlSetTip(-1, "Choose Yes If Your backup is Encrypted", "Restore Encryption", 1, 1)
 
 $h_Input_Password_Restore = GUICtrlCreateInput("Password", 54, 128, 130, 21, $ES_PASSWORD)
@@ -230,12 +230,12 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password")
 GUICtrlSetTip(-1, "Choose Yes If Your backup is Encrypted", "Restore Encryption", 1, 1)
 
-$h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("", 39, 159, 12, 17)
+$h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("", 38, 159, 13, 17)
 GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
 		"EXAMPLE:" & @CRLF & _
 		"In case of If You Want To Restore Backup of Cybercafé to Your Home PC", "Convert Profile", 1, 1)
 
-$h_Label_Convert_Registry_Restore = GUICtrlCreateLabel("Convert Profile", 60, 160, 73, 17)
+$h_Label_Convert_Registry_Restore = GUICtrlCreateLabel("Convert Profile(Disabled)", 54, 161, 130, 17)
 GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
 		"EXAMPLE:" & @CRLF & _
@@ -259,17 +259,17 @@ GUICtrlSetImage(-1, @ScriptFullPath, -18)
 $Group4 = GUICtrlCreateGroup("Tools", 24, 44, 390, 160)
 GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
-$h_Button_List_Manager_Tools = GUICtrlCreateButton("Downloads List Manager", 39, 64, 80, 60, $BS_MULTILINE)
+$h_Button_List_Manager_Tools = GUICtrlCreateButton("Downloads List Manager", 45, 64, 80, 60, $BS_MULTILINE)
 If Not FileExists(@ScriptDir & "\IDM List Manager.exe") Then GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloaded Files, Remove Download From List and much more.")
 
-$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Data Cleaner", 129, 64, 80, 60, $BS_MULTILINE)
+$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Data Cleaner", 135, 64, 80, 60, $BS_MULTILINE)
 GUICtrlSetTip(-1, "Clean History, Logs and Unfinished Download Data.")
 
-$h_Button_Clean_Password_Tools = GUICtrlCreateButton("Sites Logins Password Cleaner", 219, 64, 80, 60, $BS_MULTILINE)
+$h_Button_Clean_Password_Tools = GUICtrlCreateButton("Sites Logins Password Cleaner", 225, 64, 80, 60, $BS_MULTILINE)
 GUICtrlSetTip(-1, "Clean Password For Server/Sites.")
 
-$h_Button_Cat_Tools = GUICtrlCreateButton("Add Extra File Types in Categories", 309, 64, 80, 60, $BS_MULTILINE)
+$h_Button_Cat_Tools = GUICtrlCreateButton("Add Extra File Types in Categories", 315, 64, 80, 60, $BS_MULTILINE)
 GUICtrlSetTip(-1, "Add Extra File Types in Categories")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 #endregion Tools ;============================================================================================== Tools:
@@ -390,8 +390,10 @@ While 1
 		Case $h_Checkbox_Convert_Registry_Restore
 			If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 				GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_ENABLE)
+				GUICtrlSetData($h_Label_Convert_Registry_Restore, "Convert Profile(Enabled)")
 			Else
 				GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_DISABLE)
+				GUICtrlSetData($h_Label_Convert_Registry_Restore, "Convert Profile(Disabled)")
 			EndIf
 
 		Case $h_Checkbox_Full_Backup

@@ -1387,13 +1387,13 @@ Func _7Zip_Add_Array($s7z_File_Save_Name, $aDestinationFolders, $sCompression, $
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Command Line: " & $s_7zexe_Path & " " & "a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA)
 
-	$pid = Run($s_7zexe_Path & " a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA, "", @SW_HIDE))
+	$pid = Run($s_7zexe_Path & " a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA, "", @SW_HIDE)
 
 	$hRun = _ProcessGetHandle($pid)
 
 	While ProcessExists($pid)
 		$stas = ProcessGetStats($pid, 1)
-		GUICtrlSetData($h_Label_Info, "Info: Adding..." & Round($stas[3] / $iData_Size * 100) & "%")
+		GUICtrlSetData($h_Label_Info, "Info: Adding and Compressing Total Progress..." & Round($stas[3] / $iData_Size * 100) & "%")
 		Sleep(100)
 	WEnd
 

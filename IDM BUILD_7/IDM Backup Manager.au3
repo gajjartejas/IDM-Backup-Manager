@@ -1523,6 +1523,7 @@ EndFunc   ;==>_Control_Update_Busy
 
 Func _Control_Update_Default()
 	GUICtrlSetState($h_Tab1, $GUI_ENABLE)
+	WinActivate($s_Win_Title)
 
 	#region ;for backup
 	GUICtrlSetState($h_Input_Backup_Path, $GUI_ENABLE)
@@ -1662,12 +1663,12 @@ EndFunc   ;==>_IsInternetConnectedEx
 Func _SW_EDIT_GUI($sTXTFile, $s_Title)
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	$Help_GUI = GUICreate($s_Title, 491, 310, $size[0] + $i_xWidth / 2 - 491 / 2, $size[1] + $i_yHight / 2 - 310 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	Local $Help_GUI = GUICreate($s_Title, 491, 310, $size[0] + $i_xWidth / 2 - 491 / 2, $size[1] + $i_yHight / 2 - 310 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 
-	$Edit1 = GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $ES_READONLY, $ES_WANTRETURN, $WS_VSCROLL))
+	Local $Edit1 = GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $ES_READONLY, $ES_WANTRETURN, $WS_VSCROLL))
 	GUICtrlSetData(-1, FileRead($sTXTFile))
 	GUICtrlSetBkColor(-1, 0xFFFFFF)
-	$Close = GUICtrlCreateButton("Close", 408, 265, 75, 25)
+	Local $Close = GUICtrlCreateButton("Close", 408, 265, 75, 25)
 	GUISetIcon(@ScriptFullPath, 0, $Help_GUI)
 	GUISetState(@SW_SHOW)
 
@@ -1690,12 +1691,12 @@ Func _More_Setting_GUI()
 	Local $More_Setting_GUI = GUICreate("More Setting", 351, 121, $size[0] + $i_xWidth / 2 - 351 / 2, $size[1] + $i_yHight / 2 - 121 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 	GUISetIcon(@ScriptFullPath, 0, $More_Setting_GUI)
 
-	$h_group_Setting = GUICtrlCreateGroup("Setting", 10, 10, 330, 100)
-	$h_AppendLog_Setting = GUICtrlCreateCheckbox("Append Log", 20, 30, 313, 17)
+	Local $h_group_Setting = GUICtrlCreateGroup("Setting", 10, 10, 330, 100)
+	Local $h_AppendLog_Setting = GUICtrlCreateCheckbox("Append Log", 20, 30, 313, 17)
 	If $b_AppendLog_File = 1 Then GUICtrlSetState($h_AppendLog_Setting, $GUI_CHECKED)
 	$h_RestortIDM_Setting = GUICtrlCreateCheckbox("Auto Restart IDM after Restore/(Tool Section)", 20, 50, 313, 17)
 	If $b_RestartIDM = 1 Then GUICtrlSetState($h_RestortIDM_Setting, $GUI_CHECKED)
-	$h_Close = GUICtrlCreateButton("Close", 256, 80, 75, 25)
+	Local $h_Close = GUICtrlCreateButton("Close", 256, 80, 75, 25)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUISetState(@SW_SHOW)
 	#endregion ### END Koda GUI section ###
@@ -1703,7 +1704,7 @@ Func _More_Setting_GUI()
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
-			Case $GUI_EVENT_CLOSE
+			Case $GUI_EVENT_CLOSE, $h_Close
 				ExitLoop
 
 			Case $h_AppendLog_Setting
@@ -1723,9 +1724,6 @@ Func _More_Setting_GUI()
 					IniWrite($s_Setting_File, "More Setting", "Restart_IDM", 0)
 					$b_RestartIDM = 0
 				EndIf
-
-			Case $h_Close
-				ExitLoop
 
 		EndSwitch
 	WEnd
@@ -1792,6 +1790,7 @@ Func _Clean_GUI_Child()
 					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $size += DirGetSize($s_DwnlData_Folder)
 					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then $size += DirGetSize($GrabberData_Folder)
 					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $size += DirGetSize($Scheduler_Folder)
+
 				EndIf ;==>clean
 				_ProgressMarquee_Stop($Progress1, 1)
 				MsgBox(64, "Info", _File_Size($size) & " Will Removed.", 0, $clean)
@@ -1803,43 +1802,39 @@ Func _Clean_GUI_Child()
 					$size += DirGetSize($GrabberData_Folder)
 					$size += DirGetSize($Scheduler_Folder)
 
-					If Not IsDeclared("iMsgBoxAnswer") Then Local $iMsgBoxAnswer
-					$iMsgBoxAnswer = MsgBox(36, "Conform", _File_Size($size) & " Will Removed. Continue?", 0, $clean)
-					Select
-						Case $iMsgBoxAnswer = 6 ;Yes
-							If GUICtrlRead($Clena_DD) = $GUI_CHECKED And FileExists($s_DwnlData_Folder) Then
-								If Not DirRemove($s_DwnlData_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete. " & $s_DwnlData_Folder & " It May be Locked.", 0, $clean)
-							EndIf
+					Local $iMsgBoxAnswer = MsgBox(36, "Conform", _File_Size($size) & " Will Removed. Continue?", 0, $clean)
+					If $iMsgBoxAnswer = 6 Then
+						If GUICtrlRead($Clena_DD) = $GUI_CHECKED And FileExists($s_DwnlData_Folder) Then
+							If Not DirRemove($s_DwnlData_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete. " & $s_DwnlData_Folder & " It May be Locked.", 0, $clean)
+						EndIf
 
-							If GUICtrlRead($Clean_GD) = $GUI_CHECKED And BitOR(FileExists($Grabber_Folder), FileExists($GrabberData_Folder)) Then
-								If Not DirRemove($Grabber_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $Grabber_Folder & " It May be Locked.")
-								If Not DirRemove($GrabberData_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $GrabberData_Folder & " It May be Locked.", 0, $clean)
-							EndIf
+						If GUICtrlRead($Clean_GD) = $GUI_CHECKED And BitOR(FileExists($Grabber_Folder), FileExists($GrabberData_Folder)) Then
+							If Not DirRemove($Grabber_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $Grabber_Folder & " It May be Locked.")
+							If Not DirRemove($GrabberData_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $GrabberData_Folder & " It May be Locked.", 0, $clean)
+						EndIf
 
-							If GUICtrlRead($Clean_SD) = $GUI_CHECKED And FileExists($Scheduler_Folder) Then
-								If Not DirRemove($Scheduler_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $Scheduler_Folder & " It May be Locked.", 0, $clean)
-							EndIf
+						If GUICtrlRead($Clean_SD) = $GUI_CHECKED And FileExists($Scheduler_Folder) Then
+							If Not DirRemove($Scheduler_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $Scheduler_Folder & " It May be Locked.", 0, $clean)
+						EndIf
 
-							If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
-								FileDelete($UrlHistory_txt_File)
-								FileDelete($UrlHistory2_txt_File)
-								FileDelete($GlobalErrors_log_File)
-								FileDelete($urlexclist_dat_File)
-								FileDelete($defextmap_dat_File)
-								FileDelete($foldresHistory_txt_File)
-								FileDelete($sts_list_dat_File)
-								FileDelete($cnlurllist_dat_File)
-							EndIf
-							MsgBox(64, "Done", "Done.", 0, $clean)
-						Case $iMsgBoxAnswer = 7 ;No
-					EndSelect
+						If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
+							FileDelete($UrlHistory_txt_File)
+							FileDelete($UrlHistory2_txt_File)
+							FileDelete($GlobalErrors_log_File)
+							FileDelete($urlexclist_dat_File)
+							FileDelete($defextmap_dat_File)
+							FileDelete($foldresHistory_txt_File)
+							FileDelete($sts_list_dat_File)
+							FileDelete($cnlurllist_dat_File)
+						EndIf
+						MsgBox(64, "Done", "Done.", 0, $clean)
+					EndIf
 
 				ElseIf GUICtrlRead($Custom_Clean) = $GUI_CHECKED Then
 					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $size += DirGetSize($s_DwnlData_Folder)
 					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then $size += DirGetSize($GrabberData_Folder)
 					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $size += DirGetSize($Scheduler_Folder)
 
-					If Not IsDeclared("iMsgBoxAnswer") Then Local $iMsgBoxAnswer
 					$iMsgBoxAnswer = MsgBox(36, "Conform", _File_Size($size) & " Will Removed. Continue?", 0, $clean)
 					If $iMsgBoxAnswer = 6 Then
 
@@ -2048,9 +2043,8 @@ EndFunc   ;==>_File_Type_GUI
 
 #region app & envt Functions
 Func _sGet_AppDataIDMFolder()
-	Local $AppDataIDMFolder
 
-	$AppDataIDMFolder = RegRead($s_regpath_IDM, "AppDataIDMFolder")
+	Local $AppDataIDMFolder = RegRead($s_regpath_IDM, "AppDataIDMFolder")
 
 	If Not FileExists($AppDataIDMFolder) Then $AppDataIDMFolder = @AppDataDir & "\" & "IDM" & "\"
 
@@ -2060,9 +2054,8 @@ Func _sGet_AppDataIDMFolder()
 EndFunc   ;==>_sGet_AppDataIDMFolder
 
 Func _sGet_TempPathFolder()
-	Local $TempPath
 
-	$TempPath = RegRead($s_regpath_IDM, "TempPath")
+	Local $TempPath = RegRead($s_regpath_IDM, "TempPath")
 
 	If FileExists($TempPath) Then
 		If StringRight($TempPath, 1) <> "\" Then $TempPath &= "\"
@@ -2109,12 +2102,12 @@ EndFunc   ;==>_log_Sysinfo
 Func _Check_Componment()
 	If Not FileExists($s_7zexe_Path) Then
 		FileWriteLine($s_Log_File, _Current_Moment() & "Error: 7z.exe not found. Exiting....")
-		MsgBox(16, "Error", "7z.exe not found. Exiting....", 0, $h_IDMBM)
+		MsgBox(16, "Error", "7z.exe not found in " & @ScriptDir & " Exiting....", 0, $h_IDMBM)
 		Exit -2
 	EndIf
 	If Not FileExists(@ScriptDir & "\7z.dll") Then
 		FileWriteLine($s_Log_File, _Current_Moment() & "Error: 7z.dll not found. Exiting....")
-		MsgBox(16, "Error", "7z.dll not found. Exiting....", 0, $h_IDMBM)
+		MsgBox(16, "Error", "7z.dll not found in " & @ScriptDir & " Exiting....", 0, $h_IDMBM)
 		Exit -3
 	EndIf
 EndFunc   ;==>_Check_Componment
@@ -2122,7 +2115,7 @@ EndFunc   ;==>_Check_Componment
 Func _Check_IDM_Process()
 	If ProcessExists("idman.exe") Then ;**** Check the process "idman.exe" exists or not ***
 		If Not IsDeclared("iMsgBoxAnswer") Then Local $iMsgBoxAnswer
-		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background.Do You Want To Close IDM?", 0, $h_IDMBM)
+		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $h_IDMBM)
 		Select
 			Case $iMsgBoxAnswer = 6 ;Yes
 
@@ -2275,13 +2268,8 @@ Func _SelfProcessCheck()
 EndFunc   ;==>_SelfProcessCheck
 
 Func _CleanINInReg()
-	If FileExists($s_reg_File) Then
-		If Not FileDelete($s_reg_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $s_reg_File & '" ' & "Error Code:1")
-	EndIf
-
-	If FileExists($s_ini_File) Then
-		If Not FileDelete($s_ini_File) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete  " & "=" & ' "' & $s_ini_File & '" ' & "Error Code:1")
-	EndIf
+	_FileOrFolderDeleteWithLog($s_reg_File)
+	_FileOrFolderDeleteWithLog($s_ini_File)
 EndFunc   ;==>_CleanINInReg
 
 Func _CopyRegTempKeyWithLog($sSrcKey, $sDestKey)

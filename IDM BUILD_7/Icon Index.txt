@@ -27,5 +27,6 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Save.ico					;20					  |-21				|
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico				;21					  |-22				|
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico				;22					  |-23				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Log.ico					;23					  |-24				|
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****

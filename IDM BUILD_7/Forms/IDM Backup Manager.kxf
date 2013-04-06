@@ -36,7 +36,7 @@
 				<property name="Top" vt="Int8">10</property>
 				<property name="Width" vt="Int16">420</property>
 				<property name="Height" vt="Int16">240</property>
-				<property name="ActivePage" vt="Ident">TabSheet1</property>
+				<property name="ActivePage" vt="Ident">TabSheet5</property>
 				<property name="Font.Charset" vt="Ident">ANSI_CHARSET</property>
 				<property name="Font.Color" vt="Ident">clWindowText</property>
 				<property name="Font.Height" vt="Int8">-11</property>
@@ -162,7 +162,7 @@
 										<property name="Top" vt="Int8">53</property>
 										<property name="Width" vt="Int16">130</property>
 										<property name="Height" vt="Int8">25</property>
-										<property name="ItemHeight" vt="Int8">13</property>
+										<property name="ItemHeight" vt="Int8">0</property>
 										<property name="TabOrder" vt="Int8">2</property>
 										<property name="Text" vt="String">Setting_Compression</property>
 										<property name="CtrlStyle" vt="Int32">1342374466</property>
@@ -887,6 +887,20 @@
 								<property name="Width" vt="Int8">35</property>
 								<property name="Height" vt="Int8">25</property>
 								<property name="TabOrder" vt="Int8">4</property>
+								<property name="Color" vt="Ident">clBtnFace</property>
+								<property name="CtrlStyle" vt="Int32">1342373888</property>
+								<property name="CtrlExStyle" vt="Int8">0</property>
+								<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+							</properties>
+							<components/>
+						</object>
+						<object type="TAButton" name="Button2">
+							<properties>
+								<property name="Left" vt="Int16">260</property>
+								<property name="Top" vt="Int16">182</property>
+								<property name="Width" vt="Int8">35</property>
+								<property name="Height" vt="Int8">25</property>
+								<property name="TabOrder" vt="Int8">5</property>
 								<property name="Color" vt="Ident">clBtnFace</property>
 								<property name="CtrlStyle" vt="Int32">1342373888</property>
 								<property name="CtrlExStyle" vt="Int8">0</property>

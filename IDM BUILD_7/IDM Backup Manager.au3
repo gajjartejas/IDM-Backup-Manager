@@ -36,6 +36,7 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Save.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\Log.ico
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_Run_Obfuscator=y
@@ -299,17 +300,21 @@ GUICtrlSetTip(-1, GUICtrlRead($h_Label_DwnlDataFolder_Setting))
 $h_Button_DwnlDataFolder_Setting = GUICtrlCreateButton("DwnlData Folder:", 32, 178, 107, 25)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-$Button_RestoreDefault_Setting = GUICtrlCreateButton("", 382, 216, 30, 23)
-__AET_ButtonSetIcon(-1, 22, 16, 16, 4)
-GUICtrlSetTip(-1, "Restore Default")
+$h_Button_Open_Log = GUICtrlCreateButton("", 274, 216, 30, 23)
+__AET_ButtonSetIcon(-1, 23, 16, 16, 4)
+GUICtrlSetTip(-1, "Open Log File")
+
+$h_Button_More_Setting = GUICtrlCreateButton("", 310, 216, 30, 23)
+__AET_ButtonSetIcon(-1, 21, 16, 16, 4)
+GUICtrlSetTip(-1, "More Setting")
 
 $h_Button_Associate_Setting = GUICtrlCreateButton("", 346, 216, 30, 23)
 __AET_ButtonSetIcon(-1, 19, 16, 16, 4)
 GUICtrlSetTip(-1, "Association .IBF File")
 
-$h_Button_More_Setting = GUICtrlCreateButton("", 310, 216, 30, 23)
-__AET_ButtonSetIcon(-1, 21, 16, 16, 4)
-GUICtrlSetTip(-1, "More Setting")
+$Button_RestoreDefault_Setting = GUICtrlCreateButton("", 382, 216, 30, 23)
+__AET_ButtonSetIcon(-1, 22, 16, 16, 4)
+GUICtrlSetTip(-1, "Restore Default")
 
 GUICtrlCreateTabItem("")
 #endregion Setting ;============================================================================================== Setting:
@@ -585,6 +590,13 @@ While 1
 				GUICtrlSetData($h_Label_Info, "INFO: Ready")
 				$s_DwnlData_Folder = GUICtrlRead($h_Label_DwnlDataFolder_Setting) ;contain back "\"
 				$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
+			EndIf
+
+		Case $h_Button_Open_Log
+			If FileExists($s_Log_File) Then
+				ShellExecute($s_Log_File)
+			Else
+				GUICtrlSetData($h_Label_Info, "Error: File Could Not Found.")
 			EndIf
 
 		Case $Button_RestoreDefault_Setting

@@ -1,3 +1,4 @@
+
 #NoTrayIcon
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
@@ -60,7 +61,6 @@
 
 #region global Variables
 Global $h_IDMBM
-Global $a_Memory = MemGetStats()
 Global $Data[14]
 Global Const $s_Current_Version = "0.9.7"
 Global Const $s_Win_Title = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
@@ -280,17 +280,22 @@ GUICtrlSetImage(-1, @ScriptFullPath, -22)
 
 $Group4 = GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
 $h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 144, 64, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+GUICtrlSetTip(-1, GUICtrlRead($h_Label_LogFile_Setting))
 $h_Button_BrowseLogFile_Setting = GUICtrlCreateButton("Log File Path:", 32, 60, 107, 25)
 
 $h_Label_BrowseDataBackupFolder_Setting = GUICtrlCreateInput($s_Backup_Dir, 144, 96, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseDataBackupFolder_Setting))
 $h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton("Backup Folder:", 32, 92, 107, 25)
 
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $Group5 = GUICtrlCreateGroup("Default IDM Profile", 24, 128, 393, 81)
 $h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 144, 150, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseAppDataFolder_Setting))
 $h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton("AppData Folder:", 32, 146, 107, 25)
+
 $h_Label_DwnlDataFolder_Setting = GUICtrlCreateInput($s_DwnlData_Folder, 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+GUICtrlSetTip(-1, GUICtrlRead($h_Label_DwnlDataFolder_Setting))
 $h_Button_DwnlDataFolder_Setting = GUICtrlCreateButton("DwnlData Folder:", 32, 178, 107, 25)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -518,6 +523,7 @@ While 1
 			If Not @error Then
 				GUICtrlSetData($h_Label_LogFile_Setting, $s_Log_File)
 				IniWrite($s_Setting_File, "Default Paths", "Log_File", $s_Log_File)
+				GUICtrlSetTip($h_Label_LogFile_Setting, $s_Log_File)
 			Else
 				$s_Log_File = GUICtrlRead($h_Label_LogFile_Setting)
 			EndIf
@@ -531,6 +537,7 @@ While 1
 			If _FileIsPathValid($s_Backup_Dir) = "True" Then ;User Selected valid path
 				GUICtrlSetData($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
 				IniWrite($s_Setting_File, "Default Paths", "Backup_Dir", $s_Backup_Dir)
+				GUICtrlSetTip($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
 			Else
 				$s_Backup_Dir = GUICtrlRead($h_Label_BrowseDataBackupFolder_Setting)
 			EndIf
@@ -543,14 +550,17 @@ While 1
 
 			If _FileIsPathValid($s_AppDataIDMFolder) = "True" Then ;User Selected valid path
 				If StringRight($s_AppDataIDMFolder, 5) = "\IDM\" Then
+					GUICtrlSetData($h_Label_Info, "INFO: Ready")
 					GUICtrlSetData($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
 					IniWrite($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder)
+					GUICtrlSetTip($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
 				Else
 					GUICtrlSetData($h_Label_Info, "Error: Please Choose Correct Folder Named & 'IDM\'")
 					$s_AppDataIDMFolder = GUICtrlRead($h_Label_BrowseAppDataFolder_Setting)
 				EndIf
 			Else
 				$s_AppDataIDMFolder = GUICtrlRead($h_Label_BrowseAppDataFolder_Setting)
+				GUICtrlSetData($h_Label_Info, "INFO: Ready")
 			EndIf
 
 		Case $h_Button_DwnlDataFolder_Setting
@@ -565,6 +575,7 @@ While 1
 					GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
 					IniWrite($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder)
 					$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
+					GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
 				Else
 					GUICtrlSetData($h_Label_Info, "Error: Please Choose Correct Folder Named & 'DwnlData\'")
 					$s_DwnlData_Folder = GUICtrlRead($h_Label_DwnlDataFolder_Setting) ;contain back "\"
@@ -606,6 +617,11 @@ While 1
 
 			IniWrite($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File) ;Boolean
 			IniWrite($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM)
+
+			GUICtrlSetTip($h_Label_LogFile_Setting, $s_Log_File)
+			GUICtrlSetTip($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
+			GUICtrlSetTip($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
+			GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
 
 		Case $h_Button_Browse_Backup
 			GUICtrlSetData($h_Label_Info, "INFO: Ready")
@@ -2087,6 +2103,7 @@ EndFunc   ;==>_iGetFileSize
 
 #region system & process Functions
 Func _log_Sysinfo()
+	Local $a_Memory = MemGetStats()
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= New Session Started at " & _Current_Moment() & "=============================")
 	FileWriteLine($s_Log_File, "")

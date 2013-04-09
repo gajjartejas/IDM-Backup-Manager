@@ -304,13 +304,13 @@ $h_Button_Open_Log = GUICtrlCreateButton("", 274, 216, 30, 23)
 __AET_ButtonSetIcon(-1, 23, 16, 16, 4)
 GUICtrlSetTip(-1, "Open Log File")
 
-$h_Button_More_Setting = GUICtrlCreateButton("", 310, 216, 30, 23)
-__AET_ButtonSetIcon(-1, 21, 16, 16, 4)
-GUICtrlSetTip(-1, "More Setting")
-
-$h_Button_Associate_Setting = GUICtrlCreateButton("", 346, 216, 30, 23)
+$h_Button_Associate_Setting = GUICtrlCreateButton("", 310, 216, 30, 23)
 __AET_ButtonSetIcon(-1, 19, 16, 16, 4)
 GUICtrlSetTip(-1, "Association .IBF File")
+
+$h_Button_More_Setting = GUICtrlCreateButton("", 346, 216, 30, 23)
+__AET_ButtonSetIcon(-1, 21, 16, 16, 4)
+GUICtrlSetTip(-1, "More Setting")
 
 $Button_RestoreDefault_Setting = GUICtrlCreateButton("", 382, 216, 30, 23)
 __AET_ButtonSetIcon(-1, 22, 16, 16, 4)

@@ -24,11 +24,9 @@
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <EditConstants.au3>
-#include <GuiButton.au3>
 #include <File.au3>
 #include <GuiListView.au3>
 #include <GuiMenu.au3>
-#include <GuiImageList.au3>
 #include "Includes\_RegFunc.au3"
 #include "Includes\_GUICtrlListView_SaveHTML.au3"
 #include "Includes\_GUICtrlListView_SaveCSV.au3"
@@ -39,6 +37,7 @@ Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
 Global $GUIMINWID = 701, $GUIMINHT = 313
 Global $hGUI, $MenuItem_list_Catagories_[_CountKey($s_regpath_IDM)], $fChange = False
+Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
 #endregion global Variables
 
 #region ### START Koda GUI section ### main gui
@@ -148,13 +147,13 @@ While 1
 			_Goto()
 
 		Case $MenuItem_Edit_Find
-			_Find()
+			_SwFind()
 
 		Case $Button_x
 			_Cancel_Find()
 
 		Case $Button_Go
-			_SwFind()
+			_Find()
 
 		Case $MenuItem_Edit_Remove
 			_GUICtrlListView_DeleteItemsSelected($hListView)
@@ -273,7 +272,7 @@ Func _Join_Fragments()
 		$pattern = "Known File (*" & $FileExt & ")"
 	EndIf
 
-	$join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", $pattern, 16, $LocalFileName & $FileExt)
+	$join_file = FileSaveDialog("Save Your File", $s_Backup_Dir, $pattern, 16, $LocalFileName & $FileExt)
 	If @error Then
 		_Enable_Controls()
 		Return -1
@@ -331,7 +330,7 @@ Func _Analyze()
 	GUICtrlSetState($progressbar1, $GUI_SHOW)
 	_GUICtrlListView_BeginUpdate($ListView1)
 	_GUICtrlListView_DeleteAllItems($ListView1)
-	Local $i = 0
+	Local $i = 1
 	Local $no = 1
 	Local $s_current_selectde_cat = _get_selected_cat()
 	Local $i_TotalKey = _CountKey($s_regpath_IDM)
@@ -340,7 +339,7 @@ Func _Analyze()
 		GUICtrlSetData($JoinFile_Lable_Info, "Analyzing: " & "Please Wait..." & Round($i / $i_TotalKey * 100) & "%")
 		GUICtrlSetData($progressbar1, $i / $i_TotalKey * 100)
 
-		Local $var = _RegEnumKey($s_regpath_IDM, $i)
+		Local $var = RegEnumKey($s_regpath_IDM, $i)
 		If @error <> 0 Then ExitLoop
 
 		Local $LocalFileName = _RegRead($s_regpath_IDM & "\" & $var, "LocalFileName")

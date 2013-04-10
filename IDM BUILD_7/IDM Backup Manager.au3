@@ -1,4 +1,3 @@
-
 #NoTrayIcon
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\IDM BUILD_7\icon.ico
@@ -58,7 +57,6 @@
 #include "Includes\_FileIsPathValid.au3"
 #include "Includes\_RegFunc.au3"
 #endregion    ;************ Includes ************
-
 
 #region global Variables
 Global $h_IDMBM
@@ -974,6 +972,12 @@ While 1
 			#region ;/Define Some variable: $s_Restore_File
 			$s_Restore_File = GUICtrlRead($h_Input_Restore_Path)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $s_Restore_File= " & '"' & $s_Restore_File & '"')
+
+			If Not FileExists($s_Restore_File) Then
+				_control_update_default()
+				GUICtrlSetData($h_Label_Info, "Error: File Not Found")
+				ContinueLoop
+			EndIf
 
 			$s_Password = GUICtrlRead($h_Input_Password_Restore)
 			#endregion ;/Define Some variable: $s_Restore_File

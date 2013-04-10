@@ -1,10 +1,13 @@
 v0.9.7 March 16th, 2013
 
-• Fixed Temporary Directory Dose not Backup in Custom Mode.
-• Fixed Log File Generation.
+• Fixed IDM Temporary Directory Dose not Backup in Custom Mode.
+• Fixed Log File Generation
+• Fixed Backup taking too long time
 • Added Support on manually Restore/Backup files and registry (List of Downloads).
-• Improved Profile Conversion.
-• Reduced Backup Time.
+• Added Sites login password cleaner
+• Added to add extra filetypes in IDM Categories
+• Added Manually profile backup and restore
+• Improved Profile Conversion
 
 v0.9.6 November 21th, 2012
 

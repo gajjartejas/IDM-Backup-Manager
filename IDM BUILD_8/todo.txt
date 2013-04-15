@@ -1,0 +1,32 @@
+v0.9.8
+* To Repair Extract Problem
+- to Remove Unsude Icons
+
+v0.9.7
+>to do support link on build
+>compact tools tab to fit all items. ==========
+>Do not Restore files and registry, ==========
+>password cleaner
+#Folder can not renamed after restore using different user name. =========
+#add restart command C:\Program Files\Internet Download Manager\IDMan.exe /onboot ========
+#AppDataIDMFolder = where actually IDM setting saved TempPath = where downloaded data saved  do also on restore ========
+#Fix Registry.
+#Log file ========
+#add more reg fn to ini ========
+#IDM list manager fix name as per downloaded name
+
+
+v0.9.6
+>associate IDM Backup File (*.ibf)
+>default folder is  & "\" & "IDM Backup Files"
+>delete ini and reg file.
+
+bug fixed
+#1 backup dose not successful ini
+#2 crash under corrupted archieve
+
+
+Finalize__
+-->update version on script file
+-->Licence.txt
+-->

@@ -1,0 +1,51 @@
+v0.9.7 April 13th, 2013
+
+• Fixed IDM Temporary Directory Dose not Backup in Custom Mode.
+• Fixed Log File Generation.
+• Fixed Backup taking too long time.
+• Added Support on manually Restore/Backup files and registry (List of Downloads).
+• Added Sites login password cleaner.
+• Added to add extra file types in IDM Categories.
+• Added manually profile backup and restore.
+• Improved Profile Conversion.
+
+v0.9.6 December 31th, 2012
+
+• Added List Backup Mode without Data Backup
+• Added association to IDM Backup File (*.ibf)
+• Fixed Crash IDM Backup Manager under corrupted backup file.
+• Fixed Backup does not successful under windows xp due to 7z.dll is not include.
+• Fixed Continuous Preventing UAC under Admin account while backing up IDM.
+• Some Minor Change
+
+v0.9.5 November 23rd, 2012
+
+• Added x64 bit Operating System Support
+• Some Minor Change
+
+v0.9.4 November 11th, 2012
+
+• Removed UAC. (Multi user now supported)
+• Added icons.
+• Added Menu bar to IDM List Manager.
+• Added Filter By Downloads and By Categories to IDM List Manager.
+• Added Search Functionality to IDM List Manager.
+
+v0.9.3 October 20th, 2012
+
+• Added List Backup Mode without Data Backup
+• Added associate IDM Backup File (*.ibf)
+• Fixed Crash IDM Backup Manager under corrupted backup file.
+• Fixed Backup does not successful under windows xp due to 7z.dll is not include.
+• Fixed Continuous Preventing UAC under Admin account while backing up IDM.
+• Some Minor Change
+
+v0.9.2 June 30th, 2012
+
+• Fixed Some Bugs
+• Added Fade in/out Transparent Windows
+• Improved Functionality
+
+v0.9.1 June 25th, 2012
+
+• Initial Release

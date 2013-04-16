@@ -1,12 +1,12 @@
 #NoTrayIcon
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\Extra\icon.ico
-#AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.7.exe
+#AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.8.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_UseUpx=n
-#AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.7.0
+#AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.8.0
 #AutoIt3Wrapper_Res_Description=Backup and Restore Internet Download Manager
-#AutoIt3Wrapper_Res_Fileversion=0.9.7.0
+#AutoIt3Wrapper_Res_Fileversion=0.9.8.0
 #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-2013
 #AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
 #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
@@ -14,7 +14,7 @@
 #AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
 #AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager.exe
 #AutoIt3Wrapper_Res_Field=Product Name|IDM Backup Manager
-#AutoIt3Wrapper_Res_Field=Product Version|0.9.7 beta
+#AutoIt3Wrapper_Res_Field=Product Version|0.9.8 beta
 #AutoIt3Wrapper_Res_Field=Total Commits|322
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Backup.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico
@@ -41,7 +41,7 @@
 #AutoIt3Wrapper_Run_Obfuscator=y
 #Obfuscator_Parameters=/striponly
 #AutoIt3Wrapper_Run_cvsWrapper=v
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #region    ;************ Includes ************
 #include <EditConstants.au3>
@@ -61,7 +61,7 @@
 #region global Variables
 Global $h_IDMBM
 Global $Data[14]
-Global Const $s_Current_Version = "0.9.7"
+Global Const $s_Current_Version = "0.9.8"
 Global Const $s_Win_Title = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
 Global Const $i_xWidth = 439
@@ -1349,7 +1349,7 @@ While 1
 				Switch BinaryToString($Update_VER)
 					Case ""
 						GUICtrlSetData($h_Label_Info, "INFO: Time Out! Or server May be Unviable")
-					Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", $s_Current_Version
+					Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", $s_Current_Version
 						GUICtrlSetData($h_Label_Info, "INFO: You Have Most Recent Version.")
 					Case Else
 						GUICtrlSetData($h_Label_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))

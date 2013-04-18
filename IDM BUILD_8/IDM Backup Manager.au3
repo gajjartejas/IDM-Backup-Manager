@@ -278,24 +278,35 @@ $TabSheet5 = GUICtrlCreateTabItem("Setting")
 GUICtrlSetImage(-1, @ScriptFullPath, -22)
 
 $Group4 = GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
+
+$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton("Log File Path:", 32, 60, 107, 25)
+__AET_ButtonSetIcon(-1, 5, 16, 16, 0)
+
 $h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 144, 64, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 GUICtrlSetTip(-1, GUICtrlRead($h_Label_LogFile_Setting))
-$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton("Log File Path:", 32, 60, 107, 25)
+
+$h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton("Backup Folder:", 32, 92, 107, 25)
+__AET_ButtonSetIcon(-1, 5, 16, 16, 0)
 
 $h_Label_BrowseDataBackupFolder_Setting = GUICtrlCreateInput($s_Backup_Dir, 144, 96, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseDataBackupFolder_Setting))
-$h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton("Backup Folder:", 32, 92, 107, 25)
 
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $Group5 = GUICtrlCreateGroup("Default IDM Profile", 24, 128, 393, 81)
+
+$h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton("AppData Folder:", 32, 146, 107, 25)
+__AET_ButtonSetIcon(-1, 5, 16, 16, 0)
+
 $h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 144, 150, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseAppDataFolder_Setting))
-$h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton("AppData Folder:", 32, 146, 107, 25)
+
+$h_Button_DwnlDataFolder_Setting = GUICtrlCreateButton("DwnlData Folder:", 32, 178, 107, 25)
+__AET_ButtonSetIcon(-1, 5, 16, 16, 0)
 
 $h_Label_DwnlDataFolder_Setting = GUICtrlCreateInput($s_DwnlData_Folder, 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 GUICtrlSetTip(-1, GUICtrlRead($h_Label_DwnlDataFolder_Setting))
-$h_Button_DwnlDataFolder_Setting = GUICtrlCreateButton("DwnlData Folder:", 32, 178, 107, 25)
+
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $h_Button_Open_Log = GUICtrlCreateButton("", 274, 216, 30, 23)

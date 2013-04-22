@@ -671,7 +671,7 @@ While 1
 		Case $h_Button_Backup
 			FileWriteLine($s_Log_File, "")
 			FileWriteLine($s_Log_File, "============================= Backup Session Started =============================")
-			_control_update_busy()
+			_Control_Update_Busy()
 
 			#region ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
 			$s_Backup_File = GUICtrlRead($h_Input_Backup_Path)
@@ -695,7 +695,7 @@ While 1
 					And GUICtrlRead($h_Checkbox_Listl_Backup) = $GUI_UNCHECKED _
 					And GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_UNCHECKED Then
 				GUICtrlSetData($h_Label_Info, "Error: Select Backup Type")
-				_control_update_default()
+				_Control_Update_Default()
 				ContinueLoop
 			EndIf
 
@@ -704,7 +704,7 @@ While 1
 				If $s_Password = "" Then
 					GUICtrlSetData($h_Label_Info, "Error: Password is Empty")
 					FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password is Empty")
-					_control_update_default()
+					_Control_Update_Default()
 					ContinueLoop
 				EndIf
 				$b_Password = True
@@ -722,7 +722,7 @@ While 1
 						"Error: Not Enough  Free Space on Drive " & _Drive_Get_From_Path($s_Backup_File) & _
 						" Free Space:" & _File_Size((DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024)) & _
 						". At Least " & _File_Size(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024) & "Required")
-				_control_update_default()
+				_Control_Update_Default()
 				ContinueLoop
 			EndIf
 			#endregion ;/Check Password, Drive Space, Condition and PreRequestes--->
@@ -731,7 +731,7 @@ While 1
 			If Not _RegKeyExists($s_regpath_IDM) Then
 				GUICtrlSetData($h_Label_Info, "Error: Registry Entry Is Empty. Nothing To Backup")
 				FileWriteLine($s_Log_File, _Current_Moment() & "Error: Registry Entry Is Empty. Nothing To Backup !")
-				_control_update_default()
+				_Control_Update_Default()
 				ContinueLoop
 			Else
 				#region ;/Count registry--->
@@ -749,7 +749,7 @@ While 1
 
 			#region ;/Expert registry --->
 			GUICtrlSetData($h_Label_Info, "Backingup: Registry Registry Please Wait...")
-			_regbackup($s_reg_File, $s_regpath_IDM)
+			_RegBackup($s_reg_File, $s_regpath_IDM)
 			#endregion ;/Expert registry --->
 
 			#region ;/define backup type--->
@@ -959,7 +959,7 @@ While 1
 
 			_CleanINInReg()
 			GUICtrlSetData($h_Label_Info, "INFO: Done")
-			_control_update_default()
+			_Control_Update_Default()
 
 			FileWriteLine($s_Log_File, "============================= Backup Session Ended =============================")
 
@@ -978,14 +978,14 @@ While 1
 			FileWriteLine($s_Log_File, "")
 			FileWriteLine($s_Log_File, "============================= Restore Session Started =============================")
 			GUICtrlSetData($h_Label_Info, "INFO: Restoring...")
-			_control_update_busy()
+			_Control_Update_Busy()
 
 			#region ;/Define Some variable: $s_Restore_File
 			$s_Restore_File = GUICtrlRead($h_Input_Restore_Path)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $s_Restore_File= " & '"' & $s_Restore_File & '"')
 
 			If Not FileExists($s_Restore_File) Then
-				_control_update_default()
+				_Control_Update_Default()
 				GUICtrlSetData($h_Label_Info, "Error: File Not Found")
 				ContinueLoop
 			EndIf
@@ -1022,18 +1022,18 @@ While 1
 					If GUICtrlRead($h_Input_Password_Restore) = "" Then
 						GUICtrlSetData($h_Label_Info, "Error: Enter Password")
 						FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
-						_control_update_default()
+						_Control_Update_Default()
 						ContinueLoop
 					Else
 						GUICtrlSetData($h_Label_Info, "Error: Incorrect Password or File May Be Damaged.")
 						FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
-						_control_update_default()
+						_Control_Update_Default()
 						ContinueLoop
 					EndIf
 				Else
 					GUICtrlSetData($h_Label_Info, "Error: Check Checkbox --> Enter Password")
 					FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Check Checkbox and Enter The Password")
-					_control_update_default()
+					_Control_Update_Default()
 					ContinueLoop
 				EndIf
 			EndIf
@@ -1230,7 +1230,7 @@ While 1
 
 			#region ;/Restore Guest Registry-->
 			GUICtrlSetData($h_Label_Info, "Restoring: Registry Please Wait...")
-			If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then _reg_import($s_reg_File)
+			If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then _Reg_Import($s_reg_File)
 			#endregion ;/Restore Guest Registry-->
 
 			#region ;/Restore Host Registry from stored in tmp Registry--->
@@ -1321,7 +1321,7 @@ While 1
 			If $b_RestartIDM = 1 Then _sRun_IDMexe()
 
 			GUICtrlSetData($h_Label_Info, "INFO: Done")
-			_control_update_default()
+			_Control_Update_Default()
 			FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")
 
 		Case $h_Button_Clean_Manager_Tools
@@ -1973,50 +1973,50 @@ Func _File_Type_GUI()
 	Local $size = WinGetPos($s_Win_Title)
 	$FileTypeGUI = GUICreate("Add Extra Filetype By Categories", 477, 218, $size[0] + $i_xWidth / 2 - 477 / 2, $size[1] + $i_yHight / 2 - 218 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 
-	$s_Default_Compressed_FileTypeGUI = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
-	$s_Default_Documents_FileTypeGUI = "doc pdf ppt pps docx pptx"
-	$s_Default_Music_FileTypeGUI = "mp3 wav wma mpa ram ra aac aif m4a"
-	$s_Default_Programs_FileTypeGUI = "exe msi"
-	$s_Default_Video_FileTypeGUI = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg"
+	Local $s_Default_Compressed_FileTypeGUI = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
+	Local $s_Default_Documents_FileTypeGUI = "doc pdf ppt pps docx pptx"
+	Local $s_Default_Music_FileTypeGUI = "mp3 wav wma mpa ram ra aac aif m4a"
+	Local $s_Default_Programs_FileTypeGUI = "exe msi"
+	Local $s_Default_Video_FileTypeGUI = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg"
 
-	$s_Enhance_Compressed_FileTypeGUI = $s_Default_Compressed_FileTypeGUI & " 001 cab xz txz lzma tar cpio bzip2 tbz2 tbz gzip tgz tpz z taz lzh lha rpm deb vhd wim swm fat ntfs xar squashfs ifu ifc dgca yz1 rk miniso iso isz bin cue mds mdf nrg ashdisc b6t b6i b5t b5i bwt bwi lcd ccd img dvd 000 daa cdi cif xmf xmd pdi dmg timg hfs ncd pxi p2i rif rdf gi uif vc4 fcd vcd ima bif flp c2d dao tao p01 md1 xa VaporCD gcd ixa vdi"
-	$s_Enhance_Documents_FileTypeGUI = $s_Default_Documents_FileTypeGUI & " docm dotx dotm rtf odt wri wpd wps xps djvu ps chm accdb mdb adp mda accda mde accde ade xl* xlsx xlsm xlsb xlam xltx xltm xls xlt xla xlw xsn xsf infopathxml onetoc2 one onepkg pptm ppsx ppsm potx pot potm odp thmx pub"
-	$s_Enhance_Music_FileTypeGUI = $s_Default_Music_FileTypeGUI & " 3ga 669 a52 ac3 adt adts aifc aiff amr aob ape awb caf cda dts flac it m4p mid mka mlp mod mp1 mp2 mpc oga oma qcp rmi s3m spx thd tta voc vqf w64 wv xm"
-	$s_Enhance_Programs_FileTypeGUI = $s_Default_Programs_FileTypeGUI & " jar jad dll bpl cpl scr ocx msstyles mui"
-	$s_Enhance_Video_FileTypeGUI = $s_Default_Video_FileTypeGUI & " 3g2 3gp 3gp2 3gpp amv divx drc dv f4v gxf m1v m2v m2t m2ts mkv mp2v mp4v mpeg1 mpeg2 mpeg4 mpv2 mts mtv mxf mxg nsv nuv ogg ogm ogx rec rmvb tod ts tts vob vro"
+	Local $s_Enhance_Compressed_FileTypeGUI = $s_Default_Compressed_FileTypeGUI & " 001 cab xz txz lzma tar cpio bzip2 tbz2 tbz gzip tgz tpz z taz lzh lha rpm deb vhd wim swm fat ntfs xar squashfs ifu ifc dgca yz1 rk miniso iso isz bin cue mds mdf nrg ashdisc b6t b6i b5t b5i bwt bwi lcd ccd img dvd 000 daa cdi cif xmf xmd pdi dmg timg hfs ncd pxi p2i rif rdf gi uif vc4 fcd vcd ima bif flp c2d dao tao p01 md1 xa VaporCD gcd ixa vdi"
+	Local $s_Enhance_Documents_FileTypeGUI = $s_Default_Documents_FileTypeGUI & " docm dotx dotm rtf odt wri wpd wps xps djvu ps chm accdb mdb adp mda accda mde accde ade xl* xlsx xlsm xlsb xlam xltx xltm xls xlt xla xlw xsn xsf infopathxml onetoc2 one onepkg pptm ppsx ppsm potx pot potm odp thmx pub"
+	Local $s_Enhance_Music_FileTypeGUI = $s_Default_Music_FileTypeGUI & " 3ga 669 a52 ac3 adt adts aifc aiff amr aob ape awb caf cda dts flac it m4p mid mka mlp mod mp1 mp2 mpc oga oma qcp rmi s3m spx thd tta voc vqf w64 wv xm"
+	Local $s_Enhance_Programs_FileTypeGUI = $s_Default_Programs_FileTypeGUI & " jar jad dll bpl cpl scr ocx msstyles mui"
+	Local $s_Enhance_Video_FileTypeGUI = $s_Default_Video_FileTypeGUI & " 3g2 3gp 3gp2 3gpp amv divx drc dv f4v gxf m1v m2v m2t m2ts mkv mp2v mp4v mpeg1 mpeg2 mpeg4 mpv2 mts mtv mxf mxg nsv nuv ogg ogm ogx rec rmvb tod ts tts vob vro"
 
-	$s_Current_Compressed_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Compressed", "mask")
+	Local $s_Current_Compressed_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Compressed", "mask")
 	If @error Then $s_Current_Compressed_FileTypeGUI = ""
-	$s_Current_Documents_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Documents", "mask")
+	Local $s_Current_Documents_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Documents", "mask")
 	If @error Then $s_Current_Documents_FileTypeGUI = ""
-	$s_Current_Music_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Music", "mask")
+	Local $s_Current_Music_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Music", "mask")
 	If @error Then $s_Current_Music_FileTypeGUI = ""
-	$s_Current_Programs_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Programs", "mask")
+	Local $s_Current_Programs_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Programs", "mask")
 	If @error Then $s_Current_Programs_FileTypeGUI = ""
-	$s_Current_Video_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Video", "mask")
+	Local $s_Current_Video_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Video", "mask")
 	If @error Then $s_Current_Video_FileTypeGUI = ""
 
-	$h_Checkbox_Compressed_FileTypeGUI = GUICtrlCreateCheckbox("Compressed", 15, 12, 97, 17)
-	$h_Checkbox_Documents_FileTypeGUI = GUICtrlCreateCheckbox("Documents", 15, 42, 97, 17)
-	$h_Checkbox_Music_FileTypeGUI = GUICtrlCreateCheckbox("Music", 15, 72, 97, 17)
-	$h_Checkbox_Programs_FileTypeGUI = GUICtrlCreateCheckbox("Programs", 15, 102, 97, 17)
-	$h_Checkbox_Video_FileTypeGUI = GUICtrlCreateCheckbox("Video", 15, 132, 97, 17)
+	Local $h_Checkbox_Compressed_FileTypeGUI = GUICtrlCreateCheckbox("Compressed", 15, 12, 97, 17)
+	Local $h_Checkbox_Documents_FileTypeGUI = GUICtrlCreateCheckbox("Documents", 15, 42, 97, 17)
+	Local $h_Checkbox_Music_FileTypeGUI = GUICtrlCreateCheckbox("Music", 15, 72, 97, 17)
+	Local $h_Checkbox_Programs_FileTypeGUI = GUICtrlCreateCheckbox("Programs", 15, 102, 97, 17)
+	Local $h_Checkbox_Video_FileTypeGUI = GUICtrlCreateCheckbox("Video", 15, 132, 97, 17)
 
-	$h_Input_Compressed_FileTypeGUI = GUICtrlCreateInput($s_Current_Compressed_FileTypeGUI, 115, 12, 351, 21)
+	Local $h_Input_Compressed_FileTypeGUI = GUICtrlCreateInput($s_Current_Compressed_FileTypeGUI, 115, 12, 351, 21)
+	Local GUICtrlSetState(-1, $GUI_DISABLE)
+	Local $h_Input_Documents_FileTypeGUI = GUICtrlCreateInput($s_Current_Documents_FileTypeGUI, 115, 42, 351, 21)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Input_Documents_FileTypeGUI = GUICtrlCreateInput($s_Current_Documents_FileTypeGUI, 115, 42, 351, 21)
+	Local $h_Input_Music_FileTypeGUI = GUICtrlCreateInput($s_Current_Music_FileTypeGUI, 115, 72, 351, 21)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Input_Music_FileTypeGUI = GUICtrlCreateInput($s_Current_Music_FileTypeGUI, 115, 72, 351, 21)
+	Local $h_Input_Programs_FileTypeGUI = GUICtrlCreateInput($s_Current_Programs_FileTypeGUI, 115, 102, 351, 21)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Input_Programs_FileTypeGUI = GUICtrlCreateInput($s_Current_Programs_FileTypeGUI, 115, 102, 351, 21)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Input_Video_FileTypeGUI = GUICtrlCreateInput($s_Current_Video_FileTypeGUI, 115, 132, 351, 21)
+	Local $h_Input_Video_FileTypeGUI = GUICtrlCreateInput($s_Current_Video_FileTypeGUI, 115, 132, 351, 21)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 
-	$h_Button_Save_FileTypeGUI = GUICtrlCreateButton("Save Checked", 15, 162, 110, 43)
-	$h_Button_Enhance_FileTypeGUI = GUICtrlCreateButton("Add/Enhance Extra File Types", 130, 162, 110, 43, $BS_MULTILINE)
-	$h_Button_Default_FileTypeGUI = GUICtrlCreateButton("Restore Default File Types", 245, 162, 110, 43, $BS_MULTILINE)
-	$h_Button_Close_FileTypeGUI = GUICtrlCreateButton("Close", 358, 162, 110, 43, $BS_MULTILINE)
+	Local $h_Button_Save_FileTypeGUI = GUICtrlCreateButton("Save Checked", 15, 162, 110, 43)
+	Local $h_Button_Enhance_FileTypeGUI = GUICtrlCreateButton("Add/Enhance Extra File Types", 130, 162, 110, 43, $BS_MULTILINE)
+	Local $h_Button_Default_FileTypeGUI = GUICtrlCreateButton("Restore Default File Types", 245, 162, 110, 43, $BS_MULTILINE)
+	Local $h_Button_Close_FileTypeGUI = GUICtrlCreateButton("Close", 358, 162, 110, 43, $BS_MULTILINE)
 	GUISetState(@SW_SHOW)
 
 	While 1

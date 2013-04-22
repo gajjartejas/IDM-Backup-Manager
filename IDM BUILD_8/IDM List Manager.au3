@@ -36,7 +36,7 @@
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
 Global $GUIMINWID = 701, $GUIMINHT = 313
-Global $hGUI, $MenuItem_list_Catagories_[_CountKey($s_regpath_IDM)], $fChange = False
+Global $hGUI, $MenuItem_list_Catagories_[_CountKey($s_regpath_IDM)+1], $fChange = False
 Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
 #endregion global Variables
 
@@ -654,8 +654,8 @@ Func _Find()
 EndFunc   ;==>_Find
 
 Func _get_selected_cat()
-	Local $i = 0
-	For $i = 1 To $i_Cat_Item
+	Local $i
+	For $i = 0 To $i_Cat_Item-1
 		If BitAND(GUICtrlRead($MenuItem_list_Catagories_[$i]), $GUI_CHECKED) Then
 			Return _RegRead("HKEY_CURRENT_USER\Software\DownloadManager\FoldersTree\" & GUICtrlRead($MenuItem_list_Catagories_[$i], 1), "ID")
 		EndIf

@@ -279,7 +279,7 @@ GUICtrlSetImage(-1, @ScriptFullPath, -22)
 
 $Group4 = GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
 
-$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton("Log File Path:", 32, 60, 107, 25)
+$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton("Log File Folder:", 32, 60, 107, 25)
 __AET_ButtonSetIcon(-1, 5, 16, 16, 0)
 
 $h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 144, 64, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
@@ -1710,9 +1710,8 @@ Func _SW_EDIT_GUI($sTXTFile, $s_Title)
 	Local $size = WinGetPos($s_Win_Title)
 	Local $Help_GUI = GUICreate($s_Title, 491, 310, $size[0] + $i_xWidth / 2 - 491 / 2, $size[1] + $i_yHight / 2 - 310 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 
-	Local $Edit1 = GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $ES_READONLY, $ES_WANTRETURN, $WS_VSCROLL))
+	Local $Edit1 = GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
 	GUICtrlSetData(-1, FileRead($sTXTFile))
-	GUICtrlSetBkColor(-1, 0xFFFFFF)
 	Local $Close = GUICtrlCreateButton("Close", 408, 265, 75, 25)
 	GUISetIcon(@ScriptFullPath, 0, $Help_GUI)
 	GUISetState(@SW_SHOW)
@@ -1921,10 +1920,13 @@ EndFunc   ;==>_Clean_GUI_Child
 
 Func _Password_Cleaner_GUI()
 	GUISetState(@SW_DISABLE, $h_IDMBM)
+
 	Local $size = WinGetPos($s_Win_Title)
-	$pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth / 2 - 178 / 2, $size[1] + $i_yHight / 2 - 60 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
-	$k = 1
-	$j = 0
+	Local $pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth / 2 - 178 / 2, $size[1] + $i_yHight / 2 - 60 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	Local $k = 1
+	Local $j = 0
+	Local $sInfoLabelText = "Total " & $j & " Password Found."
+	Local $var
 	While 1
 		$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
 		If @error <> 0 Then ExitLoop
@@ -1932,10 +1934,10 @@ Func _Password_Cleaner_GUI()
 		$sInfoLabelText = "Total " & $j & " Password Found."
 		$k += 1
 	WEnd
-	$h_Lable_Info_pwCleaner = GUICtrlCreateLabel($sInfoLabelText, 10, 6, 155, 17)
-	$h_Button_ClearAll_pwCleaner = GUICtrlCreateButton("Clear All", 10, 24, 75, 25)
+	Local $h_Lable_Info_pwCleaner = GUICtrlCreateLabel($sInfoLabelText, 10, 6, 155, 17)
+	Local $h_Button_ClearAll_pwCleaner = GUICtrlCreateButton("Clear All", 10, 24, 75, 25)
 	If $j = 0 Then GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Button_Close_pwCleaner = GUICtrlCreateButton("Close", 90, 24, 75, 25)
+	Local $h_Button_Close_pwCleaner = GUICtrlCreateButton("Close", 90, 24, 75, 25)
 	GUISetState(@SW_SHOW)
 
 	While 1
@@ -2003,7 +2005,7 @@ Func _File_Type_GUI()
 	Local $h_Checkbox_Video_FileTypeGUI = GUICtrlCreateCheckbox("Video", 15, 132, 97, 17)
 
 	Local $h_Input_Compressed_FileTypeGUI = GUICtrlCreateInput($s_Current_Compressed_FileTypeGUI, 115, 12, 351, 21)
-	Local GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetState(-1, $GUI_DISABLE)
 	Local $h_Input_Documents_FileTypeGUI = GUICtrlCreateInput($s_Current_Documents_FileTypeGUI, 115, 42, 351, 21)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	Local $h_Input_Music_FileTypeGUI = GUICtrlCreateInput($s_Current_Music_FileTypeGUI, 115, 72, 351, 21)

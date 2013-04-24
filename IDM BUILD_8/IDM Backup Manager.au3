@@ -1,4 +1,5 @@
 #NoTrayIcon
+
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\Extra\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.8.exe
@@ -20,14 +21,14 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Forum.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Help.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\icon.ico
+;~ #AutoIt3Wrapper_Res_Icon_Add=Resorces\icon.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Internet.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\License.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\History.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Ok.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\ok32.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Restore.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Run.ico
+;~ #AutoIt3Wrapper_Res_Icon_Add=Resorces\Run.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\search.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Tool.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Update.ico
@@ -44,6 +45,7 @@
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #region    ;************ Includes ************
+#include <Array.au3>
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
 #include <GuiButton.au3>
@@ -107,8 +109,8 @@ Global $s_Restore_File = ""
 
 #region ini setting
 If FileExists($s_Setting_File) Then
-	$i_xWinPos = IniRead($s_Setting_File, "Position", "x", $i_xWinPos)
-	$i_yWinPos = IniRead($s_Setting_File, "Position", "y", $i_yWinPos)
+	$i_xWinPos = Number(IniRead($s_Setting_File, "Position", "x", $i_xWinPos))
+	$i_yWinPos = Number(IniRead($s_Setting_File, "Position", "y", $i_yWinPos))
 
 	$s_Backup_Dir = IniRead($s_Setting_File, "Default Paths", "Backup_Dir", $s_Backup_Dir)
 	$s_Log_File = IniRead($s_Setting_File, "Default Paths", "Log_File", $s_Log_File)
@@ -117,10 +119,10 @@ If FileExists($s_Setting_File) Then
 ;~ 	$s_AppDataIDMFolder = IniRead($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder);contain back "\"
 ;~ 	$s_DwnlData_Folder = IniRead($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder);contain back "\"
 
-	$b_AppendLog_File = IniRead($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File)
-	If $b_AppendLog_File = 0 And FileExists($s_Log_File) Then FileDelete($s_Log_File)
+	$b_AppendLog_File = Number(IniRead($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File))
+	If Not $b_AppendLog_File And FileExists($s_Log_File) Then FileDelete($s_Log_File)
 
-	$b_RestartIDM = IniRead($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM)
+	$b_RestartIDM = Number(IniRead($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM))
 Else
 	If Not BitOR(FileExists(@AppDataDir & "\IDM Backup Manager"), DirCreate(@AppDataDir & "\IDM Backup Manager")) Then MsgBox(16, "Warning", "Log File NOT Created. Please Choose Other Location. (Setting--> LogFile)")
 
@@ -161,14 +163,13 @@ $h_Input_Backup_Path = GUICtrlCreateInput("", 33, 64, 336, 21, BitOR($GUI_SS_DEF
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $h_Button_Browse_Backup = GUICtrlCreateButton("", 376, 63, 30, 23)
-__AET_ButtonSetIcon(-1, 20, 16, 16, 4)
+__AET_ButtonSetIcon(-1, 18, 16, 16, 4)
 GUICtrlSetTip(-1, "Browse For Backup File")
 
 $h_Group2 = GUICtrlCreateGroup("Options", 24, 104, 390, 100)
 GUICtrlSetFont(-1, 1, 800, 0, "MS Sans Serif")
 
 $h_Checkbox_Password_Backup = GUICtrlCreateCheckbox("", 38, 130, 13, 17)
-GUICtrlSetTip(-1, "Choose Yes If You Want Encryption of Your Backup Files Which Is Required Strong Password", "Backup Password", 1, 1)
 
 $h_Input_Password_Backup = GUICtrlCreateInput("Password", 54, 128, 130, 21, $ES_PASSWORD)
 GUICtrlSetState(-1, $GUI_DISABLE)
@@ -176,7 +177,6 @@ GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password")
 GUICtrlSetTip(-1, "Choose Yes If You Want Encryption of Your Backup Files Which Is Required Strong Password", "Backup Password", 1, 1)
 
 $h_Checkbox_Compression_Level_Backup = GUICtrlCreateCheckbox("", 38, 159, 13, 17)
-GUICtrlSetTip(-1, "Here You Can Set The Compression Level of The Backup Files" & @CRLF & "", "Compression Level", 1, 1)
 
 $h_Combo_Compression_Level_Backup = GUICtrlCreateCombo("1-No Compression", 54, 157, 130, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 GUICtrlSetState(-1, $GUI_DISABLE)
@@ -207,7 +207,7 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 #region Restore ;==============================================================================================Restore:
 
 $h_TabSheet2 = GUICtrlCreateTabItem("Restore Data")
-GUICtrlSetImage(-1, @ScriptFullPath, -15)
+GUICtrlSetImage(-1, @ScriptFullPath, -14)
 $h_Group3 = GUICtrlCreateGroup("Restore Location", 24, 44, 390, 55)
 GUICtrlSetFont(-1, 2, 800, 0, "MS Sans Serif")
 
@@ -222,7 +222,6 @@ $Group7 = GUICtrlCreateGroup("Options", 24, 104, 390, 100)
 GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
 $h_Checkbox_Password_Restore = GUICtrlCreateCheckbox("", 38, 130, 13, 17)
-GUICtrlSetTip(-1, "Choose Yes If Your backup is Encrypted", "Restore Encryption", 1, 1)
 
 $h_Input_Password_Restore = GUICtrlCreateInput("Password", 54, 128, 130, 21, $ES_PASSWORD)
 GUICtrlSetState(-1, $GUI_DISABLE)
@@ -230,15 +229,17 @@ GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password")
 GUICtrlSetTip(-1, "Choose Yes If Your backup is Encrypted", "Restore Encryption", 1, 1)
 
 $h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("", 38, 159, 13, 17)
-GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
-		"EXAMPLE:" & @CRLF & _
-		"In case of If You Want To Restore Backup of Cybercafé to Your Home PC", "Convert Profile", 1, 1)
 
 $h_Label_Convert_Registry_Restore = GUICtrlCreateLabel("Convert Profile(Disabled)", 54, 161, 130, 17)
 GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
 		"EXAMPLE:" & @CRLF & _
 		"In case of If You Want To Restore Backup of Cybercafé to Your Home PC", "Convert Profile", 1, 1)
+
+$h_Checkbox_Append_Registry_Restore = GUICtrlCreateCheckbox("", 38, 180, 13, 17)
+$h_Label_Append_Registry_Restore = GUICtrlCreateLabel("Append/Merge(Disabled)", 54, 182, 130, 17)
+GUICtrlSetState(-1, $GUI_DISABLE)
+GUICtrlSetTip(-1, "This will not remove existing profile. It will append data if possible and then merge.", "Append/Merge Data", 1, 1)
 
 $h_Checkbox_NoRestore_Registry = GUICtrlCreateCheckbox("Do Not Restore List of Downloads", 200, 128, 209, 17)
 $h_Checkbox_NoRestore_Data = GUICtrlCreateCheckbox("Do Not Restore Data", 200, 149, 209, 17)
@@ -253,7 +254,7 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 #region Tools ;============================================================================================== Tools:
 
 $TabSheet3 = GUICtrlCreateTabItem("Tools")
-GUICtrlSetImage(-1, @ScriptFullPath, -18)
+GUICtrlSetImage(-1, @ScriptFullPath, -16)
 
 $Group4 = GUICtrlCreateGroup("Tools", 24, 44, 390, 160)
 GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
@@ -275,7 +276,7 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 #region Setting ;============================================================================================== Setting:
 $TabSheet5 = GUICtrlCreateTabItem("Setting")
-GUICtrlSetImage(-1, @ScriptFullPath, -22)
+GUICtrlSetImage(-1, @ScriptFullPath, -20)
 
 $Group4 = GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
 
@@ -310,19 +311,19 @@ GUICtrlSetTip(-1, GUICtrlRead($h_Label_DwnlDataFolder_Setting))
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $h_Button_Open_Log = GUICtrlCreateButton("", 274, 216, 30, 23)
-__AET_ButtonSetIcon(-1, 23, 16, 16, 4)
+__AET_ButtonSetIcon(-1, 21, 16, 16, 4)
 GUICtrlSetTip(-1, "Open Log File")
 
 $h_Button_Associate_Setting = GUICtrlCreateButton("", 310, 216, 30, 23)
-__AET_ButtonSetIcon(-1, 19, 16, 16, 4)
+__AET_ButtonSetIcon(-1, 17, 16, 16, 4)
 GUICtrlSetTip(-1, "Association .IBF File")
 
 $h_Button_More_Setting = GUICtrlCreateButton("", 346, 216, 30, 23)
-__AET_ButtonSetIcon(-1, 21, 16, 16, 4)
+__AET_ButtonSetIcon(-1, 19, 16, 16, 4)
 GUICtrlSetTip(-1, "More Setting")
 
 $Button_RestoreDefault_Setting = GUICtrlCreateButton("", 382, 216, 30, 23)
-__AET_ButtonSetIcon(-1, 22, 16, 16, 4)
+__AET_ButtonSetIcon(-1, 20, 16, 16, 4)
 GUICtrlSetTip(-1, "Restore Default")
 
 GUICtrlCreateTabItem("")
@@ -337,22 +338,22 @@ $Group6 = GUICtrlCreateGroup("Help and Update", 24, 44, 390, 160)
 GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
 $h_Button_Website_Help = GUICtrlCreateButton("  Website", 37, 126, 100, 30, $BS_left)
-__AET_ButtonSetIcon(-1, 9, 24, 24, 0)
+__AET_ButtonSetIcon(-1, 8, 24, 24, 0)
 
 $h_Button_Help_Help = GUICtrlCreateButton("  Help", 37, 66, 100, 30, $BS_left)
 __AET_ButtonSetIcon(-1, 7, 24, 24, 0)
 
 $h_Button_Licence_Help = GUICtrlCreateButton("  License", 37, 96, 100, 30, $BS_left)
-__AET_ButtonSetIcon(-1, 10, 24, 24, 0)
+__AET_ButtonSetIcon(-1, 9, 24, 24, 0)
 
 $h_Button_Version_History_Help = GUICtrlCreateButton("  Ver History", 146, 66, 100, 30, $BS_left)
-__AET_ButtonSetIcon(-1, 11, 24, 24, 0)
+__AET_ButtonSetIcon(-1, 10, 24, 24, 0)
 
 $h_Button_Forum_Help = GUICtrlCreateButton("  Forum", 146, 96, 100, 30, $BS_left)
 __AET_ButtonSetIcon(-1, 6, 24, 24, 0)
 
 $h_Button_Update_Help = GUICtrlCreateButton("  Update", 146, 126, 100, 30, $BS_left);1111
-__AET_ButtonSetIcon(-1, 18, 24, 24, 0)
+__AET_ButtonSetIcon(-1, 16, 24, 24, 0)
 
 $h_Pic_Help = GUICtrlCreatePic("", 260, 55, 150, 145)
 GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
@@ -413,6 +414,15 @@ While 1
 			Else
 				GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_DISABLE)
 				GUICtrlSetData($h_Label_Convert_Registry_Restore, "Convert Profile(Disabled)")
+			EndIf
+
+		Case $h_Checkbox_Append_Registry_Restore
+			If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
+				GUICtrlSetState($h_Label_Append_Registry_Restore, $GUI_ENABLE)
+				GUICtrlSetData($h_Label_Append_Registry_Restore, "Append/Merge(Enabled)")
+			Else
+				GUICtrlSetState($h_Label_Append_Registry_Restore, $GUI_DISABLE)
+				GUICtrlSetData($h_Label_Append_Registry_Restore, "Append/Merge(Disabled)")
 			EndIf
 
 		Case $h_Checkbox_Full_Backup
@@ -1042,35 +1052,42 @@ While 1
 			_CleanINInReg()
 
 			#region ;/Remove TempPath--->
-			If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then ;Pre Delete as per Componments
-				GUICtrlSetData($h_Label_Info, "Removing: TempPath Please Wait...")
-				If $Guest_DwnlData_Folder = "True" Then _FileOrFolderDeleteWithLog($s_DwnlData_Folder)
 
-				GUICtrlSetData($h_Label_Info, "Removing: Grabber Folder Please Wait...")
-				If $Guest_Grabber_Folder = "True" Then _FileOrFolderDeleteWithLog($Grabber_Folder)
+			;If Data Restore allowed via Checkbox
+			If Not GUICtrlRead($h_Checkbox_NoRestore_Data) = $GUI_CHECKED Then
 
-				GUICtrlSetData($h_Label_Info, "Removing: GrabberData Folder Please Wait...")
-				If $Guest_GrabberData_Folder = "True" Then _FileOrFolderDeleteWithLog($GrabberData_Folder)
+				;if Append/Merge Not Selected then Pre Delete as per Componments
+				If Not GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
+					GUICtrlSetData($h_Label_Info, "Removing: TempPath Please Wait...")
+					If $Guest_DwnlData_Folder = "True" Then _FileOrFolderDeleteWithLog($s_DwnlData_Folder)
 
-				GUICtrlSetData($h_Label_Info, "Removing: Scheduler Folder Please Wait...")
-				If $Guest_Scheduler_Folder = "True" Then _FileOrFolderDeleteWithLog($Scheduler_Folder)
+					GUICtrlSetData($h_Label_Info, "Removing: Grabber Folder Please Wait...")
+					If $Guest_Grabber_Folder = "True" Then _FileOrFolderDeleteWithLog($Grabber_Folder)
 
-				GUICtrlSetData($h_Label_Info, "Removing: History And Logs Please Wait...")
-				If $Guest_History_Files = "True" Then
-					_FileOrFolderDeleteWithLog($UrlHistory_txt_File)
-					_FileOrFolderDeleteWithLog($UrlHistory2_txt_File)
-					_FileOrFolderDeleteWithLog($GlobalErrors_log_File)
-					_FileOrFolderDeleteWithLog($urlexclist_dat_File)
-					_FileOrFolderDeleteWithLog($defextmap_dat_File)
-					_FileOrFolderDeleteWithLog($foldresHistory_txt_File)
-					_FileOrFolderDeleteWithLog($sts_list_dat_File)
-					_FileOrFolderDeleteWithLog($cnlurllist_dat_File)
+					GUICtrlSetData($h_Label_Info, "Removing: GrabberData Folder Please Wait...")
+					If $Guest_GrabberData_Folder = "True" Then _FileOrFolderDeleteWithLog($GrabberData_Folder)
+
+					GUICtrlSetData($h_Label_Info, "Removing: Scheduler Folder Please Wait...")
+					If $Guest_Scheduler_Folder = "True" Then _FileOrFolderDeleteWithLog($Scheduler_Folder)
+
+					GUICtrlSetData($h_Label_Info, "Removing: History And Logs Please Wait...")
+					If $Guest_History_Files = "True" Then
+						_FileOrFolderDeleteWithLog($UrlHistory_txt_File)
+						_FileOrFolderDeleteWithLog($UrlHistory2_txt_File)
+						_FileOrFolderDeleteWithLog($GlobalErrors_log_File)
+						_FileOrFolderDeleteWithLog($urlexclist_dat_File)
+						_FileOrFolderDeleteWithLog($defextmap_dat_File)
+						_FileOrFolderDeleteWithLog($foldresHistory_txt_File)
+						_FileOrFolderDeleteWithLog($sts_list_dat_File)
+						_FileOrFolderDeleteWithLog($cnlurllist_dat_File)
+					EndIf
 				EndIf
 			EndIf
 			#endregion ;/Remove TempPath--->
 
 			#region ;/Restore Data--->
-			If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then ;Restore Data
+			;If Data Restore allowed via Checkbox
+			If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then
 
 				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Files And Folders...")
 
@@ -1150,9 +1167,22 @@ While 1
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract IDMregistry.reg " & "=" & ' "' & $s_Restore_File & "-->" & "IDMregistry.reg" & '" ' & "Error Code:" & _7z_Errors($foo_32))
 			#endregion ;/Extract Registry--->
 
+			#region ;/Append/Merge Registry--->
+			If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
+				GUICtrlSetData($h_Label_Info, "Appending/Merging: Profile Please Wait...")
+				_AppendRegKeys()
+				If @error Then FileWriteLine($s_Log_File, _Current_Moment() & "Error: Error Occured during Appending/Merging Profile Error Code:" & @error)
+			Else
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Append/Merge Profile Not Selected.")
+			EndIf
+			#endregion ;/Append/Merge Registry--->
+
 			#region ;/Convert Profile--->
+			;Convert Registry Checkbox Is Checked Then
 			If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
-				If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then ; Restore Registry Enable
+
+				;If Registry Restore allowed via Checkbox
+				If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Registry Profile")
 
 					GUICtrlSetData($h_Label_Info, "Converting: Profile Please Wait...")
@@ -1169,7 +1199,8 @@ While 1
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_AppDataIDMFolder, "\", "\\") & " Error Code" & @error)
 				EndIf
 
-				If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then ; Restore Data Enable
+				;If Data Restore allowed via Checkbox
+				If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
 
 					DirMove($s_DwnlData_Folder & $Guest_Username, $s_DwnlData_Folder & @UserName)
@@ -1222,21 +1253,27 @@ While 1
 			#endregion ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
 
 			#region ;/Remove Host Registry--->
-			GUICtrlSetData($h_Label_Info, "Removing: Registry Please Wait...")
-			If _RegKeyExists($s_regpath_IDM) Then
-				If Not RegDelete($s_regpath_IDM) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Host Registry " & "=" & ' "' & $s_regpath_IDM & '" ' & "Error Code:" & @error)
+			;if Append/Merge Not Selected then
+			If Not GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
+				GUICtrlSetData($h_Label_Info, "Removing: Registry Please Wait...")
+				If _RegKeyExists($s_regpath_IDM) Then
+					If Not RegDelete($s_regpath_IDM) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Host Registry " & "=" & ' "' & $s_regpath_IDM & '" ' & "Error Code:" & @error)
+				EndIf
 			EndIf
 			#endregion ;/Remove Host Registry--->
 
 			#region ;/Restore Guest Registry-->
 			GUICtrlSetData($h_Label_Info, "Restoring: Registry Please Wait...")
-			If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then _Reg_Import($s_reg_File)
+
+			;If Registry Restore allowed via Checkbox
+			If Not GUICtrlRead($h_Checkbox_NoRestore_Registry) = $GUI_CHECKED Then _Reg_Import($s_reg_File)
 			#endregion ;/Restore Guest Registry-->
 
 			#region ;/Restore Host Registry from stored in tmp Registry--->
 			GUICtrlSetData($h_Label_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
 
-			If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then ; Restore Registry Enable
+			;If Registry Restore allowed via Checkbox
+			If Not GUICtrlRead($h_Checkbox_NoRestore_Registry) = $GUI_CHECKED Then
 				If _RegKeyExists($s_regpath_IDM & "_tmp") Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Host Registry From Stored in tmp Registry")
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ')
@@ -1318,7 +1355,7 @@ While 1
 			EndIf
 			#endregion ;/Remove tmp Registry--->
 
-			If $b_RestartIDM = 1 Then _sRun_IDMexe()
+			If $b_RestartIDM Then _sRun_IDMexe()
 
 			GUICtrlSetData($h_Label_Info, "INFO: Done")
 			_Control_Update_Default()
@@ -1737,9 +1774,9 @@ Func _More_Setting_GUI()
 
 	Local $h_group_Setting = GUICtrlCreateGroup("Setting", 10, 10, 330, 100)
 	Local $h_AppendLog_Setting = GUICtrlCreateCheckbox("Append Log", 20, 30, 313, 17)
-	If $b_AppendLog_File = 1 Then GUICtrlSetState($h_AppendLog_Setting, $GUI_CHECKED)
+	If $b_AppendLog_File Then GUICtrlSetState($h_AppendLog_Setting, $GUI_CHECKED)
 	$h_RestortIDM_Setting = GUICtrlCreateCheckbox("Auto Restart IDM after Restore/(Tool Section)", 20, 50, 313, 17)
-	If $b_RestartIDM = 1 Then GUICtrlSetState($h_RestortIDM_Setting, $GUI_CHECKED)
+	If $b_RestartIDM Then GUICtrlSetState($h_RestortIDM_Setting, $GUI_CHECKED)
 	Local $h_Close = GUICtrlCreateButton("Close", 256, 80, 75, 25)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUISetState(@SW_SHOW)
@@ -1907,7 +1944,7 @@ Func _Clean_GUI_Child()
 							FileDelete($sts_list_dat_File)
 							FileDelete($cnlurllist_dat_File)
 						EndIf
-						If $b_RestartIDM = 1 Then _sRun_IDMexe()
+						If $b_RestartIDM Then _sRun_IDMexe()
 						MsgBox(64, "Done", "Done.", 0, $clean)
 					EndIf
 					_ProgressMarquee_Stop($Progress1, 1)
@@ -1962,7 +1999,7 @@ Func _Password_Cleaner_GUI()
 				$sInfoLabelText = "Total " & $j & " Password(s) Removed."
 				GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
 				GUICtrlSetState($h_Button_ClearAll_pwCleaner, $GUI_DISABLE)
-				If $b_RestartIDM = 1 Then _sRun_IDMexe()
+				If $b_RestartIDM Then _sRun_IDMexe()
 		EndSwitch
 	WEnd
 
@@ -2064,7 +2101,7 @@ Func _File_Type_GUI()
 				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Music\", "mask", $REG_SZ, GUICtrlRead($h_Input_Music_FileTypeGUI))
 				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Programs\", "mask", $REG_SZ, GUICtrlRead($h_Input_Programs_FileTypeGUI))
 				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Video\", "mask", $REG_SZ, GUICtrlRead($h_Input_Video_FileTypeGUI))
-				If $b_RestartIDM = 1 Then _sRun_IDMexe()
+				If $b_RestartIDM Then _sRun_IDMexe()
 
 			Case $h_Button_Enhance_FileTypeGUI
 				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Compressed_FileTypeGUI, $s_Enhance_Compressed_FileTypeGUI)
@@ -2128,6 +2165,86 @@ Func _iGetFileSize($aFiles)
 	Next
 	Return $iSize
 EndFunc   ;==>_iGetFileSize
+
+Func _iGet_MaxKey()
+	Local $k = 1
+	Local $j = 0
+	Local $var, $iMaxKey
+
+	While 1
+		$var = RegEnumKey($s_regpath_IDM, $k)
+		If @error <> 0 Then ExitLoop
+		If Number($var) <> 0 Then $j += 1
+		$k += 1
+	WEnd
+
+	If $j = 0 Then Return 0
+
+	Local $MaxKey[$j]
+	$k = 1
+	$j = 0
+	While 1
+		$var = RegEnumKey($s_regpath_IDM, $k)
+		If @error <> 0 Then ExitLoop
+		If Number($var) <> 0 Then
+			$MaxKey[$j] = $var
+			$j += 1
+		EndIf
+		$k += 1
+	WEnd
+	$iMaxKey = _ArrayMax($MaxKey, 1)
+	If @error Then Return SetError(1)
+	Return $iMaxKey
+EndFunc   ;==>_iGet_MaxKey
+
+Func _AppendRegKeys()
+	Local $s_reg_File_Tmp = @TempDir & "\IDMregistryTmp.reg"
+	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
+
+	Local $iHostKeys = _iGet_MaxKey();expt
+	If @error Then Return SetError(-1)
+
+	Local $h_reg_File = FileOpen($s_reg_File, 0);Read
+	Local $h_reg_File_Tmp = FileOpen($s_reg_File_Tmp, 32 + 1);append mode Use Unicode UTF16 Little Endian reading and writing mode.
+
+	Local $iCounter = $iHostKeys + 1
+	Local $sLine, $asplit
+
+	; Check if file opened for reading OK
+	If $h_reg_File = -1 Or $h_reg_File_Tmp = -1 Then Return SetError(1)
+
+	; Read in lines of text until the EOF is reached
+	While 1
+		$sLine = FileReadLine($h_reg_File)
+		If @error = -1 Then ExitLoop
+
+		If StringInStr($sLine, $s_regpath_IDM) Then
+
+			$asplit = StringSplit(StringTrimRight($sLine, 1), "\")
+
+			;Decrease Counter to set same value
+			If StringInStr($sLine, "ChList") Then $iCounter -= 1
+
+			If StringIsDigit($asplit[4]) Then $sLine = StringReplace($sLine, $asplit[4], $iCounter)
+
+			FileWrite($h_reg_File_Tmp, $sLine & @CRLF)
+			$iCounter += 1
+		Else
+			FileWrite($h_reg_File_Tmp, $sLine & @CRLF)
+		EndIf
+	WEnd
+
+	FileClose($h_reg_File)
+	FileClose($h_reg_File_Tmp)
+
+	If Not FileDelete($s_reg_File) Then Return SetError(2)
+	If Not FileMove($s_reg_File_Tmp, $s_reg_File) Then Return SetError(3)
+
+	;Cleaneup
+	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
+
+	Return 1
+EndFunc   ;==>_AppendRegKeys
 #endregion app & envt Functions
 
 #region system & process Functions
@@ -2302,7 +2419,7 @@ Func _onExit()
 	Local $WinPos = WinGetPos($h_IDMBM)
 	IniWrite($s_Setting_File, "Position", "x", $WinPos[0])
 	IniWrite($s_Setting_File, "Position", "y", $WinPos[1])
-	If $b_RestartIDM = 1 Then _sRun_IDMexe()
+	If $b_RestartIDM Then _sRun_IDMexe()
 	Exit 0
 EndFunc   ;==>_onExit
 

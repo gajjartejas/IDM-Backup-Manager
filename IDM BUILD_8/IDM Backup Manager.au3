@@ -680,6 +680,7 @@ While 1
 			FileWriteLine($s_Log_File, "")
 			FileWriteLine($s_Log_File, "============================= Backup Session Started =============================")
 			_Control_Update_Busy()
+			_CleanINInReg()
 
 			#region ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
 			$s_Backup_File = GUICtrlRead($h_Input_Backup_Path)
@@ -692,8 +693,6 @@ While 1
 			EndIf
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Compression Level " & "=" & ' "' & $s_Compression_Level & '"')
 			#endregion ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
-
-			_CleanINInReg()
 
 			#region ;/Check Password, Drive Space, Condition and PreRequestes--->
 			If GUICtrlRead($h_Checkbox_UnFinished_SD_Backup) = $GUI_UNCHECKED _
@@ -968,7 +967,6 @@ While 1
 			_CleanINInReg()
 			GUICtrlSetData($h_Label_Info, "INFO: Done")
 			_Control_Update_Default()
-
 			FileWriteLine($s_Log_File, "============================= Backup Session Ended =============================")
 
 		Case $h_Button_Browse_Restore
@@ -987,6 +985,7 @@ While 1
 			FileWriteLine($s_Log_File, "============================= Restore Session Started =============================")
 			GUICtrlSetData($h_Label_Info, "INFO: Restoring...")
 			_Control_Update_Busy()
+			_CleanINInReg()
 
 			#region ;/Define Some variable: $s_Restore_File
 			$s_Restore_File = GUICtrlRead($h_Input_Restore_Path)
@@ -1000,8 +999,6 @@ While 1
 
 			$s_Password = GUICtrlRead($h_Input_Password_Restore)
 			#endregion ;/Define Some variable: $s_Restore_File
-
-			_CleanINInReg()
 
 			#region ;/Check Backup File, Read Guest ini setting and Check For Password
 			GUICtrlSetData($h_Label_Info, "INFO: Extracting ini File Please Wait...")
@@ -1046,8 +1043,6 @@ While 1
 				EndIf
 			EndIf
 			#endregion ;/Check Backup File, Read Guest ini setting and Check For Password
-
-			_CleanINInReg()
 
 			#region ;/Remove TempPath--->
 
@@ -1354,6 +1349,7 @@ While 1
 				If Not RegDelete($s_regpath_IDM & "_tmp") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ' & "Error Code:" & @error)
 			EndIf
 			#endregion ;/Remove tmp Registry--->
+
 			_CleanINInReg()
 
 			If $b_RestartIDM Then _sRun_IDMexe()
@@ -1439,9 +1435,9 @@ Func _7Zip_Add_Array($s7z_File_Save_Name, $aDestinationFolders, $sCompression, $
 		$sPassword = " -p" & '"' & $sPassword & '" '
 	EndIf
 
-	$iData_Size = _iGetFileSize($aDestinationFolders)
+	Local $iData_Size = _iGetFileSize($aDestinationFolders)
 
-	$tDATA = ""
+	Local $tDATA = ""
 
 	For $i = 0 To UBound($aDestinationFolders) - 1
 		If $aDestinationFolders[$i] = "" Then ContinueLoop
@@ -1470,9 +1466,9 @@ Func _7Zip_Add_Array($s7z_File_Save_Name, $aDestinationFolders, $sCompression, $
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Command Line: " & $s_7zexe_Path & " " & "a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA)
 
-	$pid = Run($s_7zexe_Path & " a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA, "", @SW_HIDE)
+	Local $pid = Run($s_7zexe_Path & " a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA, "", @SW_HIDE)
 
-	$hRun = _ProcessGetHandle($pid)
+	Local $hRun = _ProcessGetHandle($pid)
 
 	While ProcessExists($pid)
 		$stas = ProcessGetStats($pid, 1)
@@ -1488,21 +1484,25 @@ Func _7Zip_Extract_File($sZipFile, $sDestinationFolder, $sFile_To_Extracr, $sPas
 	If FileExists($sZipFile) = 0 Then
 		Return SetError(4, 0, 0)
 	EndIf
+
 	If _IsDir($sDestinationFolder) = 1 And StringRight($sDestinationFolder, 1) <> "\" Then
 		$sDestinationFolder &= "\"
 	EndIf
+
 	If _IsDir($sFile_To_Extracr) = 1 And StringRight($sFile_To_Extracr, 1) <> "\" Then
 		$sFile_To_Extracr &= "\"
 	EndIf
+
 	If FileExists($sDestinationFolder) = 0 Then
 		DirCreate($sDestinationFolder)
 	EndIf
 
-	If _IsDir($sZipFile) Then
-		$iData_Size = DirGetSize($sZipFile)
-	Else
-		$iData_Size = FileGetSize($sZipFile)
-	EndIf
+;~ 	Local $iData_Size
+;~ 	If _IsDir($sZipFile) Then
+;~ 		$iData_Size = DirGetSize($sZipFile)
+;~ 	Else
+;~ 		$iData_Size = FileGetSize($sZipFile)
+;~ 	EndIf
 
 	$sPassword = "-p" & '"' & $sPassword & '" '
 
@@ -1562,8 +1562,7 @@ EndFunc   ;==>_Reg_Import
 
 #region control Functions
 Func __AET_ButtonSetIcon($hWnd, $iIndex, $iWidth, $iHeight, $iAlign)
-	Local $hImageList
-	$hImageList = _GUIImageList_Create($iWidth, $iHeight, 5, 3)
+	Local $hImageList = _GUIImageList_Create($iWidth, $iHeight, 5, 3)
 	_GUIImageList_AddIcon($hImageList, @ScriptFullPath, $iIndex, True)
 	_GUICtrlButton_SetImageList($hWnd, $hImageList, $iAlign)
 EndFunc   ;==>__AET_ButtonSetIcon
@@ -1706,20 +1705,22 @@ Func _Current_Moment()
 EndFunc   ;==>_Current_Moment
 
 Func _sPath_Last_Remove($sPath)
-	Local $d_Saved_Path = ""
-	If StringRight($sPath, 1) <> "\" Then
-		$sPath &= "\"
-	EndIf
-	$split_path = StringSplit($sPath, "\")
+	Local $s_Saved_Path = ""
+	Local $sPath = ""
+
+	If StringRight($sPath, 1) <> "\" Then $sPath &= "\"
+
+	Local $split_path = StringSplit($sPath, "\")
+
 	If @error = 1 Then
 		Return $sPath
 	ElseIf $split_path[0] = 2 Then
 		Return $sPath
 	Else
 		For $i = 1 To $split_path[0] - 2 Step 1
-			$d_Saved_Path &= $split_path[$i] & "\"
+			$s_Saved_Path &= $split_path[$i] & "\"
 		Next
-		Return $d_Saved_Path
+		Return $s_Saved_Path
 	EndIf
 EndFunc   ;==>_sPath_Last_Remove
 
@@ -2011,7 +2012,7 @@ EndFunc   ;==>_Password_Cleaner_GUI
 Func _File_Type_GUI()
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
-	$FileTypeGUI = GUICreate("Add Extra Filetype By Categories", 477, 218, $size[0] + $i_xWidth / 2 - 477 / 2, $size[1] + $i_yHight / 2 - 218 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	Local $FileTypeGUI = GUICreate("Add Extra Filetype By Categories", 477, 218, $size[0] + $i_xWidth / 2 - 477 / 2, $size[1] + $i_yHight / 2 - 218 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 
 	Local $s_Default_Compressed_FileTypeGUI = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
 	Local $s_Default_Documents_FileTypeGUI = "doc pdf ppt pps docx pptx"
@@ -2280,7 +2281,7 @@ EndFunc   ;==>_Check_Componment
 
 Func _Check_IDM_Process()
 	If ProcessExists("idman.exe") Then ;**** Check the process "idman.exe" exists or not ***
-		If Not IsDeclared("iMsgBoxAnswer") Then Local $iMsgBoxAnswer
+		Local $iMsgBoxAnswer
 		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $h_IDMBM)
 		Select
 			Case $iMsgBoxAnswer = 6 ;Yes

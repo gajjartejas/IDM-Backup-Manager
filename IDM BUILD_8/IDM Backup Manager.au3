@@ -1,5 +1,4 @@
 #NoTrayIcon
-
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\Extra\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.8.exe
@@ -21,14 +20,12 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Forum.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Help.ico
-;~ #AutoIt3Wrapper_Res_Icon_Add=Resorces\icon.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Internet.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\License.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\History.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Ok.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\ok32.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Restore.ico
-;~ #AutoIt3Wrapper_Res_Icon_Add=Resorces\Run.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\search.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Tool.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Update.ico
@@ -41,8 +38,9 @@
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_Run_Obfuscator=y
 #Obfuscator_Parameters=/striponly
-#AutoIt3Wrapper_Run_cvsWrapper=v
+#AutoIt3Wrapper_Versioning=v
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Run_cvsWrapper=v
 
 #region    ;************ Includes ************
 #include <Array.au3>
@@ -1054,10 +1052,10 @@ While 1
 			#region ;/Remove TempPath--->
 
 			;If Data Restore allowed via Checkbox
-			If Not GUICtrlRead($h_Checkbox_NoRestore_Data) = $GUI_CHECKED Then
+			If GUICtrlRead($h_Checkbox_NoRestore_Data) = $GUI_UNCHECKED Then
 
 				;if Append/Merge Not Selected then Pre Delete as per Componments
-				If Not GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
+				If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_UNCHECKED Then
 					GUICtrlSetData($h_Label_Info, "Removing: TempPath Please Wait...")
 					If $Guest_DwnlData_Folder = "True" Then _FileOrFolderDeleteWithLog($s_DwnlData_Folder)
 
@@ -1087,7 +1085,7 @@ While 1
 
 			#region ;/Restore Data--->
 			;If Data Restore allowed via Checkbox
-			If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then
+			If GUICtrlRead($h_Checkbox_NoRestore_Data) = $GUI_UNCHECKED Then
 
 				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Files And Folders...")
 
@@ -1169,6 +1167,8 @@ While 1
 
 			#region ;/Append/Merge Registry--->
 			If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Appending/Merging Profile")
+
 				GUICtrlSetData($h_Label_Info, "Appending/Merging: Profile Please Wait...")
 				_AppendRegKeys()
 				If @error Then FileWriteLine($s_Log_File, _Current_Moment() & "Error: Error Occured during Appending/Merging Profile Error Code:" & @error)
@@ -1182,7 +1182,7 @@ While 1
 			If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 
 				;If Registry Restore allowed via Checkbox
-				If GUICtrlRead($h_Checkbox_NoRestore_Registry) <> $GUI_CHECKED Then
+				If GUICtrlRead($h_Checkbox_NoRestore_Registry) = $GUI_UNCHECKED Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Registry Profile")
 
 					GUICtrlSetData($h_Label_Info, "Converting: Profile Please Wait...")
@@ -1200,12 +1200,12 @@ While 1
 				EndIf
 
 				;If Data Restore allowed via Checkbox
-				If GUICtrlRead($h_Checkbox_NoRestore_Data) <> $GUI_CHECKED Then
+				If GUICtrlRead($h_Checkbox_NoRestore_Data) = $GUI_UNCHECKED Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
 
 					DirMove($s_DwnlData_Folder & $Guest_Username, $s_DwnlData_Folder & @UserName)
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $s_DwnlData_Folder & $Guest_Username)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $s_DwnlData_Folder & @UserName & @UserName & " Error Code" & @error)
+					FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $s_DwnlData_Folder & @UserName & " Error Code" & @error)
 
 					DirMove($s_AppDataIDMFolder & "GrabberData\" & $Guest_Username, $s_AppDataIDMFolder & "GrabberData\" & @UserName)
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $s_AppDataIDMFolder & "GrabberData\" & $Guest_Username)
@@ -1233,7 +1233,7 @@ While 1
 				If _RegKeyExists($s_regpath_IDM & "\" & "DwnlSelPanel") Then _RegCopyKey($s_regpath_IDM & "\" & "DwnlSelPanel", $s_regpath_IDM & "_tmp" & "\" & "DwnlSelPanel")
 				If _RegKeyExists($s_regpath_IDM & "\" & "FoldersTree") Then _RegCopyKey($s_regpath_IDM & "\" & "FoldersTree", $s_regpath_IDM & "_tmp" & "\" & "FoldersTree")
 				If _RegKeyExists($s_regpath_IDM & "\" & "GetAllDlgLS") Then _RegCopyKey($s_regpath_IDM & "\" & "GetAllDlgLS", $s_regpath_IDM & "_tmp" & "\" & "GetAllDlgLS")
-				If Not $Guest_GrabberData_Folder = "True" Then
+				If $Guest_GrabberData_Folder = "False" Then
 					If _RegKeyExists($s_regpath_IDM & "\" & "GrabberDlgLS") Then _RegCopyKey($s_regpath_IDM & "\" & "GrabberDlgLS", $s_regpath_IDM & "_tmp" & "\" & "GrabberDlgLS")
 					If _RegKeyExists($s_regpath_IDM & "\" & "GrabberSts") Then _RegCopyKey($s_regpath_IDM & "\" & "GrabberSts", $s_regpath_IDM & "_tmp" & "\" & "GrabberSts")
 				EndIf
@@ -1245,7 +1245,7 @@ While 1
 				If _RegKeyExists($s_regpath_IDM & "\" & "netApps") Then _RegCopyKey($s_regpath_IDM & "\" & "netApps", $s_regpath_IDM & "_tmp" & "\" & "netApps")
 				If _RegKeyExists($s_regpath_IDM & "\" & "Passwords") Then _RegCopyKey($s_regpath_IDM & "\" & "Passwords", $s_regpath_IDM & "_tmp" & "\" & "Passwords")
 				If _RegKeyExists($s_regpath_IDM & "\" & "Queue") Then _RegCopyKey($s_regpath_IDM & "\" & "Queue", $s_regpath_IDM & "_tmp" & "\" & "Queue")
-				If Not $Guest_Scheduler_Folder = "True" Then
+				If $Guest_Scheduler_Folder = "False" Then
 					If _RegKeyExists($s_regpath_IDM & "\" & "Scheduler") Then _RegCopyKey($s_regpath_IDM & "\" & "Scheduler", $s_regpath_IDM & "_tmp" & "\" & "Scheduler")
 				EndIf
 				If _RegKeyExists($s_regpath_IDM & "\" & "SpecialKeys") Then _RegCopyKey($s_regpath_IDM & "\" & "SpecialKeys", $s_regpath_IDM & "_tmp" & "\" & "SpecialKeys")
@@ -1254,7 +1254,7 @@ While 1
 
 			#region ;/Remove Host Registry--->
 			;if Append/Merge Not Selected then
-			If Not GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
+			If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_UNCHECKED Then
 				GUICtrlSetData($h_Label_Info, "Removing: Registry Please Wait...")
 				If _RegKeyExists($s_regpath_IDM) Then
 					If Not RegDelete($s_regpath_IDM) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Host Registry " & "=" & ' "' & $s_regpath_IDM & '" ' & "Error Code:" & @error)
@@ -1266,14 +1266,14 @@ While 1
 			GUICtrlSetData($h_Label_Info, "Restoring: Registry Please Wait...")
 
 			;If Registry Restore allowed via Checkbox
-			If Not GUICtrlRead($h_Checkbox_NoRestore_Registry) = $GUI_CHECKED Then _Reg_Import($s_reg_File)
+			If GUICtrlRead($h_Checkbox_NoRestore_Registry) = $GUI_UNCHECKED Then _Reg_Import($s_reg_File)
 			#endregion ;/Restore Guest Registry-->
 
 			#region ;/Restore Host Registry from stored in tmp Registry--->
 			GUICtrlSetData($h_Label_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
 
 			;If Registry Restore allowed via Checkbox
-			If Not GUICtrlRead($h_Checkbox_NoRestore_Registry) = $GUI_CHECKED Then
+			If GUICtrlRead($h_Checkbox_NoRestore_Registry) = $GUI_UNCHECKED Then
 				If _RegKeyExists($s_regpath_IDM & "_tmp") Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Host Registry From Stored in tmp Registry")
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ')
@@ -1354,6 +1354,7 @@ While 1
 				If Not RegDelete($s_regpath_IDM & "_tmp") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ' & "Error Code:" & @error)
 			EndIf
 			#endregion ;/Remove tmp Registry--->
+			_CleanINInReg()
 
 			If $b_RestartIDM Then _sRun_IDMexe()
 
@@ -2218,7 +2219,7 @@ Func _AppendRegKeys()
 		$sLine = FileReadLine($h_reg_File)
 		If @error = -1 Then ExitLoop
 
-		If StringInStr($sLine, $s_regpath_IDM) Then
+		If StringInStr($sLine, $s_regpath_IDM & "\") Then
 
 			$asplit = StringSplit(StringTrimRight($sLine, 1), "\")
 

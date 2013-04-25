@@ -1,6 +1,7 @@
 v0.9.8 April 24th, 2013
 
 • Added Append/Merge Profile
+• Fixed IDM Restart
 
 v0.9.7 April 13th, 2013
 

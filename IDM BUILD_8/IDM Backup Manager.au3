@@ -1418,7 +1418,7 @@ While 1
 			ShellExecute("http://forum.1067081.n5.nabble.com/IDM-Backup-Manager-f3.html")
 
 		Case $h_Button_Associate_Setting
-			_ShellFile_Install("Restore IDM Backup", "ibf", @ScriptName, @ScriptFullPath, @ScriptFullPath, 19, False, False)
+			_ShellFile_Install("Restore IDM Backup", "ibf", @ScriptName, @ScriptFullPath, @ScriptFullPath, 17, False, False)
 			If @error Then
 				GUICtrlSetData($h_Label_Info, "Error: Association NOT Created.")
 			Else
@@ -1706,7 +1706,6 @@ EndFunc   ;==>_Current_Moment
 
 Func _sPath_Last_Remove($sPath)
 	Local $s_Saved_Path = ""
-	Local $sPath = ""
 
 	If StringRight($sPath, 1) <> "\" Then $sPath &= "\"
 
@@ -1836,11 +1835,11 @@ Func _Clean_GUI_Child()
 	Local $Progress1 = GUICtrlCreateProgress(10, 225, 96, 21)
 
 	Local $Button_Clean = GUICtrlCreateButton("", 155, 215, 40, 40)
-	__AET_ButtonSetIcon(-1, 13, 32, 32, 0)
+	__AET_ButtonSetIcon(-1, 12, 32, 32, 0)
 	GUICtrlSetTip(-1, "Clean The Files/Folders", "Clean", 1, 1)
 
 	Local $Button_Analyze = GUICtrlCreateButton("", 110, 215, 40, 40)
-	__AET_ButtonSetIcon(-1, 16, 32, 32, 0)
+	__AET_ButtonSetIcon(-1, 14, 32, 32, 0)
 	GUICtrlSetTip(-1, "Analyze Size of Files/Folders To Clean", "Analyze", 1, 1)
 	GUISetState(@SW_SHOW)
 

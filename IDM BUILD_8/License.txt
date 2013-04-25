@@ -1,7 +1,10 @@
 IDM Backup Manager v0.9.8(Beta) Copyright (c) 2012-13, Gajjar Tejas
-7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)
-Other product and company names mentioned herein may be the trademarks of their 
-respective owners.
+
+Other
+================================================================
+• 7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL) www.7-zip.org
+• Other product and company names mentioned herein may be the 
+  trademarks of their respective owners.
 
 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL 
 WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED 

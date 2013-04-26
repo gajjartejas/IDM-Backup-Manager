@@ -11,10 +11,10 @@
 #AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
 #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
 #AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas's Blog
-#AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
+#AutoIt3Wrapper_Res_Field=Compile Date|%longdate% %time%
 #AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager.exe
-#AutoIt3Wrapper_Res_Field=Product Name|IDM Backup Manager
-#AutoIt3Wrapper_Res_Field=Product Version|0.9.8 beta
+#AutoIt3Wrapper_Res_Field=ProductName|IDM Backup Manager
+#AutoIt3Wrapper_Res_Field=ProductVersion|0.9.8 beta
 #AutoIt3Wrapper_Res_Field=Total Commits|322
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Backup.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico
@@ -56,6 +56,7 @@
 #include "Includes\_Resources.au3"
 #include "Includes\_FileIsPathValid.au3"
 #include "Includes\_RegFunc.au3"
+#include "Includes\_RunWithReducedPrivileges.au3"
 #endregion    ;************ Includes ************
 
 #region global Variables
@@ -196,7 +197,7 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $h_Button_Backup = GUICtrlCreateButton("Backup Now", 319, 217, 95, 25)
-__AET_ButtonSetIcon(-1, 12, 16, 16, 0)
+__AET_ButtonSetIcon(-1, 11, 16, 16, 0)
 GUICtrlSetTip(-1, "Backup Now")
 GUICtrlSetState(-1, $GUI_DISABLE)
 
@@ -244,7 +245,7 @@ $h_Checkbox_NoRestore_Data = GUICtrlCreateCheckbox("Do Not Restore Data", 200, 1
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $h_Button_Restore = GUICtrlCreateButton("Restore Now", 319, 217, 95, 25)
-__AET_ButtonSetIcon(-1, 12, 16, 16, 0)
+__AET_ButtonSetIcon(-1, 11, 16, 16, 0)
 GUICtrlSetTip(-1, "Restore Now")
 GUICtrlSetState(-1, $GUI_DISABLE)
 #endregion Restore ;==============================================================================================Restore:
@@ -2406,14 +2407,9 @@ EndFunc   ;==>_ShellFile_Uninstall
 Func _sRun_IDMexe()
 	Local $s_IDMexe_Path = RegRead($s_regpath_IDM, "ExePath")
 	If Not FileExists($s_IDMexe_Path) Then $s_IDMexe_Path = @ProgramFilesDir & "\" & "Internet Download Manager\IDMan.exe"
-	If Not FileExists($s_IDMexe_Path) Then Return 0
-	$s_IDMexe_Path &= " /onboot"
-	If Not ProcessExists("idman.exe") Then
-		Run($s_IDMexe_Path)
-	Else
-		ProcessClose("idman.exe")
-		Run($s_IDMexe_Path)
-	EndIf
+	If Not FileExists($s_IDMexe_Path) Then Return SetError(1)
+	If ProcessExists("idman.exe") Then ProcessClose("idman.exe")
+	_RunWithReducedPrivileges($s_IDMexe_Path, "/onboot")
 EndFunc   ;==>_sRun_IDMexe
 
 Func _onExit()

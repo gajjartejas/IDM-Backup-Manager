@@ -57,6 +57,10 @@
 #include "Includes\_FileIsPathValid.au3"
 #include "Includes\_RegFunc.au3"
 #include "Includes\_RunWithReducedPrivileges.au3"
+#include "Includes\_ShellFile_Install.au3"
+#include "Includes\_ProcessGetExitCode.au3"
+#include "Includes\_ProgressMarquee.au3"
+
 #endregion    ;************ Includes ************
 
 #region global Variables
@@ -804,17 +808,20 @@ While 1
 			#endregion ;/define backup type--->
 
 			#region ;/Build Data array and Write INI--->
+
+			For $i = 0 To UBound($Data) - 1
+				$Data[$i] = ""
+			Next
+
 			If $b_DwnlData_Folder = True Then
 				If FileExists($s_DwnlData_Folder) Then
 					$Data[0] = $s_DwnlData_Folder
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_DwnlData_Folder " & "=" & ' "' & $s_DwnlData_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "DwnlData_Folder", True)
 				Else
-					$Data[0] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $s_DwnlData_Folder & '"')
 				EndIf
 			Else
-				$Data[0] = ""
 				IniWrite($s_ini_File, "Default", "DwnlData_Folder", False)
 			EndIf
 
@@ -824,7 +831,6 @@ While 1
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Grabber_Folder " & "=" & ' "' & $Grabber_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "Grabber_Folder", True)
 				Else
-					$Data[1] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $Grabber_Folder & '"')
 				EndIf
 
@@ -833,12 +839,9 @@ While 1
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GrabberData_Folder " & "=" & ' "' & $GrabberData_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "GrabberData_Folder", True)
 				Else
-					$Data[2] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $GrabberData_Folder & '"')
 				EndIf
 			Else
-				$Data[1] = ""
-				$Data[2] = ""
 				IniWrite($s_ini_File, "Default", "Grabber_Folder", False)
 				IniWrite($s_ini_File, "Default", "GrabberData_Folder", False)
 			EndIf
@@ -849,11 +852,9 @@ While 1
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Scheduler_Folder " & "=" & ' "' & $Scheduler_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "Scheduler_Folder", True)
 				Else
-					$Data[3] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $Scheduler_Folder & '"')
 				EndIf
 			Else
-				$Data[3] = ""
 				IniWrite($s_ini_File, "Default", "Scheduler_Folder", False)
 			EndIf
 
@@ -865,7 +866,6 @@ While 1
 					$Data[4] = $UrlHistory_txt_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory_txt_File " & "=" & ' "' & $UrlHistory_txt_File & '"')
 				Else
-					$Data[4] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $UrlHistory_txt_File & '"')
 				EndIf
 
@@ -873,7 +873,6 @@ While 1
 					$Data[5] = $UrlHistory2_txt_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory2_txt_File " & "=" & ' "' & $UrlHistory2_txt_File & '"')
 				Else
-					$Data[5] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $UrlHistory2_txt_File & '"')
 				EndIf
 
@@ -881,7 +880,6 @@ While 1
 					$Data[6] = $GlobalErrors_log_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GlobalErrors_log_File " & "=" & ' "' & $GlobalErrors_log_File & '"')
 				Else
-					$Data[6] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $GlobalErrors_log_File & '"')
 				EndIf
 
@@ -889,7 +887,6 @@ While 1
 					$Data[7] = $urlexclist_dat_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $urlexclist_dat_File " & "=" & ' "' & $urlexclist_dat_File & '"')
 				Else
-					$Data[7] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $urlexclist_dat_File & '"')
 				EndIf
 
@@ -897,7 +894,6 @@ While 1
 					$Data[8] = $defextmap_dat_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $defextmap_dat_File " & "=" & ' "' & $defextmap_dat_File & '"')
 				Else
-					$Data[8] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $defextmap_dat_File & '"')
 				EndIf
 
@@ -905,7 +901,6 @@ While 1
 					$Data[9] = $foldresHistory_txt_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $foldresHistory_txt_File " & "=" & ' "' & $foldresHistory_txt_File & '"')
 				Else
-					$Data[9] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $foldresHistory_txt_File & '"')
 				EndIf
 
@@ -913,7 +908,6 @@ While 1
 					$Data[10] = $sts_list_dat_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $sts_list_dat_File " & "=" & ' "' & $sts_list_dat_File & '" ')
 				Else
-					$Data[10] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $sts_list_dat_File & '"')
 				EndIf
 
@@ -921,21 +915,12 @@ While 1
 					$Data[11] = $cnlurllist_dat_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $cnlurllist_dat_File " & "=" & ' "' & $cnlurllist_dat_File & '" ')
 				Else
-					$Data[11] = ""
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $cnlurllist_dat_File & '"')
 				EndIf
 
 				IniWrite($s_ini_File, "Default", "History_Files", True)
 			Else
 				IniWrite($s_ini_File, "Default", "History_Files", False)
-				$Data[4] = ""
-				$Data[5] = ""
-				$Data[6] = ""
-				$Data[7] = ""
-				$Data[8] = ""
-				$Data[9] = ""
-				$Data[10] = ""
-				$Data[11] = ""
 			EndIf
 
 			#region ;/add INI--->
@@ -1663,19 +1648,6 @@ Func _Control_Update_Default()
 	#endregion ;for restore
 EndFunc   ;==>_Control_Update_Default
 
-Func _ProgressMarquee_Start($iControlID)
-	GUICtrlSetStyle($iControlID, BitOR($PBS_SMOOTH, $PBS_MARQUEE, $WS_TABSTOP))
-	Return GUICtrlSendMsg($iControlID, $PBM_SETMARQUEE, 1, 10)
-EndFunc   ;==>_ProgressMarquee_Start
-
-Func _ProgressMarquee_Stop($iControlID, $iReset = 0)
-	GUICtrlSendMsg($iControlID, $PBM_SETMARQUEE, 1, 10)
-	Local $iReturn = GUICtrlSendMsg($iControlID, $PBM_SETMARQUEE, 0, 50)
-	If $iReset Then
-		GUICtrlSetStyle($iControlID, BitOR($PBS_SMOOTH, $WS_TABSTOP))
-	EndIf
-	Return $iReturn
-EndFunc   ;==>_ProgressMarquee_Stop
 #endregion control Functions
 
 #region file, string Functions
@@ -1687,7 +1659,7 @@ EndFunc   ;==>_Drive_Get_From_Path
 
 Func _File_Size($iBytes)
 	If $iBytes >= 0 And $iBytes <= 1024 Then
-		Return $iBytes & " BYTES"
+		Return $iBytes & " Bytes"
 	ElseIf $iBytes > 1024 And $iBytes <= 1048576 Then
 		Return Round($iBytes / (1024), 2) & " KB"
 	ElseIf $iBytes > 1048576 And $iBytes <= 1073741824 Then
@@ -1733,6 +1705,21 @@ Func _FileOrFolderDeleteWithLog($sFile)
 		EndIf
 	EndIf
 EndFunc   ;==>_FileOrFolderDeleteWithLog
+
+Func _iFileOrFolderRemove($aFiles)
+	Local $i, $sFileLocked = ""
+
+	For $i = 0 To UBound($aFiles) - 1
+		If ($aFiles[$i] = "") Or (Not FileExists($aFiles[$i])) Then ContinueLoop
+
+		If _IsDir($aFiles[$i]) Then
+			If Not DirRemove($aFiles[$i], 1) Then $sFileLocked &= $aFiles[$i] & @CRLF
+		Else
+			If Not FileDelete($aFiles[$i]) Then $sFileLocked &= $aFiles[$i] & @CRLF
+		EndIf
+	Next
+	Return $sFileLocked
+EndFunc   ;==>_iFileOrFolderRemove
 #endregion file, string Functions
 
 #region Misc Functions
@@ -1820,7 +1807,7 @@ Func _Clean_GUI_Child()
 	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0] + $i_xWidth / 2 - 202 / 2, $size[1] + $i_yHight / 2 - 259 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
 	GUISetIcon(@ScriptFullPath, 0, $clean)
 
-	$Group1 = GUICtrlCreateGroup("Options", 5, 60, 190, 150)
+	Local $Group1 = GUICtrlCreateGroup("Options", 5, 60, 190, 150)
 	Local $Clena_DD = GUICtrlCreateCheckbox("Download Data", 20, 80, 97, 17)
 	Local $Clean_GD = GUICtrlCreateCheckbox("Grabber Data", 20, 105, 97, 17)
 	Local $Clean_SD = GUICtrlCreateCheckbox("Scheduler Data", 20, 130, 97, 17)
@@ -1843,7 +1830,8 @@ Func _Clean_GUI_Child()
 	__AET_ButtonSetIcon(-1, 14, 32, 32, 0)
 	GUICtrlSetTip(-1, "Analyze Size of Files/Folders To Clean", "Analyze", 1, 1)
 	GUISetState(@SW_SHOW)
-
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "============================= IDM Cleaner Started =============================")
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
@@ -1864,93 +1852,109 @@ Func _Clean_GUI_Child()
 
 			Case $Button_Analyze
 				_ProgressMarquee_Start($Progress1)
-				Local $size = 0
-				If GUICtrlRead($Full_Clean) = $GUI_CHECKED Then
-					$size += DirGetSize($s_DwnlData_Folder)
-					$size += DirGetSize($GrabberData_Folder)
-					$size += DirGetSize($Scheduler_Folder)
-				Else
-					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $size += DirGetSize($s_DwnlData_Folder)
-					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then $size += DirGetSize($GrabberData_Folder)
-					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $size += DirGetSize($Scheduler_Folder)
 
+				If GUICtrlRead($Full_Clean) = $GUI_CHECKED Then
+					$Data[0] = $s_DwnlData_Folder & @UserName & "\"
+					$Data[1] = $Grabber_Folder
+					$Data[2] = $GrabberData_Folder & @UserName & "\"
+					$Data[3] = $Scheduler_Folder
+
+					$Data[4] = $UrlHistory_txt_File
+					$Data[5] = $UrlHistory2_txt_File
+					$Data[6] = $GlobalErrors_log_File
+					$Data[7] = $urlexclist_dat_File
+					$Data[8] = $defextmap_dat_File
+					$Data[9] = $foldresHistory_txt_File
+					$Data[10] = $sts_list_dat_File
+					$Data[11] = $cnlurllist_dat_File
+				Else
+					For $i = 0 To UBound($Data) - 1
+						$Data[$i] = ""
+					Next
+					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $Data[0] = $s_DwnlData_Folder & @UserName & "\"
+					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then
+						$Data[1] = $Grabber_Folder
+						$Data[2] = $GrabberData_Folder & @UserName & "\"
+					EndIf
+					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $Data[3] = $Scheduler_Folder
+					If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
+						$Data[4] = $UrlHistory_txt_File
+						$Data[5] = $UrlHistory2_txt_File
+						$Data[6] = $GlobalErrors_log_File
+						$Data[7] = $urlexclist_dat_File
+						$Data[8] = $defextmap_dat_File
+						$Data[9] = $foldresHistory_txt_File
+						$Data[10] = $sts_list_dat_File
+						$Data[11] = $cnlurllist_dat_File
+					EndIf
 				EndIf ;==>clean
+
 				_ProgressMarquee_Stop($Progress1, 1)
-				MsgBox(64, "Info", _File_Size($size) & " Will Removed.", 0, $clean)
+				MsgBox(64, "Info", _File_Size(_iGetFileSize($Data)) & " Will Removed.", 0, $clean)
 
 			Case $Button_Clean
-				Local $size = 0
+				FileWriteLine($s_Log_File, "")
+				FileWriteLine($s_Log_File, "============================= Cleaning Started =============================")
 				If GUICtrlRead($Full_Clean) = $GUI_CHECKED Then
-					$size += DirGetSize($s_DwnlData_Folder)
-					$size += DirGetSize($GrabberData_Folder)
-					$size += DirGetSize($Scheduler_Folder)
+					$Data[0] = $s_DwnlData_Folder & @UserName & "\"
+					$Data[1] = $Grabber_Folder
+					$Data[2] = $GrabberData_Folder & @UserName & "\"
+					$Data[3] = $Scheduler_Folder
 
-					Local $iMsgBoxAnswer = MsgBox(36, "Conform", _File_Size($size) & " Will Removed. Continue?", 0, $clean)
-					If $iMsgBoxAnswer = 6 Then
-						If GUICtrlRead($Clena_DD) = $GUI_CHECKED And FileExists($s_DwnlData_Folder) Then
-							If Not DirRemove($s_DwnlData_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete. " & $s_DwnlData_Folder & " It May be Locked.", 0, $clean)
-						EndIf
-
-						If GUICtrlRead($Clean_GD) = $GUI_CHECKED And BitOR(FileExists($Grabber_Folder), FileExists($GrabberData_Folder)) Then
-							If Not DirRemove($Grabber_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $Grabber_Folder & " It May be Locked.")
-							If Not DirRemove($GrabberData_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $GrabberData_Folder & " It May be Locked.", 0, $clean)
-						EndIf
-
-						If GUICtrlRead($Clean_SD) = $GUI_CHECKED And FileExists($Scheduler_Folder) Then
-							If Not DirRemove($Scheduler_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $Scheduler_Folder & " It May be Locked.", 0, $clean)
-						EndIf
-
-						If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
-							FileDelete($UrlHistory_txt_File)
-							FileDelete($UrlHistory2_txt_File)
-							FileDelete($GlobalErrors_log_File)
-							FileDelete($urlexclist_dat_File)
-							FileDelete($defextmap_dat_File)
-							FileDelete($foldresHistory_txt_File)
-							FileDelete($sts_list_dat_File)
-							FileDelete($cnlurllist_dat_File)
-						EndIf
-						MsgBox(64, "Done", "Done.", 0, $clean)
+					$Data[4] = $UrlHistory_txt_File
+					$Data[5] = $UrlHistory2_txt_File
+					$Data[6] = $GlobalErrors_log_File
+					$Data[7] = $urlexclist_dat_File
+					$Data[8] = $defextmap_dat_File
+					$Data[9] = $foldresHistory_txt_File
+					$Data[10] = $sts_list_dat_File
+					$Data[11] = $cnlurllist_dat_File
+				Else
+					For $i = 0 To UBound($Data) - 1
+						$Data[$i] = ""
+					Next
+					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $Data[0] = $s_DwnlData_Folder & @UserName & "\"
+					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then
+						$Data[1] = $Grabber_Folder
+						$Data[2] = $GrabberData_Folder & @UserName & "\"
 					EndIf
-
-				ElseIf GUICtrlRead($Custom_Clean) = $GUI_CHECKED Then
-					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $size += DirGetSize($s_DwnlData_Folder)
-					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then $size += DirGetSize($GrabberData_Folder)
-					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $size += DirGetSize($Scheduler_Folder)
-
-					$iMsgBoxAnswer = MsgBox(36, "Conform", _File_Size($size) & " Will Removed. Continue?", 0, $clean)
-					If $iMsgBoxAnswer = 6 Then
-
-						_ProgressMarquee_Start($Progress1)
-
-						If GUICtrlRead($Clena_DD) = $GUI_CHECKED And FileExists($s_DwnlData_Folder) Then
-							If Not DirRemove($s_DwnlData_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete. " & $s_DwnlData_Folder & " It May be Locked.", 0, $clean)
-						EndIf
-
-						If GUICtrlRead($Clean_GD) = $GUI_CHECKED And BitOR(FileExists($Grabber_Folder), FileExists($GrabberData_Folder)) Then
-							If Not DirRemove($Grabber_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $Grabber_Folder & " It May be Locked.")
-							If Not DirRemove($GrabberData_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $GrabberData_Folder & " It May be Locked.", 0, $clean)
-						EndIf
-
-						If GUICtrlRead($Clean_SD) = $GUI_CHECKED And FileExists($Scheduler_Folder) Then
-							If Not DirRemove($Scheduler_Folder, 1) Then MsgBox(16, "Error", " Could Not Delete: " & $Scheduler_Folder & " It May be Locked.", 0, $clean)
-						EndIf
-
-						If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
-							FileDelete($UrlHistory_txt_File)
-							FileDelete($UrlHistory2_txt_File)
-							FileDelete($GlobalErrors_log_File)
-							FileDelete($urlexclist_dat_File)
-							FileDelete($defextmap_dat_File)
-							FileDelete($foldresHistory_txt_File)
-							FileDelete($sts_list_dat_File)
-							FileDelete($cnlurllist_dat_File)
-						EndIf
-						If $b_RestartIDM Then _sRun_IDMexe()
-						MsgBox(64, "Done", "Done.", 0, $clean)
+					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $Data[3] = $Scheduler_Folder
+					If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
+						$Data[4] = $UrlHistory_txt_File
+						$Data[5] = $UrlHistory2_txt_File
+						$Data[6] = $GlobalErrors_log_File
+						$Data[7] = $urlexclist_dat_File
+						$Data[8] = $defextmap_dat_File
+						$Data[9] = $foldresHistory_txt_File
+						$Data[10] = $sts_list_dat_File
+						$Data[11] = $cnlurllist_dat_File
 					EndIf
-					_ProgressMarquee_Stop($Progress1, 1)
 				EndIf
+
+				Local $iMsgBoxAnswer = MsgBox(36, "Conform", _File_Size(_iGetFileSize($Data)) & " Will Removed. Continue?", 0, $clean)
+				If $iMsgBoxAnswer = 6 Then
+					_ProgressMarquee_Start($Progress1)
+					Local $sLockedFiles = _iFileOrFolderRemove($Data)
+					_ProgressMarquee_Stop($Progress1, 1)
+
+					If $sLockedFiles <> "" Then
+						MsgBox(16, "Warning", "Some File(s) Could Not Removed.View Log For More Information.", 0, $clean)
+
+						$sLockedFile = StringSplit($sLockedFiles, @CRLF, 1)
+						For $i = 1 To $sLockedFile[0] - 1
+							FileWriteLine($s_Log_File, _Current_Moment() & "Warning: File Could Not Deleted= " & '"' & $sLockedFile[$i] & '"')
+						Next
+
+					EndIf
+
+					For $i = 0 To 3
+						If Not FileExists($Data[$i]) Then DirCreate($Data[$i])
+					Next
+
+					MsgBox(64, "Done", "Done.", 0, $clean)
+					If $b_RestartIDM Then _sRun_IDMexe()
+				EndIf
+				FileWriteLine($s_Log_File, "============================= Cleaning Ended =============================")
 		EndSwitch
 	WEnd
 	GUISetState(@SW_ENABLE, $h_IDMBM)
@@ -2158,7 +2162,6 @@ Func _iGetFileSize($aFiles)
 
 	For $i = 0 To UBound($aFiles) - 1
 		If $aFiles[$i] = "" Then ContinueLoop
-
 		If _IsDir($aFiles[$i]) Then
 			$iSize += DirGetSize($aFiles[$i])
 		Else
@@ -2331,79 +2334,6 @@ Func _check_cmd()
 	EndIf
 EndFunc   ;==>_check_cmd
 
-Func _ShellFile_Install($sText, $sFileType, $sName = @ScriptName, $sFilePath = @ScriptFullPath, $sIconPath = @ScriptFullPath, $iIcon = 0, $fAllUsers = False, $fExtended = False)
-	Local $i64Bit = '', $sRegistryKey = ''
-
-	If $iIcon = Default Then
-		$iIcon = 0
-	EndIf
-	If $sFilePath = Default Then
-		$sFilePath = @ScriptFullPath
-	EndIf
-	If $sIconPath = Default Then
-		$sIconPath = @ScriptFullPath
-	EndIf
-	If $sName = Default Then
-		$sName = @ScriptName
-	EndIf
-	If @OSArch = 'X64' Then
-		$i64Bit = '64'
-	EndIf
-	If $fAllUsers Then
-		$sRegistryKey = 'HKEY_LOCAL_MACHINE' & $i64Bit & '\SOFTWARE\Classes\'
-	Else
-		$sRegistryKey = 'HKEY_CURRENT_USER' & $i64Bit & '\SOFTWARE\Classes\'
-	EndIf
-
-	$sFileType = StringRegExpReplace($sFileType, '^\.+', '')
-	$sName = StringLower(StringRegExpReplace($sName, '\.[^\.\\/]*$', ''))
-	If StringStripWS($sName, 8) = '' Or FileExists($sFilePath) = 0 Or StringStripWS($sFileType, 8) = '' Then
-		Return SetError(1, 0, False)
-	EndIf
-
-	_ShellFile_Uninstall($sFileType, $fAllUsers)
-
-	Local $iReturn = 0
-	$iReturn += RegWrite($sRegistryKey & '.' & $sFileType, '', 'REG_SZ', $sName)
-	$iReturn += RegWrite($sRegistryKey & $sName & '\DefaultIcon\', '', 'REG_SZ', $sIconPath & ',' & $iIcon)
-	$iReturn += RegWrite($sRegistryKey & $sName & '\shell\open', '', 'REG_SZ', $sText)
-	$iReturn += RegWrite($sRegistryKey & $sName & '\shell\open', 'Icon', 'REG_EXPAND_SZ', $sIconPath & ',' & $iIcon)
-	$iReturn += RegWrite($sRegistryKey & $sName & '\shell\open\command\', '', 'REG_SZ', '"' & $sFilePath & '" "%1"')
-	$iReturn += RegWrite($sRegistryKey & $sName, '', 'REG_SZ', $sText)
-	$iReturn += RegWrite($sRegistryKey & $sName, 'Icon', 'REG_EXPAND_SZ', $sIconPath & ',' & $iIcon)
-	$iReturn += RegWrite($sRegistryKey & $sName & '\command', '', 'REG_SZ', '"' & $sFilePath & '" "%1"')
-	If $fExtended Then
-		$iReturn += RegWrite($sRegistryKey & $sName, 'Extended', 'REG_SZ', '')
-	EndIf
-	Return $iReturn > 0
-EndFunc   ;==>_ShellFile_Install
-
-Func _ShellFile_Uninstall($sFileType, $fAllUsers = False)
-	Local $i64Bit = '', $sRegistryKey = ''
-
-	If @OSArch = 'X64' Then
-		$i64Bit = '64'
-	EndIf
-	If $fAllUsers Then
-		$sRegistryKey = 'HKEY_LOCAL_MACHINE' & $i64Bit & '\SOFTWARE\Classes\'
-	Else
-		$sRegistryKey = 'HKEY_CURRENT_USER' & $i64Bit & '\SOFTWARE\Classes\'
-	EndIf
-
-	$sFileType = StringRegExpReplace($sFileType, '^\.+', '')
-	If StringStripWS($sFileType, 8) = '' Then
-		Return SetError(1, 0, False)
-	EndIf
-
-	Local $iReturn = 0, $sName = RegRead($sRegistryKey & '.' & $sFileType, '')
-	If @error Then
-		Return SetError(2, 0, False)
-	EndIf
-	$iReturn += RegDelete($sRegistryKey & '.' & $sFileType)
-	$iReturn += RegDelete($sRegistryKey & $sName)
-	Return $iReturn > 0
-EndFunc   ;==>_ShellFile_Uninstall
-
 Func _sRun_IDMexe()
 	Local $s_IDMexe_Path = RegRead($s_regpath_IDM, "ExePath")
 	If Not FileExists($s_IDMexe_Path) Then $s_IDMexe_Path = @ProgramFilesDir & "\" & "Internet Download Manager\IDMan.exe"
@@ -2421,12 +2351,8 @@ Func _onExit()
 EndFunc   ;==>_onExit
 
 Func _SelfProcessCheck()
-	If Not WinActive($s_Win_Title) Then
-		If Not WinActivate($s_Win_Title) = 0 Then Exit
-	EndIf
-	If ProcessExists(@ScriptName) Then
-		If Not WinActivate($s_Win_Title) = 0 Then Exit
-	EndIf
+	;Activates (gives focus to) a window.
+	If WinActivate($s_Win_Title) > 0 Then Exit
 EndFunc   ;==>_SelfProcessCheck
 
 Func _CleanINInReg()
@@ -2446,35 +2372,8 @@ Func _CopyRegTempKeyWithLog($sSrcKey, $sDestKey)
 	EndIf
 EndFunc   ;==>_CopyRegTempKeyWithLog
 
-; Return handle of given PID
-Func _ProcessGetHandle($iPID)
-	Local Const $PROCESS_QUERY_INFORMATION = 0x0400
-	Local $avRET = DllCall("kernel32.dll", "ptr", "OpenProcess", "int", $PROCESS_QUERY_INFORMATION, "int", 0, "int", $iPID)
-	If @error Then
-		Return SetError(1, 0, 0)
-	Else
-		Return $avRET[0]
-	EndIf
-EndFunc   ;==>_ProcessGetHandle
 
-; Close process handle
-Func _ProcessCloseHandle($hProc)
-	Local $avRET = DllCall("kernel32.dll", "int", "CloseHandle", "ptr", $hProc)
-	If @error Then
-		Return SetError(1, 0, 0)
-	Else
-		Return 1
-	EndIf
-EndFunc   ;==>_ProcessCloseHandle
-
-; Get process exit code from handle
-Func _ProcessGetExitCode($hProc)
-	Local $t_ExitCode = DllStructCreate("int")
-	Local $avRET = DllCall("kernel32.dll", "int", "GetExitCodeProcess", "ptr", $hProc, "ptr", DllStructGetPtr($t_ExitCode))
-	If @error Then
-		Return SetError(1, 0, 0)
-	Else
-		Return DllStructGetData($t_ExitCode, 1)
-	EndIf
-EndFunc   ;==>_ProcessGetExitCode
 #endregion system & process Functions
+
+
+

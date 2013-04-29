@@ -5,7 +5,7 @@
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.8.0
-#AutoIt3Wrapper_Res_Description=Backup and Restore Internet Download Manager
+#AutoIt3Wrapper_Res_Description=Internet Download Manager
 #AutoIt3Wrapper_Res_Fileversion=0.9.8.0
 #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-2013
 #AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
@@ -42,7 +42,7 @@
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Run_cvsWrapper=v
 
-#region    ;************ Includes ************
+#region   Includes
 #include <Array.au3>
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
@@ -60,8 +60,7 @@
 #include "Includes\_ShellFile_Install.au3"
 #include "Includes\_ProcessGetExitCode.au3"
 #include "Includes\_ProgressMarquee.au3"
-
-#endregion    ;************ Includes ************
+#endregion   Includes
 
 #region global Variables
 Global $h_IDMBM
@@ -622,40 +621,12 @@ While 1
 			EndIf
 
 		Case $Button_RestoreDefault_Setting
-			$i_xWinPos = (@DesktopWidth - $i_xWidth) / 2
-			$i_yWinPos = (@DesktopHeight - $i_yHight) / 2
+			Local $iMsgBoxAnswer = MsgBox(52, "Warning", "This Operation Will Reset IDM Backup Manager Setting And Restart IDM Backup Manager. Do You Want To Continue?", 0, $h_IDMBM)
 
-			$s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files"
-			$s_Log_File = @AppDataDir & "\IDM Backup Manager" & "\LogFile.log" ;for installer
-
-			$s_AppDataIDMFolder = _sGet_AppDataIDMFolder() ;contain back "\"
-			$s_DwnlData_Folder = _sGet_TempPathFolder() ;contain back "\"
-			$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
-
-			$b_AppendLog_File = 1
-			$b_RestartIDM = 0
-
-			GUICtrlSetData($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
-			GUICtrlSetData($h_Label_LogFile_Setting, $s_Log_File)
-			GUICtrlSetData($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
-			GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
-
-			IniWrite($s_Setting_File, "Position", "x", $i_xWinPos)
-			IniWrite($s_Setting_File, "Position", "y", $i_yWinPos)
-
-			IniWrite($s_Setting_File, "Default Paths", "Backup_Dir", $s_Backup_Dir)
-			IniWrite($s_Setting_File, "Default Paths", "Log_File", $s_Log_File)
-
-			IniWrite($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder);contain back "\"
-			IniWrite($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder);contain back "\"
-
-			IniWrite($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File) ;Boolean
-			IniWrite($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM)
-
-			GUICtrlSetTip($h_Label_LogFile_Setting, $s_Log_File)
-			GUICtrlSetTip($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
-			GUICtrlSetTip($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
-			GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
+			If $iMsgBoxAnswer = 6 Then;Yes
+				_ResetSetting()
+				If IsNumber(Run(@ScriptFullPath)) <> 0 Then Exit
+			EndIf
 
 		Case $h_Button_Browse_Backup
 			GUICtrlSetData($h_Label_Info, "INFO: Ready")
@@ -2171,7 +2142,7 @@ Func _iGetFileSize($aFiles)
 	Return $iSize
 EndFunc   ;==>_iGetFileSize
 
-Func _iGet_MaxKey()
+Func _iGet_MaxKey($s_regpath_IDM)
 	Local $k = 1
 	Local $j = 0
 	Local $var, $iMaxKey
@@ -2206,7 +2177,7 @@ Func _AppendRegKeys()
 	Local $s_reg_File_Tmp = @TempDir & "\IDMregistryTmp.reg"
 	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
 
-	Local $iHostKeys = _iGet_MaxKey();expt
+	Local $iHostKeys = _iGet_MaxKey($s_regpath_IDM);expt
 	If @error Then Return SetError(-1)
 
 	Local $h_reg_File = FileOpen($s_reg_File, 0);Read
@@ -2252,7 +2223,7 @@ Func _AppendRegKeys()
 EndFunc   ;==>_AppendRegKeys
 #endregion app & envt Functions
 
-#region system & process Functions
+#region system & process Functions(idm related)
 Func _log_Sysinfo()
 	Local $a_Memory = MemGetStats()
 	FileWriteLine($s_Log_File, "")
@@ -2372,8 +2343,40 @@ Func _CopyRegTempKeyWithLog($sSrcKey, $sDestKey)
 	EndIf
 EndFunc   ;==>_CopyRegTempKeyWithLog
 
+Func _ResetSetting()
+	$i_xWinPos = (@DesktopWidth - $i_xWidth) / 2
+	$i_yWinPos = (@DesktopHeight - $i_yHight) / 2
 
-#endregion system & process Functions
+	$s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files"
+	$s_Log_File = @AppDataDir & "\IDM Backup Manager" & "\LogFile.log" ;for installer
 
+	$s_AppDataIDMFolder = _sGet_AppDataIDMFolder() ;contain back "\"
+	$s_DwnlData_Folder = _sGet_TempPathFolder() ;contain back "\"
+	$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 
+	$b_AppendLog_File = 1
+	$b_RestartIDM = 0
 
+	GUICtrlSetData($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
+	GUICtrlSetData($h_Label_LogFile_Setting, $s_Log_File)
+	GUICtrlSetData($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
+	GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
+
+	IniWrite($s_Setting_File, "Position", "x", $i_xWinPos)
+	IniWrite($s_Setting_File, "Position", "y", $i_yWinPos)
+
+	IniWrite($s_Setting_File, "Default Paths", "Backup_Dir", $s_Backup_Dir)
+	IniWrite($s_Setting_File, "Default Paths", "Log_File", $s_Log_File)
+
+	IniWrite($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder);contain back "\"
+	IniWrite($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder);contain back "\"
+
+	IniWrite($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File) ;Boolean
+	IniWrite($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM)
+
+	GUICtrlSetTip($h_Label_LogFile_Setting, $s_Log_File)
+	GUICtrlSetTip($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
+	GUICtrlSetTip($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
+	GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
+EndFunc   ;==>_ResetSetting
+#endregion system & process Functions(idm related)

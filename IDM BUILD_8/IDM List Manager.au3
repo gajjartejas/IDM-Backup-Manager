@@ -20,7 +20,7 @@
 #AutoIt3Wrapper_Run_cvsWrapper=v
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#region    ;************ Includes ************
+#region Includes
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <EditConstants.au3>
@@ -30,13 +30,13 @@
 #include "Includes\_RegFunc.au3"
 #include "Includes\_GUICtrlListView_SaveHTML.au3"
 #include "Includes\_GUICtrlListView_SaveCSV.au3"
-#endregion    ;************ Includes ************
+#endregion Includes
 
 #region global Variables
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
 Global $GUIMINWID = 701, $GUIMINHT = 313
-Global $hGUI, $MenuItem_list_Catagories_[_CountKey($s_regpath_IDM)+1], $fChange = False
+Global $hGUI, $MenuItem_list_Catagories_[_CountKey($s_regpath_IDM) + 1], $fChange = False
 Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
 #endregion global Variables
 
@@ -45,86 +45,103 @@ Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
 $hGUI = GUICreate("IDM List Manager", $GUIMINWID, $GUIMINHT, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_THICKFRAME, $WS_TABSTOP))
 
 #region Menu
+
+#region File Menu ;============================================================================================== File Menu
 $MenuItem_File = GUICtrlCreateMenu("&File")
-$MenuItem_Analyze = GUICtrlCreateMenuItem("&Analyze(Refresh)", $MenuItem_File)
-$MenuItem_Selected = GUICtrlCreateMenu("&Selected", $MenuItem_File)
-$MenuItem_ExploreFolder = GUICtrlCreateMenuItem("&Explore Folder", $MenuItem_Selected)
+$MenuItem_File_Analyze = GUICtrlCreateMenuItem("&Analyze(Refresh)", $MenuItem_File)
+$MenuItem_File_Selected = GUICtrlCreateMenu("&Selected", $MenuItem_File)
+$MenuItem_File_Selected_ExploreFolder = GUICtrlCreateMenuItem("&Explore Folder", $MenuItem_File_Selected)
 GUICtrlSetState(-1, $GUI_DISABLE)
-$MenuItem_ForceJoin = GUICtrlCreateMenuItem("F&orce Join", $MenuItem_Selected)
+$MenuItem_File_Selected_ForceJoin = GUICtrlCreateMenuItem("F&orce Join", $MenuItem_File_Selected)
 GUICtrlSetState(-1, $GUI_DISABLE)
-$MenuItem_Remove = GUICtrlCreateMenuItem("&Remove", $MenuItem_Selected)
+$MenuItem_File_Selected_Remove = GUICtrlCreateMenuItem("&Remove", $MenuItem_File_Selected)
 GUICtrlSetState(-1, $GUI_DISABLE)
+$MenuItem_File_Selected_Goto = GUICtrlCreateMenuItem("&Goto", $MenuItem_File_Selected)
+GUICtrlSetState(-1, $GUI_DISABLE)
+$MenuItem_File_Selected_Properties = GUICtrlCreateMenuItem("&Properties", $MenuItem_File_Selected)
+GUICtrlSetState(-1, $GUI_DISABLE)
+$MenuItem_File_Split = GUICtrlCreateMenuItem("", $MenuItem_File)
+$MenuItem_File_Exit = GUICtrlCreateMenuItem("&Exit", $MenuItem_File)
+#endregion File Menu ;============================================================================================== File Menu
 
-$MenuItem_Goto = GUICtrlCreateMenuItem("&Goto", $MenuItem_Selected)
-GUICtrlSetState(-1, $GUI_DISABLE)
-
-$MenuItem_Properties = GUICtrlCreateMenuItem("&Properties", $MenuItem_Selected)
-GUICtrlSetState(-1, $GUI_DISABLE)
-$MenuItem_Split1 = GUICtrlCreateMenuItem("", $MenuItem_File)
-$MenuItem_Exit = GUICtrlCreateMenuItem("&Exit", $MenuItem_File)
-
+#region Edit Menu ;==============================================================================================Edit Menu
 $MenuItem_Edit = GUICtrlCreateMenu("&Edit")
 $MenuItem_Edit_Remove = GUICtrlCreateMenuItem("&Clear Selected Entry", $MenuItem_Edit)
 GUICtrlSetState(-1, $GUI_DISABLE)
 $MenuItem_Edit_Remove_All = GUICtrlCreateMenuItem("C&lear All Entry", $MenuItem_Edit)
 $MenuItem_Edit_Find = GUICtrlCreateMenuItem("&Find...", $MenuItem_Edit)
+#endregion Edit Menu ;==============================================================================================Edit Menu
 
+#region Tools Menu ;==============================================================================================Tools Menu
 $MenuItem_Tools = GUICtrlCreateMenu("T&ools")
-$MenuItem_Expert = GUICtrlCreateMenu("&Expert", $MenuItem_Tools)
-$MenuItem_Expert_AS_IDM = GUICtrlCreateMenuItem("To IDM E&xpert File", $MenuItem_Expert)
-$MenuItem_Expert_AS_Text = GUICtrlCreateMenuItem("To IDM &Text File", $MenuItem_Expert_AS_IDM)
-$MenuItem_Expert_AS_HTML = GUICtrlCreateMenuItem("As HTML Re&port File", $MenuItem_Expert_AS_IDM)
-$MenuItem_Expert_AS_CSV = GUICtrlCreateMenuItem("As CSV &Report File", $MenuItem_Expert_AS_IDM)
+$MenuItem_Tools_Expert = GUICtrlCreateMenu("&Expert", $MenuItem_Tools)
+$MenuItem__Tools_Expert_asIDM = GUICtrlCreateMenuItem("To IDM E&xpert File", $MenuItem_Tools_Expert)
+$MenuItem_Tools_Expert_asText = GUICtrlCreateMenuItem("To IDM &Text File", $MenuItem__Tools_Expert_asIDM)
+$MenuItem__Tools_Expert_asHTML = GUICtrlCreateMenuItem("As HTML Re&port File", $MenuItem__Tools_Expert_asIDM)
+$MenuItem__Tools_Expert_asCSV = GUICtrlCreateMenuItem("As CSV &Report File", $MenuItem__Tools_Expert_asIDM)
+#endregion Tools Menu ;==============================================================================================Tools Menu
 
+#region View Menu ;==============================================================================================View Menu
 $MenuItem_View = GUICtrlCreateMenu("&View")
+
 $MenuItem_list = GUICtrlCreateMenu("L&ist", $MenuItem_View)
-$MenuItem_list_AllDownloads = GUICtrlCreateMenuItem("&All Downloads", $MenuItem_list, -1, 1)
+$MenuItem_View_List_AllDownloads = GUICtrlCreateMenuItem("&All Downloads", $MenuItem_list, -1, 1)
 GUICtrlSetState(-1, $GUI_CHECKED)
-$MenuItem_list_FinishedDownloads = GUICtrlCreateMenuItem("&Finished Downloads", $MenuItem_list, -1, 1)
-$MenuItem_list_UnFinished = GUICtrlCreateMenuItem("&UnFinished Downloads", $MenuItem_list, -1, 1)
-$MenuItem_list_UnFinished_Data = GUICtrlCreateMenuItem("UnFinished Downloads &Data", $MenuItem_list, -1, 1)
-$MenuItem_list_Catagories = GUICtrlCreateMenu("&Catagories", $MenuItem_View)
-$MenuItem_list_Catagories_0 = GUICtrlCreateMenuItem("A&ll", $MenuItem_list_Catagories, -1, 1)
+$MenuItem_View_List_FinishedDownloads = GUICtrlCreateMenuItem("&Finished Downloads", $MenuItem_list, -1, 1)
+$MenuItem_View_List_UnFinished = GUICtrlCreateMenuItem("&UnFinished Downloads", $MenuItem_list, -1, 1)
+$MenuItem_View_List_UnFinished_Data = GUICtrlCreateMenuItem("UnFinished Downloads &Data", $MenuItem_list, -1, 1)
+
+$MenuItem_View_Categories_list_all = GUICtrlCreateMenu("&Catagories", $MenuItem_View)
+$MenuItem_View_Categories_list_CatArray = GUICtrlCreateMenuItem("A&ll", $MenuItem_View_Categories_list_all, -1, 1)
 GUICtrlSetState(-1, $GUI_CHECKED)
 $i_Cat_Item = _set_cat_to_menu()
-$MenuItem_Setting_SwGrid = GUICtrlCreateMenuItem("&Show Grid Lines", $MenuItem_View)
+
+$MenuItem_View_SwGrid = GUICtrlCreateMenuItem("&Show Grid Lines", $MenuItem_View)
 GUICtrlSetState(-1, $GUI_CHECKED)
-$MenuItem_Setting_Auto_Arrange = GUICtrlCreateMenuItem("A&uto Arrange", $MenuItem_View)
+$MenuItem_View_AutoArrange = GUICtrlCreateMenuItem("A&uto Arrange", $MenuItem_View)
 
 $MenuItem_Help = GUICtrlCreateMenu("&?")
 $MenuItem_Help_h = GUICtrlCreateMenuItem("Help", $MenuItem_Help)
+#endregion View Menu ;==============================================================================================View Menu
 #endregion Menu
 
 #region GUI
-$ListView1 = GUICtrlCreateListView("No.|Name|File Size|MIME Type|ID|Link", 10, 10, 680, 240)
-GUICtrlSetCursor(-1, 0)
-$hListView = GUICtrlGetHandle($ListView1)
-_GUICtrlListView_SetExtendedListViewStyle($ListView1, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
+#region List View ;==============================================================================================List View
+$idListView = GUICtrlCreateListView("No.|Name|File Size|MIME Type|ID|Link", 10, 10, 680, 240)
+$hListView = GUICtrlGetHandle($idListView)
+_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
+#endregion List View ;==============================================================================================List View
 
-$JoinFile_Lable_Info = GUICtrlCreateLabel("Ready", 10, 252, 400, 17)
+#region Info;==============================================================================================Info
+$idLable_Info = GUICtrlCreateLabel("Ready", 10, 252, 400, 17)
 GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT)
-$progressbar1 = GUICtrlCreateProgress(10, 270, 260, 12)
+
+$idProgressBar_Info = GUICtrlCreateProgress(10, 270, 260, 12)
 GUICtrlSetState(-1, $GUI_HIDE)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKHEIGHT)
+#endregion Info;==============================================================================================Info
 
-$Input_Find = GUICtrlCreateInput("", 442, 265, 146, 21)
+#region Find;==============================================================================================Find
+$idInput_Find = GUICtrlCreateInput("", 442, 266, 146, 21)
 GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
 GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Search...")
 GUICtrlSetState(-1, $GUI_HIDE)
-$Button_Go = GUICtrlCreateButton("Search", 590, 265, 65, 23)
+
+$idButton_Find = GUICtrlCreateButton("Search", 590, 265, 65, 23)
 GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-GUICtrlSetBkColor(-1, 0xF1F0F0)
 GUICtrlSetState(-1, $GUI_HIDE)
-$Button_x = GUICtrlCreateButton("X", 655, 265, 30, 23)
-GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-GUICtrlSetBkColor(-1, 0xF1F0F0)
+
+$idButton_Remove_Find = GUICtrlCreateButton("r", 655, 265, 30, 23)
+GUICtrlSetFont(-1, 10, 400, 0, "Webdings")
+#endregion Find;==============================================================================================Find
+
 GUICtrlSetState(-1, $GUI_HIDE)
 #endregion GUI
-
+_Disable_Button()
 GUIRegisterMsg($WM_NOTIFY, "WM_NOTIFY")
-GUIRegisterMsg(0x0024, "WM_GETMINMAXINFO")
+GUIRegisterMsg($WM_GETMINMAXINFO, "WM_GETMINMAXINFO")
 GUIRegisterMsg($WM_SIZE, "MY_WM_SIZE")
 
 GUISetState(@SW_SHOW)
@@ -134,58 +151,66 @@ While 1
 	$nMsg = GUIGetMsg()
 
 	Switch $nMsg
-		Case $GUI_EVENT_CLOSE
+		Case $GUI_EVENT_CLOSE, $MenuItem_File_Exit
 			Exit
 
-		Case $MenuItem_Analyze
+		Case $MenuItem_File_Analyze
 			_Analyze()
+			$fChange = True
+			_Disable_Button()
 
-		Case $MenuItem_Properties
+		Case $MenuItem_File_Selected_Properties
 			_Details()
 
-		Case $MenuItem_Goto
+		Case $MenuItem_File_Selected_Goto
 			_Goto()
 
 		Case $MenuItem_Edit_Find
 			_SwFind()
 
-		Case $Button_x
+		Case $idButton_Remove_Find
 			_Cancel_Find()
 
-		Case $Button_Go
+		Case $idButton_Find
 			_Find()
 
 		Case $MenuItem_Edit_Remove
 			_GUICtrlListView_DeleteItemsSelected($hListView)
+			$fChange = True
+			_Disable_Button()
 
 		Case $MenuItem_Edit_Remove_All
 			_GUICtrlListView_DeleteAllItems($hListView)
+			$fChange = True
+			_Disable_Button()
 
-		Case $MenuItem_Setting_SwGrid
-			_sw_Grid()
+		Case $MenuItem_View_SwGrid
+			_SwGrid()
 
-		Case $MenuItem_Setting_Auto_Arrange
+		Case $MenuItem_View_AutoArrange
 			_Auto_Arrange()
 
-		Case $MenuItem_ForceJoin
+		Case $MenuItem_File_Selected_ForceJoin
 			If _Join_Fragments() = -2 Then MsgBox(48, "Error", "At Least 2 Fragment Required To Join It.", 0, $hGUI)
 
-		Case $MenuItem_ExploreFolder
+		Case $MenuItem_File_Selected_ExploreFolder
 			_Open_Folder()
 
-		Case $MenuItem_Remove
+		Case $MenuItem_File_Selected_Remove
 			_Remove()
+			$fChange = True
+			_Disable_Button()
 
-		Case $MenuItem_Expert_AS_CSV
-			_Expert_csv()
+		Case $MenuItem__Tools_Expert_asCSV
+			_Expert_CSV()
 
-		Case $MenuItem_Expert_AS_HTML
+		Case $MenuItem__Tools_Expert_asHTML
 			_Expert_HTML()
 
-		Case $MenuItem_Expert_AS_Text
-			_expert_IDM_TXT()
+		Case $MenuItem_Tools_Expert_asText
+			_Expert_IDM_TXT()
 
-		Case $MenuItem_Expert_AS_IDM
+		Case $MenuItem__Tools_Expert_asIDM
 			_Expert_IDM_LIST()
 
 		Case $MenuItem_Help_h
@@ -195,6 +220,183 @@ While 1
 	_Disable_Button()
 WEnd
 
+#region Export Function
+Func _Expert_HTML()
+	Local $join_file = FileSaveDialog("Save Your File", $s_Backup_Dir, "webpage (*.htm)", 16, "Download_List.htm")
+	If @error Then Return -1
+	If $join_file <> "" And StringRight($join_file, 4) <> ".htm" Then $join_file &= ".htm"
+
+	If FileExists($join_file) Then
+		If FileDelete($join_file) = 0 Then
+			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
+			_Expert_HTML()
+		EndIf
+	EndIf
+	_Disable_Controls()
+
+	_GUICtrlListView_DeleteColumn($hListView, 0)
+	_GUICtrlListView_SaveHTML($hListView, $join_file, "")
+	ShellExecute($join_file)
+	_GUICtrlListView_InsertColumn($hListView, 0, "No.", 100)
+	_Analyze()
+EndFunc   ;==>_Expert_HTML
+
+Func _Expert_CSV()
+	Local $join_file = FileSaveDialog("Save Your File", $s_Backup_Dir, "Comma Separated Values (*.csv)", 16, "Download_List.csv")
+	If @error Then Return -1
+	If $join_file <> "" And StringRight($join_file, 4) <> ".csv" Then $join_file &= ".csv"
+
+	If FileExists($join_file) Then
+		If FileDelete($join_file) = 0 Then
+			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
+			_Expert_CSV()
+		EndIf
+	EndIf
+	_Disable_Controls()
+
+	_GUICtrlListView_DeleteColumn($hListView, 0)
+	_GUICtrlListView_SaveCSV($hListView, $join_file)
+	ShellExecute($join_file)
+	_GUICtrlListView_InsertColumn($hListView, 0, "No.", 100)
+	_Analyze()
+EndFunc   ;==>_Expert_CSV
+
+Func _Expert_IDM_LIST()
+	Local $join_file = FileSaveDialog("Save Your File", $s_Backup_Dir, "IDM Export File (*.ef2)", 16, "Download_List.ef2")
+	If @error Then Return -1
+	If $join_file <> "" And StringRight($join_file, 4) <> ".ef2" Then $join_file &= ".ef2"
+
+	If FileExists($join_file) Then
+		If FileDelete($join_file) = 0 Then
+			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
+			_Expert_IDM_LIST()
+		EndIf
+	EndIf
+	_Disable_Controls()
+
+	Local $i = 0
+	For $i = 0 To _GUICtrlListView_GetItemCount($hListView) - 1
+		GUICtrlSetData($idLable_Info, "Experting: " & $i & " " & "Please Wait...")
+		$var = _GUICtrlListView_GetItemText($hListView, $i, 4)
+		Local $LocalFileName = _RegRead($s_regpath_IDM & "\" & $var, "LocalFileName")
+		Local $var_Url0 = _RegRead($s_regpath_IDM & "\" & $var, "Url0") & @CRLF
+		If @error Then $var_Url0 = ""
+		Local $var_Referer = "referer: " & _RegRead($s_regpath_IDM & "\" & $var, "Referer") & @CRLF
+		If @error Then $var_Referer = ""
+		Local $var_cookie = "cookie: " & _RegRead($s_regpath_IDM & "\" & $var, "Cookie") & @CRLF
+		If @error Then $var_cookie = ""
+		If $var_Url0 <> "" Then
+			FileWrite($join_file, "<" & @CRLF)
+			FileWrite($join_file, $var_Url0)
+			FileWrite($join_file, $var_Referer)
+			FileWrite($join_file, $var_cookie)
+			FileWrite($join_file, ">" & @CRLF)
+		EndIf
+	Next
+	GUICtrlSetData($idLable_Info, "Ready")
+	_Enable_Controls()
+EndFunc   ;==>_Expert_IDM_LIST
+
+Func _Expert_IDM_TXT()
+	Local $join_file = FileSaveDialog("Save Your File", $s_Backup_Dir, "Plain Text File (*txt)", 16, "Download_List.txt")
+	If @error Then Return -1
+	If $join_file <> "" And StringRight($join_file, 4) <> ".txt" Then $join_file &= ".txt"
+
+	If FileExists($join_file) Then
+		If FileDelete($join_file) = 0 Then
+			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
+			_Expert_IDM_TXT()
+		EndIf
+	EndIf
+	_Disable_Controls()
+	For $i = 0 To _GUICtrlListView_GetItemCount($hListView) - 1
+		$var = _GUICtrlListView_GetItemText($hListView, $i, 4)
+		GUICtrlSetData($idLable_Info, "Experting: " & $i & " " & "Please Wait...")
+		Local $LocalFileName = _RegRead($s_regpath_IDM & "\" & $var, "LocalFileName")
+		Local $var_Url0 = _RegRead($s_regpath_IDM & "\" & $var, "Url0")
+		If @error Then $var_Url0 = ""
+		If $var_Url0 <> "" Then
+			FileWriteLine($join_file, $var_Url0)
+		EndIf
+	Next
+	GUICtrlSetData($idLable_Info, "Ready")
+	_Enable_Controls()
+EndFunc   ;==>_Expert_IDM_TXT
+#endregion Export Function
+
+#region Windows Messages
+Func WM_NOTIFY($hWnd, $iMsg, $iwParam, $ilParam)
+	#forceref $hWnd, $iMsg, $iwParam
+	Local $hWndFrom, $iIDFrom, $iCode, $tNMHDR, $hWndListView, $tInfo, $B_DESCENDING
+	$hWndListView = $hListView
+	If Not IsHWnd($hListView) Then $hWndListView = GUICtrlGetHandle($hListView)
+
+	$tNMHDR = DllStructCreate($tagNMHDR, $ilParam)
+	$hWndFrom = HWnd(DllStructGetData($tNMHDR, "hWndFrom"))
+	$iIDFrom = DllStructGetData($tNMHDR, "IDFrom")
+	$iCode = DllStructGetData($tNMHDR, "Code")
+	Switch $hWndFrom
+		Case $hWndListView
+			Switch $iCode
+				Case $NM_KILLFOCUS ; The control has lost the input focus
+
+				Case $LVN_ITEMCHANGING
+					$fChange = True
+
+				Case $LVN_COLUMNCLICK ; A column was clicked
+					$tInfo = DllStructCreate($tagNMLISTVIEW, $ilParam)
+					_GUICtrlListView_SimpleSort($hWndListView, $B_DESCENDING, DllStructGetData($tInfo, "SubItem"))
+					; No return value
+
+				Case $LVN_KEYDOWN ; A key has been pressed
+					$tInfo = DllStructCreate($tagNMLVKEYDOWN, $ilParam)
+					; No return value
+
+				Case $NM_CLICK ; Sent by a list-view control when the user clicks an item with the left mouse button
+					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
+					; No return value
+
+				Case $NM_DBLCLK ; Sent by a list-view control when the user double-clicks an item with the left mouse button
+					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
+					_Open_Folder()
+
+					; No return value
+
+				Case $NM_RCLICK ; Sent by a list-view control when the user clicks an item with the right mouse button
+					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
+					ListView_RClick()
+
+					Return 0 ; allow the default processing
+				Case $NM_RDBLCLK ; Sent by a list-view control when the user double-clicks an item with the right mouse button
+					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
+
+					; No return value
+				Case $NM_RETURN ; The control has the input focus and that the user has pressed the ENTER key
+
+					; No return value
+				Case $NM_SETFOCUS ; The control has received the input focus
+					ConsoleWrite("$NM_SETFOCUS" & @LF)
+
+					; No return value
+			EndSwitch
+	EndSwitch
+	Return $GUI_RUNDEFMSG
+EndFunc   ;==>WM_NOTIFY
+
+Func WM_GETMINMAXINFO($hWnd, $Msg, $WPARAM, $lParam)
+	Local $tagMaxinfo = DllStructCreate("int;int;int;int;int;int;int;int;int;int", $lParam)
+	DllStructSetData($tagMaxinfo, 7, $GUIMINWID / 1.2) ; min X
+	DllStructSetData($tagMaxinfo, 8, $GUIMINHT / 1.4) ; min Y
+	Return 0
+EndFunc   ;==>WM_GETMINMAXINFO
+
+Func MY_WM_SIZE($hWnd, $iMsg, $iwParam, $ilParam)
+	Return 'GUI_RUNDEFMSG'
+EndFunc   ;==>MY_WM_SIZE
+
+#endregion Windows Messages
+
+#region Events
 Func _SwHelp()
 	If FileExists(@ScriptDir & "\Help.chm") Then
 		ShellExecute(@ScriptDir & "\Help.chm")
@@ -204,45 +406,45 @@ Func _SwHelp()
 EndFunc   ;==>_SwHelp
 
 Func _SwFind()
-	GUICtrlSetState($Button_Go, $GUI_SHOW)
-	GUICtrlSetState($Input_Find, $GUI_SHOW)
-	GUICtrlSetState($Button_x, $GUI_SHOW)
+	GUICtrlSetState($idButton_Find, $GUI_SHOW)
+	GUICtrlSetState($idInput_Find, $GUI_SHOW)
+	GUICtrlSetState($idButton_Remove_Find, $GUI_SHOW)
 EndFunc   ;==>_SwFind
 
 Func _Cancel_Find()
-	If GUICtrlRead($Input_Find) = "" Then
-		GUICtrlSetState($Button_Go, $GUI_HIDE)
-		GUICtrlSetState($Input_Find, $GUI_HIDE)
-		GUICtrlSetState($Button_x, $GUI_HIDE)
+	If GUICtrlRead($idInput_Find) = "" Then
+		GUICtrlSetState($idButton_Find, $GUI_HIDE)
+		GUICtrlSetState($idInput_Find, $GUI_HIDE)
+		GUICtrlSetState($idButton_Remove_Find, $GUI_HIDE)
 	Else
-		GUICtrlSetData($Input_Find, "")
+		GUICtrlSetData($idInput_Find, "")
 	EndIf
-	GUICtrlSetData($JoinFile_Lable_Info, "Ready")
+	GUICtrlSetData($idLable_Info, "Ready")
 EndFunc   ;==>_Cancel_Find
 
-Func _sw_Grid()
-	If BitAND(GUICtrlRead($MenuItem_Setting_SwGrid), $GUI_CHECKED) Then
-		GUICtrlSetState($MenuItem_Setting_SwGrid, $GUI_UNCHECKED)
-		_GUICtrlListView_SetExtendedListViewStyle($ListView1, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
+Func _SwGrid()
+	If BitAND(GUICtrlRead($MenuItem_View_SwGrid), $GUI_CHECKED) Then
+		GUICtrlSetState($MenuItem_View_SwGrid, $GUI_UNCHECKED)
+		_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
 	Else
-		_GUICtrlListView_SetExtendedListViewStyle($ListView1, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
-		GUICtrlSetState($MenuItem_Setting_SwGrid, $GUI_CHECKED)
+		_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
+		GUICtrlSetState($MenuItem_View_SwGrid, $GUI_CHECKED)
 	EndIf
-EndFunc   ;==>_sw_Grid
+EndFunc   ;==>_SwGrid
 
 Func _Auto_Arrange()
-	_GUICtrlListView_SetColumnWidth($ListView1, 0, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-	_GUICtrlListView_SetColumnWidth($ListView1, 1, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-	_GUICtrlListView_SetColumnWidth($ListView1, 2, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-	_GUICtrlListView_SetColumnWidth($ListView1, 3, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
-	_GUICtrlListView_SetColumnWidth($ListView1, 4, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($idListView, 0, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($idListView, 1, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($idListView, 2, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($idListView, 3, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
+	_GUICtrlListView_SetColumnWidth($idListView, 4, BitAND($LVSCW_AUTOSIZE, $LVSCW_AUTOSIZE_USEHEADER))
 EndFunc   ;==>_Auto_Arrange
 
 Func _Join_Fragments()
 	_Disable_Controls()
 
 	Local $sChunk = ""
-	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
+	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 	Local $LocalFileName = _Name_Get_From_Path(_RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName"))
 	Local $FileExt = _Ext_Get_From_Path(_RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName"))
 	Local $LocalPath = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
@@ -278,34 +480,34 @@ Func _Join_Fragments()
 		Return -1
 	EndIf
 
-	GUICtrlSetState($progressbar1, $GUI_SHOW)
+	GUICtrlSetState($idProgressBar_Info, $GUI_SHOW)
 	While 1
 		Local $a = 1
 		Local $LocalFileName_ = FileFindNextFile($search_)
 		If @error Then ExitLoop
 		$file_join = FileOpen($LocalPath & "\" & $LocalFileName_, 0)
-		GUICtrlSetData($progressbar1, ($b * 100) / $total_frag_file)
+		GUICtrlSetData($idProgressBar_Info, ($b * 100) / $total_frag_file)
 		While 1
 			$sChunk = FileRead($file_join, $iBuffer)
 			If @error = -1 Then ExitLoop
 			FileWrite($join_file, $sChunk)
-			GUICtrlSetData($JoinFile_Lable_Info, "Joining Segment: " & $b & " " & "Please Wait...")
+			GUICtrlSetData($idLable_Info, "Joining Segment: " & $b & " " & "Please Wait...")
 			$a += 1
 		WEnd
 		FileClose($file_join)
 		$b += 1
 	WEnd
 	FileClose($search)
-	GUICtrlSetState($progressbar1, $GUI_HIDE)
-	GUICtrlSetData($JoinFile_Lable_Info, "DONE")
-	GUICtrlSetData($progressbar1, 0)
+	GUICtrlSetState($idProgressBar_Info, $GUI_HIDE)
+	GUICtrlSetData($idLable_Info, "DONE")
+	GUICtrlSetData($idProgressBar_Info, 0)
 	_Enable_Controls()
 EndFunc   ;==>_Join_Fragments
 
 Func _Details()
 	Local $avArray[2][6]
 	Local $avArray1[6]
-	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
+	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 	$avArray1[0] = _RegRead($s_regpath_IDM & "\" & $ID[5], "FileName") ;Name:
 	$avArray1[1] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName") ;Path:
 	$avArray1[2] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LastModified") ;Last Modified:
@@ -318,7 +520,7 @@ Func _Details()
 EndFunc   ;==>_Details
 
 Func _Open_Folder()
-	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
+	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 	If _GUICtrlListView_GetSelectedCount($hListView) > 0 Then
 		Local $FileName = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
 		If FileExists($FileName) Then ShellExecute($FileName)
@@ -327,17 +529,17 @@ EndFunc   ;==>_Open_Folder
 
 Func _Analyze()
 	_Disable_Controls()
-	GUICtrlSetState($progressbar1, $GUI_SHOW)
-	_GUICtrlListView_BeginUpdate($ListView1)
-	_GUICtrlListView_DeleteAllItems($ListView1)
+	GUICtrlSetState($idProgressBar_Info, $GUI_SHOW)
+	_GUICtrlListView_BeginUpdate($idListView)
+	_GUICtrlListView_DeleteAllItems($idListView)
 	Local $i = 1
 	Local $no = 1
 	Local $s_current_selectde_cat = _get_selected_cat()
 	Local $i_TotalKey = _CountKey($s_regpath_IDM)
 
 	While 1
-		GUICtrlSetData($JoinFile_Lable_Info, "Analyzing: " & "Please Wait..." & Round($i / $i_TotalKey * 100) & "%")
-		GUICtrlSetData($progressbar1, $i / $i_TotalKey * 100)
+		GUICtrlSetData($idLable_Info, "Analyzing: " & "Please Wait..." & Round($i / $i_TotalKey * 100) & "%")
+		GUICtrlSetData($idProgressBar_Info, $i / $i_TotalKey * 100)
 
 		Local $var = RegEnumKey($s_regpath_IDM, $i)
 		If @error <> 0 Then ExitLoop
@@ -354,45 +556,45 @@ Func _Analyze()
 		Local $cat_id = _RegRead($s_regpath_IDM & "\" & $var, "categoryID")
 		Local $status = _RegRead($s_regpath_IDM & "\" & $var, "Status")
 
-		If BitAND(GUICtrlRead($MenuItem_list_Catagories_0), $GUI_CHECKED) Then
-			If BitAND(GUICtrlRead($MenuItem_list_AllDownloads), $GUI_CHECKED) Then
-				GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $ListView1)
+		If BitAND(GUICtrlRead($MenuItem_View_Categories_list_CatArray), $GUI_CHECKED) Then
+			If BitAND(GUICtrlRead($MenuItem_View_List_AllDownloads), $GUI_CHECKED) Then
+				GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 				$no += 1
-			ElseIf BitAND(GUICtrlRead($MenuItem_list_FinishedDownloads), $GUI_CHECKED) Then
+			ElseIf BitAND(GUICtrlRead($MenuItem_View_List_FinishedDownloads), $GUI_CHECKED) Then
 				If $status = 3 Then
-					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $ListView1)
+					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
 				EndIf
-			ElseIf BitAND(GUICtrlRead($MenuItem_list_UnFinished), $GUI_CHECKED) Then
+			ElseIf BitAND(GUICtrlRead($MenuItem_View_List_UnFinished), $GUI_CHECKED) Then
 				If $status = 2 Or $status = 0 Then
-					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $ListView1)
+					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
 				EndIf
-			ElseIf BitAND(GUICtrlRead($MenuItem_list_UnFinished_Data), $GUI_CHECKED) Then
+			ElseIf BitAND(GUICtrlRead($MenuItem_View_List_UnFinished_Data), $GUI_CHECKED) Then
 				If FileExists($LocalFileName) Then
-					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $ListView1)
+					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
 				EndIf
 			EndIf
 			$i += 1
 		Else
 			If $s_current_selectde_cat = $cat_id Then
-				If BitAND(GUICtrlRead($MenuItem_list_AllDownloads), $GUI_CHECKED) Then
-					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $ListView1)
+				If BitAND(GUICtrlRead($MenuItem_View_List_AllDownloads), $GUI_CHECKED) Then
+					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
-				ElseIf BitAND(GUICtrlRead($MenuItem_list_FinishedDownloads), $GUI_CHECKED) Then
+				ElseIf BitAND(GUICtrlRead($MenuItem_View_List_FinishedDownloads), $GUI_CHECKED) Then
 					If $status = 3 Then
-						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $ListView1)
+						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 						$no += 1
 					EndIf
-				ElseIf BitAND(GUICtrlRead($MenuItem_list_UnFinished), $GUI_CHECKED) Then
+				ElseIf BitAND(GUICtrlRead($MenuItem_View_List_UnFinished), $GUI_CHECKED) Then
 					If $status = 2 Or $status = 0 Then
-						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $ListView1)
+						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 						$no += 1
 					EndIf
-				ElseIf BitAND(GUICtrlRead($MenuItem_list_UnFinished_Data), $GUI_CHECKED) Then
+				ElseIf BitAND(GUICtrlRead($MenuItem_View_List_UnFinished_Data), $GUI_CHECKED) Then
 					If FileExists($LocalFileName) Then
-						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $ListView1)
+						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 						$no += 1
 					EndIf
 				EndIf
@@ -401,15 +603,15 @@ Func _Analyze()
 		EndIf
 	WEnd
 
-	_GUICtrlListView_EndUpdate($ListView1)
-	GUICtrlSetData($JoinFile_Lable_Info, "Ready")
-	GUICtrlSetState($progressbar1, $GUI_HIDE)
+	_GUICtrlListView_EndUpdate($idListView)
+	GUICtrlSetData($idLable_Info, "Ready")
+	GUICtrlSetState($idProgressBar_Info, $GUI_HIDE)
 	_Enable_Controls()
 	Return $no
 EndFunc   ;==>_Analyze
 
 Func _Remove()
-	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
+	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 	Local $FileName = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
 	Local $iMsgBoxAnswer
 	$iMsgBoxAnswer = MsgBox(36, "Conform Delete", "Are you sure you want to delete selected downloads from IDM list of downloads?." & @CRLF & "Delete completely downloaded files from your hard disk as well. Be careful ! ", 0, $hGUI)
@@ -423,7 +625,7 @@ Func _Remove()
 EndFunc   ;==>_Remove
 
 Func _Goto()
-	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
+	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 	Local $owWPage = _RegRead($s_regpath_IDM & "\" & $ID[5], "owWPage")
 	Local $Referer = _RegRead($s_regpath_IDM & "\" & $ID[5], "Referer")
 
@@ -441,14 +643,14 @@ EndFunc   ;==>_Goto
 Func _Disable_Button()
 	If $fChange Then
 		If _GUICtrlListView_GetSelectedCount($hListView) = 0 Then
-			If BitAND(GUICtrlGetState($MenuItem_ForceJoin), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_ForceJoin, $GUI_DISABLE)
-			If BitAND(GUICtrlGetState($MenuItem_Properties), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_Properties, $GUI_DISABLE)
-			If BitAND(GUICtrlGetState($MenuItem_Remove), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_Remove, $GUI_DISABLE)
-			If BitAND(GUICtrlGetState($MenuItem_ExploreFolder), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_ExploreFolder, $GUI_DISABLE)
-			If BitAND(GUICtrlGetState($MenuItem_Goto), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_Goto, $GUI_DISABLE)
-			If BitAND(GUICtrlGetState($MenuItem_Edit_Remove), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_Edit_Remove, $GUI_DISABLE)
+			If BitAND(GUICtrlRead($MenuItem_File_Selected_ForceJoin), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_File_Selected_ForceJoin, $GUI_DISABLE)
+			If BitAND(GUICtrlRead($MenuItem_File_Selected_Properties), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_File_Selected_Properties, $GUI_DISABLE)
+			If BitAND(GUICtrlRead($MenuItem_File_Selected_Remove), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_File_Selected_Remove, $GUI_DISABLE)
+			If BitAND(GUICtrlRead($MenuItem_File_Selected_ExploreFolder), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_File_Selected_ExploreFolder, $GUI_DISABLE)
+			If BitAND(GUICtrlRead($MenuItem_File_Selected_Goto), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_File_Selected_Goto, $GUI_DISABLE)
+			If BitAND(GUICtrlRead($MenuItem_Edit_Remove), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_Edit_Remove, $GUI_DISABLE)
 		Else
-			Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
+			Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 			Local $FileName = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
 			Local $LocalFileName = _Name_Get_From_Path(_RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName"))
 			Local $FileExt = _Ext_Get_From_Path(_RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName"))
@@ -458,188 +660,68 @@ Func _Disable_Button()
 
 			Local $search = FileFindFirstFile($LocalPath & $LocalFileName & $FileExt & "*")
 			If $search = -1 Then
-				GUICtrlSetState($MenuItem_ForceJoin, $GUI_DISABLE)
+				GUICtrlSetState($MenuItem_File_Selected_ForceJoin, $GUI_DISABLE)
 			Else
-				GUICtrlSetState($MenuItem_ForceJoin, $GUI_ENABLE)
+				GUICtrlSetState($MenuItem_File_Selected_ForceJoin, $GUI_ENABLE)
 			EndIf
 
-			GUICtrlSetState($MenuItem_Properties, $GUI_ENABLE)
-			GUICtrlSetState($MenuItem_Remove, $GUI_ENABLE)
+			GUICtrlSetState($MenuItem_File_Selected_Properties, $GUI_ENABLE)
+			GUICtrlSetState($MenuItem_File_Selected_Remove, $GUI_ENABLE)
 			GUICtrlSetState($MenuItem_Edit_Remove, $GUI_ENABLE)
 
 			If FileExists($FileName) = 0 Then
-				GUICtrlSetState($MenuItem_ExploreFolder, $GUI_DISABLE)
+				GUICtrlSetState($MenuItem_File_Selected_ExploreFolder, $GUI_DISABLE)
 			Else
-				GUICtrlSetState($MenuItem_ExploreFolder, $GUI_ENABLE)
+				GUICtrlSetState($MenuItem_File_Selected_ExploreFolder, $GUI_ENABLE)
 			EndIf
 
 			If $owWPage = "" And $Referer = "" Then
-				GUICtrlSetData($MenuItem_Goto, "Goto")
-				GUICtrlSetState($MenuItem_Goto, $GUI_DISABLE)
+				GUICtrlSetData($MenuItem_File_Selected_Goto, "Goto")
+				GUICtrlSetState($MenuItem_File_Selected_Goto, $GUI_DISABLE)
 			Else
-				GUICtrlSetState($MenuItem_Goto, $GUI_ENABLE)
-				If $owWPage <> "" Then GUICtrlSetData($MenuItem_Goto, _Resize_Text($owWPage))
-				If $Referer <> "" Then GUICtrlSetData($MenuItem_Goto, _Resize_Text($Referer))
+				GUICtrlSetState($MenuItem_File_Selected_Goto, $GUI_ENABLE)
+				If $owWPage <> "" Then GUICtrlSetData($MenuItem_File_Selected_Goto, _Resize_Text($owWPage))
+				If $Referer <> "" Then GUICtrlSetData($MenuItem_File_Selected_Goto, _Resize_Text($Referer))
 			EndIf
 
 		EndIf
 		$fChange = False
 	EndIf
+
+	If _GUICtrlListView_GetItemCount($idListView) = 0 Then
+		If BitAND(GUICtrlRead($MenuItem_Edit_Remove_All), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_Edit_Remove_All, $GUI_DISABLE)
+		If BitAND(GUICtrlRead($MenuItem_Edit_Find), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_Edit_Find, $GUI_DISABLE)
+		If BitAND(GUICtrlRead($MenuItem__Tools_Expert_asIDM), $GUI_ENABLE) Then GUICtrlSetState($MenuItem__Tools_Expert_asIDM, $GUI_DISABLE)
+		If BitAND(GUICtrlRead($MenuItem_Tools_Expert_asText), $GUI_ENABLE) Then GUICtrlSetState($MenuItem_Tools_Expert_asText, $GUI_DISABLE)
+		If BitAND(GUICtrlRead($MenuItem__Tools_Expert_asHTML), $GUI_ENABLE) Then GUICtrlSetState($MenuItem__Tools_Expert_asHTML, $GUI_DISABLE)
+		If BitAND(GUICtrlRead($MenuItem__Tools_Expert_asCSV), $GUI_ENABLE) Then GUICtrlSetState($MenuItem__Tools_Expert_asCSV, $GUI_DISABLE)
+	Else
+		If BitAND(GUICtrlRead($MenuItem_Edit_Remove_All), $GUI_DISABLE) Then GUICtrlSetState($MenuItem_Edit_Remove_All, $GUI_ENABLE)
+		If BitAND(GUICtrlRead($MenuItem_Edit_Find), $GUI_DISABLE) Then GUICtrlSetState($MenuItem_Edit_Find, $GUI_ENABLE)
+		If BitAND(GUICtrlRead($MenuItem__Tools_Expert_asIDM), $GUI_DISABLE) Then GUICtrlSetState($MenuItem__Tools_Expert_asIDM, $GUI_ENABLE)
+		If BitAND(GUICtrlRead($MenuItem_Tools_Expert_asText), $GUI_DISABLE) Then GUICtrlSetState($MenuItem_Tools_Expert_asText, $GUI_ENABLE)
+		If BitAND(GUICtrlRead($MenuItem__Tools_Expert_asHTML), $GUI_DISABLE) Then GUICtrlSetState($MenuItem__Tools_Expert_asHTML, $GUI_ENABLE)
+		If BitAND(GUICtrlRead($MenuItem__Tools_Expert_asCSV), $GUI_DISABLE) Then GUICtrlSetState($MenuItem__Tools_Expert_asCSV, $GUI_ENABLE)
+	EndIf
 EndFunc   ;==>_Disable_Button
-
-Func _Resize_Text($text)
-	Return "Goto " & StringLeft($text, 20) & "...."
-EndFunc   ;==>_Resize_Text
-
-Func _Expert_HTML()
-	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "webpage (*.htm)", 16, "Download_List.htm")
-	If @error Then Return -1
-	If $join_file <> "" And StringRight($join_file, 4) <> ".htm" Then $join_file &= ".htm"
-
-	If FileExists($join_file) Then
-		If FileDelete($join_file) = 0 Then
-			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
-			_Expert_HTML()
-		EndIf
-	EndIf
-	_Disable_Controls()
-
-	_GUICtrlListView_DeleteColumn($hListView, 0)
-	_GUICtrlListView_SaveHTML($hListView, $join_file, "")
-	ShellExecute($join_file)
-	_GUICtrlListView_InsertColumn($hListView, 0, "No.", 100)
-	_Analyze()
-EndFunc   ;==>_Expert_HTML
-
-Func _Expert_csv()
-	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "Comma Separated Values (*.csv)", 16, "Download_List.csv")
-	If @error Then Return -1
-	If $join_file <> "" And StringRight($join_file, 4) <> ".csv" Then $join_file &= ".csv"
-
-	If FileExists($join_file) Then
-		If FileDelete($join_file) = 0 Then
-			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
-			_Expert_csv()
-		EndIf
-	EndIf
-	_Disable_Controls()
-
-	_GUICtrlListView_DeleteColumn($hListView, 0)
-	_GUICtrlListView_SaveCSV($hListView, $join_file)
-	ShellExecute($join_file)
-	_GUICtrlListView_InsertColumn($hListView, 0, "No.", 100)
-	_Analyze()
-EndFunc   ;==>_Expert_csv
-
-Func _Expert_IDM_LIST()
-	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "IDM Export File (*.ef2)", 16, "Download_List.ef2")
-	If @error Then Return -1
-	If $join_file <> "" And StringRight($join_file, 4) <> ".ef2" Then $join_file &= ".ef2"
-
-	If FileExists($join_file) Then
-		If FileDelete($join_file) = 0 Then
-			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
-			_Expert_IDM_LIST()
-		EndIf
-	EndIf
-	_Disable_Controls()
-
-	Local $i = 0
-	For $i = 0 To _GUICtrlListView_GetItemCount($hListView) - 1
-		GUICtrlSetData($JoinFile_Lable_Info, "Experting: " & $i & " " & "Please Wait...")
-		$var = _GUICtrlListView_GetItemText($hListView, $i, 4)
-		Local $LocalFileName = _RegRead($s_regpath_IDM & "\" & $var, "LocalFileName")
-		Local $var_Url0 = _RegRead($s_regpath_IDM & "\" & $var, "Url0") & @CRLF
-		If @error Then $var_Url0 = ""
-		Local $var_Referer = "referer: " & _RegRead($s_regpath_IDM & "\" & $var, "Referer") & @CRLF
-		If @error Then $var_Referer = ""
-		Local $var_cookie = "cookie: " & _RegRead($s_regpath_IDM & "\" & $var, "Cookie") & @CRLF
-		If @error Then $var_cookie = ""
-		If $var_Url0 <> "" Then
-			FileWrite($join_file, "<" & @CRLF)
-			FileWrite($join_file, $var_Url0)
-			FileWrite($join_file, $var_Referer)
-			FileWrite($join_file, $var_cookie)
-			FileWrite($join_file, ">" & @CRLF)
-		EndIf
-	Next
-	GUICtrlSetData($JoinFile_Lable_Info, "Ready")
-	_Enable_Controls()
-EndFunc   ;==>_Expert_IDM_LIST
-
-Func _expert_IDM_TXT()
-	Local $join_file = FileSaveDialog("Save Your File", "::{450D8FBA-AD25-11D0-98A8-0800361B1103}", "Plain Text File (*txt)", 16, "Download_List.txt")
-	If @error Then Return -1
-	If $join_file <> "" And StringRight($join_file, 4) <> ".txt" Then $join_file &= ".txt"
-
-	If FileExists($join_file) Then
-		If FileDelete($join_file) = 0 Then
-			MsgBox(48, "Error", "Could Not Delete: " & $join_file, 0, $hGUI)
-			_expert_IDM_TXT()
-		EndIf
-	EndIf
-	_Disable_Controls()
-	For $i = 0 To _GUICtrlListView_GetItemCount($hListView) - 1
-		$var = _GUICtrlListView_GetItemText($hListView, $i, 4)
-		GUICtrlSetData($JoinFile_Lable_Info, "Experting: " & $i & " " & "Please Wait...")
-		Local $LocalFileName = _RegRead($s_regpath_IDM & "\" & $var, "LocalFileName")
-		Local $var_Url0 = _RegRead($s_regpath_IDM & "\" & $var, "Url0")
-		If @error Then $var_Url0 = ""
-		If $var_Url0 <> "" Then
-			FileWriteLine($join_file, $var_Url0)
-		EndIf
-	Next
-	GUICtrlSetData($JoinFile_Lable_Info, "Ready")
-	_Enable_Controls()
-EndFunc   ;==>_expert_IDM_TXT
 
 Func _set_cat_to_menu()
 	Local $i = 1
 	While 1
-		Local $var = RegEnumKey("HKEY_CURRENT_USER\Software\DownloadManager\FoldersTree", $i)
+		Local $var = RegEnumKey($s_regpath_IDM & "\FoldersTree\", $i)
 		If @error Then ExitLoop
-		$MenuItem_list_Catagories_[$i] = GUICtrlCreateMenuItem($var, $MenuItem_list_Catagories, -1, 1)
+		$MenuItem_list_Catagories_[$i] = GUICtrlCreateMenuItem($var, $MenuItem_View_Categories_list_all, -1, 1)
 		$i += 1
 	WEnd
 	Return $i
 EndFunc   ;==>_set_cat_to_menu
 
-Func _File_Size($Rn)
-	If $Rn > 0 And $Rn <= 1024 Then
-		Return $Rn & " BYTES"
-	ElseIf $Rn > 1024 And $Rn <= 1048576 Then
-		Return Round($Rn / (1024), 2) & " KB"
-	ElseIf $Rn > 1048576 And $Rn <= 1073741824 Then
-		Return Round($Rn / (1048576), 2) & " MB"
-	ElseIf $Rn > 1073741824 Then
-		Return Round($Rn / (1073741824), 2) & " GB"
-	EndIf
-EndFunc   ;==>_File_Size
-
-Func _Drive_Get_From_Path($path)
-	Dim $szDrive, $szDir, $szFName, $szExt
-	$TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
-	Return $TestPath[1]
-EndFunc   ;==>_Drive_Get_From_Path
-
-Func _Ext_Get_From_Path($path)
-	Dim $szDrive, $szDir, $szFName, $szExt
-	$TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
-	Return $TestPath[4]
-EndFunc   ;==>_Ext_Get_From_Path
-
-Func _Name_Get_From_Path($path)
-	Dim $szDrive, $szDir, $szFName, $szExt
-	$TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
-	Return $TestPath[3]
-EndFunc   ;==>_Name_Get_From_Path
-
 Func _Find()
-	$sText = GUICtrlRead($Input_Find)
+	$sText = GUICtrlRead($idInput_Find)
 	Local $i = 0
 	If StringLen($sText) <> 0 Then
-		_GUICtrlListView_BeginUpdate($ListView1)
-		GUICtrlSetData($JoinFile_Lable_Info, "Finding Please Wait...")
+		_GUICtrlListView_BeginUpdate($idListView)
+		GUICtrlSetData($idLable_Info, "Finding Please Wait...")
 		While 1
 			If $i = _GUICtrlListView_GetItemCount($hListView) Then ExitLoop
 			If Not StringInStr(_GUICtrlListView_GetItemTextString($hListView, $i), $sText) Then
@@ -648,28 +730,39 @@ Func _Find()
 			EndIf
 			$i += 1
 		WEnd
-		_GUICtrlListView_EndUpdate($ListView1)
-		GUICtrlSetData($JoinFile_Lable_Info, "INFO: " & _GUICtrlListView_GetItemCount($hListView) & " Item Found." & " Contain:" & $sText)
+		_GUICtrlListView_EndUpdate($idListView)
+		GUICtrlSetData($idLable_Info, "INFO: " & _GUICtrlListView_GetItemCount($hListView) & " Item Found." & " Contain:" & $sText)
 	EndIf
 EndFunc   ;==>_Find
 
 Func _get_selected_cat()
 	Local $i
-	For $i = 0 To $i_Cat_Item-1
+	For $i = 0 To $i_Cat_Item - 1
 		If BitAND(GUICtrlRead($MenuItem_list_Catagories_[$i]), $GUI_CHECKED) Then
-			Return _RegRead("HKEY_CURRENT_USER\Software\DownloadManager\FoldersTree\" & GUICtrlRead($MenuItem_list_Catagories_[$i], 1), "ID")
+			Return _RegRead($s_regpath_IDM & "\FoldersTree\" & GUICtrlRead($MenuItem_list_Catagories_[$i], 1), "ID")
 		EndIf
 	Next
 EndFunc   ;==>_get_selected_cat
 
 Func _Disable_Controls()
 	GUISetCursor(15, -1, $hGUI)
-	GUICtrlSetState($ListView1, $GUI_DISABLE)
+	GUICtrlSetState($idListView, $GUI_DISABLE)
+	GUICtrlSetState($MenuItem_File, $GUI_DISABLE)
+	GUICtrlSetState($MenuItem_Edit, $GUI_DISABLE)
+	GUICtrlSetState($MenuItem_Tools, $GUI_DISABLE)
+	GUICtrlSetState($MenuItem_View, $GUI_DISABLE)
+	GUICtrlSetState($MenuItem_Help, $GUI_DISABLE)
 EndFunc   ;==>_Disable_Controls
 
 Func _Enable_Controls()
 	GUISetCursor(-1, -1, $hGUI)
-	GUICtrlSetState($ListView1, $GUI_ENABLE)
+	GUICtrlSetState($idListView, $GUI_ENABLE)
+
+	GUICtrlSetState($MenuItem_File, $GUI_ENABLE)
+	GUICtrlSetState($MenuItem_Edit, $GUI_ENABLE)
+	GUICtrlSetState($MenuItem_Tools, $GUI_ENABLE)
+	GUICtrlSetState($MenuItem_View, $GUI_ENABLE)
+	GUICtrlSetState($MenuItem_Help, $GUI_ENABLE)
 EndFunc   ;==>_Enable_Controls
 
 Func ListView_RClick()
@@ -688,7 +781,7 @@ Func ListView_RClick()
 		; ========================================================================
 		; goto action
 		; ========================================================================
-		Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($ListView1, "id")), "|")
+		Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 		Local $owWPage = _RegRead($s_regpath_IDM & "\" & $ID[5], "owWPage")
 		Local $Referer = _RegRead($s_regpath_IDM & "\" & $ID[5], "Referer")
 		Local $FileName = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
@@ -727,75 +820,9 @@ Func ListView_RClick()
 	EndIf
 EndFunc   ;==>ListView_RClick
 
-Func WM_NOTIFY($hWnd, $iMsg, $iwParam, $ilParam)
-	#forceref $hWnd, $iMsg, $iwParam
-	Local $hWndFrom, $iIDFrom, $iCode, $tNMHDR, $hWndListView, $tInfo, $B_DESCENDING
-	$hWndListView = $hListView
-	If Not IsHWnd($hListView) Then $hWndListView = GUICtrlGetHandle($hListView)
+#endregion Events
 
-	$tNMHDR = DllStructCreate($tagNMHDR, $ilParam)
-	$hWndFrom = HWnd(DllStructGetData($tNMHDR, "hWndFrom"))
-	$iIDFrom = DllStructGetData($tNMHDR, "IDFrom")
-	$iCode = DllStructGetData($tNMHDR, "Code")
-	Switch $hWndFrom
-		Case $hWndListView
-			Switch $iCode
-
-				Case $LVN_ITEMCHANGING
-					$fChange = True
-
-				Case $LVN_COLUMNCLICK ; A column was clicked
-					$tInfo = DllStructCreate($tagNMLISTVIEW, $ilParam)
-					_GUICtrlListView_SimpleSort($hWndListView, $B_DESCENDING, DllStructGetData($tInfo, "SubItem"))
-					; No return value
-
-				Case $LVN_KEYDOWN ; A key has been pressed
-					$tInfo = DllStructCreate($tagNMLVKEYDOWN, $ilParam)
-					; No return value
-
-				Case $NM_CLICK ; Sent by a list-view control when the user clicks an item with the left mouse button
-					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
-					; No return value
-
-				Case $NM_DBLCLK ; Sent by a list-view control when the user double-clicks an item with the left mouse button
-					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
-					_Open_Folder()
-
-					; No return value
-				Case $NM_KILLFOCUS ; The control has lost the input focus
-					; No return value
-
-				Case $NM_RCLICK ; Sent by a list-view control when the user clicks an item with the right mouse button
-					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
-					ListView_RClick()
-
-					Return 0 ; allow the default processing
-				Case $NM_RDBLCLK ; Sent by a list-view control when the user double-clicks an item with the right mouse button
-					$tInfo = DllStructCreate($tagNMITEMACTIVATE, $ilParam)
-
-					; No return value
-				Case $NM_RETURN ; The control has the input focus and that the user has pressed the ENTER key
-
-					; No return value
-				Case $NM_SETFOCUS ; The control has received the input focus
-
-					; No return value
-			EndSwitch
-	EndSwitch
-	Return $GUI_RUNDEFMSG
-EndFunc   ;==>WM_NOTIFY
-
-Func WM_GETMINMAXINFO($hWnd, $Msg, $WPARAM, $lParam)
-	Local $tagMaxinfo = DllStructCreate("int;int;int;int;int;int;int;int;int;int", $lParam)
-	DllStructSetData($tagMaxinfo, 7, $GUIMINWID / 1.2) ; min X
-	DllStructSetData($tagMaxinfo, 8, $GUIMINHT / 1.4) ; min Y
-	Return 0
-EndFunc   ;==>WM_GETMINMAXINFO
-
-Func MY_WM_SIZE($hWnd, $iMsg, $iwParam, $ilParam)
-	Return 'GUI_RUNDEFMSG'
-EndFunc   ;==>MY_WM_SIZE
-
+#region Internal Function
 Func _CountKey($sRegpath)
 	Local $k = 1
 	While 1
@@ -805,3 +832,39 @@ Func _CountKey($sRegpath)
 	WEnd
 	Return $k - 1
 EndFunc   ;==>_CountKey
+
+Func _Resize_Text($text)
+	Return "Goto " & StringLeft($text, 20) & "...."
+EndFunc   ;==>_Resize_Text
+
+Func _File_Size($Rn)
+	If $Rn > 0 And $Rn <= 1024 Then
+		Return $Rn & " BYTES"
+	ElseIf $Rn > 1024 And $Rn <= 1048576 Then
+		Return Round($Rn / (1024), 2) & " KB"
+	ElseIf $Rn > 1048576 And $Rn <= 1073741824 Then
+		Return Round($Rn / (1048576), 2) & " MB"
+	ElseIf $Rn > 1073741824 Then
+		Return Round($Rn / (1073741824), 2) & " GB"
+	EndIf
+EndFunc   ;==>_File_Size
+
+Func _Drive_Get_From_Path($path)
+	Dim $szDrive, $szDir, $szFName, $szExt
+	$TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
+	Return $TestPath[1]
+EndFunc   ;==>_Drive_Get_From_Path
+
+Func _Ext_Get_From_Path($path)
+	Dim $szDrive, $szDir, $szFName, $szExt
+	$TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
+	Return $TestPath[4]
+EndFunc   ;==>_Ext_Get_From_Path
+
+Func _Name_Get_From_Path($path)
+	Dim $szDrive, $szDir, $szFName, $szExt
+	$TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
+	Return $TestPath[3]
+EndFunc   ;==>_Name_Get_From_Path
+
+#endregion Internal Function

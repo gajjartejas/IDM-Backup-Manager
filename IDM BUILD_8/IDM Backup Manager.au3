@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.8.0
 #AutoIt3Wrapper_Res_Description=IDM Backup Manager
 #AutoIt3Wrapper_Res_Fileversion=0.9.8.0
-#AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-2013
+#AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2012-2013 Gajjar Tejas
 #AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
 #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
 #AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas's Blog

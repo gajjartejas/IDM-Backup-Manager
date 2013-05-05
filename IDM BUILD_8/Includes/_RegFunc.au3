@@ -295,13 +295,14 @@ Func _RegDeleteKey($szKey)
 	Local $szSubkey = StringTrimLeft($szKey, StringLen($parentKey) + 1)
 	Local $hKey = _RegOpenKey($parentKey, $KEY_READ)
 	If @error Then Return SetError(@error, @extended, 0)
+	Local $ret
 	; check compatibility
 	; RegDeleteKeyExW does not exist on XP 32-bit and lower or lower than Server 2003 SP1
 	; it is not needed at all on 32-bit OS's, so make decision based on that
 	If $__g_RF_Is64BitOS Then
-		Local $ret = DllCall("advapi32.dll", "long", "RegDeleteKeyExW", "ptr", $hKey, "wstr", $szSubkey, "long", @extended, "dword", 0)
+		 $ret = DllCall("advapi32.dll", "long", "RegDeleteKeyExW", "ptr", $hKey, "wstr", $szSubkey, "long", @extended, "dword", 0)
 	Else
-		Local $ret = DllCall("advapi32.dll", "long", "RegDeleteKeyW", "ptr", $hKey, "wstr", $szSubkey)
+		 $ret = DllCall("advapi32.dll", "long", "RegDeleteKeyW", "ptr", $hKey, "wstr", $szSubkey)
 	EndIf
 	DllCall("advapi32.dll", "long", "RegCloseKey", "ulong_ptr", $hKey)
 	If (Not IsArray($ret)) Or ($ret[0] <> 0) Then
@@ -484,7 +485,7 @@ Func _RegCopyKey($s_key, $d_key, $delete = False)
 	_RegWrite($d_key) ; write destination key in case source key empty
 	If @error Then Return SetError(2, @error, 0)
 	; value loop
-	Local $i = 0, $val, $data, $err = 0
+	Local $i = 0, $val, $err = 0
 	While 1
 		$val = _RegEnumValue($s_key, $i)
 		If @error Then ExitLoop ; no more values
@@ -604,19 +605,18 @@ EndFunc   ;==>_RegCopyValue
 ; Link...........:
 ; Example........:
 ; ===============================================================================================================
-Func _RegCopyKeyNoTree($s_key, $d_key, $delete = False)
+Func _RegCopyKeyNoTree($s_key, $d_key)
 	If $s_key = $d_key Then Return SetError(-1, 0, 0) ; destination is the same as source
 	If Not _RegKeyExists($s_key) Then Return SetError(1, 0, 0)
 	_RegWrite($d_key) ; write destination key in case source key empty
 	If @error Then Return SetError(2, @error, 0)
 	; value loop
-	Local $i = 0, $val, $data, $err = 0
+	Local $i = 0, $val
 	While 1
 		$val = _RegEnumValue($s_key, $i)
 		If @error Then ExitLoop ; no more values
 		_RegCopyValue($s_key, $val, $d_key)
 		If @error Then
-			$err = 3
 			ContinueLoop ; some error reading value, skip it
 		EndIf
 		$i += 1

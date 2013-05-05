@@ -40,7 +40,7 @@ Global Const $SND_PURGE = 0x40
 Func _ResourceGet($ResName, $ResType = 10, $ResLang = 0, $DLL = -1) ; $RT_RCDATA = 10
 	Local Const $IMAGE_BITMAP = 0
 	Local $hInstance, $hBitmap, $InfoBlock, $GlobalMemoryBlock, $MemoryPointer, $ResSize
-	
+
 	If $DLL = -1 Then
 	  $hInstance = _WinAPI_GetModuleHandle("")
 	Else
@@ -59,29 +59,29 @@ Func _ResourceGet($ResName, $ResType = 10, $ResLang = 0, $DLL = -1) ; $RT_RCDATA
 	Else
 		$InfoBlock = DllCall("kernel32.dll", "ptr", "FindResourceW", "ptr", $hInstance, "wstr", $ResName, "long", $ResType)
 	EndIf
-	
+
 	If @error Then Return SetError(3, 0, 0)
 	$InfoBlock = $InfoBlock[0]
 	If $InfoBlock = 0 Then Return SetError(4, 0, 0)
-	
+
 	$ResSize = DllCall("kernel32.dll", "dword", "SizeofResource", "ptr", $hInstance, "ptr", $InfoBlock)
 	If @error Then Return SetError(5, 0, 0)
 	$ResSize = $ResSize[0]
 	If $ResSize = 0 Then Return SetError(6, 0, 0)
-	
+
 	$GlobalMemoryBlock = DllCall("kernel32.dll", "ptr", "LoadResource", "ptr", $hInstance, "ptr", $InfoBlock)
 	If @error Then Return SetError(7, 0, 0)
 	$GlobalMemoryBlock = $GlobalMemoryBlock[0]
 	If $GlobalMemoryBlock = 0 Then Return SetError(8, 0, 0)
-	
+
 	$MemoryPointer = DllCall("kernel32.dll", "ptr", "LockResource", "ptr", $GlobalMemoryBlock)
 	If @error Then Return SetError(9, 0, 0)
 	$MemoryPointer = $MemoryPointer[0]
 	If $MemoryPointer = 0 Then Return SetError(10, 0, 0)
-	
+
 	If $DLL <> -1 Then _WinAPI_FreeLibrary($hInstance)
 	If @error Then Return SetError(11, 0, 0)
-    
+
 	SetExtended($ResSize)
 	Return $MemoryPointer
 EndFunc
@@ -129,15 +129,15 @@ EndFunc
 ; $width =  _GDIPlus_ImageGetWidth ($hImage)
 ; $height = _GDIPlus_ImageGetHeight($hImage)
 Func _ResourceGetAsImage($ResName, $ResType = 10, $DLL = -1) ; $RT_RCDATA = 10
-	Local $ResData, $nSize, $hData, $pData, $pStream, $pBitmap, $hBitmap
+	Local $ResData, $nSize, $hData, $pData, $pStream
 
 	$ResData = _ResourceGet($ResName, $ResType, 0, $DLL)
 	If @error Then Return SetError(1, 0, 0)
 	$nSize = @extended
-	
+
 	If $ResType = $RT_BITMAP Then
  		; $ResData is hBitmap type
-		$hImage = _GDIPlus_BitmapCreateFromHBITMAP($ResData)
+		Local $hImage = _GDIPlus_BitmapCreateFromHBITMAP($ResData)
 	Else
  		; $ResData is memory pointer
 		; thanks ProgAndy
@@ -158,28 +158,28 @@ Func _ResourceGetAsImage($ResName, $ResType = 10, $DLL = -1) ; $RT_RCDATA = 10
 EndFunc
 
 Func _ResourceGetAsBitmap($ResName, $ResType = 10, $DLL = -1) ; $RT_RCDATA = 10
-	$hImage = _ResourceGetAsImage($ResName, $ResType, $DLL)
+	Local $hImage = _ResourceGetAsImage($ResName, $ResType, $DLL)
 	If @error Then Return SetError(1, 0, 0)
-	$hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
+	Local $hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
 	Return $hBitmap ; hBitmap type
 EndFunc
 
 Func _ResourceSaveToFile($FileName, $ResName, $ResType = 10, $ResLang = 0, $CreatePath = 0, $DLL = -1) ; $RT_RCDATA = 10
 	Local $ResStruct, $ResSize, $FileHandle
-	
+
 	If $CreatePath Then $CreatePath = 8 ; mode 8 = Create directory structure if it doesn't exist in FileOpen()
 
 	If $ResType = $RT_BITMAP Then
 		; workaround: for RT_BITMAP _ResourceGetAsBytes() doesn't work so use _ResourceGetAsImage()
-		$hImage = _ResourceGetAsImage($ResName, $ResType)
+		Local $hImage = _ResourceGetAsImage($ResName, $ResType)
 		If @error Then Return SetError(10, 0, 0)
-		
+
 		; create filepath if doesn't exist
 		$FileHandle = FileOpen($FileName, 2+16+$CreatePath)
 		If @error Then Return SetError(11, 0, 0)
 		FileClose($FileHandle)
 		If @error Then Return SetError(12, 0, 0)
-		
+
 		_GDIPlus_ImageSaveToFile($hImage, $FileName)
 		_GDIPlus_ImageDispose($hImage)
 
@@ -189,7 +189,7 @@ Func _ResourceSaveToFile($FileName, $ResName, $ResType = 10, $ResLang = 0, $Crea
 		$ResStruct = _ResourceGetAsBytes($ResName, $ResType, $ResLang, $DLL)
 		If @error Then Return SetError(1, 0, 0)
 		$ResSize = DllStructGetSize($ResStruct)
-		
+
 		$FileHandle = FileOpen($FileName, 2+16+$CreatePath)
 		If @error Then Return SetError(2, 0, 0)
 		FileWrite($FileHandle, DllStructGetData($ResStruct, 1))
@@ -203,11 +203,11 @@ EndFunc
 
 Func _ResourceSetImageToCtrl($CtrlId, $ResName, $ResType = 10, $DLL = -1) ; $RT_RCDATA = 10
 	Local $ResData, $nSize, $hData, $pData, $pStream, $pBitmap, $hBitmap
-	
+
 	$ResData = _ResourceGet($ResName, $ResType, 0, $DLL)
 	If @error Then Return SetError(1, 0, 0)
 	$nSize = @extended
-	
+
 	If $ResType = $RT_BITMAP Then
 		_SetBitmapToCtrl($CtrlId, $ResData)
 		If @error Then Return SetError(2, 0, 0)
@@ -237,19 +237,17 @@ EndFunc
 ; thanks for improvements Melba
 Func _SetBitmapToCtrl($CtrlId, $hBitmap)
     Local Const $STM_SETIMAGE = 0x0172
-    Local Const $STM_GETIMAGE = 0x0173
     Local Const $BM_SETIMAGE = 0xF7
-    Local Const $BM_GETIMAGE = 0xF6
     Local Const $IMAGE_BITMAP = 0
     Local Const $SS_BITMAP = 0x0E
     Local Const $BS_BITMAP = 0x0080
     Local Const $GWL_STYLE = -16
 
-    Local $hWnd, $hPrev, $Style, $iCtrl_SETIMAGE, $iCtrl_GETIMAGE, $iCtrl_BITMAP
+    Local $hWnd, $hPrev, $Style, $iCtrl_SETIMAGE, $iCtrl_BITMAP
 
     $hWnd = GUICtrlGetHandle($CtrlId)
     If $hWnd = 0 Then Return SetError(1, 0, 0)
-	
+
     $CtrlId = _WinAPI_GetDlgCtrlID($hWnd) ; support for $CtrlId = -1
     If @error Then Return SetError(2, 0, 0)
 
@@ -257,27 +255,25 @@ Func _SetBitmapToCtrl($CtrlId, $hBitmap)
     Switch _WinAPI_GetClassName($CtrlId)
         Case "Button" ; button,checkbox,radiobutton,groupbox
             $iCtrl_SETIMAGE = $BM_SETIMAGE
-            $iCtrl_GETIMAGE = $BM_GETIMAGE
             $iCtrl_BITMAP = $BS_BITMAP
         Case "Static" ; picture,icon,label
             $iCtrl_SETIMAGE = $STM_SETIMAGE
-            $iCtrl_GETIMAGE = $STM_GETIMAGE
             $iCtrl_BITMAP = $SS_BITMAP
         Case Else
             Return SetError(3, 0, 0)
 	EndSwitch
-	
+
 	; set SS_BITMAP/BS_BITMAP style to the control
     $Style = _WinAPI_GetWindowLong($hWnd, $GWL_STYLE)
     If @error Then Return SetError(4, 0, 0)
     _WinAPI_SetWindowLong($hWnd, $GWL_STYLE, BitOR($Style, $iCtrl_BITMAP))
     If @error Then Return SetError(5, 0, 0)
-	
+
 	; set image to the control
     $hPrev  = _SendMessage($hWnd, $iCtrl_SETIMAGE, $IMAGE_BITMAP, $hBitmap)
     If @error Then Return SetError(6, 0, 0)
     If $hPrev Then _WinAPI_DeleteObject($hPrev)
-	
+
 	Return 1
 EndFunc
 
@@ -286,16 +282,16 @@ EndFunc
 ; default flag is $SND_SYNC = 0
 Func _ResourcePlaySound($ResName, $Flag = 0, $DLL = -1)
 	If $DLL = -1 Then
-	  $hInstance = 0
+	  Local $hInstance = 0
 	Else
 	  $hInstance = _WinAPI_LoadLibraryEx($DLL, $LOAD_LIBRARY_AS_DATAFILE)
 	EndIf
-  
+
 	Local $ret = DllCall("winmm.dll", "int", "PlaySound", "str", $ResName, "hwnd", $hInstance, "int", BitOr($SND_RESOURCE,$Flag))
 	If @error Then Return SetError(1, 0, 0)
 
 	If $DLL <> -1 Then _WinAPI_FreeLibrary($hInstance)
 	If @error Then Return SetError(2, 0, 0)
-  
+
 	Return $ret[0]
 EndFunc

@@ -23,7 +23,7 @@ EndFunc   ;==>_ProcessGetHandle
 
 ; Close process handle
 Func _ProcessCloseHandle($hProc)
-	Local $avRET = DllCall("kernel32.dll", "int", "CloseHandle", "ptr", $hProc)
+DllCall("kernel32.dll", "int", "CloseHandle", "ptr", $hProc)
 	If @error Then
 		Return SetError(1, 0, 0)
 	Else
@@ -34,7 +34,7 @@ EndFunc   ;==>_ProcessCloseHandle
 ; Get process exit code from handle
 Func _ProcessGetExitCode($hProc)
 	Local $t_ExitCode = DllStructCreate("int")
-	Local $avRET = DllCall("kernel32.dll", "int", "GetExitCodeProcess", "ptr", $hProc, "ptr", DllStructGetPtr($t_ExitCode))
+DllCall("kernel32.dll", "int", "GetExitCodeProcess", "ptr", $hProc, "ptr", DllStructGetPtr($t_ExitCode))
 	If @error Then
 		Return SetError(1, 0, 0)
 	Else

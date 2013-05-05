@@ -94,8 +94,8 @@ Global $b_AppendLog_File = 1
 Global $b_RestartIDM = 0
 Global $b_OpenFolder = 1
 
-Global $s_AppDataIDMFolder = _sGet_AppDataIDMFolder() ;contain back "\"
-Global $s_DwnlData_Folder = _sGet_TempPathFolder() ;contain back "\"
+Global $s_AppDataIDMFolder = _sGetAppDataIDMFolder() ;contain back "\"
+Global $s_DwnlData_Folder = _sGetTempPathFolder() ;contain back "\"
 Global $s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 Global $Grabber_Folder = $s_AppDataIDMFolder & "Grabber\"
 Global $GrabberData_Folder = $s_AppDataIDMFolder & "GrabberData\"
@@ -136,7 +136,7 @@ Global $iMsgBoxAnswer, $s_Compression_Level, $s_Password, $b_Password, $iTotalKe
 Global $b_DwnlData_Folder, $b_Grabber_Folder, $b_Scheduler_Folder, $b_History_Files
 Global $foo
 Global $Guest_AppDataIDMFolder, $Guest_TempPath, $Guest_Keys, $Guest_Password, $Guest_Mode, $Guest_Username, $Guest_DwnlData_Folder, $Guest_Grabber_Folder
-Global $Guest_GrabberData_Folder, $Guest_Scheduler_Folder, $Guest_History_Files, $Guest_idmvers
+Global $Guest_GrabberData_Folder, $Guest_Scheduler_Folder, $Guest_History_Files, $Guest_IDMver
 #endregion global Variables
 
 _CheckIni()
@@ -430,7 +430,7 @@ While 1
 		Case $h_Button_Backup
 			FileWriteLine($s_Log_File, "")
 			FileWriteLine($s_Log_File, "============================= Backup Session Started =============================")
-			_Control_Update_Busy()
+			_ControlUpdateBusy()
 			_CleanINInReg()
 
 			#region ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
@@ -453,7 +453,7 @@ While 1
 					And GUICtrlRead($h_Checkbox_Listl_Backup) = $GUI_UNCHECKED _
 					And GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_UNCHECKED Then
 				GUICtrlSetData($h_Label_Info, "Error: Select Backup Type")
-				_Control_Update_Default()
+				_ControlUpdateDefault()
 				ContinueLoop
 			EndIf
 
@@ -462,7 +462,7 @@ While 1
 				If $s_Password = "" Then
 					GUICtrlSetData($h_Label_Info, "Error: Password is Empty")
 					FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password is Empty")
-					_Control_Update_Default()
+					_ControlUpdateDefault()
 					ContinueLoop
 				EndIf
 				$b_Password = True
@@ -473,14 +473,14 @@ While 1
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Password= " & '"' & $b_Password & '"')
 
 			GUICtrlSetData($h_Label_Info, "Checking : Drive Space Please Wait...")
-			If DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) < DirGetSize($s_AppDataIDMFolder) / 1024 / 1024 Then
-				GUICtrlSetData($h_Label_Info, "Error: Not Enough  Free Space on Drive. +" & _File_Size(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024) & " Required")
+			If DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) < DirGetSize($s_AppDataIDMFolder) / 1024 / 1024 Then
+				GUICtrlSetData($h_Label_Info, "Error: Not Enough  Free Space on Drive. +" & _sGetFileSizeConv(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) * 1024 * 1024) & " Required")
 
 				FileWriteLine($s_Log_File, _Current_Moment() & _
-						"Error: Not Enough  Free Space on Drive " & _Drive_Get_From_Path($s_Backup_File) & _
-						" Free Space:" & _File_Size((DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024)) & _
-						". At Least " & _File_Size(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_Drive_Get_From_Path($s_Backup_File)) * 1024 * 1024) & "Required")
-				_Control_Update_Default()
+						"Error: Not Enough  Free Space on Drive " & _sDriveGetFromPath($s_Backup_File) & _
+						" Free Space:" & _sGetFileSizeConv((DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) * 1024 * 1024)) & _
+						". At Least " & _sGetFileSizeConv(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) * 1024 * 1024) & "Required")
+				_ControlUpdateDefault()
 				ContinueLoop
 			EndIf
 			#endregion ;/Check Password, Drive Space, Condition and PreRequestes--->
@@ -489,7 +489,7 @@ While 1
 			If Not _RegKeyExists($s_regpath_IDM) Then
 				GUICtrlSetData($h_Label_Info, "Error: Registry Entry Is Empty. Nothing To Backup")
 				FileWriteLine($s_Log_File, _Current_Moment() & "Error: Registry Entry Is Empty. Nothing To Backup !")
-				_Control_Update_Default()
+				_ControlUpdateDefault()
 				ContinueLoop
 			Else
 				#region ;/Count registry--->
@@ -693,7 +693,7 @@ While 1
 
 			_CleanINInReg()
 			GUICtrlSetData($h_Label_Info, "INFO: Done")
-			_Control_Update_Default()
+			_ControlUpdateDefault()
 			If $b_OpenFolder Then _SelectFile($s_Backup_File)
 			FileWriteLine($s_Log_File, "============================= Backup Session Ended =============================")
 
@@ -712,7 +712,7 @@ While 1
 			FileWriteLine($s_Log_File, "")
 			FileWriteLine($s_Log_File, "============================= Restore Session Started =============================")
 			GUICtrlSetData($h_Label_Info, "INFO: Restoring...")
-			_Control_Update_Busy()
+			_ControlUpdateBusy()
 			_CleanINInReg()
 
 			#region ;/Define Some variable: $s_Restore_File
@@ -720,7 +720,7 @@ While 1
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $s_Restore_File= " & '"' & $s_Restore_File & '"')
 
 			If Not FileExists($s_Restore_File) Then
-				_Control_Update_Default()
+				_ControlUpdateDefault()
 				GUICtrlSetData($h_Label_Info, "Error: File Not Found")
 				ContinueLoop
 			EndIf
@@ -737,7 +737,7 @@ While 1
 
 				$Guest_AppDataIDMFolder = IniRead($s_ini_File, "Default", "AppDataIDMFolder", "") ;True C:\Users\Tejas\AppData\Roaming\IDM\
 				$Guest_TempPath = IniRead($s_ini_File, "Default", "TempPath", "");C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\
-				$Guest_idmvers = IniRead($s_ini_File, "Default", "idmvers", "");v6.07b10 Full
+				$Guest_IDMver = IniRead($s_ini_File, "Default", "idmvers", "");v6.07b10 Full
 				$Guest_Keys = IniRead($s_ini_File, "Default", "Keys", "");1191
 				$Guest_Password = IniRead($s_ini_File, "Default", "Password", "");True
 				$Guest_Mode = IniRead($s_ini_File, "Default", "Mode", "");Custom
@@ -755,18 +755,18 @@ While 1
 					If GUICtrlRead($h_Input_Password_Restore) = "" Then
 						GUICtrlSetData($h_Label_Info, "Error: Enter Password")
 						FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
-						_Control_Update_Default()
+						_ControlUpdateDefault()
 						ContinueLoop
 					Else
 						GUICtrlSetData($h_Label_Info, "Error: Incorrect Password or File May Be Damaged.")
 						FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
-						_Control_Update_Default()
+						_ControlUpdateDefault()
 						ContinueLoop
 					EndIf
 				Else
 					GUICtrlSetData($h_Label_Info, "Error: Check Checkbox --> Enter Password")
 					FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Check Checkbox and Enter The Password")
-					_Control_Update_Default()
+					_ControlUpdateDefault()
 					ContinueLoop
 				EndIf
 			EndIf
@@ -1074,10 +1074,10 @@ While 1
 
 			_CleanINInReg()
 
-			If $b_RestartIDM Then _sRun_IDMexe()
+			If $b_RestartIDM Then _RunIDMexe()
 
 			GUICtrlSetData($h_Label_Info, "INFO: Done")
-			_Control_Update_Default()
+			_ControlUpdateDefault()
 			FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")
 
 		Case $h_Button_Clean_Manager_Tools
@@ -1285,7 +1285,7 @@ Func __AET_ButtonSetIcon($hWnd, $iIndex, $iWidth, $iHeight, $iAlign)
 	_GUICtrlButton_SetImageList($hWnd, $hImageList, $iAlign)
 EndFunc   ;==>__AET_ButtonSetIcon
 
-Func _Control_Update_Busy()
+Func _ControlUpdateBusy()
 	GUICtrlSetState($h_TabSheet1, $GUI_DISABLE)
 
 	#region ;for backup
@@ -1319,9 +1319,9 @@ Func _Control_Update_Busy()
 
 	GUICtrlSetState($h_Button_Restore, $GUI_DISABLE)
 	#endregion  ;for Restore
-EndFunc   ;==>_Control_Update_Busy
+EndFunc   ;==>_ControlUpdateBusy
 
-Func _Control_Update_Default()
+Func _ControlUpdateDefault()
 	GUICtrlSetState($h_TabSheet1, $GUI_ENABLE)
 	WinActivate($s_Win_Title)
 
@@ -1378,18 +1378,19 @@ Func _Control_Update_Default()
 
 	If FileExists($s_Restore_File) Then GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
 	#endregion ;for restore
-EndFunc   ;==>_Control_Update_Default
+EndFunc   ;==>_ControlUpdateDefault
 
 #endregion control Functions
 
 #region file, string Functions
-Func _Drive_Get_From_Path($path)
+Func _sDriveGetFromPath($path)
 	Local $szDrive, $szDir, $szFName, $szExt
 	Local $TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
 	Return $TestPath[1]
-EndFunc   ;==>_Drive_Get_From_Path
+EndFunc   ;==>_sDriveGetFromPath
 
-Func _File_Size($iBytes)
+;Get Filesize Conversion
+Func _sGetFileSizeConv($iBytes)
 	If $iBytes >= 0 And $iBytes <= 1024 Then
 		Return $iBytes & " Bytes"
 	ElseIf $iBytes > 1024 And $iBytes <= 1048576 Then
@@ -1399,7 +1400,7 @@ Func _File_Size($iBytes)
 	ElseIf $iBytes > 1073741824 Then
 		Return Round($iBytes / (1073741824), 2) & " GB"
 	EndIf
-EndFunc   ;==>_File_Size
+EndFunc   ;==>_sGetFileSizeConv
 
 Func _IsDir($sFilePath)
 	Return Number(FileExists($sFilePath) And StringInStr(FileGetAttrib($sFilePath), "D", 2, 1) > 0)
@@ -1870,7 +1871,7 @@ Func _Clean_GUI_Child()
 				EndIf ;==>clean
 
 				_ProgressMarquee_Stop($Progress1, 1)
-				MsgBox(64, "Info", _File_Size(_iGetFileSize($Data)) & " Will Removed.", 0, $clean)
+				MsgBox(64, "Info", _sGetFileSizeConv(_iGetFileSize($Data)) & " Will Removed.", 0, $clean)
 
 			Case $Button_Clean
 				FileWriteLine($s_Log_File, "")
@@ -1912,7 +1913,7 @@ Func _Clean_GUI_Child()
 				EndIf
 
 				_ProgressMarquee_Start($Progress1)
-				Local $iMsgBoxAnswer = MsgBox(36, "Conform", _File_Size(_iGetFileSize($Data)) & " Will Removed. Continue?", 0, $clean)
+				Local $iMsgBoxAnswer = MsgBox(36, "Conform", _sGetFileSizeConv(_iGetFileSize($Data)) & " Will Removed. Continue?", 0, $clean)
 				_ProgressMarquee_Stop($Progress1, 1)
 
 				If $iMsgBoxAnswer = 6 Then
@@ -1935,7 +1936,7 @@ Func _Clean_GUI_Child()
 					Next
 
 					MsgBox(64, "Done", "Done.", 0, $clean)
-					If $b_RestartIDM Then _sRun_IDMexe()
+					If $b_RestartIDM Then _RunIDMexe()
 				EndIf
 				FileWriteLine($s_Log_File, "============================= Cleaning Ended =============================")
 		EndSwitch
@@ -1949,16 +1950,16 @@ Func _Password_Cleaner_GUI()
 
 	Local $size = WinGetPos($s_Win_Title)
 	Local $pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth / 2 - 178 / 2, $size[1] + $i_yHight / 2 - 60 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
-	Local $K = 1
+	Local $k = 1
 	Local $j = 0
 	Local $sInfoLabelText = "Total " & $j & " Password Found."
-	Local $VAR
+	Local $var
 	While 1
-		$VAR = RegEnumKey($s_regpath_IDM & "\Passwords", $K)
+		$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
 		If @error <> 0 Then ExitLoop
-		If _RegValueExists($s_regpath_IDM & "\Passwords\" & $VAR, "EncPassword") Then $j += 1
+		If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then $j += 1
 		$sInfoLabelText = "Total " & $j & " Password Found."
-		$K += 1
+		$k += 1
 	WEnd
 	Local $h_Lable_Info_pwCleaner = GUICtrlCreateLabel($sInfoLabelText, 10, 6, 155, 17)
 	Local $h_Button_ClearAll_pwCleaner = GUICtrlCreateButton("Clear All", 10, 24, 75, 25)
@@ -1972,23 +1973,23 @@ Func _Password_Cleaner_GUI()
 			Case $GUI_EVENT_CLOSE, $h_Button_Close_pwCleaner
 				ExitLoop
 			Case $h_Button_ClearAll_pwCleaner
-				$K = 1
+				$k = 1
 				$j = 0
 				While 1
-					$VAR = RegEnumKey($s_regpath_IDM & "\Passwords", $K)
+					$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
 					If @error <> 0 Then ExitLoop
-					If _RegValueExists($s_regpath_IDM & "\Passwords\" & $VAR, "EncPassword") Then
-						_RegDelete($s_regpath_IDM & "\Passwords\" & $VAR, "EncPassword")
+					If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then
+						_RegDelete($s_regpath_IDM & "\Passwords\" & $var, "EncPassword")
 						$j += 1
 					EndIf
-					$sInfoLabelText = "Removing " & $K - 1 & " Password(s)."
+					$sInfoLabelText = "Removing " & $k - 1 & " Password(s)."
 					GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
-					$K += 1
+					$k += 1
 				WEnd
 				$sInfoLabelText = "Total " & $j & " Password(s) Removed."
 				GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
 				GUICtrlSetState($h_Button_ClearAll_pwCleaner, $GUI_DISABLE)
-				If $b_RestartIDM Then _sRun_IDMexe()
+				If $b_RestartIDM Then _RunIDMexe()
 		EndSwitch
 	WEnd
 
@@ -2090,7 +2091,7 @@ Func _File_Type_GUI()
 				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Music\", "mask", $REG_SZ, GUICtrlRead($h_Input_Music_FileTypeGUI))
 				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Programs\", "mask", $REG_SZ, GUICtrlRead($h_Input_Programs_FileTypeGUI))
 				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Video\", "mask", $REG_SZ, GUICtrlRead($h_Input_Video_FileTypeGUI))
-				If $b_RestartIDM Then _sRun_IDMexe()
+				If $b_RestartIDM Then _RunIDMexe()
 
 			Case $h_Button_Enhance_FileTypeGUI
 				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Compressed_FileTypeGUI, $s_Enhance_Compressed_FileTypeGUI)
@@ -2105,7 +2106,6 @@ Func _File_Type_GUI()
 				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Music_FileTypeGUI, $s_Default_Music_FileTypeGUI)
 				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Programs_FileTypeGUI, $s_Default_Programs_FileTypeGUI)
 				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Video_FileTypeGUI, $s_Default_Video_FileTypeGUI)
-
 		EndSwitch
 	WEnd
 
@@ -2115,7 +2115,7 @@ EndFunc   ;==>_File_Type_GUI
 #endregion GUIS
 
 #region app & envt Functions
-Func _sGet_AppDataIDMFolder()
+Func _sGetAppDataIDMFolder()
 
 	Local $AppDataIDMFolder = RegRead($s_regpath_IDM, "AppDataIDMFolder")
 
@@ -2124,9 +2124,9 @@ Func _sGet_AppDataIDMFolder()
 	If StringRight($AppDataIDMFolder, 1) <> "\" Then $AppDataIDMFolder &= "\"
 
 	Return $AppDataIDMFolder
-EndFunc   ;==>_sGet_AppDataIDMFolder
+EndFunc   ;==>_sGetAppDataIDMFolder
 
-Func _sGet_TempPathFolder()
+Func _sGetTempPathFolder()
 
 	Local $TempPath = RegRead($s_regpath_IDM, "TempPath")
 
@@ -2138,7 +2138,7 @@ Func _sGet_TempPathFolder()
 	EndIf
 
 	Return $TempPath
-EndFunc   ;==>_sGet_TempPathFolder
+EndFunc   ;==>_sGetTempPathFolder
 
 Func _iGetFileSize($aFiles)
 	Local $i, $iSize = 0
@@ -2154,42 +2154,42 @@ Func _iGetFileSize($aFiles)
 	Return $iSize
 EndFunc   ;==>_iGetFileSize
 
-Func _iGet_MaxKey($s_regpath_IDM)
-	Local $K = 1
+Func _iGetMaxKey($s_regpath_IDM)
+	Local $k = 1
 	Local $j = 0
-	Local $VAR, $iMaxKey
+	Local $var, $iMaxKey
 
 	While 1
-		$VAR = RegEnumKey($s_regpath_IDM, $K)
+		$var = RegEnumKey($s_regpath_IDM, $k)
 		If @error <> 0 Then ExitLoop
-		If Number($VAR) <> 0 Then $j += 1
-		$K += 1
+		If Number($var) <> 0 Then $j += 1
+		$k += 1
 	WEnd
 
 	If $j = 0 Then Return 0
 
 	Local $MaxKey[$j]
-	$K = 1
+	$k = 1
 	$j = 0
 	While 1
-		$VAR = RegEnumKey($s_regpath_IDM, $K)
+		$var = RegEnumKey($s_regpath_IDM, $k)
 		If @error <> 0 Then ExitLoop
-		If Number($VAR) <> 0 Then
-			$MaxKey[$j] = $VAR
+		If Number($var) <> 0 Then
+			$MaxKey[$j] = $var
 			$j += 1
 		EndIf
-		$K += 1
+		$k += 1
 	WEnd
 	$iMaxKey = _ArrayMax($MaxKey, 1)
 	If @error Then Return SetError(1)
 	Return $iMaxKey
-EndFunc   ;==>_iGet_MaxKey
+EndFunc   ;==>_iGetMaxKey
 
 Func _AppendRegKeys()
 	Local $s_reg_File_Tmp = @TempDir & "\IDMregistryTmp.reg"
 	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
 
-	Local $iHostKeys = _iGet_MaxKey($s_regpath_IDM);expt
+	Local $iHostKeys = _iGetMaxKey($s_regpath_IDM);expt
 	If @error Then Return SetError(-1)
 
 	Local $h_reg_File = FileOpen($s_reg_File, 0);Read
@@ -2235,13 +2235,13 @@ Func _AppendRegKeys()
 EndFunc   ;==>_AppendRegKeys
 
 Func _iCountKey()
-	Local $K = 1
+	Local $k = 1
 	While 1
-		RegEnumKey($s_regpath_IDM, $K)
+		RegEnumKey($s_regpath_IDM, $k)
 		If @error <> 0 Then ExitLoop
-		$K += 1
+		$k += 1
 	WEnd
-	Return $K - 1
+	Return $k - 1
 EndFunc   ;==>_iCountKey
 
 Func _SwLicense()
@@ -2335,7 +2335,7 @@ Func _CheckCmdLine()
 	EndIf
 EndFunc   ;==>_CheckCmdLine
 
-Func _sRun_IDMexe()
+Func _RunIDMexe()
 	Local $s_IDMexe_Path = RegRead($s_regpath_IDM, "ExePath")
 	If Not FileExists($s_IDMexe_Path) Then $s_IDMexe_Path = @ProgramFilesDir & "\" & "Internet Download Manager\IDMan.exe"
 	If Not FileExists($s_IDMexe_Path) Then Return SetError(1)
@@ -2343,13 +2343,13 @@ Func _sRun_IDMexe()
 		ProcessClose("idman.exe")
 		_RunWithReducedPrivileges($s_IDMexe_Path, "/onboot")
 	EndIf
-EndFunc   ;==>_sRun_IDMexe
+EndFunc   ;==>_RunIDMexe
 
 Func _onExit()
 	Local $WinPos = WinGetPos($h_IDMBM)
 	IniWrite($s_Setting_File, "Position", "x", $WinPos[0])
 	IniWrite($s_Setting_File, "Position", "y", $WinPos[1])
-	If $b_RestartIDM Then _sRun_IDMexe()
+	If $b_RestartIDM Then _RunIDMexe()
 	Exit 0
 EndFunc   ;==>_onExit
 
@@ -2407,8 +2407,8 @@ Func _ResetSetting()
 	$s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files"
 	$s_Log_File = @AppDataDir & "\IDM Backup Manager" & "\LogFile.log" ;for installer
 
-	$s_AppDataIDMFolder = _sGet_AppDataIDMFolder() ;contain back "\"
-	$s_DwnlData_Folder = _sGet_TempPathFolder() ;contain back "\"
+	$s_AppDataIDMFolder = _sGetAppDataIDMFolder() ;contain back "\"
+	$s_DwnlData_Folder = _sGetTempPathFolder() ;contain back "\"
 	$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 
 	$b_AppendLog_File = 1

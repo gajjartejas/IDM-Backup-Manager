@@ -1,14 +1,11 @@
-#cs ----------------------------------------------------------------------------
 
- AutoIt Version: 3.3.8.1
- Author:         myName
+#AutoIt3Wrapper_Au3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 
- Script Function:
-	Template AutoIt script.
-
-#ce ----------------------------------------------------------------------------
-
-; Script Start - Add your code below here
+#Region    ;************ Includes ************
+#include-once
+#Include <ProgressConstants.au3>
+#Include <WindowsConstants.au3>
+#EndRegion ;************ Includes ************
 
 Func _ProgressMarquee_Start($iControlID)
 	GUICtrlSetStyle($iControlID, BitOR($PBS_SMOOTH, $PBS_MARQUEE, $WS_TABSTOP))

@@ -1,5 +1,5 @@
 #NoTrayIcon
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=..\Extra\icon.ico
 #AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.8.exe
 #AutoIt3Wrapper_Compression=4
@@ -36,23 +36,21 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Log.ico
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
+#AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-;~ #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
-;~ #AutoIt3Wrapper_Run_Obfuscator=y
-;~ #Obfuscator_Parameters=/striponly
-;~ #AutoIt3Wrapper_Versioning=v
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Run_Obfuscator=y
+#Obfuscator_Parameters=/striponly
+#AutoIt3Wrapper_Versioning=v
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Run_cvsWrapper=v
 
-#region   Includes
+#region Includes
+#Region    ;************ Includes ************
 #include <Array.au3>
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
 #include <GuiButton.au3>
 #include <ComboConstants.au3>
-#include <WindowsConstants.au3>
-#include <ProgressConstants.au3>
-#include <String.au3>
 #include <File.au3>
 #include <GuiImageList.au3>
 #include "Includes\_Resources.au3"
@@ -60,15 +58,14 @@
 #include "Includes\_RegFunc.au3"
 #include "Includes\_RunWithReducedPrivileges.au3"
 #include "Includes\_ShellFile_Install.au3"
-#include "Includes\_ProcessGetExitCode.au3"
+#include "Includes\7Zip.au3"
 #include "Includes\_ProgressMarquee.au3"
-#endregion   Includes
-
-Opt("MustDeclareVars", 1)
+#EndRegion ;************ Includes ************
+#endregion Includes
 
 #region global Variables
 Global $h_IDMBM
-Global $Data[14]
+Global $aData[14]
 Global Const $s_Current_Version = "0.9.8"
 Global Const $s_Win_Title = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
@@ -77,7 +74,6 @@ Global Const $i_yHight = 276
 Global $i_xWinPos = (@DesktopWidth - $i_xWidth) / 2
 Global $i_yWinPos = (@DesktopHeight - $i_yHight) / 2
 
-Global Const $s_7zexe_Path = @ScriptDir & '\7z.exe'
 Global Const $s_History_File = @ScriptDir & "\history.txt"
 Global Const $s_License_File = @ScriptDir & "\License.txt"
 
@@ -118,8 +114,9 @@ Global $h_Checkbox_UnFinished_DD_Backup, $h_Checkbox_UnFinished_GD_Backup, $h_Ch
 Global $h_Input_Password_Backup, $h_Combo_Compression_Level_Backup, $h_Checkbox_UnFinished_HL_Backup, $h_Input_Backup_Path
 
 Global $h_Button_Browse_Restore, $h_Checkbox_Password_Restore, $h_Checkbox_Convert_Registry_Restore, $h_Label_Convert_Registry_Restore
+Global $h_Checkbox_UnFinished_DD_Restore, $h_Checkbox_UnFinished_GD_Restore, $h_Checkbox_UnFinished_SD_Restore, $h_Checkbox_UnFinished_HL_Restore
 Global $h_Checkbox_Append_Registry_Restore, $h_Input_Password_Restore, $h_Label_Append_Registry_Restore, $h_Button_Restore, $h_Input_Restore_Path
-Global $h_Checkbox_NoRestore_Registry_Restore, $h_Checkbox_NoRestore_Data_Restore
+Global $h_Checkbox_Listl_Restore, $h_Checkbox_Full_Restore
 
 Global $h_Button_List_Manager_Tools, $h_Button_Clean_Manager_Tools, $h_Button_Clean_Password_Tools, $h_Button_Cat_Tools
 
@@ -132,18 +129,18 @@ Global $h_Button_Update_Help
 
 Global $h_Label_Info, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
 
-Global $iMsgBoxAnswer, $s_Compression_Level, $s_Password, $b_Password, $iTotalKey, $key
+Global $iMsgBoxAnswer, $s_Compression_Level, $s_Password, $b_Password, $iTotalKey, $key, $i
 Global $b_DwnlData_Folder, $b_Grabber_Folder, $b_Scheduler_Folder, $b_History_Files
 Global $foo
 Global $Guest_AppDataIDMFolder, $Guest_TempPath, $Guest_Keys, $Guest_Password, $Guest_Mode, $Guest_Username, $Guest_DwnlData_Folder, $Guest_Grabber_Folder
 Global $Guest_GrabberData_Folder, $Guest_Scheduler_Folder, $Guest_History_Files, $Guest_IDMver
-Global $nMsg
+Global $nMsg, $retResult
 #endregion global Variables
 
 _CheckIni()
 _SelfProcessCheck()
 _LogSysInfo()
-_CheckComponment()
+;~ _CheckComponment()
 _CheckIDMProcess()
 _LogProfilePaths()
 _SwMainGUI()
@@ -301,22 +298,102 @@ While 1
 				EndIf
 			EndIf
 
-		Case $h_Checkbox_NoRestore_Registry_Restore
-			If GUICtrlRead($h_Checkbox_NoRestore_Registry_Restore) = $GUI_CHECKED Then
-				GUICtrlSetState($h_Checkbox_NoRestore_Data_Restore, $GUI_DISABLE)
-				GUICtrlSetData($h_Label_Info, "INFO: Only Data will Restored List, Setting Will Not Restored.")
+		Case $h_Checkbox_Full_Restore
+			If GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_CHECKED Then
+				GUICtrlSetData($h_Label_Info, "INFO: Full Restore Selected")
+				GUICtrlSetState($h_Checkbox_UnFinished_DD_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_GD_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_HL_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 			Else
-				GUICtrlSetState($h_Checkbox_NoRestore_Data_Restore, $GUI_ENABLE)
 				GUICtrlSetData($h_Label_Info, "INFO: Ready")
+				GUICtrlSetState($h_Checkbox_UnFinished_DD_Restore, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_GD_Restore, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_HL_Restore, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
 			EndIf
 
-		Case $h_Checkbox_NoRestore_Data_Restore
-			If GUICtrlRead($h_Checkbox_NoRestore_Data_Restore) = $GUI_CHECKED Then
-				GUICtrlSetData($h_Label_Info, "INFO: Only List, Setting Will Restored Data will Not Restored.")
-				GUICtrlSetState($h_Checkbox_NoRestore_Registry_Restore, $GUI_DISABLE)
+		Case $h_Checkbox_Listl_Restore
+			If GUICtrlRead($h_Checkbox_Listl_Restore) = $GUI_CHECKED Then
+				GUICtrlSetData($h_Label_Info, "INFO: List Restore Selected. Only IDM List and Setting Restore")
+				GUICtrlSetState($h_Checkbox_UnFinished_DD_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_GD_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_HL_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 			Else
-				GUICtrlSetState($h_Checkbox_NoRestore_Registry_Restore, $GUI_ENABLE)
 				GUICtrlSetData($h_Label_Info, "INFO: Ready")
+				GUICtrlSetState($h_Checkbox_UnFinished_DD_Restore, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_GD_Restore, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_UnFinished_HL_Restore, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
+			EndIf
+
+		Case $h_Checkbox_UnFinished_SD_Restore
+			If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Then
+				GUICtrlSetData($h_Label_Info, "INFO: Custom Restore Selected.")
+				GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+			Else
+				If GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_CHECKED Or GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Or GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
+					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+				Else
+					GUICtrlSetData($h_Label_Info, "INFO: Ready")
+					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
+					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
+				EndIf
+			EndIf
+
+		Case $h_Checkbox_UnFinished_GD_Restore
+			If GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_CHECKED Then
+				GUICtrlSetData($h_Label_Info, "INFO: Custom Restore Selected.")
+				GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+			Else
+				If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Or GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Or GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
+					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+				Else
+					GUICtrlSetData($h_Label_Info, "INFO: Ready")
+					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
+					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
+				EndIf
+			EndIf
+
+		Case $h_Checkbox_UnFinished_DD_Restore
+			If GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Then
+				GUICtrlSetData($h_Label_Info, "INFO: Custom Restore Selected.")
+				GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+			Else
+				If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Or GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_CHECKED Or GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
+					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+				Else
+					GUICtrlSetData($h_Label_Info, "INFO: Ready")
+					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
+					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
+				EndIf
+			EndIf
+
+		Case $h_Checkbox_UnFinished_HL_Restore
+			If GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
+				GUICtrlSetData($h_Label_Info, "INFO: Custom Restore Selected.")
+				GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+			Else
+				If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Or GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_CHECKED Or $h_Checkbox_UnFinished_DD_Restore = $GUI_CHECKED Then
+					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
+					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+				Else
+					GUICtrlSetData($h_Label_Info, "INFO: Ready")
+					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
+					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
+				EndIf
 			EndIf
 
 		Case $h_Button_BrowseLogFile_Setting
@@ -551,13 +628,11 @@ While 1
 
 			#region ;/Build Data array and Write INI--->
 
-			For $i = 0 To UBound($Data) - 1
-				$Data[$i] = ""
-			Next
+			_ResetDataAray($aData)
 
 			If $b_DwnlData_Folder = True Then
 				If FileExists($s_DwnlData_Folder) Then
-					$Data[0] = $s_DwnlData_Folder
+					$aData[0] = $s_DwnlData_Folder
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_DwnlData_Folder " & "=" & ' "' & $s_DwnlData_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "DwnlData_Folder", True)
 				Else
@@ -569,7 +644,7 @@ While 1
 
 			If $b_Grabber_Folder = True Then
 				If FileExists($Grabber_Folder) Then
-					$Data[1] = $Grabber_Folder
+					$aData[1] = $Grabber_Folder
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Grabber_Folder " & "=" & ' "' & $Grabber_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "Grabber_Folder", True)
 				Else
@@ -577,7 +652,7 @@ While 1
 				EndIf
 
 				If FileExists($GrabberData_Folder) Then
-					$Data[2] = $GrabberData_Folder
+					$aData[2] = $GrabberData_Folder
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GrabberData_Folder " & "=" & ' "' & $GrabberData_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "GrabberData_Folder", True)
 				Else
@@ -590,7 +665,7 @@ While 1
 
 			If $b_Scheduler_Folder = True Then
 				If FileExists($Scheduler_Folder) Then
-					$Data[3] = $Scheduler_Folder
+					$aData[3] = $Scheduler_Folder
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Scheduler_Folder " & "=" & ' "' & $Scheduler_Folder & '" ')
 					IniWrite($s_ini_File, "Default", "Scheduler_Folder", True)
 				Else
@@ -605,56 +680,56 @@ While 1
 				GUICtrlSetData($h_Label_Info, "Adding: History and Logs Files Please Wait...")
 
 				If FileExists($UrlHistory_txt_File) Then
-					$Data[4] = $UrlHistory_txt_File
+					$aData[4] = $UrlHistory_txt_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory_txt_File " & "=" & ' "' & $UrlHistory_txt_File & '"')
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $UrlHistory_txt_File & '"')
 				EndIf
 
 				If FileExists($UrlHistory2_txt_File) Then
-					$Data[5] = $UrlHistory2_txt_File
+					$aData[5] = $UrlHistory2_txt_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory2_txt_File " & "=" & ' "' & $UrlHistory2_txt_File & '"')
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $UrlHistory2_txt_File & '"')
 				EndIf
 
 				If FileExists($GlobalErrors_log_File) Then
-					$Data[6] = $GlobalErrors_log_File
+					$aData[6] = $GlobalErrors_log_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GlobalErrors_log_File " & "=" & ' "' & $GlobalErrors_log_File & '"')
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $GlobalErrors_log_File & '"')
 				EndIf
 
 				If FileExists($urlexclist_dat_File) Then
-					$Data[7] = $urlexclist_dat_File
+					$aData[7] = $urlexclist_dat_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $urlexclist_dat_File " & "=" & ' "' & $urlexclist_dat_File & '"')
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $urlexclist_dat_File & '"')
 				EndIf
 
 				If FileExists($defextmap_dat_File) Then
-					$Data[8] = $defextmap_dat_File
+					$aData[8] = $defextmap_dat_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $defextmap_dat_File " & "=" & ' "' & $defextmap_dat_File & '"')
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $defextmap_dat_File & '"')
 				EndIf
 
 				If FileExists($foldresHistory_txt_File) Then
-					$Data[9] = $foldresHistory_txt_File
+					$aData[9] = $foldresHistory_txt_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $foldresHistory_txt_File " & "=" & ' "' & $foldresHistory_txt_File & '"')
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $foldresHistory_txt_File & '"')
 				EndIf
 
 				If FileExists($sts_list_dat_File) Then
-					$Data[10] = $sts_list_dat_File
+					$aData[10] = $sts_list_dat_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $sts_list_dat_File " & "=" & ' "' & $sts_list_dat_File & '" ')
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $sts_list_dat_File & '"')
 				EndIf
 
 				If FileExists($cnlurllist_dat_File) Then
-					$Data[11] = $cnlurllist_dat_File
+					$aData[11] = $cnlurllist_dat_File
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $cnlurllist_dat_File " & "=" & ' "' & $cnlurllist_dat_File & '" ')
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $cnlurllist_dat_File & '"')
@@ -667,20 +742,20 @@ While 1
 
 			#region ;/add INI--->
 			If FileExists($s_ini_File) Then
-				$Data[12] = $s_ini_File
+				$aData[12] = $s_ini_File
 				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_ini_File & '"')
 			Else
-				$Data[12] = ""
+				$aData[12] = ""
 				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_ini_File & '"')
 			EndIf
 			#endregion ;/add INI--->
 
 			#region ;/add registry--->
 			If FileExists($s_reg_File) Then
-				$Data[13] = $s_reg_File
+				$aData[13] = $s_reg_File
 				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_reg_File & '"')
 			Else
-				$Data[13] = ""
+				$aData[13] = ""
 				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_reg_File & '"')
 			EndIf
 			#endregion ;/add registry--->
@@ -688,8 +763,13 @@ While 1
 
 			#region ;/add Data Files--->
 			GUICtrlSetData($h_Label_Info, "Adding: Data Files Please Wait...")
-			$foo = _7Zip_Add_Array($s_Backup_File, $Data, $s_Compression_Level, $s_Password)
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Added Data Files With Error Code:" & _7z_Errors($foo))
+;~ 			$foo = _7Zip_Add_Array($s_Backup_File, $aData, $s_Compression_Level, $s_Password)
+
+			_7ZipStartup()
+			$retResult = _7ZipSetOwnerWindowEx($h_IDMBM, "_ARCHIVERPROC")
+			$retResult = _7ZipAdd($h_IDMBM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
+			_7ZipShutdown()
+
 			#endregion ;/add Data Files--->
 
 			_CleanINInReg()
@@ -722,19 +802,40 @@ While 1
 
 			If Not FileExists($s_Restore_File) Then
 				_ControlUpdateDefault()
-				GUICtrlSetData($h_Label_Info, "Error: File Not Found")
+				GUICtrlSetData($h_Label_Info, "Error: Backup File Not Found")
 				ContinueLoop
 			EndIf
 
-			$s_Password = GUICtrlRead($h_Input_Password_Restore)
+			If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_UNCHECKED _
+					And GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_UNCHECKED _
+					And GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_UNCHECKED _
+					And GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_UNCHECKED _
+					And GUICtrlRead($h_Checkbox_Listl_Restore) = $GUI_UNCHECKED _
+					And GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_UNCHECKED Then
+				GUICtrlSetData($h_Label_Info, "Error: Select Restore Type")
+				_ControlUpdateDefault()
+				ContinueLoop
+			EndIf
+
+			If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
+				$s_Password = GUICtrlRead($h_Input_Password_Restore)
+			Else
+				$s_Password = ""
+			EndIf
 			#endregion ;/Define Some variable: $s_Restore_File
 
 			#region ;/Check Backup File, Read Guest ini setting and Check For Password
-			GUICtrlSetData($h_Label_Info, "INFO: Extracting ini File Please Wait...")
-			$foo = _7Zip_Extract_File($s_Restore_File, @TempDir, "idm_guest_Setting.ini", $s_Password);Extract ini File -> Check For Password
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract Staus idm_guest_Setting.ini " & "=" & ' "' & $s_Restore_File & "-->" & "idm_guest_Setting.ini" & '" ' & "Error Code:" & _7z_Errors($foo))
+			GUICtrlSetData($h_Label_Info, "INFO: Reading Backup File Please Wait...")
 
-			If $foo = 0 And FileExists($s_ini_File) Then ;Check if INI available and Succeful Extract
+			_ResetDataAray($aData)
+			$aData[12] = "idm_guest_Setting.ini"
+			$aData[13] = "IDMregistry.reg"
+
+			_7ZipStartup()
+			$foo = _7ZipSetOwnerWindowEx($h_IDMBM, "_ARCHIVERPROC")
+			$foo = _7ZipExtractEx($h_IDMBM, $s_Restore_File, @TempDir, $aData, $s_Password);Extract ini,reg File -> Check For Password
+
+			If $foo <> 0 And FileExists($s_ini_File) Then ;Check if INI available and Succeful Extract
 
 				$Guest_AppDataIDMFolder = IniRead($s_ini_File, "Default", "AppDataIDMFolder", "") ;True C:\Users\Tejas\AppData\Roaming\IDM\
 				$Guest_TempPath = IniRead($s_ini_File, "Default", "TempPath", "");C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\
@@ -775,23 +876,28 @@ While 1
 
 			#region ;/Remove TempPath--->
 
-			;If Data Restore allowed via Checkbox
-			If GUICtrlRead($h_Checkbox_NoRestore_Data_Restore) = $GUI_UNCHECKED Then
+			;if Append/Merge Not Selected then Pre Delete as per Componments
+			If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_UNCHECKED Then
 
-				;if Append/Merge Not Selected then Pre Delete as per Componments
-				If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_UNCHECKED Then
+				If GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Then
 					GUICtrlSetData($h_Label_Info, "Removing: TempPath Please Wait...")
 					If $Guest_DwnlData_Folder = "True" Then _FileOrFolderDeleteWithLog($s_DwnlData_Folder)
+				EndIf
 
+				If GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_CHECKED Then
 					GUICtrlSetData($h_Label_Info, "Removing: Grabber Folder Please Wait...")
 					If $Guest_Grabber_Folder = "True" Then _FileOrFolderDeleteWithLog($Grabber_Folder)
 
 					GUICtrlSetData($h_Label_Info, "Removing: GrabberData Folder Please Wait...")
 					If $Guest_GrabberData_Folder = "True" Then _FileOrFolderDeleteWithLog($GrabberData_Folder)
+				EndIf
 
+				If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Then
 					GUICtrlSetData($h_Label_Info, "Removing: Scheduler Folder Please Wait...")
 					If $Guest_Scheduler_Folder = "True" Then _FileOrFolderDeleteWithLog($Scheduler_Folder)
+				EndIf
 
+				If GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
 					GUICtrlSetData($h_Label_Info, "Removing: History And Logs Please Wait...")
 					If $Guest_History_Files = "True" Then
 						_FileOrFolderDeleteWithLog($UrlHistory_txt_File)
@@ -807,83 +913,117 @@ While 1
 			EndIf
 			#endregion ;/Remove TempPath--->
 
+			#region ;/define Restore type--->
+			$b_DwnlData_Folder = False
+			$b_Grabber_Folder = False
+			$b_Scheduler_Folder = False
+			$b_History_Files = False
+
+			If GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_CHECKED Then ;Full Restore
+				$b_DwnlData_Folder = True
+				$b_Grabber_Folder = True
+				$b_Scheduler_Folder = True
+				$b_History_Files = True
+			Else
+				If GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Then $b_DwnlData_Folder = True
+				If GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_CHECKED Then $b_Grabber_Folder = True
+				If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Then $b_Scheduler_Folder = True
+				If GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then $b_History_Files = True
+			EndIf
+			#endregion ;/define Restore type--->
+
 			#region ;/Restore Data--->
-			;If Data Restore allowed via Checkbox
-			If GUICtrlRead($h_Checkbox_NoRestore_Data_Restore) = $GUI_UNCHECKED Then
+
+			#region Restore DwnlData\
+			;If Unfinished Download Data Selectde Then
+			If $b_DwnlData_Folder Then
 
 				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Files And Folders...")
+
+				_ResetDataAray($aData)
 
 				If $Guest_DwnlData_Folder = "True" Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
 					GUICtrlSetData($h_Label_Info, "Restoring: DwnlData Folder Please Wait...")
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_DwnlData_Folder_, "DwnlData" & "\", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract DwnlData " & "=" & ' "' & $s_Restore_File & "-->" & "DwnlData\" & '" ' & "Error Code:" & _7z_Errors($foo))
+					$aData[0] = "DwnlData" & "\"
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
 				EndIf
 
+				$foo = _7ZipExtractEx($h_IDMBM, $s_Restore_File, $s_DwnlData_Folder_, $aData, $s_Password)
+			EndIf
+			#endregion Restore DwnlData\
+
+			_ResetDataAray($aData)
+
+			#region Restore GrabberData\
+			;If Grabber Data Selectde Then
+			If $b_Grabber_Folder Then
 				If $Guest_Grabber_Folder = "True" Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Grabber_Folder= " & '"' & $Guest_Grabber_Folder & '"')
-					GUICtrlSetData($h_Label_Info, "Restoring: Grabber Folder Please Wait...")
 
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "Grabber" & "\", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract Grabber " & "=" & ' "' & $s_Restore_File & "-->" & "Grabber\" & '" ' & "Error Code:" & _7z_Errors($foo))
+					$aData[1] = "Grabber" & "\"
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Grabber_Folder= " & '"' & $Guest_Grabber_Folder & '"')
 				EndIf
 
 				If $Guest_GrabberData_Folder = "True" Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_GrabberData_Folder= " & '"' & $Guest_GrabberData_Folder & '"')
-					GUICtrlSetData($h_Label_Info, "Restoring: Grabber Data Folder Please Wait...")
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "GrabberData" & "\", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract GrabberData Folder " & "=" & ' "' & $s_Restore_File & "-->" & "GrabberData\" & '" ' & "Error Code:" & _7z_Errors($foo))
+
+					$aData[2] = "GrabberData" & "\"
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_GrabberData_Folder= " & '"' & $Guest_GrabberData_Folder & '"')
 				EndIf
+			EndIf
+			#endregion Restore GrabberData\
 
+			#region Restore Scheduler\
+			;If Scheduler Data Selectde Then
+			If $b_Scheduler_Folder Then
 				If $Guest_Scheduler_Folder = "True" Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Scheduler_Folder= " & '"' & $Guest_Scheduler_Folder & '"')
-					GUICtrlSetData($h_Label_Info, "Restoring: Scheduler Data Folder Please Wait...")
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "Scheduler", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract Scheduler " & "=" & ' "' & $s_Restore_File & "-->" & "Scheduler\" & '" ' & "Error Code:" & _7z_Errors($foo))
+
+					$aData[3] = "Scheduler" & "\"
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Scheduler_Folder= " & '"' & $Guest_Scheduler_Folder & '"')
 				EndIf
+			EndIf
+			#endregion Restore Scheduler\
 
+			#region Restore History_Files
+			;If History_Files Selectde Then
+			If $b_History_Files Then
 				If $Guest_History_Files = "True" Then
-					GUICtrlSetData($h_Label_Info, "Restoring: History and Logs Data Folder Please Wait...")
+					$aData[4] = "UrlHistory.txt"
+					$aData[5] = "UrlHistory2.txt"
+					$aData[6] = "GlobalErrors.log"
+					$aData[7] = "urlexclist.dat"
+					$aData[8] = "defextmap.dat"
+					$aData[9] = "foldresHistory.txt"
+					$aData[10] = "sts_list.dat"
+					$aData[11] = "cnlurllist.dat"
+
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_History_Files= " & '"' & $Guest_History_Files & '"')
-
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "UrlHistory.txt", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract UrlHistory.txt " & "=" & ' "' & $s_Restore_File & "-->" & "UrlHistory.txt" & '" ' & "Error Code:" & _7z_Errors($foo))
-
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "urlexclist.dat", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract urlexclist.dat " & "=" & ' "' & $s_Restore_File & "-->" & "urlexclist.dat" & '" ' & "Error Code:" & _7z_Errors($foo))
-
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "defextmap.dat", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract defextmap.dat " & "=" & ' "' & $s_Restore_File & "-->" & "defextmap.dat" & '" ' & "Error Code:" & _7z_Errors($foo))
-
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "foldresHistory.txt", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract foldresHistory.txt " & "=" & ' "' & $s_Restore_File & "-->" & "foldresHistory.txt" & '" ' & "Error Code:" & _7z_Errors($foo))
-
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "sts_list.dat", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract sts_list.dat " & "=" & ' "' & $s_Restore_File & "-->" & "sts_list.dat" & '" ' & "Error Code:" & _7z_Errors($foo))
-
-					$foo = _7Zip_Extract_File($s_Restore_File, $s_AppDataIDMFolder, "cnlurllist.dat", $s_Password)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract cnlurllist.dat " & "=" & ' "' & $s_Restore_File & "-->" & "cnlurllist.dat" & '" ' & "Error Code:" & _7z_Errors($foo))
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_History_Files= " & '"' & $Guest_History_Files & '"')
 				EndIf
 			EndIf
+			#endregion Restore History_Files
+
+			$foo = _7ZipExtractEx($h_IDMBM, $s_Restore_File, $s_AppDataIDMFolder, $aData, $s_Password)
 			#endregion ;/Restore Data--->
 
-			#region ;/Extract Registry--->
-			GUICtrlSetData($h_Label_Info, "Extarcting: Registry Please Wait...")
-			$foo = _7Zip_Extract_File($s_Restore_File, @TempDir, "IDMregistry.reg", $s_Password)
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Extract IDMregistry.reg " & "=" & ' "' & $s_Restore_File & "-->" & "IDMregistry.reg" & '" ' & "Error Code:" & _7z_Errors($foo))
-			#endregion ;/Extract Registry--->
+			_7ZipShutdown()
 
-			#region ;/Append/Merge Registry--->
+			#region ;/Remove Temp Registry File--->
+			GUICtrlSetData($h_Label_Info, "Removing: Temp Registry Please Wait...")
+			If _RegKeyExists($s_regpath_IDM & "_tmp") Then
+				If Not RegDelete($s_regpath_IDM & "_tmp") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ' & "Error Code:" & @error)
+			EndIf
+			#endregion ;/Remove Temp Registry File--->
+
+			#region ;/CAppend/Merge--->
+			;Append/Merge Registry Checkbox Is Checked Then
 			If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
 				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Appending/Merging Profile")
 
@@ -893,38 +1033,37 @@ While 1
 			Else
 				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Append/Merge Profile Not Selected.")
 			EndIf
-			#endregion ;/Append/Merge Registry--->
+			#endregion ;/CAppend/Merge--->
 
 			#region ;/Convert Profile--->
 			;Convert Registry Checkbox Is Checked Then
 			If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 
-				;If Registry Restore allowed via Checkbox
-				If GUICtrlRead($h_Checkbox_NoRestore_Registry_Restore) = $GUI_UNCHECKED Then
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Registry Profile")
+				;Registry Renames
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Registry Profile")
 
-					GUICtrlSetData($h_Label_Info, "Converting: Profile Please Wait...")
-					_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder & "DwnlData" & "\" & $Guest_Username), "\", "\\"), StringReplace($s_DwnlData_Folder & @UserName, "\", "\\"))
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder & "DwnlData" & "\" & $Guest_Username), "\", "\\"))
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_DwnlData_Folder & @UserName, "\", "\\") & " Error Code" & @error)
+				GUICtrlSetData($h_Label_Info, "Converting: Profile Please Wait...")
+				_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder & "DwnlData" & "\" & $Guest_Username), "\", "\\"), StringReplace($s_DwnlData_Folder & @UserName, "\", "\\"))
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder & "DwnlData" & "\" & $Guest_Username), "\", "\\"))
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_DwnlData_Folder & @UserName, "\", "\\") & " Error Code" & @error)
 
-					_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder & "GrabberData" & "\" & $Guest_Username), "\", "\\"), StringReplace($s_AppDataIDMFolder & "GrabberData" & "\" & @UserName, "\", "\\"))
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder & "GrabberData" & "\" & $Guest_Username), "\", "\\"))
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_AppDataIDMFolder & "GrabberData" & "\" & @UserName, "\", "\\") & " Error Code" & @error)
+				_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder & "GrabberData" & "\" & $Guest_Username), "\", "\\"), StringReplace($s_AppDataIDMFolder & "GrabberData" & "\" & @UserName, "\", "\\"))
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder & "GrabberData" & "\" & $Guest_Username), "\", "\\"))
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_AppDataIDMFolder & "GrabberData" & "\" & @UserName, "\", "\\") & " Error Code" & @error)
 
-					_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder), "\", "\\"), StringReplace($s_AppDataIDMFolder, "\", "\\"))
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder), "\", "\\"))
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_AppDataIDMFolder, "\", "\\") & " Error Code" & @error)
-				EndIf
+				_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder), "\", "\\"), StringReplace($s_AppDataIDMFolder, "\", "\\"))
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder), "\", "\\"))
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_AppDataIDMFolder, "\", "\\") & " Error Code" & @error)
 
-				;If Data Restore allowed via Checkbox
-				If GUICtrlRead($h_Checkbox_NoRestore_Data_Restore) = $GUI_UNCHECKED Then
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
+				;Folder Renames
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
 
+				If FileExists($s_DwnlData_Folder & $Guest_Username) Then
 					DirMove($s_DwnlData_Folder & $Guest_Username, $s_DwnlData_Folder & @UserName)
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $s_DwnlData_Folder & $Guest_Username)
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $s_DwnlData_Folder & @UserName & " Error Code" & @error)
-
+				EndIf
+				If FileExists($s_AppDataIDMFolder & "GrabberData\" & $Guest_Username) Then
 					DirMove($s_AppDataIDMFolder & "GrabberData\" & $Guest_Username, $s_AppDataIDMFolder & "GrabberData\" & @UserName)
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $s_AppDataIDMFolder & "GrabberData\" & $Guest_Username)
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $s_AppDataIDMFolder & "GrabberData\" & @UserName & " Error Code" & @error)
@@ -933,13 +1072,6 @@ While 1
 				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Profile Conversion Not Selected.")
 			EndIf
 			#endregion ;/Convert Profile--->
-
-			#region ;/Remove Temp Registry File--->
-			GUICtrlSetData($h_Label_Info, "Removing: Temp Registry Please Wait...")
-			If _RegKeyExists($s_regpath_IDM & "_tmp") Then
-				If Not RegDelete($s_regpath_IDM & "_tmp") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ' & "Error Code:" & @error)
-			EndIf
-			#endregion ;/Remove Temp Registry File--->
 
 			#region ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
 			If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
@@ -982,16 +1114,15 @@ While 1
 
 			#region ;/Restore Guest Registry-->
 			GUICtrlSetData($h_Label_Info, "Restoring: Registry Please Wait...")
-
 			;If Registry Restore allowed via Checkbox
-			If GUICtrlRead($h_Checkbox_NoRestore_Registry_Restore) = $GUI_UNCHECKED Then _Reg_Import($s_reg_File)
+			_Reg_Import($s_reg_File)
 			#endregion ;/Restore Guest Registry-->
 
 			#region ;/Restore Host Registry from stored in tmp Registry--->
-			GUICtrlSetData($h_Label_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
+			If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 
-			;If Registry Restore allowed via Checkbox
-			If GUICtrlRead($h_Checkbox_NoRestore_Registry_Restore) = $GUI_UNCHECKED Then
+				GUICtrlSetData($h_Label_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
+
 				If _RegKeyExists($s_regpath_IDM & "_tmp") Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Host Registry From Stored in tmp Registry")
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: tmp Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ')
@@ -1003,8 +1134,9 @@ While 1
 					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "DwnlPanel", $s_regpath_IDM & "\" & "DwnlPanel")
 					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "DwnlSelPanel", $s_regpath_IDM & "\" & "DwnlSelPanel")
 
-					_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "FoldersTree", $s_regpath_IDM & "\" & "FoldersTree")
-					If Not _RegKeyExists($s_regpath_IDM & "_tmp" & "\" & "FoldersTree") Then
+					If _RegKeyExists($s_regpath_IDM & "_tmp" & "\" & "FoldersTree") Then
+						_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "FoldersTree", $s_regpath_IDM & "\" & "FoldersTree")
+					Else
 						FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found" & "=" & ' "' & $s_regpath_IDM & "_tmp" & "\" & "FoldersTree" & '" ')
 						$i = 1
 						While 1
@@ -1076,8 +1208,8 @@ While 1
 			_CleanINInReg()
 
 			If $b_RestartIDM Then _RunIDMexe()
-
 			GUICtrlSetData($h_Label_Info, "INFO: Done")
+
 			_ControlUpdateDefault()
 			FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")
 
@@ -1147,123 +1279,6 @@ While 1
 	EndSwitch
 WEnd
 
-#region 7z Functions
-Func _7Zip_Add_Array($s7z_File_Save_Name, $aDestinationFolders, $sCompression, $sPassword)
-
-	If $sPassword <> "" Then
-		$sPassword = " -p" & '"' & $sPassword & '" '
-	EndIf
-
-	Local $iData_Size = _iGetFileSize($aDestinationFolders)
-
-	Local $tDATA = ""
-
-	For $i = 0 To UBound($aDestinationFolders) - 1
-		If $aDestinationFolders[$i] = "" Then ContinueLoop
-		$aDestinationFolders[$i] = _StringInsert($aDestinationFolders[$i], " -ir!" & '"', -StringLen($aDestinationFolders[$i])) & '"'
-		$tDATA &= $aDestinationFolders[$i]
-	Next
-
-	If $tDATA = "" Then Return 0
-
-	If $sCompression <> "" Then
-		Switch $sCompression
-			Case "1-No Compression"
-				$sCompression = " -mx0"
-			Case "2-Fastest Compression"
-				$sCompression = " -mx1"
-			Case "3-Fast Compression"
-				$sCompression = " -mx3"
-			Case "4-Normal Compression"
-				$sCompression = " -mx5"
-			Case "5-Maximum Compression"
-				$sCompression = " -mx7"
-			Case "6-Ultra Compression"
-				$sCompression = " -mx9"
-		EndSwitch
-	EndIf
-
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Command Line: " & $s_7zexe_Path & " " & "a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA)
-
-	Local $pid = Run($s_7zexe_Path & " a" & " " & '"' & $s7z_File_Save_Name & '"' & $sCompression & $sPassword & $tDATA, "", @SW_HIDE)
-
-	Local $hRun = _ProcessGetHandle($pid)
-	Local $stas
-	While ProcessExists($pid)
-		$stas = ProcessGetStats($pid, 1)
-		GUICtrlSetData($h_Label_Info, "Info: Adding and Compressing Total Progress..." & Round($stas[3] / $iData_Size * 100) & "%")
-		Sleep(100)
-	WEnd
-
-	Return _ProcessGetExitCode($hRun)
-EndFunc   ;==>_7Zip_Add_Array
-
-Func _7Zip_Extract_File($sZipFile, $sDestinationFolder, $sFile_To_Extracr, $sPassword)
-
-	If FileExists($sZipFile) = 0 Then
-		Return SetError(4, 0, 0)
-	EndIf
-
-	If _IsDir($sDestinationFolder) = 1 And StringRight($sDestinationFolder, 1) <> "\" Then
-		$sDestinationFolder &= "\"
-	EndIf
-
-	If _IsDir($sFile_To_Extracr) = 1 And StringRight($sFile_To_Extracr, 1) <> "\" Then
-		$sFile_To_Extracr &= "\"
-	EndIf
-
-	If FileExists($sDestinationFolder) = 0 Then
-		DirCreate($sDestinationFolder)
-	EndIf
-
-;~ 	Local $iData_Size
-;~ 	If _IsDir($sZipFile) Then
-;~ 		$iData_Size = DirGetSize($sZipFile)
-;~ 	Else
-;~ 		$iData_Size = FileGetSize($sZipFile)
-;~ 	EndIf
-
-	$sPassword = "-p" & '"' & $sPassword & '" '
-
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Command Line: " & $s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r")
-
-	Local $pid = RunWait($s_7zexe_Path & ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $sFile_To_Extracr & " -r", "", @SW_HIDE)
-
-;~ 	$hRun = _ProcessGetHandle($pid)
-;~ 	While ProcessExists($pid)
-;~ 		$stas = ProcessGetStats($pid, 1)
-;~ 		GUICtrlSetData($h_Label_Info, "Info: Restoring..." & Round($stas[3] / $iData_Size * 100) & "%")
-;~ 		Sleep(100)
-;~ 	WEnd
-;~ 	Return _ProcessGetExitCode($hRun)
-
-	Return $pid
-
-EndFunc   ;==>_7Zip_Extract_File
-
-Func _7z_Errors($foo)
-	If $foo = 1 Then
-		Return "1 Warning (Non-fatal error(s)) For example, one or more files were locked by some other application, so they were not compressed."
-	ElseIf $foo = 2 Then
-		Return "2 Fatal Error"
-	ElseIf $foo = 3 Then
-		Return "3 Destination File/Folder Not Exist To Add To Archive"
-	ElseIf $foo = 4 Then
-		Return "4 Backup File Not Found"
-	ElseIf $foo = 7 Then
-		Return "7 Command line error"
-	ElseIf $foo = 8 Then
-		Return "8 Not enough memory for operation"
-	ElseIf $foo = 255 Then
-		Return "255 Operation Cancelled"
-	ElseIf $foo = 0 Then
-		Return "0 Done"
-	Else
-		Return "Unknown Error"
-	EndIf
-EndFunc   ;==>_7z_Errors
-#endregion 7z Functions
-
 #region Registry Functions
 ;_regbackup(c:\path\name1.reg",     hku\folder1\folder2)
 ;_regbackup(@TempDir & "\" & "Scheduler.reg", $s_regpath_IDM & "\Scheduler")
@@ -1315,8 +1330,8 @@ Func _ControlUpdateBusy()
 	GUICtrlSetState($h_Input_Password_Restore, $GUI_DISABLE)
 	GUICtrlSetState($h_Checkbox_Convert_Registry_Restore, $GUI_DISABLE)
 	GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_DISABLE)
-	GUICtrlSetState($h_Checkbox_NoRestore_Registry_Restore, $GUI_DISABLE)
-	GUICtrlSetState($h_Checkbox_NoRestore_Data_Restore, $GUI_DISABLE)
+	GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
+	GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 
 	GUICtrlSetState($h_Button_Restore, $GUI_DISABLE)
 	#endregion  ;for Restore
@@ -1370,11 +1385,11 @@ Func _ControlUpdateDefault()
 	GUICtrlSetState($h_Checkbox_Password_Restore, $GUI_ENABLE)
 	If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then GUICtrlSetState($h_Input_Password_Restore, $GUI_ENABLE)
 	If GUICtrlSetState($h_Checkbox_Convert_Registry_Restore, $GUI_ENABLE) Then GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_ENABLE)
-	If GUICtrlRead($h_Checkbox_NoRestore_Registry_Restore) = $GUI_CHECKED Then GUICtrlSetState($h_Checkbox_NoRestore_Registry_Restore, $GUI_ENABLE)
-	If GUICtrlRead($h_Checkbox_NoRestore_Data_Restore) = $GUI_CHECKED Then GUICtrlSetState($h_Checkbox_NoRestore_Data_Restore, $GUI_ENABLE)
-	If GUICtrlRead($h_Checkbox_NoRestore_Registry_Restore) = $GUI_UNCHECKED And GUICtrlRead($h_Checkbox_NoRestore_Data_Restore) = $GUI_UNCHECKED Then
-		GUICtrlSetState($h_Checkbox_NoRestore_Registry_Restore, $GUI_ENABLE)
-		GUICtrlSetState($h_Checkbox_NoRestore_Data_Restore, $GUI_ENABLE)
+	If GUICtrlRead($h_Checkbox_Listl_Restore) = $GUI_CHECKED Then GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
+	If GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_CHECKED Then GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
+	If GUICtrlRead($h_Checkbox_Listl_Restore) = $GUI_UNCHECKED And GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_UNCHECKED Then
+		GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
+		GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
 	EndIf
 
 	If FileExists($s_Restore_File) Then GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
@@ -1566,8 +1581,21 @@ Func _SwMainGUI()
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "This will not remove existing profile. It will append data if possible and then merge.", "Append/Merge Data", 1, 1)
 
-	$h_Checkbox_NoRestore_Registry_Restore = GUICtrlCreateCheckbox("Do Not Restore List of Downloads", 200, 128, 209, 17)
-	$h_Checkbox_NoRestore_Data_Restore = GUICtrlCreateCheckbox("Do Not Restore Data", 200, 149, 209, 17)
+;~ 	$h_Checkbox_Listl_Restore = GUICtrlCreateCheckbox("Do Not Restore List of Downloads", 200, 128, 209, 17)
+;~ 	$h_Checkbox_Full_Restore = GUICtrlCreateCheckbox("Do Not Restore Data", 200, 149, 209, 17)
+
+	$h_Checkbox_Full_Restore = GUICtrlCreateCheckbox("Full Restore", 200, 128, 107, 17)
+	GUICtrlSetState(-1, $GUI_CHECKED)
+	$h_Checkbox_Listl_Restore = GUICtrlCreateCheckbox("Only List Restore", 310, 128, 97, 17)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Checkbox_UnFinished_DD_Restore = GUICtrlCreateCheckbox("Downloaded Data", 200, 149, 107, 17)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Checkbox_UnFinished_GD_Restore = GUICtrlCreateCheckbox("Grabber Data", 310, 149, 97, 17)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Checkbox_UnFinished_SD_Restore = GUICtrlCreateCheckbox("Scheduler/Queues", 200, 170, 107, 17)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Checkbox_UnFinished_HL_Restore = GUICtrlCreateCheckbox("History and Logs", 310, 170, 97, 17)
+	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$h_Button_Restore = GUICtrlCreateButton("Restore Now", 319, 217, 95, 25)
@@ -1690,7 +1718,7 @@ Func _SwMainGUI()
 	GUICtrlCreateTabItem("")
 	#region Info Label
 	$h_Label_Info = GUICtrlCreateLabel("INFO: Full Backup Selected", 12, 253, 413, 17)
-	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
+;~ 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 	#endregion Info Label
 	#endregion ### END Koda GUI section ###
 	GUISetState(@SW_SHOW)
@@ -1837,90 +1865,86 @@ Func _SwCleanerGUI()
 				_ProgressMarquee_Start($Progress1)
 
 				If GUICtrlRead($Full_Clean) = $GUI_CHECKED Then
-					$Data[0] = $s_DwnlData_Folder & @UserName & "\"
-					$Data[1] = $Grabber_Folder
-					$Data[2] = $GrabberData_Folder & @UserName & "\"
-					$Data[3] = $Scheduler_Folder
+					$aData[0] = $s_DwnlData_Folder & @UserName & "\"
+					$aData[1] = $Grabber_Folder
+					$aData[2] = $GrabberData_Folder & @UserName & "\"
+					$aData[3] = $Scheduler_Folder
 
-					$Data[4] = $UrlHistory_txt_File
-					$Data[5] = $UrlHistory2_txt_File
-					$Data[6] = $GlobalErrors_log_File
-					$Data[7] = $urlexclist_dat_File
-					$Data[8] = $defextmap_dat_File
-					$Data[9] = $foldresHistory_txt_File
-					$Data[10] = $sts_list_dat_File
-					$Data[11] = $cnlurllist_dat_File
+					$aData[4] = $UrlHistory_txt_File
+					$aData[5] = $UrlHistory2_txt_File
+					$aData[6] = $GlobalErrors_log_File
+					$aData[7] = $urlexclist_dat_File
+					$aData[8] = $defextmap_dat_File
+					$aData[9] = $foldresHistory_txt_File
+					$aData[10] = $sts_list_dat_File
+					$aData[11] = $cnlurllist_dat_File
 				Else
-					For $i = 0 To UBound($Data) - 1
-						$Data[$i] = ""
-					Next
-					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $Data[0] = $s_DwnlData_Folder & @UserName & "\"
+					_ResetDataAray($aData)
+					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $aData[0] = $s_DwnlData_Folder & @UserName & "\"
 					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then
-						$Data[1] = $Grabber_Folder
-						$Data[2] = $GrabberData_Folder & @UserName & "\"
+						$aData[1] = $Grabber_Folder
+						$aData[2] = $GrabberData_Folder & @UserName & "\"
 					EndIf
-					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $Data[3] = $Scheduler_Folder
+					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $aData[3] = $Scheduler_Folder
 					If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
-						$Data[4] = $UrlHistory_txt_File
-						$Data[5] = $UrlHistory2_txt_File
-						$Data[6] = $GlobalErrors_log_File
-						$Data[7] = $urlexclist_dat_File
-						$Data[8] = $defextmap_dat_File
-						$Data[9] = $foldresHistory_txt_File
-						$Data[10] = $sts_list_dat_File
-						$Data[11] = $cnlurllist_dat_File
+						$aData[4] = $UrlHistory_txt_File
+						$aData[5] = $UrlHistory2_txt_File
+						$aData[6] = $GlobalErrors_log_File
+						$aData[7] = $urlexclist_dat_File
+						$aData[8] = $defextmap_dat_File
+						$aData[9] = $foldresHistory_txt_File
+						$aData[10] = $sts_list_dat_File
+						$aData[11] = $cnlurllist_dat_File
 					EndIf
 				EndIf ;==>clean
 
 				_ProgressMarquee_Stop($Progress1, 1)
-				MsgBox(64, "Info", _sGetFileSizeConv(_iGetFileSize($Data)) & " Will Removed.", 0, $clean)
+				MsgBox(64, "Info", _sGetFileSizeConv(_iGetFileSize($aData)) & " Will Removed.", 0, $clean)
 
 			Case $Button_Clean
 				FileWriteLine($s_Log_File, "")
 				FileWriteLine($s_Log_File, "============================= Cleaning Started =============================")
 				If GUICtrlRead($Full_Clean) = $GUI_CHECKED Then
-					$Data[0] = $s_DwnlData_Folder & @UserName & "\"
-					$Data[1] = $Grabber_Folder
-					$Data[2] = $GrabberData_Folder & @UserName & "\"
-					$Data[3] = $Scheduler_Folder
+					$aData[0] = $s_DwnlData_Folder & @UserName & "\"
+					$aData[1] = $Grabber_Folder
+					$aData[2] = $GrabberData_Folder & @UserName & "\"
+					$aData[3] = $Scheduler_Folder
 
-					$Data[4] = $UrlHistory_txt_File
-					$Data[5] = $UrlHistory2_txt_File
-					$Data[6] = $GlobalErrors_log_File
-					$Data[7] = $urlexclist_dat_File
-					$Data[8] = $defextmap_dat_File
-					$Data[9] = $foldresHistory_txt_File
-					$Data[10] = $sts_list_dat_File
-					$Data[11] = $cnlurllist_dat_File
+					$aData[4] = $UrlHistory_txt_File
+					$aData[5] = $UrlHistory2_txt_File
+					$aData[6] = $GlobalErrors_log_File
+					$aData[7] = $urlexclist_dat_File
+					$aData[8] = $defextmap_dat_File
+					$aData[9] = $foldresHistory_txt_File
+					$aData[10] = $sts_list_dat_File
+					$aData[11] = $cnlurllist_dat_File
 				Else
-					For $i = 0 To UBound($Data) - 1
-						$Data[$i] = ""
-					Next
-					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $Data[0] = $s_DwnlData_Folder & @UserName & "\"
+					_ResetDataAray($aData)
+					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $aData[0] = $s_DwnlData_Folder & @UserName & "\"
 					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then
-						$Data[1] = $Grabber_Folder
-						$Data[2] = $GrabberData_Folder & @UserName & "\"
+						$aData[1] = $Grabber_Folder
+						$aData[2] = $GrabberData_Folder & @UserName & "\"
 					EndIf
-					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $Data[3] = $Scheduler_Folder
+					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $aData[3] = $Scheduler_Folder
 					If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
-						$Data[4] = $UrlHistory_txt_File
-						$Data[5] = $UrlHistory2_txt_File
-						$Data[6] = $GlobalErrors_log_File
-						$Data[7] = $urlexclist_dat_File
-						$Data[8] = $defextmap_dat_File
-						$Data[9] = $foldresHistory_txt_File
-						$Data[10] = $sts_list_dat_File
-						$Data[11] = $cnlurllist_dat_File
+						$aData[4] = $UrlHistory_txt_File
+						$aData[5] = $UrlHistory2_txt_File
+						$aData[6] = $GlobalErrors_log_File
+						$aData[7] = $urlexclist_dat_File
+						$aData[8] = $defextmap_dat_File
+						$aData[9] = $foldresHistory_txt_File
+						$aData[10] = $sts_list_dat_File
+						$aData[11] = $cnlurllist_dat_File
 					EndIf
 				EndIf
 
 				_ProgressMarquee_Start($Progress1)
-				Local $iMsgBoxAnswer = MsgBox(36, "Conform", _sGetFileSizeConv(_iGetFileSize($Data)) & " Will Removed. Continue?", 0, $clean)
+				Local $iMsgBoxAnswer = MsgBox(36, "Conform", _sGetFileSizeConv(_iGetFileSize($aData)) & " Will Removed. Continue?", 0, $clean)
 				_ProgressMarquee_Stop($Progress1, 1)
 
 				If $iMsgBoxAnswer = 6 Then
 					_ProgressMarquee_Start($Progress1)
-					Local $sLockedFiles = _iFileOrFolderRemove($Data)
+					Local $sLockedFiles = _iFileOrFolderRemove($aData)
 					_ProgressMarquee_Stop($Progress1, 1)
 
 					If $sLockedFiles <> "" Then
@@ -1934,7 +1958,7 @@ Func _SwCleanerGUI()
 					EndIf
 
 					For $i = 0 To 3
-						If Not FileExists($Data[$i]) Then DirCreate($Data[$i])
+						If Not FileExists($aData[$i]) Then DirCreate($aData[$i])
 					Next
 
 					MsgBox(64, "Done", "Done.", 0, $clean)
@@ -2274,18 +2298,18 @@ Func _LogSysInfo()
 	FileWriteLine($s_Log_File, "")
 EndFunc   ;==>_LogSysInfo
 
-Func _CheckComponment()
-	If Not FileExists($s_7zexe_Path) Then
-		FileWriteLine($s_Log_File, _Current_Moment() & "Error: 7z.exe not found. Exiting....")
-		MsgBox(16, "Error", "7z.exe not found in " & @ScriptDir & " Exiting....", 0, $h_IDMBM)
-		Exit -2
-	EndIf
-	If Not FileExists(@ScriptDir & "\7z.dll") Then
-		FileWriteLine($s_Log_File, _Current_Moment() & "Error: 7z.dll not found. Exiting....")
-		MsgBox(16, "Error", "7z.dll not found in " & @ScriptDir & " Exiting....", 0, $h_IDMBM)
-		Exit -3
-	EndIf
-EndFunc   ;==>_CheckComponment
+;~ Func _CheckComponment()
+;~ 	If Not FileExists($s_7zexe_Path) Then
+;~ 		FileWriteLine($s_Log_File, _Current_Moment() & "Error: 7z.exe not found. Exiting....")
+;~ 		MsgBox(16, "Error", "7z.exe not found in " & @ScriptDir & " Exiting....", 0, $h_IDMBM)
+;~ 		Exit -2
+;~ 	EndIf
+;~ 	If Not FileExists(@ScriptDir & "\7z.dll") Then
+;~ 		FileWriteLine($s_Log_File, _Current_Moment() & "Error: 7z.dll not found. Exiting....")
+;~ 		MsgBox(16, "Error", "7z.dll not found in " & @ScriptDir & " Exiting....", 0, $h_IDMBM)
+;~ 		Exit -3
+;~ 	EndIf
+;~ EndFunc   ;==>_CheckComponment
 
 Func _CheckIDMProcess()
 	If ProcessExists("idman.exe") Then ;**** Check the process "idman.exe" exists or not ***
@@ -2446,3 +2470,32 @@ Func _WriteINI()
 	IniWrite($s_Setting_File, "More Setting", "Open_Folder", $b_OpenFolder)
 EndFunc   ;==>_WriteINI
 #endregion system & process Functions(idm related)
+
+#obfuscator_off
+Func _ARCHIVERPROC($hWnd, $Msg, $nState, $ExInfo)
+	Local $iFileSize, $iWriteSize, $iPercent = 0
+	#forceref $hWnd,$Msg
+
+	If $nState = 0 Then
+		Local $EXTRACTINGINFO = DllStructCreate($tagEXTRACTINGINFO, $ExInfo)
+
+		Local $sStr = StringRight(DllStructGetData($EXTRACTINGINFO, "szSourceFileName"), 50)
+
+		$iFileSize = DllStructGetData($EXTRACTINGINFO, "dwFileSize")
+		$iWriteSize = DllStructGetData($EXTRACTINGINFO, "dwWriteSize")
+
+		$iPercent = Int($iWriteSize / $iFileSize * 100)
+
+		GUICtrlSetData($h_Label_Info, "Adding... " & $iPercent & "%   ..." & $sStr)
+		Return 1
+	EndIf
+
+	Return 1
+EndFunc   ;==>_ARCHIVERPROC
+#Obfuscator_On
+
+Func _ResetDataAray(ByRef $aData)
+	For $i = 0 To UBound($aData) - 1
+		$aData[$i] = ""
+	Next
+EndFunc   ;==>_ResetDataAray

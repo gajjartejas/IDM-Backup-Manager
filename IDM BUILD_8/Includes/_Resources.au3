@@ -1,8 +1,11 @@
+#AutoIt3Wrapper_Au3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+
+#Region    ;************ Includes ************
 #include-once
 #include <Constants.au3>
-#include <WinAPI.au3>
 #include <GDIPlus.au3>
 #include <Memory.au3>
+#EndRegion ;************ Includes ************
 
 _GDIPlus_Startup()
 

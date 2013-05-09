@@ -1,7 +1,10 @@
 v0.9.8 April 24th, 2013
-
-• Added Append/Merge Profile
-• Fixed IDM Restart
+• Added Custom Componment Restore.
+• Added Append/Merge Profile.
+• Added Open Folder after Backup.
+• Fixed IDM Restart.
+• Fixed Restore taking too long time on High Compression Backup File.
+• Improved Data Cleaner.
 
 v0.9.7 April 13th, 2013
 

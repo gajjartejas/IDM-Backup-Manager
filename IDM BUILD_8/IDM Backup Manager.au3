@@ -137,6 +137,7 @@ Global $b_DwnlData_Folder, $b_Grabber_Folder, $b_Scheduler_Folder, $b_History_Fi
 Global $foo
 Global $Guest_AppDataIDMFolder, $Guest_TempPath, $Guest_Keys, $Guest_Password, $Guest_Mode, $Guest_Username, $Guest_DwnlData_Folder, $Guest_Grabber_Folder
 Global $Guest_GrabberData_Folder, $Guest_Scheduler_Folder, $Guest_History_Files, $Guest_IDMver
+Global $nMsg
 #endregion global Variables
 
 _CheckIni()
@@ -149,7 +150,7 @@ _SwMainGUI()
 _CheckCmdLine()
 
 FileWriteLine($s_Log_File, _Current_Moment() & "Info: Window Created: " & $s_Win_Title & " With Error Code: " & @error)
-Global $nMsg
+
 While 1
 	$nMsg = GUIGetMsg()
 	Switch $nMsg
@@ -1081,20 +1082,20 @@ While 1
 			FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")
 
 		Case $h_Button_Clean_Manager_Tools
-			_Clean_GUI_Child()
+			_SwCleanerGUI()
 
 		Case $h_Button_More_Setting
-			_More_Setting_GUI()
+			_SwMoreSettingGUI()
 
 		Case $h_Button_Clean_Password_Tools
-			_Password_Cleaner_GUI()
+			_SwPwCleanerGUI()
 
 		Case $h_Button_Cat_Tools
-			_File_Type_GUI()
+			_SwFileTypeGUI()
 
 		Case $h_Button_Version_History_Help
 			If FileExists($s_History_File) Then
-				_SW_EDIT_GUI($s_History_File, "Version History")
+				_SwEditGUI($s_History_File, "Version History")
 			Else
 				GUICtrlSetData($h_Label_Info, "Error: history.txt Not Found.")
 			EndIf
@@ -1695,7 +1696,7 @@ Func _SwMainGUI()
 	GUISetState(@SW_SHOW)
 EndFunc   ;==>_SwMainGUI
 
-Func _SW_EDIT_GUI($sTXTFile, $s_Title)
+Func _SwEditGUI($sTXTFile, $s_Title)
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 
 	Local $size = WinGetPos($s_Win_Title)
@@ -1711,7 +1712,7 @@ Func _SW_EDIT_GUI($sTXTFile, $s_Title)
 	Local $Close = GUICtrlCreateButton("Close", 408, 265, 75, 25)
 	GUISetIcon(@ScriptFullPath, 0, $Help_GUI)
 	GUISetState(@SW_SHOW)
-
+	Local $nMsg
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
@@ -1722,9 +1723,9 @@ Func _SW_EDIT_GUI($sTXTFile, $s_Title)
 
 	GUISetState(@SW_ENABLE, $h_IDMBM)
 	GUIDelete($Help_GUI)
-EndFunc   ;==>_SW_EDIT_GUI
+EndFunc   ;==>_SwEditGUI
 
-Func _More_Setting_GUI()
+Func _SwMoreSettingGUI()
 	#region ### START Koda GUI section ###
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
@@ -1742,7 +1743,7 @@ Func _More_Setting_GUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUISetState(@SW_SHOW)
 	#endregion ### END Koda GUI section ###
-
+	Local $nMsg
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
@@ -1780,9 +1781,9 @@ Func _More_Setting_GUI()
 	WEnd
 	GUISetState(@SW_ENABLE, $h_IDMBM)
 	GUIDelete($More_Setting_GUI)
-EndFunc   ;==>_More_Setting_GUI
+EndFunc   ;==>_SwMoreSettingGUI
 
-Func _Clean_GUI_Child()
+Func _SwCleanerGUI()
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
 	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0] + $i_xWidth / 2 - 202 / 2, $size[1] + $i_yHight / 2 - 259 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
@@ -1813,6 +1814,7 @@ Func _Clean_GUI_Child()
 	GUISetState(@SW_SHOW)
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= IDM Cleaner Started =============================")
+	Local $nMsg
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
@@ -1943,9 +1945,9 @@ Func _Clean_GUI_Child()
 	WEnd
 	GUISetState(@SW_ENABLE, $h_IDMBM)
 	GUIDelete($clean)
-EndFunc   ;==>_Clean_GUI_Child
+EndFunc   ;==>_SwCleanerGUI
 
-Func _Password_Cleaner_GUI()
+Func _SwPwCleanerGUI()
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 
 	Local $size = WinGetPos($s_Win_Title)
@@ -1967,6 +1969,7 @@ Func _Password_Cleaner_GUI()
 	Local $h_Button_Close_pwCleaner = GUICtrlCreateButton("Close", 90, 24, 75, 25)
 	GUISetState(@SW_SHOW)
 
+	Local $nMsg
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
@@ -1995,9 +1998,9 @@ Func _Password_Cleaner_GUI()
 
 	GUISetState(@SW_ENABLE, $h_IDMBM)
 	GUIDelete($pwCleaner_GUI)
-EndFunc   ;==>_Password_Cleaner_GUI
+EndFunc   ;==>_SwPwCleanerGUI
 
-Func _File_Type_GUI()
+Func _SwFileTypeGUI()
 	GUISetState(@SW_DISABLE, $h_IDMBM)
 	Local $size = WinGetPos($s_Win_Title)
 	Local $FileTypeGUI = GUICreate("Add Extra Filetype By Categories", 477, 218, $size[0] + $i_xWidth / 2 - 477 / 2, $size[1] + $i_yHight / 2 - 218 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
@@ -2048,6 +2051,7 @@ Func _File_Type_GUI()
 	Local $h_Button_Close_FileTypeGUI = GUICtrlCreateButton("Close", 358, 162, 110, 43, $BS_MULTILINE)
 	GUISetState(@SW_SHOW)
 
+	Local $nMsg
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
@@ -2111,7 +2115,7 @@ Func _File_Type_GUI()
 
 	GUISetState(@SW_ENABLE, $h_IDMBM)
 	GUIDelete($FileTypeGUI)
-EndFunc   ;==>_File_Type_GUI
+EndFunc   ;==>_SwFileTypeGUI
 #endregion GUIS
 
 #region app & envt Functions
@@ -2246,7 +2250,7 @@ EndFunc   ;==>_iCountKey
 
 Func _SwLicense()
 	If FileExists($s_License_File) Then
-		_SW_EDIT_GUI($s_License_File, "License")
+		_SwEditGUI($s_License_File, "License")
 	Else
 		MsgBox(64, "License", "IDM Backup Manager v" & $s_Current_Version & "(Beta) Copyright (c) 2012-2013, Gajjar Tejas" & @CRLF & "7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)" & @CRLF & @CRLF & "THE SOFTWARE IS PROVIDED" & '"' & "AS IS" & '"' & "AND THE AUTHOR DISCLAIMS ALL WARRANTIESWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FORANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGESWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ANACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OFOR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.", 0, $h_IDMBM)
 	EndIf
@@ -2289,14 +2293,13 @@ Func _CheckIDMProcess()
 		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $h_IDMBM)
 		Select
 			Case $iMsgBoxAnswer = 6 ;Yes
-
 				If ProcessClose("idman.exe") <> 1 Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Internet Download Manager Is Closed. Now Cont...")
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Could Not Closed.")
 				EndIf
 			Case $iMsgBoxAnswer = 7 ;No
-				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Internet Download Manager Is Running Now...User Selected No")
+				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Is Running Now...User Selected No")
 				MsgBox(48, "Warning", "If Some File is Locked By IDM Backup/Restore Process Will Not Work Correctly.", 0, $h_IDMBM)
 		EndSelect
 	EndIf
@@ -2416,8 +2419,6 @@ Func _ResetSetting()
 	$b_OpenFolder = 1
 
 	If FileExists($s_Setting_File) Then FileDelete($s_Setting_File)
-
-	_WriteINI()
 
 	GUICtrlSetData($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
 	GUICtrlSetData($h_Label_LogFile_Setting, $s_Log_File)

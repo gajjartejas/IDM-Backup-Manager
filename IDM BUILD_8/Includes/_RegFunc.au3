@@ -7,32 +7,13 @@
 ; Author:	Erik Pilsits
 ; Version:	2.0.7
 ; ===============================================================================================================================
-
-;~ Global Const $REG_NONE = 0
-;~ Global Const $REG_SZ = 1
-;~ Global Const $REG_EXPAND_SZ = 2
-;~ Global Const $REG_BINARY = 3
-;~ Global Const $REG_DWORD = 4
-;~ Global Const $REG_DWORD_BIG_ENDIAN = 5
-;~ Global Const $REG_LINK = 6
-;~ Global Const $REG_MULTI_SZ = 7
-;~ Global Const $REG_RESOURCE_LIST = 8
-;~ Global Const $REG_FULL_RESOURCE_DESCRIPTOR = 9
-;~ Global Const $REG_RESOURCE_REQUIREMENTS_LIST = 10
 Global Const $REG_QWORD = 11
 
 Global Const $HKEY_CLASSES_ROOT = 0x80000000
 Global Const $HKEY_CURRENT_USER = 0x80000001
 Global Const $HKEY_LOCAL_MACHINE = 0x80000002
 Global Const $HKEY_USERS = 0x80000003
-Global Const $HKEY_PERFORMANCE_DATA = 0x80000004
-Global Const $HKEY_PERFORMANCE_TEXT = 0x80000050
-Global Const $HKEY_PERFORMANCE_NLSTEXT = 0x80000060
 Global Const $HKEY_CURRENT_CONFIG = 0x80000005
-Global Const $HKEY_DYN_DATA = 0x80000006
-Global Const $KEY_QUERY_VALUE = 0x0001
-Global Const $KEY_SET_VALUE = 0x0002
-Global Const $KEY_ENUMERATE_SUB_KEYS = 0x0008
 Global Const $KEY_WRITE = 0x20006
 Global Const $KEY_READ = 0x20019
 Global Const $REG_OPTION_NON_VOLATILE = 0x0000
@@ -302,9 +283,9 @@ Func _RegDeleteKey($szKey)
 	; RegDeleteKeyExW does not exist on XP 32-bit and lower or lower than Server 2003 SP1
 	; it is not needed at all on 32-bit OS's, so make decision based on that
 	If $__g_RF_Is64BitOS Then
-		 $ret = DllCall("advapi32.dll", "long", "RegDeleteKeyExW", "ptr", $hKey, "wstr", $szSubkey, "long", @extended, "dword", 0)
+		$ret = DllCall("advapi32.dll", "long", "RegDeleteKeyExW", "ptr", $hKey, "wstr", $szSubkey, "long", @extended, "dword", 0)
 	Else
-		 $ret = DllCall("advapi32.dll", "long", "RegDeleteKeyW", "ptr", $hKey, "wstr", $szSubkey)
+		$ret = DllCall("advapi32.dll", "long", "RegDeleteKeyW", "ptr", $hKey, "wstr", $szSubkey)
 	EndIf
 	DllCall("advapi32.dll", "long", "RegCloseKey", "ulong_ptr", $hKey)
 	If (Not IsArray($ret)) Or ($ret[0] <> 0) Then
@@ -831,6 +812,31 @@ Func _RegExport($d_file, $s_key, $s_val = Default, $fFirstKey = True, $hFile = -
 	Return SetError($err, 0, Number(Not $err))
 EndFunc   ;==>_RegExport
 
+;_regbackup(c:\path\name1.reg",     hku\folder1\folder2)
+;_regbackup(@TempDir & "\" & "Scheduler.reg", $s_regpath_IDM & "\Scheduler")
+Func _RegBackup($s7z_File_Save_Name, $regkey)
+	ShellExecuteWait('regedit.exe', '/e "' & $s7z_File_Save_Name & '"' & " " & $regkey)
+EndFunc   ;==>_RegBackup
+
+;_regbackup(c:\path\name1.reg")
+;_regbackup(@TempDir & "\" & "Scheduler.reg")
+Func _RegImport($s7z_File_Save_Name)
+	If ProcessExists('regedit.exe') Then ProcessClose('regedit.exe')
+	ShellExecuteWait('regedit.exe', "/s /c " & '"' & $s7z_File_Save_Name & '"')
+EndFunc   ;==>_RegImport
+
+;Return Total Sub keys
+Func _iCountKey($s_regpath_IDM)
+	Local $k = 1
+	While 1
+		RegEnumKey($s_regpath_IDM, $k)
+		If @error <> 0 Then ExitLoop
+		$k += 1
+	WEnd
+	Return $k - 1
+EndFunc   ;==>_iCountKey
+
+#region Internal Fun
 Func _RegWriteFile($hFile, $val, $data, $type)
 	If $val <> "@" Then $val = '"' & _RegEscape($val) & '"'
 	;
@@ -1047,4 +1053,4 @@ Func _TypeToString($iType)
 	EndSwitch
 	Return $sType
 EndFunc   ;==>_TypeToString
-
+#endregion Internal Fun

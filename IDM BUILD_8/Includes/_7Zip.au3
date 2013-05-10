@@ -27,7 +27,7 @@ Func _7ZipStartup()
 	If @OSArch = "X86" Then
 		$hDLL_7ZIP = DllOpen($sZip32Dll) ; Open x32 dll from no compiled path
 	Else
-		$hDLL_7ZIP = DllOpen($sZip32Dll) ; Open x64 dll from no compiled path
+		$hDLL_7ZIP = DllOpen($sZip64Dll) ; Open x64 dll from no compiled path
 	EndIf
 	If $hDLL_7ZIP = -1 Then Return SetError(1, 0, 0) ; If no dll handle, return error
 	Return 1
@@ -119,7 +119,6 @@ Func _7ZipExtractEx($hWnd, $sZipFile, $sDestinationFolder, $aFile_To_Extracr, $s
 	$sPassword = "-p" & '"' & $sPassword & '" '
 
 	Local $sCMD = ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $tDATA & " -hide"
-	ConsoleWrite( $sCMD& @LF)
 
 	Local $tOutBuffer = DllStructCreate("char[32768]")
 
@@ -158,3 +157,11 @@ Func _7ZipControlStartup()
 	EndIf
 	Return 1 ; The dll was already opened
 EndFunc   ;==>_7ZipControlStartup
+
+Func _7ZipCheckDll()
+	If @OSArch = "X86" Then
+		If Not FileExists($sZip32Dll) Then Return SetError(1, 0, "7-zip32.dll")
+	Else
+		If Not FileExists($sZip64Dll) Then Return SetError(2, 0, "7-zip64.dll")
+	EndIf
+EndFunc   ;==>_7ZipCheckDll

@@ -39,12 +39,12 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Log.ico
 #AutoIt3Wrapper_Versioning=v
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
-;~ #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
-;~ #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
-;~ #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-;~ #AutoIt3Wrapper_Run_Obfuscator=y
-;~ #Obfuscator_Parameters=/striponly
-;~ #AutoIt3Wrapper_Versioning=v
+#AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
+#AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
+#AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+#AutoIt3Wrapper_Run_Obfuscator=y
+#Obfuscator_Parameters=/striponly
+#AutoIt3Wrapper_Versioning=v
 #AutoIt3Wrapper_Run_cvsWrapper=v
 
 #region Includes
@@ -1771,7 +1771,7 @@ Func _OpenLog()
 EndFunc   ;==>_OpenLog
 
 Func _RestoreDefaultSetting()
-	$iMsgBoxAnswer = MsgBox(52, "Warning", "This Operation Will Reset IDM Backup Manager Setting And Restart IDM Backup Manager. Do You Want To Continue?", 0, $h_IDMBM)
+	Local $iMsgBoxAnswer = MsgBox(52, "Warning", "This Operation Will Reset IDM Backup Manager Setting And Restart IDM Backup Manager. Do You Want To Continue?", 0, $h_IDMBM)
 
 	If $iMsgBoxAnswer = 6 Then;Yes
 		If _FileOrFolderDeleteWithLog($s_Setting_File) Then
@@ -1787,7 +1787,7 @@ EndFunc   ;==>_RestoreDefaultSetting
 #region Backup
 Func _ChooseBackupFile()
 	GUICtrlSetData($h_Label_Info, "INFO: Ready")
-	$s_Backup_File = FileSaveDialog("Save Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 18, "IDMbackup" & @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & ".ibf", $h_IDMBM)
+	Local $s_Backup_File = FileSaveDialog("Save Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 18, "IDMbackup" & @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & ".ibf", $h_IDMBM)
 	If $s_Backup_File <> "" And StringRight($s_Backup_File, 4) <> ".ibf" Then $s_Backup_File &= ".ibf"
 
 	If @error Then
@@ -2070,6 +2070,7 @@ Func _Backup()
 	_7ZipStartup()
 	Local $foo = _7ZipSetOwnerWindowEx($h_IDMBM, "_ARCHIVERPROC")
 	$foo = _7ZipAdd($h_IDMBM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Added Data Files With Error Code:" & $foo)
 	_7ZipShutdown()
 
 	#endregion ;/add Data Files--->
@@ -2085,7 +2086,7 @@ EndFunc   ;==>_Backup
 #region Restore
 Func _ChooseRestoreFile()
 	GUICtrlSetData($h_Label_Info, "INFO: Ready")
-	$s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 3, "*.ibf", $h_IDMBM)
+	Local $s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 3, "*.ibf", $h_IDMBM)
 	If @error Then
 		GUICtrlSetData($h_Label_Info, "INFO: Ready")
 	Else
@@ -2447,7 +2448,7 @@ Func _Restore()
 				_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "FoldersTree", $s_regpath_IDM & "\" & "FoldersTree")
 			Else
 				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found" & "=" & ' "' & $s_regpath_IDM & "_tmp" & "\" & "FoldersTree" & '" ')
-				$i = 1
+				Local $i = 1
 				Local $key
 				While 1
 					$key = RegEnumKey($s_regpath_IDM & "\FoldersTree\", $i)

@@ -37,97 +37,28 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Log.ico
-#AutoIt3Wrapper_Versioning=v
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 #AutoIt3Wrapper_Run_Obfuscator=y
 #Obfuscator_Parameters=/striponly
 #AutoIt3Wrapper_Versioning=v
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Run_cvsWrapper=v
 
 #region Includes
-#include "Includes\_AET_ButtonSetIcon.au3"
-#include <Array.au3>
-#include <EditConstants.au3>
-#include <GUIConstantsEx.au3>
+#region    ;************ Includes ************
 #include <ComboConstants.au3>
-#include <File.au3>
+#include "Includes\_AET_ButtonSetIcon.au3"
 #include "Includes\_Resources.au3"
 #include "Includes\_FileIsPathValid.au3"
-#include "Includes\_RegFunc.au3"
 #include "Includes\_RunWithReducedPrivileges.au3"
 #include "Includes\_ShellFile_Install.au3"
 #include "Includes\_7Zip.au3"
 #include "Includes\_ProgressMarquee.au3"
+#include "Includes\_IDM List Manager.au3"
+#endregion    ;************ Includes ************
 #endregion Includes
-
-#region Global Variables
-Global $h_IDMBM
-Global $aData[14]
-Global Const $s_Current_Version = "0.9.8"
-Global Const $s_Win_Title = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
-Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
-Global Const $i_xWidth = 439
-Global Const $i_yHight = 276
-Global $i_xWinPos = (@DesktopWidth - $i_xWidth) / 2
-Global $i_yWinPos = (@DesktopHeight - $i_yHight) / 2
-
-Global Const $s_History_File = @ScriptDir & "\history.txt"
-Global Const $s_License_File = @ScriptDir & "\License.txt"
-
-Global Const $s_ini_File = @TempDir & "\" & "idm_guest_Setting.ini"
-Global Const $s_reg_File = @TempDir & "\IDMregistry.reg"
-
-;~ Global Const $s_Setting_File = @ScriptDir & "\SettingFile.ini" ;for portable
-;~ Global $s_Log_File = @ScriptDir & "\LogFile.log" ;for portable
-Global Const $s_Setting_File = @AppDataDir & "\IDM Backup Manager" & "\SettingFile.ini" ;for installer
-Global $s_Log_File = @AppDataDir & "\IDM Backup Manager" & "\LogFile.log" ;for installer
-Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
-
-Global $b_AppendLog_File = 1
-Global $b_RestartIDM = 0
-Global $b_OpenFolder = 1
-
-Global $s_AppDataIDMFolder = _sGetAppDataIDMFolder() ;contain back "\"
-Global $s_DwnlData_Folder = _sGetTempPathFolder() ;contain back "\"
-Global $s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
-Global $Grabber_Folder = $s_AppDataIDMFolder & "Grabber\"
-Global $GrabberData_Folder = $s_AppDataIDMFolder & "GrabberData\"
-Global $Scheduler_Folder = $s_AppDataIDMFolder & "Scheduler\"
-
-Global $UrlHistory_txt_File = $s_AppDataIDMFolder & "UrlHistory.txt"
-Global $UrlHistory2_txt_File = $s_AppDataIDMFolder & "UrlHistory2.txt"
-Global $GlobalErrors_log_File = $s_AppDataIDMFolder & "GlobalErrors.log"
-Global $urlexclist_dat_File = $s_AppDataIDMFolder & "urlexclist.dat"
-Global $defextmap_dat_File = $s_AppDataIDMFolder & "defextmap.dat"
-Global $foldresHistory_txt_File = $s_AppDataIDMFolder & "foldresHistory.txt"
-Global $sts_list_dat_File = $s_AppDataIDMFolder & "sts_list.dat"
-Global $cnlurllist_dat_File = $s_AppDataIDMFolder & "cnlurllist.dat"
-
-Global $h_Button_Browse_Backup, $h_Checkbox_Password_Backup, $h_Checkbox_Compression_Level_Backup, $h_Checkbox_Full_Backup, $h_Checkbox_Listl_Backup
-Global $h_Checkbox_UnFinished_DD_Backup, $h_Checkbox_UnFinished_GD_Backup, $h_Checkbox_UnFinished_SD_Backup, $h_Button_Backup
-Global $h_Input_Password_Backup, $h_Combo_Compression_Level_Backup, $h_Checkbox_UnFinished_HL_Backup, $h_Input_Backup_Path
-
-Global $h_Button_Browse_Restore, $h_Checkbox_Password_Restore, $h_Checkbox_Convert_Registry_Restore, $h_Label_Convert_Registry_Restore
-Global $h_Checkbox_UnFinished_DD_Restore, $h_Checkbox_UnFinished_GD_Restore, $h_Checkbox_UnFinished_SD_Restore, $h_Checkbox_UnFinished_HL_Restore
-Global $h_Checkbox_Append_Registry_Restore, $h_Input_Password_Restore, $h_Label_Append_Registry_Restore, $h_Button_Restore, $h_Input_Restore_Path
-Global $h_Checkbox_Listl_Restore, $h_Checkbox_Full_Restore
-
-Global $h_Button_List_Manager_Tools, $h_Button_Clean_Manager_Tools, $h_Button_Clean_Password_Tools, $h_Button_Cat_Tools
-
-Global $h_Button_BrowseLogFile_Setting, $h_Button_BrowseDataBackupFolder_Setting, $h_Button_BrowseAppDataFolder_Setting, $h_Button_DwnlDataFolder_Setting
-Global $h_Button_Open_Log_Setting, $h_Button_Associate_Setting, $h_Button_More_Setting, $h_Button_RestoreDefault_Setting
-Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Label_BrowseAppDataFolder_Setting, $h_Label_DwnlDataFolder_Setting
-
-Global $h_Button_Website_Help, $h_Button_Help_Help, $h_Button_Licence_Help, $h_Button_Version_History_Help, $h_Button_Forum_Help
-Global $h_Button_Update_Help
-
-Global $h_Tab1, $h_Label_Info, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
-
-Global $nMsg
-#endregion Global Variables
 
 _CheckIni()
 _CheckSelfProcess()
@@ -438,7 +369,7 @@ Func _Main()
 				_SwLicense()
 
 			Case $h_Button_List_Manager_Tools
-				Run(@ScriptDir & "\IDM List Manager.exe")
+				_RunILM()
 
 			Case $h_Button_Update_Help
 				_UpdateCheck()
@@ -486,7 +417,7 @@ EndFunc   ;==>_CheckIni
 
 Func _CheckSelfProcess()
 	;Activates (gives focus to) a window.
-	If WinActivate($s_Win_Title) > 0 Then Exit
+	If WinActivate($s_Win_Title_BM) > 0 Then Exit
 EndFunc   ;==>_CheckSelfProcess
 
 Func _LogSysInfo()
@@ -495,21 +426,23 @@ Func _LogSysInfo()
 	FileWriteLine($s_Log_File, "============================= New Session Started at " & _Current_Moment() & "=============================")
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= System Information =============================")
-	FileWriteLine($s_Log_File, "Module Name and Version: " & $s_Win_Title)
+	FileWriteLine($s_Log_File, "Module Name and Version: " & $s_Win_Title_BM)
 	FileWriteLine($s_Log_File, "Module Path: " & @ScriptFullPath)
+	FileWriteLine($s_Log_File, "Is Module 64 bit?: " & @AutoItX64)
+	FileWriteLine($s_Log_File, "Dll:" & $7zDll)
 	FileWriteLine($s_Log_File, "OS Type: " & @OSType)
 	FileWriteLine($s_Log_File, "OS Version: " & @OSVersion)
 	FileWriteLine($s_Log_File, "Service Package: " & @OSServicePack)
-	FileWriteLine($s_Log_File, "Total Memory: " & $a_Memory[1])
-	FileWriteLine($s_Log_File, "Available Memory: " & $a_Memory[2])
+	FileWriteLine($s_Log_File, "Total Memory: " & _sGetFileSizeConv($a_Memory[1] * 1024))
+	FileWriteLine($s_Log_File, "Available Memory: " & _sGetFileSizeConv($a_Memory[2] * 1024))
 	FileWriteLine($s_Log_File, "")
 EndFunc   ;==>_LogSysInfo
 
 Func _CheckComponment()
 	Local $sDllCheck = _7ZipCheckDll()
 	If @error Then
-		FileWriteLine($s_Log_File, _Current_Moment() & $sDllCheck & " not found in " & @ScriptDir & " Exiting....")
-		MsgBox(16, "Error", $sDllCheck & " not found in " & @ScriptDir & " Exiting....")
+		FileWriteLine($s_Log_File, _Current_Moment() & $sDllCheck & " Not found Exiting....")
+		MsgBox(16, "Error", $sDllCheck & " Not Found Exiting....")
 		Exit -2
 	EndIf
 EndFunc   ;==>_CheckComponment
@@ -517,7 +450,7 @@ EndFunc   ;==>_CheckComponment
 Func _CheckIDMProcess()
 	If ProcessExists("idman.exe") Then ;**** Check the process "idman.exe" exists or not ***
 		Local $iMsgBoxAnswer
-		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $h_IDMBM)
+		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $hGUI_BM)
 		Select
 			Case $iMsgBoxAnswer = 6 ;Yes
 				If ProcessClose("idman.exe") <> 1 Then
@@ -527,7 +460,7 @@ Func _CheckIDMProcess()
 				EndIf
 			Case $iMsgBoxAnswer = 7 ;No
 				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Is Running Now...User Selected No")
-				MsgBox(48, "Warning", "If Some File is Locked By IDM Backup/Restore Process Will Not Work Correctly.", 0, $h_IDMBM)
+				MsgBox(48, "Warning", "If Some File is Locked By IDM Backup/Restore Process Will Not Work Correctly.", 0, $hGUI_BM)
 		EndSelect
 	EndIf
 	FileWriteLine($s_Log_File, "")
@@ -555,11 +488,11 @@ Func _CheckCmdLine()
 				GUICtrlSetData($h_Input_Restore_Path, $CmdLine[1])
 				GUICtrlSetState($h_TabSheet2, $GUI_SHOW)
 			Else
-				MsgBox(16, "Error", "File Not Exists:" & @CRLF & $CmdLine[1], 0, $h_IDMBM)
+				MsgBox(16, "Error", "File Not Exists:" & @CRLF & $CmdLine[1], 0, $hGUI_BM)
 				FileWriteLine($s_Log_File, _Current_Moment() & "Error: File Not Exists: " & $CmdLine[1])
 			EndIf
 		Else
-			MsgBox(16, "Error", "Wrong Command Line.Please Use ""(Double quation on Full path)""", 0, $h_IDMBM)
+			MsgBox(16, "Error", "Wrong Command Line.Please Use ""(Double quation on Full path)""", 0, $hGUI_BM)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Wrong Command Line: " & $CmdLine[1])
 		EndIf
 	EndIf
@@ -613,7 +546,7 @@ EndFunc   ;==>_ControlUpdateBusy
 
 Func _ControlUpdateDefault()
 	GUICtrlSetState($h_Tab1, $GUI_ENABLE)
-	WinActivate($s_Win_Title)
+	WinActivate($s_Win_Title_BM)
 
 	#region ;for backup
 	GUICtrlSetState($h_Input_Backup_Path, $GUI_ENABLE)
@@ -687,7 +620,7 @@ Func _iGetFileSize($aFiles)
 	Local $i, $iSize = 0
 
 	For $i = 0 To UBound($aFiles) - 1
-		If $aFiles[$i] = "" Then ContinueLoop
+		If Not FileExists($aFiles[$i]) Then ContinueLoop
 		If _IsDir($aFiles[$i]) Then
 			$iSize += DirGetSize($aFiles[$i])
 		Else
@@ -724,25 +657,6 @@ Func _Current_Moment()
 	Return @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":" & @MIN & ":" & @SEC & " --> "
 EndFunc   ;==>_Current_Moment
 
-Func _sPath_Last_Remove($sPath)
-	Local $s_Saved_Path = ""
-
-	If StringRight($sPath, 1) <> "\" Then $sPath &= "\"
-
-	Local $split_path = StringSplit($sPath, "\")
-
-	If @error = 1 Then
-		Return $sPath
-	ElseIf $split_path[0] = 2 Then
-		Return $sPath
-	Else
-		For $i = 1 To $split_path[0] - 2 Step 1
-			$s_Saved_Path &= $split_path[$i] & "\"
-		Next
-		Return $s_Saved_Path
-	EndIf
-EndFunc   ;==>_sPath_Last_Remove
-
 Func _iFileOrFolderRemove($aFiles)
 	Local $i, $sFileLocked
 
@@ -774,7 +688,7 @@ EndFunc   ;==>_SelectFile
 Func _SwMainGUI()
 	#region ### START Koda GUI section ###
 
-	$h_IDMBM = GUICreate($s_Win_Title, $i_xWidth, $i_yHight, $i_xWinPos, $i_yWinPos)
+	$hGUI_BM = GUICreate($s_Win_Title_BM, $i_xWidth_BM, $i_yHight_BM, $i_xWinPos, $i_yWinPos)
 
 	$h_Tab1 = GUICtrlCreateTab(10, 10, 420, 240)
 
@@ -896,7 +810,7 @@ Func _SwMainGUI()
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
 	$h_Button_List_Manager_Tools = GUICtrlCreateButton("Downloads List Manager", 45, 64, 80, 60, $BS_MULTILINE)
-	If Not FileExists(@ScriptDir & "\IDM List Manager.exe") Then GUICtrlSetState(-1, $GUI_DISABLE)
+;~ 	If Not FileExists(@ScriptDir & "\IDM List Manager.exe") Then GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloaded Files, Remove Download From List and much more.")
 
 	$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Data Cleaner", 135, 64, 80, 60, $BS_MULTILINE)
@@ -1004,19 +918,19 @@ Func _SwMainGUI()
 	#endregion Info Label
 	#endregion ### END Koda GUI section ###
 	GUISetState(@SW_SHOW)
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Window Created: " & $s_Win_Title & " With Error Code: " & @error)
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Window Created: " & $s_Win_Title_BM & " With Error Code: " & @error)
 EndFunc   ;==>_SwMainGUI
 
 Func _SwEditGUI($sTXTFile, $s_Title)
-	GUISetState(@SW_DISABLE, $h_IDMBM)
+	GUISetState(@SW_DISABLE, $hGUI_BM)
 
-	Local $size = WinGetPos($s_Win_Title)
+	Local $size = WinGetPos($s_Win_Title_BM)
 	If @error Then
 		;If windows not Found Place it to centre
 		Local $size[2] = [(@DesktopWidth - 491) / 2, (@DesktopHeight - 310) / 2]
 	EndIf
 
-	Local $Help_GUI = GUICreate($s_Title, 491, 310, $size[0] + $i_xWidth / 2 - 491 / 2, $size[1] + $i_yHight / 2 - 310 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	Local $Help_GUI = GUICreate($s_Title, 491, 310, $size[0] + $i_xWidth_BM / 2 - 491 / 2, $size[1] + $i_yHight_BM / 2 - 310 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
 	GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
 	GUICtrlSetData(-1, FileRead($sTXTFile))
@@ -1032,15 +946,15 @@ Func _SwEditGUI($sTXTFile, $s_Title)
 		EndSwitch
 	WEnd
 
-	GUISetState(@SW_ENABLE, $h_IDMBM)
+	GUISetState(@SW_ENABLE, $hGUI_BM)
 	GUIDelete($Help_GUI)
 EndFunc   ;==>_SwEditGUI
 
 Func _SwMoreSettingGUI()
 	#region ### START Koda GUI section ###
-	GUISetState(@SW_DISABLE, $h_IDMBM)
-	Local $size = WinGetPos($s_Win_Title)
-	Local $More_Setting_GUI = GUICreate("More Setting", 351, 141, $size[0] + $i_xWidth / 2 - 351 / 2, $size[1] + $i_yHight / 2 - 141 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	GUISetState(@SW_DISABLE, $hGUI_BM)
+	Local $size = WinGetPos($s_Win_Title_BM)
+	Local $More_Setting_GUI = GUICreate("More Setting", 351, 141, $size[0] + $i_xWidth_BM / 2 - 351 / 2, $size[1] + $i_yHight_BM / 2 - 141 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 	GUISetIcon(@ScriptFullPath, 0, $More_Setting_GUI)
 
 	GUICtrlCreateGroup("Setting", 10, 10, 330, 116)
@@ -1090,14 +1004,14 @@ Func _SwMoreSettingGUI()
 
 		EndSwitch
 	WEnd
-	GUISetState(@SW_ENABLE, $h_IDMBM)
+	GUISetState(@SW_ENABLE, $hGUI_BM)
 	GUIDelete($More_Setting_GUI)
 EndFunc   ;==>_SwMoreSettingGUI
 
 Func _SwCleanerGUI()
-	GUISetState(@SW_DISABLE, $h_IDMBM)
-	Local $size = WinGetPos($s_Win_Title)
-	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0] + $i_xWidth / 2 - 202 / 2, $size[1] + $i_yHight / 2 - 259 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	GUISetState(@SW_DISABLE, $hGUI_BM)
+	Local $size = WinGetPos($s_Win_Title_BM)
+	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0] + $i_xWidth_BM / 2 - 202 / 2, $size[1] + $i_yHight_BM / 2 - 259 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 	GUISetIcon(@ScriptFullPath, 0, $clean)
 
 	GUICtrlCreateGroup("Options", 5, 60, 190, 150)
@@ -1253,15 +1167,15 @@ Func _SwCleanerGUI()
 				FileWriteLine($s_Log_File, "============================= Cleaning Ended =============================")
 		EndSwitch
 	WEnd
-	GUISetState(@SW_ENABLE, $h_IDMBM)
+	GUISetState(@SW_ENABLE, $hGUI_BM)
 	GUIDelete($clean)
 EndFunc   ;==>_SwCleanerGUI
 
 Func _SwPwCleanerGUI()
-	GUISetState(@SW_DISABLE, $h_IDMBM)
+	GUISetState(@SW_DISABLE, $hGUI_BM)
 
-	Local $size = WinGetPos($s_Win_Title)
-	Local $pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth / 2 - 178 / 2, $size[1] + $i_yHight / 2 - 60 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	Local $size = WinGetPos($s_Win_Title_BM)
+	Local $pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth_BM / 2 - 178 / 2, $size[1] + $i_yHight_BM / 2 - 60 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 	Local $k = 1
 	Local $j = 0
 	Local $sInfoLabelText = "Total " & $j & " Password Found."
@@ -1306,14 +1220,14 @@ Func _SwPwCleanerGUI()
 		EndSwitch
 	WEnd
 
-	GUISetState(@SW_ENABLE, $h_IDMBM)
+	GUISetState(@SW_ENABLE, $hGUI_BM)
 	GUIDelete($pwCleaner_GUI)
 EndFunc   ;==>_SwPwCleanerGUI
 
 Func _SwFileTypeGUI()
-	GUISetState(@SW_DISABLE, $h_IDMBM)
-	Local $size = WinGetPos($s_Win_Title)
-	Local $FileTypeGUI = GUICreate("Add Extra Filetype By Categories", 477, 218, $size[0] + $i_xWidth / 2 - 477 / 2, $size[1] + $i_yHight / 2 - 218 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $h_IDMBM)
+	GUISetState(@SW_DISABLE, $hGUI_BM)
+	Local $size = WinGetPos($s_Win_Title_BM)
+	Local $FileTypeGUI = GUICreate("Add Extra Filetype By Categories", 477, 218, $size[0] + $i_xWidth_BM / 2 - 477 / 2, $size[1] + $i_yHight_BM / 2 - 218 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
 	Local $s_Default_Compressed_FileTypeGUI = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
 	Local $s_Default_Documents_FileTypeGUI = "doc pdf ppt pps docx pptx"
@@ -1423,37 +1337,12 @@ Func _SwFileTypeGUI()
 		EndSwitch
 	WEnd
 
-	GUISetState(@SW_ENABLE, $h_IDMBM)
+	GUISetState(@SW_ENABLE, $hGUI_BM)
 	GUIDelete($FileTypeGUI)
 EndFunc   ;==>_SwFileTypeGUI
 #endregion GUIS
 
 #region system & process Functions(idm related)
-Func _sGetAppDataIDMFolder()
-
-	Local $AppDataIDMFolder = RegRead($s_regpath_IDM, "AppDataIDMFolder")
-
-	If Not FileExists($AppDataIDMFolder) Then $AppDataIDMFolder = @AppDataDir & "\" & "IDM" & "\"
-
-	If StringRight($AppDataIDMFolder, 1) <> "\" Then $AppDataIDMFolder &= "\"
-
-	Return $AppDataIDMFolder
-EndFunc   ;==>_sGetAppDataIDMFolder
-
-Func _sGetTempPathFolder()
-
-	Local $TempPath = RegRead($s_regpath_IDM, "TempPath")
-
-	If FileExists($TempPath) Then
-		If StringRight($TempPath, 1) <> "\" Then $TempPath &= "\"
-		$TempPath &= "DwnlData\"
-	Else
-		$TempPath = @AppDataDir & "\" & "IDM" & "\" & "DwnlData\"
-	EndIf
-
-	Return $TempPath
-EndFunc   ;==>_sGetTempPathFolder
-
 Func _FileOrFolderDeleteWithLog($sFile)
 	If FileExists($sFile) Then
 		If _IsDir($sFile) Then
@@ -1564,7 +1453,7 @@ Func _RunIDMexe()
 EndFunc   ;==>_RunIDMexe
 
 Func _onExit()
-	Local $WinPos = WinGetPos($h_IDMBM)
+	Local $WinPos = WinGetPos($hGUI_BM)
 	IniWrite($s_Setting_File, "Position", "x", $WinPos[0])
 	IniWrite($s_Setting_File, "Position", "y", $WinPos[1])
 	If $b_RestartIDM Then _RunIDMexe()
@@ -1645,14 +1534,6 @@ Func _UpdateCheck()
 	EndIf
 EndFunc   ;==>_UpdateCheck
 
-Func _SwHelp()
-	If FileExists(@ScriptDir & "\Help.chm") Then
-		ShellExecute(@ScriptDir & "\Help.chm")
-	Else
-		ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
-	EndIf
-EndFunc   ;==>_SwHelp
-
 Func _ShellInstall()
 	_ShellFile_Install("Restore IDM Backup", "ibf", @ScriptName, @ScriptFullPath, @ScriptFullPath, 17, False, False)
 	If @error Then
@@ -1667,14 +1548,14 @@ Func _SwLicense()
 	If FileExists($s_License_File) Then
 		_SwEditGUI($s_License_File, "License")
 	Else
-		MsgBox(64, "License", "IDM Backup Manager v" & $s_Current_Version & "(Beta) Copyright (c) 2012-2013, Gajjar Tejas" & @CRLF & "7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)" & @CRLF & @CRLF & "THE SOFTWARE IS PROVIDED" & '"' & "AS IS" & '"' & "AND THE AUTHOR DISCLAIMS ALL WARRANTIESWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FORANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGESWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ANACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OFOR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.", 0, $h_IDMBM)
+		MsgBox(64, "License", "IDM Backup Manager v" & $s_Current_Version & "(Beta) Copyright (c) 2012-2013, Gajjar Tejas" & @CRLF & "7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)" & @CRLF & @CRLF & "THE SOFTWARE IS PROVIDED" & '"' & "AS IS" & '"' & "AND THE AUTHOR DISCLAIMS ALL WARRANTIESWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FORANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGESWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ANACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OFOR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.", 0, $hGUI_BM)
 	EndIf
 EndFunc   ;==>_SwLicense
 #endregion Help
 
 #region Setting
 Func _ChooseLogFile()
-	$s_Log_File = FileSaveDialog("Save Log File", _sPath_Last_Remove($s_Log_File), "Log File (*.Log)", 2, "LogFile.log", $h_IDMBM)
+	$s_Log_File = FileSaveDialog("Save Log File", _sPath_Last_Remove($s_Log_File), "Log File (*.Log)", 2, "LogFile.log", $hGUI_BM)
 	If $s_Log_File <> "" And StringRight($s_Log_File, 4) <> ".log" Then $s_Log_File &= ".log"
 	If Not @error Then
 		GUICtrlSetData($h_Label_LogFile_Setting, $s_Log_File)
@@ -1688,7 +1569,7 @@ EndFunc   ;==>_ChooseLogFile
 Func _ChooseDataBackupFolder()
 	If Not FileExists($s_Backup_Dir) Then DirCreate($s_Backup_Dir)
 
-	$s_Backup_Dir = FileSelectFolder("Choose a folder to save file...", "", 7, $s_Backup_Dir, $h_IDMBM)
+	$s_Backup_Dir = FileSelectFolder("Choose a folder to save file...", "", 7, $s_Backup_Dir, $hGUI_BM)
 	If StringRight($s_Backup_Dir, 1) <> "\" Then $s_Backup_Dir &= "\"
 
 	If _FileIsPathValid($s_Backup_Dir) = "True" Then ;User Selected valid path
@@ -1703,7 +1584,7 @@ EndFunc   ;==>_ChooseDataBackupFolder
 Func _ChooseAppDataBackupFolder()
 	If Not FileExists($s_AppDataIDMFolder) Then DirCreate($s_AppDataIDMFolder)
 
-	$s_AppDataIDMFolder = FileSelectFolder("Choose a folder to save file...", "", 7, $s_AppDataIDMFolder, $h_IDMBM)
+	$s_AppDataIDMFolder = FileSelectFolder("Choose a folder to save file...", "", 7, $s_AppDataIDMFolder, $hGUI_BM)
 	If StringRight($s_AppDataIDMFolder, 1) <> "\" Then $s_AppDataIDMFolder &= "\"
 
 	If _FileIsPathValid($s_AppDataIDMFolder) = "True" Then ;User Selected valid path
@@ -1725,7 +1606,7 @@ EndFunc   ;==>_ChooseAppDataBackupFolder
 Func _ChooseDwnlDataBackupFolder()
 	If Not FileExists($s_DwnlData_Folder) Then DirCreate($s_DwnlData_Folder)
 
-	$s_DwnlData_Folder = FileSelectFolder("Choose a folder...", "", 7, $s_DwnlData_Folder, $h_IDMBM)
+	$s_DwnlData_Folder = FileSelectFolder("Choose a folder...", "", 7, $s_DwnlData_Folder, $hGUI_BM)
 	If StringRight($s_DwnlData_Folder, 1) <> "\" Then $s_DwnlData_Folder &= "\"
 
 	If _FileIsPathValid($s_DwnlData_Folder) = "True" Then ;User Selected valid path
@@ -1771,7 +1652,7 @@ Func _OpenLog()
 EndFunc   ;==>_OpenLog
 
 Func _RestoreDefaultSetting()
-	Local $iMsgBoxAnswer = MsgBox(52, "Warning", "This Operation Will Reset IDM Backup Manager Setting And Restart IDM Backup Manager. Do You Want To Continue?", 0, $h_IDMBM)
+	Local $iMsgBoxAnswer = MsgBox(52, "Warning", "This Operation Will Reset IDM Backup Manager Setting And Restart IDM Backup Manager. Do You Want To Continue?", 0, $hGUI_BM)
 
 	If $iMsgBoxAnswer = 6 Then;Yes
 		If _FileOrFolderDeleteWithLog($s_Setting_File) Then
@@ -1787,7 +1668,7 @@ EndFunc   ;==>_RestoreDefaultSetting
 #region Backup
 Func _ChooseBackupFile()
 	GUICtrlSetData($h_Label_Info, "INFO: Ready")
-	Local $s_Backup_File = FileSaveDialog("Save Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 18, "IDMbackup" & @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & ".ibf", $h_IDMBM)
+	Local $s_Backup_File = FileSaveDialog("Save Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 18, "IDMbackup" & @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & ".ibf", $hGUI_BM)
 	If $s_Backup_File <> "" And StringRight($s_Backup_File, 4) <> ".ibf" Then $s_Backup_File &= ".ibf"
 
 	If @error Then
@@ -2068,9 +1949,14 @@ Func _Backup()
 	GUICtrlSetData($h_Label_Info, "Adding: Data Files Please Wait...")
 
 	_7ZipStartup()
-	Local $foo = _7ZipSetOwnerWindowEx($h_IDMBM, "_ARCHIVERPROC")
-	$foo = _7ZipAdd($h_IDMBM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Added Data Files With Error Code:" & $foo)
+	Local $foo = _7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
+	$foo = _7ZipAdd($hGUI_BM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
+
+	Local $sFile = StringSplit($foo, @CRLF, 1)
+	For $i = 1 To $sFile[0]
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Adding..= " & '"' & $sFile[$i] & '"')
+	Next
+
 	_7ZipShutdown()
 
 	#endregion ;/add Data Files--->
@@ -2086,7 +1972,7 @@ EndFunc   ;==>_Backup
 #region Restore
 Func _ChooseRestoreFile()
 	GUICtrlSetData($h_Label_Info, "INFO: Ready")
-	Local $s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 3, "*.ibf", $h_IDMBM)
+	Local $s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 3, "*.ibf", $hGUI_BM)
 	If @error Then
 		GUICtrlSetData($h_Label_Info, "INFO: Ready")
 	Else
@@ -2142,17 +2028,17 @@ Func _Restore()
 
 	_7ZipStartup()
 	Local $foo
-	$foo = _7ZipSetOwnerWindowEx($h_IDMBM, "_ARCHIVERPROC")
-	$foo = _7ZipExtractEx($h_IDMBM, $s_Restore_File, @TempDir, $aData, $s_Password);Extract ini,reg File -> Check For Password
+	$foo = _7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
+	$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, @TempDir, $aData, $s_Password);Extract ini,reg File -> Check For Password
 
 	If $foo <> 0 And FileExists($s_ini_File) Then ;Check if INI available and Succeful Extract
 
 		Local $Guest_AppDataIDMFolder = IniRead($s_ini_File, "Default", "AppDataIDMFolder", "") ;True C:\Users\Tejas\AppData\Roaming\IDM\
 		Local $Guest_TempPath = IniRead($s_ini_File, "Default", "TempPath", "");C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\
-		Local $Guest_IDMver = IniRead($s_ini_File, "Default", "idmvers", "");v6.07b10 Full
-		Local $Guest_Keys = IniRead($s_ini_File, "Default", "Keys", "");1191
-		Local $Guest_Password = IniRead($s_ini_File, "Default", "Password", "");True
-		Local $Guest_Mode = IniRead($s_ini_File, "Default", "Mode", "");Custom
+;~ 		Local $Guest_IDMver = IniRead($s_ini_File, "Default", "idmvers", "");v6.07b10 Full
+;~ 		Local $Guest_Keys = IniRead($s_ini_File, "Default", "Keys", "");1191
+;~ 		Local $Guest_Password = IniRead($s_ini_File, "Default", "Password", "");True
+;~ 		Local $Guest_Mode = IniRead($s_ini_File, "Default", "Mode", "");Custom
 		Local $Guest_Username = IniRead($s_ini_File, "Default", "Username", "");Tejas
 
 		Local $Guest_DwnlData_Folder = IniRead($s_ini_File, "Default", "DwnlData_Folder", "True");True
@@ -2260,7 +2146,7 @@ Func _Restore()
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
 		EndIf
 
-		$foo = _7ZipExtractEx($h_IDMBM, $s_Restore_File, $s_DwnlData_Folder_, $aData, $s_Password)
+		$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_DwnlData_Folder_, $aData, $s_Password)
 	EndIf
 	#endregion Restore DwnlData\
 
@@ -2320,7 +2206,7 @@ Func _Restore()
 	EndIf
 	#endregion Restore History_Files
 
-	$foo = _7ZipExtractEx($h_IDMBM, $s_Restore_File, $s_AppDataIDMFolder, $aData, $s_Password)
+	$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_AppDataIDMFolder, $aData, $s_Password)
 	#endregion ;/Restore Data--->
 
 	_7ZipShutdown()
@@ -2353,7 +2239,7 @@ Func _Restore()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Registry Profile")
 
 		GUICtrlSetData($h_Label_Info, "Converting: Profile Please Wait...")
-		_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder & "DwnlData" & "\" & $Guest_Username), "\", "\\"), StringReplace($s_DwnlData_Folder & @UserName, "\", "\\"))
+		_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_TempPath & "DwnlData" & "\" & $Guest_Username), "\", "\\"), StringReplace($s_DwnlData_Folder & @UserName, "\", "\\"))
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder & "DwnlData" & "\" & $Guest_Username), "\", "\\"))
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_DwnlData_Folder & @UserName, "\", "\\") & " Error Code" & @error)
 
@@ -2448,8 +2334,7 @@ Func _Restore()
 				_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "FoldersTree", $s_regpath_IDM & "\" & "FoldersTree")
 			Else
 				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found" & "=" & ' "' & $s_regpath_IDM & "_tmp" & "\" & "FoldersTree" & '" ')
-				Local $i = 1
-				Local $key
+				Local $i = 1, $key
 				While 1
 					$key = RegEnumKey($s_regpath_IDM & "\FoldersTree\", $i)
 					If @error <> 0 Then ExitLoop

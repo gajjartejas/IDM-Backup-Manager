@@ -6,8 +6,17 @@
 #endregion    ;************ Includes ************
 
 ; #VARIABLES# ===================================================================================================================
-Global $sZip32Dll = @ScriptDir & "\" & "7-zip32.dll" ;|If you intend to modify the original name of used dll, don't forget
-Global $sZip64Dll = @ScriptDir & "\" & "7-zip64.dll" ;|to modify _7ZipStartup() function in FileInstall section.
+Global $7zDll
+If @OSArch = "X64" Then
+	If @AutoItX64 Then
+		$7zDll = @ScriptDir & "\" & "7-zip64.dll";64os on 64autoit
+	Else
+		$7zDll = @ScriptDir & "\" & "7-zip32.dll" ;64os on 32autoit
+	EndIf
+Else
+	$7zDll = @ScriptDir & "\" & "7-zip32.dll" ;32os on 32autoit
+EndIf
+
 Global Const $FNAME_MAX32 = 512
 Global $hArchiveProc
 Global $hDLL_7ZIP = 0
@@ -24,11 +33,8 @@ Global Const $tagEXTRACTINGINFOEX = $tagEXTRACTINGINFO & ";dword dwCompressedSiz
 		"short wDate;short wTime;char szAttribute[8];char szMode[8]"
 
 Func _7ZipStartup()
-	If @OSArch = "X86" Then
-		$hDLL_7ZIP = DllOpen($sZip32Dll) ; Open x32 dll from no compiled path
-	Else
-		$hDLL_7ZIP = DllOpen($sZip64Dll) ; Open x64 dll from no compiled path
-	EndIf
+	$hDLL_7ZIP = DllOpen($7zDll) ; Open x32 dll from no compiled path
+
 	If $hDLL_7ZIP = -1 Then Return SetError(1, 0, 0) ; If no dll handle, return error
 	Return 1
 EndFunc   ;==>_7ZipStartup
@@ -159,9 +165,5 @@ Func _7ZipControlStartup()
 EndFunc   ;==>_7ZipControlStartup
 
 Func _7ZipCheckDll()
-	If @OSArch = "X86" Then
-		If Not FileExists($sZip32Dll) Then Return SetError(1, 0, "7-zip32.dll")
-	Else
-		If Not FileExists($sZip64Dll) Then Return SetError(2, 0, "7-zip64.dll")
-	EndIf
+	If Not FileExists($7zDll) Then Return SetError(1, 0, $7zDll)
 EndFunc   ;==>_7ZipCheckDll

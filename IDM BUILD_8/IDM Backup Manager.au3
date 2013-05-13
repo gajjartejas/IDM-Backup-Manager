@@ -49,6 +49,7 @@
 #region Includes
 #region    ;************ Includes ************
 #include <ComboConstants.au3>
+#include <GuiStatusBar.au3>
 #include "Includes\_AET_ButtonSetIcon.au3"
 #include "Includes\_Resources.au3"
 #include "Includes\_FileIsPathValid.au3"
@@ -126,14 +127,15 @@ Func _Main()
 
 			Case $h_Checkbox_Full_Backup
 				If GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Full Backup Selected")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Full Backup Selected")
+
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_HL_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
-					GUICtrlSetData($h_Label_Info, "INFO: Ready")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Backup, $GUI_ENABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Backup, $GUI_ENABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Backup, $GUI_ENABLE)
@@ -143,14 +145,14 @@ Func _Main()
 
 			Case $h_Checkbox_Listl_Backup
 				If GUICtrlRead($h_Checkbox_Listl_Backup) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: List Backup Selected. Only IDM List and Setting Backup")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: List Backup Selected. Only IDM List and Setting Backup")
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_HL_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 				Else
-					GUICtrlSetData($h_Label_Info, "INFO: Ready")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Backup, $GUI_ENABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Backup, $GUI_ENABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Backup, $GUI_ENABLE)
@@ -160,7 +162,7 @@ Func _Main()
 
 			Case $h_Checkbox_UnFinished_SD_Backup
 				If GUICtrlRead($h_Checkbox_UnFinished_SD_Backup) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Custom Backup Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Backup Selected.")
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
@@ -168,7 +170,7 @@ Func _Main()
 						GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 					Else
-						GUICtrlSetData($h_Label_Info, "INFO: Ready")
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_ENABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_ENABLE)
 					EndIf
@@ -176,7 +178,7 @@ Func _Main()
 
 			Case $h_Checkbox_UnFinished_GD_Backup
 				If GUICtrlRead($h_Checkbox_UnFinished_GD_Backup) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Custom Backup Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Backup Selected.")
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
@@ -184,7 +186,7 @@ Func _Main()
 						GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 					Else
-						GUICtrlSetData($h_Label_Info, "INFO: Ready")
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_ENABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_ENABLE)
 					EndIf
@@ -192,7 +194,7 @@ Func _Main()
 
 			Case $h_Checkbox_UnFinished_DD_Backup
 				If GUICtrlRead($h_Checkbox_UnFinished_DD_Backup) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Custom Backup Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Backup Selected.")
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
@@ -200,7 +202,7 @@ Func _Main()
 						GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 					Else
-						GUICtrlSetData($h_Label_Info, "INFO: Ready")
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_ENABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_ENABLE)
 					EndIf
@@ -208,7 +210,7 @@ Func _Main()
 
 			Case $h_Checkbox_UnFinished_HL_Backup
 				If GUICtrlRead($h_Checkbox_UnFinished_HL_Backup) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Custom Backup Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Backup Selected.")
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
@@ -216,7 +218,7 @@ Func _Main()
 						GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 					Else
-						GUICtrlSetData($h_Label_Info, "INFO: Ready")
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_ENABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_ENABLE)
 					EndIf
@@ -224,14 +226,14 @@ Func _Main()
 
 			Case $h_Checkbox_Full_Restore
 				If GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Full Restore Selected")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Full Restore Selected")
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_HL_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 				Else
-					GUICtrlSetData($h_Label_Info, "INFO: Ready")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Restore, $GUI_ENABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Restore, $GUI_ENABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_ENABLE)
@@ -241,14 +243,14 @@ Func _Main()
 
 			Case $h_Checkbox_Listl_Restore
 				If GUICtrlRead($h_Checkbox_Listl_Restore) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: List Restore Selected. Only IDM List and Setting Restore")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: List Restore Selected. Only IDM List and Setting Restore")
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_HL_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 				Else
-					GUICtrlSetData($h_Label_Info, "INFO: Ready")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Restore, $GUI_ENABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Restore, $GUI_ENABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_ENABLE)
@@ -258,7 +260,7 @@ Func _Main()
 
 			Case $h_Checkbox_UnFinished_SD_Restore
 				If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Custom Restore Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Restore Selected.")
 					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 				Else
@@ -266,7 +268,7 @@ Func _Main()
 						GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 					Else
-						GUICtrlSetData($h_Label_Info, "INFO: Ready")
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
 					EndIf
@@ -274,7 +276,7 @@ Func _Main()
 
 			Case $h_Checkbox_UnFinished_GD_Restore
 				If GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Custom Restore Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Restore Selected.")
 					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 				Else
@@ -282,7 +284,7 @@ Func _Main()
 						GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 					Else
-						GUICtrlSetData($h_Label_Info, "INFO: Ready")
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
 					EndIf
@@ -290,7 +292,7 @@ Func _Main()
 
 			Case $h_Checkbox_UnFinished_DD_Restore
 				If GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Custom Restore Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Restore Selected.")
 					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 				Else
@@ -298,7 +300,7 @@ Func _Main()
 						GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 					Else
-						GUICtrlSetData($h_Label_Info, "INFO: Ready")
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
 					EndIf
@@ -306,7 +308,7 @@ Func _Main()
 
 			Case $h_Checkbox_UnFinished_HL_Restore
 				If GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
-					GUICtrlSetData($h_Label_Info, "INFO: Custom Restore Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Restore Selected.")
 					GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 				Else
@@ -314,7 +316,7 @@ Func _Main()
 						GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_DISABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_DISABLE)
 					Else
-						GUICtrlSetData($h_Label_Info, "INFO: Ready")
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Checkbox_Full_Restore, $GUI_ENABLE)
 						GUICtrlSetState($h_Checkbox_Listl_Restore, $GUI_ENABLE)
 					EndIf
@@ -441,7 +443,7 @@ EndFunc   ;==>_LogSysInfo
 Func _CheckComponment()
 	Local $sDllCheck = _7ZipCheckDll()
 	If @error Then
-		FileWriteLine($s_Log_File, _Current_Moment() & $sDllCheck & " Not found Exiting....")
+		FileWriteLine($s_Log_File, _Current_Moment() & "Error: " & $sDllCheck & " Not found Exiting....")
 		MsgBox(16, "Error", $sDllCheck & " Not Found Exiting....")
 		Exit -2
 	EndIf
@@ -453,7 +455,7 @@ Func _CheckIDMProcess()
 		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $hGUI_BM)
 		Select
 			Case $iMsgBoxAnswer = 6 ;Yes
-				If ProcessClose("idman.exe") <> 1 Then
+				If ProcessClose("idman.exe") Then
 					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Internet Download Manager Is Closed. Now Cont...")
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Could Not Closed.")
@@ -481,9 +483,10 @@ EndFunc   ;==>_LogProfilePaths
 
 Func _CheckCmdLine()
 	If $CmdLine[0] > 0 Then
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Checking Command Line: " & $CmdLine[1])
 		If $CmdLine[0] = 1 Then
 			If FileExists($CmdLine[1]) Then
-				GUICtrlSetData($h_Label_Info, "INFO: Ready")
+				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 				GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
 				GUICtrlSetData($h_Input_Restore_Path, $CmdLine[1])
 				GUICtrlSetState($h_TabSheet2, $GUI_SHOW)
@@ -611,6 +614,8 @@ Func _ControlUpdateDefault()
 	If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then GUICtrlSetState($h_Label_Append_Registry_Restore, $GUI_ENABLE)
 
 	If FileExists(GUICtrlRead($h_Input_Restore_Path)) Then GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
+
+	_GUICtrlStatusBar_SetText($h_Status_Info, "", 1)
 	#endregion ;for restore
 EndFunc   ;==>_ControlUpdateDefault
 #endregion control Functions
@@ -914,7 +919,11 @@ Func _SwMainGUI()
 
 	GUICtrlCreateTabItem("")
 	#region Info Label
-	$h_Label_Info = GUICtrlCreateLabel("INFO: Full Backup Selected", 12, 253, 413, 17)
+;~ 	$h_Label_Info = GUICtrlCreateLabel("INFO: Full Backup Selected", 12, 253, 413, 17)
+
+	Local $aParts[3] = [400, 650]
+	Local $aText[3] = ["INFO: Ready", @TAB & ""]
+	$h_Status_Info = _GUICtrlStatusBar_Create($hGUI_BM, $aParts, $aText)
 	#endregion Info Label
 	#endregion ### END Koda GUI section ###
 	GUISetState(@SW_SHOW)
@@ -993,8 +1002,8 @@ Func _SwMoreSettingGUI()
 					$b_RestartIDM = 0
 				EndIf
 
-			Case $b_OpenFolder
-				If GUICtrlRead($b_OpenFolder) = $GUI_CHECKED Then
+			Case $h_OpenFolder_Setting
+				If GUICtrlRead($h_OpenFolder_Setting) = $GUI_CHECKED Then
 					IniWrite($s_Setting_File, "More Setting", "Open_Folder", 1)
 					$b_OpenFolder = 1
 				Else
@@ -1165,6 +1174,7 @@ Func _SwCleanerGUI()
 					If $b_RestartIDM Then _RunIDMexe()
 				EndIf
 				FileWriteLine($s_Log_File, "============================= Cleaning Ended =============================")
+				FileWriteLine($s_Log_File, "")
 		EndSwitch
 	WEnd
 	GUISetState(@SW_ENABLE, $hGUI_BM)
@@ -1197,8 +1207,10 @@ Func _SwPwCleanerGUI()
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
+
 			Case $GUI_EVENT_CLOSE, $h_Button_Close_pwCleaner
 				ExitLoop
+
 			Case $h_Button_ClearAll_pwCleaner
 				$k = 1
 				$j = 0
@@ -1319,6 +1331,11 @@ Func _SwFileTypeGUI()
 				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Music\", "mask", $REG_SZ, GUICtrlRead($h_Input_Music_FileTypeGUI))
 				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Programs\", "mask", $REG_SZ, GUICtrlRead($h_Input_Programs_FileTypeGUI))
 				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Video\", "mask", $REG_SZ, GUICtrlRead($h_Input_Video_FileTypeGUI))
+				GUICtrlSetState($h_Button_Save_FileTypeGUI, $GUI_DISABLE)
+				GUICtrlSetData($h_Button_Save_FileTypeGUI, "Done!")
+				Sleep(500)
+				GUICtrlSetState($h_Button_Save_FileTypeGUI, $GUI_ENABLE)
+				GUICtrlSetData($h_Button_Save_FileTypeGUI, "Save")
 				If $b_RestartIDM Then _RunIDMexe()
 
 			Case $h_Button_Enhance_FileTypeGUI
@@ -1485,14 +1502,14 @@ Func _ARCHIVERPROC($hWnd, $Msg, $nState, $ExInfo)
 	If $nState = 0 Then
 		Local $EXTRACTINGINFO = DllStructCreate($tagEXTRACTINGINFO, $ExInfo)
 
-		Local $sStr = StringRight(DllStructGetData($EXTRACTINGINFO, "szSourceFileName"), 50)
+;~ 		Local $sStr = StringRight(DllStructGetData($EXTRACTINGINFO, "szSourceFileName"), 50)
 
 		$iFileSize = DllStructGetData($EXTRACTINGINFO, "dwFileSize")
 		$iWriteSize = DllStructGetData($EXTRACTINGINFO, "dwWriteSize")
 
 		$iPercent = Int($iWriteSize / $iFileSize * 100)
 
-		GUICtrlSetData($h_Label_Info, "Adding... " & $iPercent & "%   ..." & $sStr)
+		_GUICtrlStatusBar_SetText($h_Status_Info, $iPercent & " %", 1)
 		Return 1
 	EndIf
 
@@ -1512,35 +1529,35 @@ Func _SwHistory()
 	If FileExists($s_History_File) Then
 		_SwEditGUI($s_History_File, "Version History")
 	Else
-		GUICtrlSetData($h_Label_Info, "Error: history.txt Not Found.")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: history.txt Not Found.")
 	EndIf
 EndFunc   ;==>_SwHistory
 
 Func _UpdateCheck()
-	GUICtrlSetData($h_Label_Info, "INFO: Checking Update Please Wait...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Checking Update Please Wait...")
 	If _IsInternetConnectedEx() Then
 		Local $Update_VER = InetRead("http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/update.txt", 1)
 		Switch BinaryToString($Update_VER)
 			Case ""
-				GUICtrlSetData($h_Label_Info, "INFO: Time Out! Or server May be Unviable")
+				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Time Out! Or server May be Unviable")
 			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", $s_Current_Version
-				GUICtrlSetData($h_Label_Info, "INFO: You Have Most Recent Version.")
+				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: You Have Most Recent Version.")
 			Case Else
-				GUICtrlSetData($h_Label_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
+				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
 				ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
 		EndSwitch
 	Else
-		GUICtrlSetData($h_Label_Info, "Error: Internet Connection Could Not Found")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Internet Connection Could Not Found")
 	EndIf
 EndFunc   ;==>_UpdateCheck
 
 Func _ShellInstall()
 	_ShellFile_Install("Restore IDM Backup", "ibf", @ScriptName, @ScriptFullPath, @ScriptFullPath, 17, False, False)
 	If @error Then
-		GUICtrlSetData($h_Label_Info, "Error: Association NOT Created.")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Association NOT Created.")
 	Else
 		GUICtrlSetState($h_Button_Associate_Setting, $GUI_DISABLE)
-		GUICtrlSetData($h_Label_Info, "Info: Association Created.")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Info: Association Created.")
 	EndIf
 EndFunc   ;==>_ShellInstall
 
@@ -1589,17 +1606,17 @@ Func _ChooseAppDataBackupFolder()
 
 	If _FileIsPathValid($s_AppDataIDMFolder) = "True" Then ;User Selected valid path
 		If StringRight($s_AppDataIDMFolder, 5) = "\IDM\" Then
-			GUICtrlSetData($h_Label_Info, "INFO: Ready")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 			GUICtrlSetData($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
 			IniWrite($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder)
 			GUICtrlSetTip($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
 		Else
-			GUICtrlSetData($h_Label_Info, "Error: Please Choose Correct Folder Named & 'IDM\'")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Please Choose Correct Folder Named & 'IDM\'")
 			$s_AppDataIDMFolder = GUICtrlRead($h_Label_BrowseAppDataFolder_Setting)
 		EndIf
 	Else
 		$s_AppDataIDMFolder = GUICtrlRead($h_Label_BrowseAppDataFolder_Setting)
-		GUICtrlSetData($h_Label_Info, "INFO: Ready")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 	EndIf
 EndFunc   ;==>_ChooseAppDataBackupFolder
 
@@ -1611,18 +1628,18 @@ Func _ChooseDwnlDataBackupFolder()
 
 	If _FileIsPathValid($s_DwnlData_Folder) = "True" Then ;User Selected valid path
 		If StringRight($s_DwnlData_Folder, 10) = "\DwnlData\" Then
-			GUICtrlSetData($h_Label_Info, "INFO: Ready")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 			GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
 			IniWrite($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder)
 			$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 			GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
 		Else
-			GUICtrlSetData($h_Label_Info, "Error: Please Choose Correct Folder Named & 'DwnlData\'")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Please Choose Correct Folder Named & 'DwnlData\'")
 			$s_DwnlData_Folder = GUICtrlRead($h_Label_DwnlDataFolder_Setting) ;contain back "\"
 			$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 		EndIf
 	Else
-		GUICtrlSetData($h_Label_Info, "INFO: Ready")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 		$s_DwnlData_Folder = GUICtrlRead($h_Label_DwnlDataFolder_Setting) ;contain back "\"
 		$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 	EndIf
@@ -1647,7 +1664,7 @@ Func _OpenLog()
 	If FileExists($s_Log_File) Then
 		ShellExecute($s_Log_File)
 	Else
-		GUICtrlSetData($h_Label_Info, "Error: File Could Not Found.Please Choose Correct Location in Setting Tab.")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: File Could Not Found.Please Choose Correct Location in Setting Tab.")
 	EndIf
 EndFunc   ;==>_OpenLog
 
@@ -1667,21 +1684,21 @@ EndFunc   ;==>_RestoreDefaultSetting
 
 #region Backup
 Func _ChooseBackupFile()
-	GUICtrlSetData($h_Label_Info, "INFO: Ready")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 	Local $s_Backup_File = FileSaveDialog("Save Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 18, "IDMbackup" & @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & ".ibf", $hGUI_BM)
 	If $s_Backup_File <> "" And StringRight($s_Backup_File, 4) <> ".ibf" Then $s_Backup_File &= ".ibf"
 
 	If @error Then
-		GUICtrlSetData($h_Label_Info, "INFO: Ready")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 	Else
 		If FileExists($s_Backup_File) Then
 			If FileDelete($s_Backup_File) = 0 Then
 				GUICtrlSetState($h_Button_Backup, $GUI_DISABLE)
 				GUICtrlSetData($h_Input_Backup_Path, "")
-				GUICtrlSetData($h_Label_Info, "Error: File Could Not Deleted")
+				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: File Could Not Deleted")
 			Else
 				GUICtrlSetState($h_Button_Backup, $GUI_ENABLE)
-				GUICtrlSetData($h_Label_Info, "INFO: Ready")
+				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 				GUICtrlSetData($h_Input_Backup_Path, $s_Backup_File)
 			EndIf
 		Else
@@ -1717,7 +1734,7 @@ Func _Backup()
 			And GUICtrlRead($h_Checkbox_UnFinished_DD_Backup) = $GUI_UNCHECKED _
 			And GUICtrlRead($h_Checkbox_Listl_Backup) = $GUI_UNCHECKED _
 			And GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_UNCHECKED Then
-		GUICtrlSetData($h_Label_Info, "Error: Select Backup Type")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Select Backup Type")
 		_ControlUpdateDefault()
 		Return SetError(1)
 	EndIf
@@ -1726,21 +1743,27 @@ Func _Backup()
 	If GUICtrlRead($h_Checkbox_Password_Backup) = $GUI_CHECKED Then
 		$s_Password = GUICtrlRead($h_Input_Password_Backup)
 		If $s_Password = "" Then
-			GUICtrlSetData($h_Label_Info, "Error: Password is Empty")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password is Empty")
 			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password is Empty")
 			_ControlUpdateDefault()
 			Return SetError(1)
+		ElseIf StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote)
+			Return SetError(1)
+		Else
+			$b_Password = True
 		EndIf
-		$b_Password = True
+
 	Else
 		$b_Password = False
 		$s_Password = ""
 	EndIf
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Password= " & '"' & $b_Password & '"')
 
-	GUICtrlSetData($h_Label_Info, "Checking : Drive Space Please Wait...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Checking : Drive Space Please Wait...")
 	If DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) < DirGetSize($s_AppDataIDMFolder) / 1024 / 1024 Then
-		GUICtrlSetData($h_Label_Info, "Error: Not Enough  Free Space on Drive. +" & _sGetFileSizeConv(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) * 1024 * 1024) & " Required")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Not Enough  Free Space on Drive. +" & _sGetFileSizeConv(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) * 1024 * 1024) & " Required")
 
 		FileWriteLine($s_Log_File, _Current_Moment() & _
 				"Error: Not Enough  Free Space on Drive " & _sDriveGetFromPath($s_Backup_File) & _
@@ -1753,19 +1776,19 @@ Func _Backup()
 
 	#region ;/Check registry and count--->
 	If Not _RegKeyExists($s_regpath_IDM) Then
-		GUICtrlSetData($h_Label_Info, "Error: Registry Entry Is Empty. Nothing To Backup")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Registry Entry Is Empty. Nothing To Backup")
 		FileWriteLine($s_Log_File, _Current_Moment() & "Error: Registry Entry Is Empty. Nothing To Backup !")
 		_ControlUpdateDefault()
 		Return SetError(1)
 	Else
-		GUICtrlSetData($h_Label_Info, "Counting Registry Key Please Wait...")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Counting Registry Key Please Wait...")
 		Local $iTotalKey = _iCountKey($s_regpath_IDM)
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Total Registry Need to Backup = " & '"' & $iTotalKey & '"')
 	EndIf
 	#endregion ;/Check registry and count--->
 
 	#region ;/Expert registry --->
-	GUICtrlSetData($h_Label_Info, "Backingup: Registry Registry Please Wait...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Backingup: Registry Registry Please Wait...")
 	_RegBackup($s_reg_File, $s_regpath_IDM)
 	#endregion ;/Expert registry --->
 
@@ -1861,8 +1884,6 @@ Func _Backup()
 
 	If $b_History_Files = True Then
 
-		GUICtrlSetData($h_Label_Info, "Adding: History and Logs Files Please Wait...")
-
 		If FileExists($UrlHistory_txt_File) Then
 			$aData[4] = $UrlHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory_txt_File " & "=" & ' "' & $UrlHistory_txt_File & '"')
@@ -1946,23 +1967,21 @@ Func _Backup()
 	#endregion ;/Build Data array and Write INI--->
 
 	#region ;/add Data Files--->
-	GUICtrlSetData($h_Label_Info, "Adding: Data Files Please Wait...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Adding: Data Files Please Wait...")
 
 	_7ZipStartup()
-	Local $foo = _7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
-	$foo = _7ZipAdd($hGUI_BM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
+	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
+	Local $foo = _7ZipAdd($hGUI_BM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
 
 	Local $sFile = StringSplit($foo, @CRLF, 1)
 	For $i = 1 To $sFile[0]
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Adding..= " & '"' & $sFile[$i] & '"')
 	Next
-
 	_7ZipShutdown()
-
 	#endregion ;/add Data Files--->
 
 	_CleanINInReg()
-	GUICtrlSetData($h_Label_Info, "INFO: Done")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Done")
 	_ControlUpdateDefault()
 	If $b_OpenFolder Then _SelectFile($s_Backup_File)
 	FileWriteLine($s_Log_File, "============================= Backup Session Ended =============================")
@@ -1971,22 +1990,19 @@ EndFunc   ;==>_Backup
 
 #region Restore
 Func _ChooseRestoreFile()
-	GUICtrlSetData($h_Label_Info, "INFO: Ready")
 	Local $s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 3, "*.ibf", $hGUI_BM)
 	If @error Then
-		GUICtrlSetData($h_Label_Info, "INFO: Ready")
 	Else
-		GUICtrlSetData($h_Label_Info, "INFO: Ready")
 		GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
 		GUICtrlSetData($h_Input_Restore_Path, $s_Restore_File)
 	EndIf
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 EndFunc   ;==>_ChooseRestoreFile
 
 Func _Restore()
-
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= Restore Session Started =============================")
-	GUICtrlSetData($h_Label_Info, "INFO: Restoring...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Restoring...")
 	_ControlUpdateBusy()
 	_CleanINInReg()
 
@@ -1996,7 +2012,7 @@ Func _Restore()
 
 	If Not FileExists($s_Restore_File) Then
 		_ControlUpdateDefault()
-		GUICtrlSetData($h_Label_Info, "Error: Backup File Not Found")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Backup File Not Found")
 		Return SetError(1)
 	EndIf
 
@@ -2006,7 +2022,7 @@ Func _Restore()
 			And GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_UNCHECKED _
 			And GUICtrlRead($h_Checkbox_Listl_Restore) = $GUI_UNCHECKED _
 			And GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_UNCHECKED Then
-		GUICtrlSetData($h_Label_Info, "Error: Select Restore Type")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Select Restore Type")
 		_ControlUpdateDefault()
 		Return SetError(1)
 	EndIf
@@ -2014,22 +2030,26 @@ Func _Restore()
 	Local $s_Password
 	If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
 		$s_Password = GUICtrlRead($h_Input_Password_Restore)
+		If StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
+			Return SetError(1)
+		EndIf
 	Else
 		$s_Password = ""
 	EndIf
 	#endregion ;/Define Some variable: $s_Restore_File
 
 	#region ;/Check Backup File, Read Guest ini setting and Check For Password
-	GUICtrlSetData($h_Label_Info, "INFO: Reading Backup File Please Wait...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Reading Backup File Please Wait...")
 
 	_ResetDataAray($aData)
 	$aData[12] = "idm_guest_Setting.ini"
 	$aData[13] = "IDMregistry.reg"
 
 	_7ZipStartup()
-	Local $foo
-	$foo = _7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
-	$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, @TempDir, $aData, $s_Password);Extract ini,reg File -> Check For Password
+	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
+	Local $foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, @TempDir, $aData, $s_Password);Extract ini,reg File -> Check For Password
 
 	If $foo <> 0 And FileExists($s_ini_File) Then ;Check if INI available and Succeful Extract
 
@@ -2051,18 +2071,18 @@ Func _Restore()
 	Else
 		If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
 			If GUICtrlRead($h_Input_Password_Restore) = "" Then
-				GUICtrlSetData($h_Label_Info, "Error: Enter Password")
+				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Enter Password")
 				FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
 				_ControlUpdateDefault()
 				Return SetError(1)
 			Else
-				GUICtrlSetData($h_Label_Info, "Error: Incorrect Password or File May Be Damaged.")
+				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Incorrect Password or File May Be Damaged.")
 				FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
 				_ControlUpdateDefault()
 				Return SetError(1)
 			EndIf
 		Else
-			GUICtrlSetData($h_Label_Info, "Error: Check Checkbox --> Enter Password")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Check Checkbox --> Enter Password")
 			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Check Checkbox and Enter The Password")
 			_ControlUpdateDefault()
 			Return SetError(1)
@@ -2076,25 +2096,25 @@ Func _Restore()
 	If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_UNCHECKED Then
 
 		If GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Then
-			GUICtrlSetData($h_Label_Info, "Removing: TempPath Please Wait...")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: TempPath Please Wait...")
 			If $Guest_DwnlData_Folder = "True" Then _FileOrFolderDeleteWithLog($s_DwnlData_Folder)
 		EndIf
 
 		If GUICtrlRead($h_Checkbox_UnFinished_GD_Restore) = $GUI_CHECKED Then
-			GUICtrlSetData($h_Label_Info, "Removing: Grabber Folder Please Wait...")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Grabber Folder Please Wait...")
 			If $Guest_Grabber_Folder = "True" Then _FileOrFolderDeleteWithLog($Grabber_Folder)
 
-			GUICtrlSetData($h_Label_Info, "Removing: GrabberData Folder Please Wait...")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: GrabberData Folder Please Wait...")
 			If $Guest_GrabberData_Folder = "True" Then _FileOrFolderDeleteWithLog($GrabberData_Folder)
 		EndIf
 
 		If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Then
-			GUICtrlSetData($h_Label_Info, "Removing: Scheduler Folder Please Wait...")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Scheduler Folder Please Wait...")
 			If $Guest_Scheduler_Folder = "True" Then _FileOrFolderDeleteWithLog($Scheduler_Folder)
 		EndIf
 
 		If GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
-			GUICtrlSetData($h_Label_Info, "Removing: History And Logs Please Wait...")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: History And Logs Please Wait...")
 			If $Guest_History_Files = "True" Then
 				_FileOrFolderDeleteWithLog($UrlHistory_txt_File)
 				_FileOrFolderDeleteWithLog($UrlHistory2_txt_File)
@@ -2140,12 +2160,12 @@ Func _Restore()
 
 		If $Guest_DwnlData_Folder = "True" Then
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
-			GUICtrlSetData($h_Label_Info, "Restoring: DwnlData Folder Please Wait...")
 			$aData[0] = "DwnlData" & "\"
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
 		EndIf
 
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: DwnlData Folder Please Wait...")
 		$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_DwnlData_Folder_, $aData, $s_Password)
 	EndIf
 	#endregion Restore DwnlData\
@@ -2206,14 +2226,15 @@ Func _Restore()
 	EndIf
 	#endregion Restore History_Files
 
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: AppDataIDMFolder Folder Please Wait...")
 	$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_AppDataIDMFolder, $aData, $s_Password)
 	#endregion ;/Restore Data--->
 
 	_7ZipShutdown()
 
 	#region ;/Remove Temp Registry File--->
-	GUICtrlSetData($h_Label_Info, "Removing: Temp Registry Please Wait...")
 	If _RegKeyExists($s_regpath_IDM & "_tmp") Then
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Temp Registry Please Wait...")
 		If Not RegDelete($s_regpath_IDM & "_tmp") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ' & "Error Code:" & @error)
 	EndIf
 	#endregion ;/Remove Temp Registry File--->
@@ -2223,7 +2244,7 @@ Func _Restore()
 	If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Appending/Merging Profile")
 
-		GUICtrlSetData($h_Label_Info, "Appending/Merging: Profile Please Wait...")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Appending/Merging: Profile Please Wait...")
 		_AppendRegKeys()
 		If @error Then FileWriteLine($s_Log_File, _Current_Moment() & "Error: Error Occured during Appending/Merging Profile Error Code:" & @error)
 	Else
@@ -2238,7 +2259,7 @@ Func _Restore()
 		;Registry Renames
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Registry Profile")
 
-		GUICtrlSetData($h_Label_Info, "Converting: Profile Please Wait...")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Converting: Profile Please Wait...")
 		_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_TempPath & "DwnlData" & "\" & $Guest_Username), "\", "\\"), StringReplace($s_DwnlData_Folder & @UserName, "\", "\\"))
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder & "DwnlData" & "\" & $Guest_Username), "\", "\\"))
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_DwnlData_Folder & @UserName, "\", "\\") & " Error Code" & @error)
@@ -2271,7 +2292,7 @@ Func _Restore()
 
 	#region ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
 	If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
-		GUICtrlSetData($h_Label_Info, "Creating: Temp Registry Please Wait...")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Creating: Temp Registry Please Wait...")
 		If _RegKeyExists($s_regpath_IDM) Then _RegCopyKeyNoTree($s_regpath_IDM, $s_regpath_IDM & "_tmp")
 
 		If _RegKeyExists($s_regpath_IDM & "\" & "ConfigTime") Then _RegCopyKey($s_regpath_IDM & "\" & "ConfigTime", $s_regpath_IDM & "_tmp" & "\" & "ConfigTime")
@@ -2301,7 +2322,7 @@ Func _Restore()
 	#region ;/Remove Host Registry--->
 	;if Append/Merge Not Selected then
 	If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_UNCHECKED Then
-		GUICtrlSetData($h_Label_Info, "Removing: Registry Please Wait...")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Registry Please Wait...")
 		If _RegKeyExists($s_regpath_IDM) Then
 			If Not RegDelete($s_regpath_IDM) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Host Registry " & "=" & ' "' & $s_regpath_IDM & '" ' & "Error Code:" & @error)
 		EndIf
@@ -2309,7 +2330,7 @@ Func _Restore()
 	#endregion ;/Remove Host Registry--->
 
 	#region ;/Restore Guest Registry-->
-	GUICtrlSetData($h_Label_Info, "Restoring: Registry Please Wait...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: Registry Please Wait...")
 	;If Registry Restore allowed via Checkbox
 	_RegImport($s_reg_File)
 	#endregion ;/Restore Guest Registry-->
@@ -2317,7 +2338,7 @@ Func _Restore()
 	#region ;/Restore Host Registry from stored in tmp Registry--->
 	If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 
-		GUICtrlSetData($h_Label_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
 
 		If _RegKeyExists($s_regpath_IDM & "_tmp") Then
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Host Registry From Stored in tmp Registry")
@@ -2395,7 +2416,7 @@ Func _Restore()
 	#endregion ;/Restore Host Registry from stored in tmp Registry--->
 
 	#region ;/Remove tmp Registry--->
-	GUICtrlSetData($h_Label_Info, "Removing: Temp Registry Please Wait...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Temp Registry Please Wait...")
 	If _RegKeyExists($s_regpath_IDM & "_tmp") Then
 		If Not RegDelete($s_regpath_IDM & "_tmp") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ' & "Error Code:" & @error)
 	EndIf
@@ -2404,7 +2425,7 @@ Func _Restore()
 	_CleanINInReg()
 
 	If $b_RestartIDM Then _RunIDMexe()
-	GUICtrlSetData($h_Label_Info, "INFO: Done")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Done")
 
 	_ControlUpdateDefault()
 	FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")

@@ -68,7 +68,7 @@ Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Lab
 Global $h_Button_Website_Help, $h_Button_Help_Help, $h_Button_Licence_Help, $h_Button_Version_History_Help, $h_Button_Forum_Help
 Global $h_Button_Update_Help
 
-Global $h_Tab1, $h_Label_Info, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
+Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5,$h_Status_Info
 
 Global $nMsg
 #endregion Global Variables

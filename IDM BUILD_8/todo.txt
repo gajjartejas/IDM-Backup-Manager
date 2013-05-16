@@ -6,8 +6,8 @@ v0.9.8
 * Log could not open. on first install solve it...done
 * Data cleaner: progress marquee  on data remove...done
 * _CheckComponment ...done
-* Progress backup and restore
-* _CheckCmdLine
+* Progress backup and restore...done
+* _CheckCmdLine...done
 + Normal Attributes to delete file...done
 + Log File Improvement
 

@@ -447,9 +447,12 @@ Func _CheckComponment()
 EndFunc   ;==>_CheckComponment
 
 Func _CheckIDMProcess()
+	Local $ParentWin = ""
+	If IsHWnd($hGUI_BM) Then $ParentWin = $hGUI_BM
+
 	If ProcessExists("idman.exe") Then ;**** Check the process "idman.exe" exists or not ***
 		Local $iMsgBoxAnswer
-		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $hGUI_BM)
+		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $ParentWin)
 		Select
 			Case $iMsgBoxAnswer = 6 ;Yes
 				If ProcessClose("idman.exe") Then
@@ -459,7 +462,7 @@ Func _CheckIDMProcess()
 				EndIf
 			Case $iMsgBoxAnswer = 7 ;No
 				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Is Running Now...User Selected No")
-				MsgBox(48, "Warning", "If Some File is Locked By IDM Backup/Restore Process Will Not Work Correctly.", 0, $hGUI_BM)
+				MsgBox(48, "Warning", "If Some File is Locked By IDM Backup/Restore Process Will Not Work Correctly.", 0, $ParentWin)
 		EndSelect
 	EndIf
 	FileWriteLine($s_Log_File, "")
@@ -479,36 +482,56 @@ Func _LogProfilePaths()
 EndFunc   ;==>_LogProfilePaths
 
 Func _CheckCmdLine()
-	If $CmdLine[0] > 0 Then
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Checking Command Line: " & $CmdLine[1])
-		If $CmdLine[0] = 1 Then
-			If $CmdLine[1] = "swlm" Then
-				_RunILM()
-			ElseIf $CmdLine[1] = "swdc" Then
-				_SwCleanerGUI()
-			ElseIf $CmdLine[1] = "swpwc" Then
-				_SwPwCleanerGUI()
-			ElseIf $CmdLine[1] = "swft" Then
-				_SwFileTypeGUI()
-			Else
-				_RunIBM()
-				If FileExists($CmdLine[1]) Then
-					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
-					GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
-					GUICtrlSetData($h_Input_Restore_Path, $CmdLine[1])
-					GUICtrlSetState($h_TabSheet2, $GUI_SHOW)
-				Else
-					MsgBox(16, "Error", "File Not Exists:" & @CRLF & $CmdLine[1], 0, $hGUI_BM)
-					FileWriteLine($s_Log_File, _Current_Moment() & "Error: File Not Exists: " & $CmdLine[1])
-				EndIf
-			EndIf
-		Else
-			MsgBox(16, "Error", "Wrong Command Line.Please Use ""(Double quation on Full path)""", 0, $hGUI_BM)
-			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Wrong Command Line: " & $CmdLine[1])
-		EndIf
-	Else
-		_RunIBM()
-	EndIf
+
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Checking Command Line: " & $CmdLine[0])
+
+	Switch $CmdLine[0]
+		Case 0
+			_RunIBM()
+		Case 1
+			Switch $CmdLine[1]
+				Case "swlm"
+					_RunILM()
+				Case "swdc"
+					_SwCleanerGUI()
+				Case "swpwc"
+					_SwPwCleanerGUI()
+				Case "swft"
+					_SwFileTypeGUI()
+				Case Else
+					_SwCMDLineMSGBOX()
+			EndSwitch
+		Case 2
+			_RunIBM()
+			Switch $CmdLine[1]
+				Case "backup"
+					If FileExists($CmdLine[1]) Then
+						If Not FileDelete($CmdLine[2]) Then
+							GUICtrlSetState($h_Button_Backup, $GUI_DISABLE)
+							GUICtrlSetData($h_Input_Backup_Path, "")
+							_GUICtrlStatusBar_SetText($h_Status_Info, "Error: File Could Not Deleted")
+							FileWriteLine($s_Log_File, _Current_Moment() & "Error: File Could Not Deleted: " & $CmdLine[2])
+						EndIf
+					Else
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+						GUICtrlSetState($h_Button_Backup, $GUI_ENABLE)
+						GUICtrlSetData($h_Input_Backup_Path, $CmdLine[1])
+						GUICtrlSetState($h_TabSheet1, $GUI_SHOW)
+					EndIf
+				Case "restore"
+					If FileExists($CmdLine[1]) Then
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+						GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
+						GUICtrlSetData($h_Input_Restore_Path, $CmdLine[1])
+						GUICtrlSetState($h_TabSheet2, $GUI_SHOW)
+					Else
+						MsgBox(16, "Error", "File Not Exists:" & @CRLF & $CmdLine[1], 0, $hGUI_BM)
+						FileWriteLine($s_Log_File, _Current_Moment() & "Error: File Not Exists: " & $CmdLine[2])
+					EndIf
+				Case Else
+					_SwCMDLineMSGBOX()
+			EndSwitch
+	EndSwitch
 EndFunc   ;==>_CheckCmdLine
 #endregion Main
 
@@ -2487,3 +2510,22 @@ Func _RunIBM()
 	_SwBMGUI()
 	_MainBM()
 EndFunc   ;==>_RunIBM
+
+Func _SwCMDLineMSGBOX()
+	Local $ParentWin = ""
+	If IsHWnd($hGUI_BM) Then $ParentWin = $hGUI_BM
+	MsgBox(64, "Info", "Command Line Parameters:" & @CRLF & _
+			"" & @CRLF & _
+			"USAGE:" & @CRLF & _
+			"IDM Backup Manager.exe 	[swlm] [swdc] [swpwc] [swft] " & @CRLF & _
+			"			[backup <file path>]" & @CRLF & _
+			"			[restore <file path>]" & @CRLF & _
+			"" & @CRLF & _
+			"Where:" & @CRLF & _
+			"	swlm 		Run IDM List Manager" & @CRLF & _
+			"	swdc 		Run Data Cleaner" & @CRLF & _
+			"	swpwc		Run Password Cleaner" & @CRLF & _
+			"	swft		Run FileType" & @CRLF & "" & @CRLF & _
+			"	backup		Run Backup" & @CRLF & _
+			"	restore		Run Restore", 0, $ParentWin)
+EndFunc   ;==>_SwCMDLineMSGBOX

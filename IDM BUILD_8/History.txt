@@ -1,4 +1,6 @@
 v0.9.8 April 24th, 2013
+• Added Command Line Support.
+• Added 64 bit Operating System Support.
 • Added Custom Component Restore.
 • Added Append/Merge Profile.
 • Added Open Folder after Backup.

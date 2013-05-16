@@ -49,7 +49,6 @@
 #region Includes
 #region    ;************ Includes ************
 #include <ComboConstants.au3>
-#include <GuiStatusBar.au3>
 #include "Includes\_AET_ButtonSetIcon.au3"
 #include "Includes\_Resources.au3"
 #include "Includes\_FileIsPathValid.au3"
@@ -67,12 +66,10 @@ _LogSysInfo()
 _CheckComponment()
 _CheckIDMProcess()
 _LogProfilePaths()
-_SwMainGUI()
 _CheckCmdLine()
-_Main()
 
 #region Main
-Func _Main()
+Func _MainBM()
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
@@ -390,7 +387,7 @@ Func _Main()
 
 		EndSwitch
 	WEnd
-EndFunc   ;==>_Main
+EndFunc   ;==>_MainBM
 
 Func _CheckIni()
 	If FileExists($s_Setting_File) Then
@@ -431,7 +428,7 @@ Func _LogSysInfo()
 	FileWriteLine($s_Log_File, "Module Name and Version: " & $s_Win_Title_BM)
 	FileWriteLine($s_Log_File, "Module Path: " & @ScriptFullPath)
 	FileWriteLine($s_Log_File, "Is Module 64 bit?: " & @AutoItX64)
-	FileWriteLine($s_Log_File, "Dll:" & $7zDll)
+	FileWriteLine($s_Log_File, "Dll: " & $7zDll)
 	FileWriteLine($s_Log_File, "OS Type: " & @OSType)
 	FileWriteLine($s_Log_File, "OS Version: " & @OSVersion)
 	FileWriteLine($s_Log_File, "Service Package: " & @OSServicePack)
@@ -485,19 +482,32 @@ Func _CheckCmdLine()
 	If $CmdLine[0] > 0 Then
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Checking Command Line: " & $CmdLine[1])
 		If $CmdLine[0] = 1 Then
-			If FileExists($CmdLine[1]) Then
-				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
-				GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
-				GUICtrlSetData($h_Input_Restore_Path, $CmdLine[1])
-				GUICtrlSetState($h_TabSheet2, $GUI_SHOW)
+			If $CmdLine[1] = "swlm" Then
+				_RunILM()
+			ElseIf $CmdLine[1] = "swdc" Then
+				_SwCleanerGUI()
+			ElseIf $CmdLine[1] = "swpwc" Then
+				_SwPwCleanerGUI()
+			ElseIf $CmdLine[1] = "swft" Then
+				_SwFileTypeGUI()
 			Else
-				MsgBox(16, "Error", "File Not Exists:" & @CRLF & $CmdLine[1], 0, $hGUI_BM)
-				FileWriteLine($s_Log_File, _Current_Moment() & "Error: File Not Exists: " & $CmdLine[1])
+				_RunIBM()
+				If FileExists($CmdLine[1]) Then
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+					GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
+					GUICtrlSetData($h_Input_Restore_Path, $CmdLine[1])
+					GUICtrlSetState($h_TabSheet2, $GUI_SHOW)
+				Else
+					MsgBox(16, "Error", "File Not Exists:" & @CRLF & $CmdLine[1], 0, $hGUI_BM)
+					FileWriteLine($s_Log_File, _Current_Moment() & "Error: File Not Exists: " & $CmdLine[1])
+				EndIf
 			EndIf
 		Else
 			MsgBox(16, "Error", "Wrong Command Line.Please Use ""(Double quation on Full path)""", 0, $hGUI_BM)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Wrong Command Line: " & $CmdLine[1])
 		EndIf
+	Else
+		_RunIBM()
 	EndIf
 EndFunc   ;==>_CheckCmdLine
 #endregion Main
@@ -690,7 +700,7 @@ EndFunc   ;==>_SelectFile
 #endregion Misc Functions(App Indepedent)
 
 #region GUIS
-Func _SwMainGUI()
+Func _SwBMGUI()
 	#region ### START Koda GUI section ###
 
 	$hGUI_BM = GUICreate($s_Win_Title_BM, $i_xWidth_BM, $i_yHight_BM, $i_xWinPos, $i_yWinPos)
@@ -928,18 +938,22 @@ Func _SwMainGUI()
 	#endregion ### END Koda GUI section ###
 	GUISetState(@SW_SHOW)
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Window Created: " & $s_Win_Title_BM & " With Error Code: " & @error)
-EndFunc   ;==>_SwMainGUI
+EndFunc   ;==>_SwBMGUI
 
 Func _SwEditGUI($sTXTFile, $s_Title)
 	GUISetState(@SW_DISABLE, $hGUI_BM)
 
-	Local $size = WinGetPos($s_Win_Title_BM)
+	Local $ChildixWidth = 491
+	Local $ChildiyHight = 310
+	Local $sizea = WinGetPos($s_Win_Title_BM)
 	If @error Then
 		;If windows not Found Place it to centre
-		Local $size[2] = [(@DesktopWidth - 491) / 2, (@DesktopHeight - 310) / 2]
+		Local $size[2] = [(@DesktopWidth - $ChildixWidth) / 2, (@DesktopHeight - $ChildiyHight) / 2]
+	Else
+		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
 	EndIf
-
-	Local $Help_GUI = GUICreate($s_Title, 491, 310, $size[0] + $i_xWidth_BM / 2 - 491 / 2, $size[1] + $i_yHight_BM / 2 - 310 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
+;~ IsHWnd
+	Local $Help_GUI = GUICreate($s_Title, $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
 	GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
 	GUICtrlSetData(-1, FileRead($sTXTFile))
@@ -962,9 +976,18 @@ EndFunc   ;==>_SwEditGUI
 Func _SwMoreSettingGUI()
 	#region ### START Koda GUI section ###
 	GUISetState(@SW_DISABLE, $hGUI_BM)
-	Local $size = WinGetPos($s_Win_Title_BM)
-	Local $More_Setting_GUI = GUICreate("More Setting", 351, 141, $size[0] + $i_xWidth_BM / 2 - 351 / 2, $size[1] + $i_yHight_BM / 2 - 141 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
-	GUISetIcon(@ScriptFullPath, 0, $More_Setting_GUI)
+
+	Local $ChildixWidth = 351
+	Local $ChildiyHight = 141
+	Local $sizea = WinGetPos($s_Win_Title_BM)
+	If @error Then
+		;If windows not Found Place it to centre
+		Local $size[2] = [(@DesktopWidth - $ChildixWidth) / 2, (@DesktopHeight - $ChildiyHight) / 2]
+	Else
+		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
+	EndIf
+
+	Local $More_Setting_GUI = GUICreate("More Setting", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
 	GUICtrlCreateGroup("Setting", 10, 10, 330, 116)
 	Local $h_AppendLog_Setting = GUICtrlCreateCheckbox("Append Log", 20, 30, 313, 17)
@@ -1019,9 +1042,18 @@ EndFunc   ;==>_SwMoreSettingGUI
 
 Func _SwCleanerGUI()
 	GUISetState(@SW_DISABLE, $hGUI_BM)
-	Local $size = WinGetPos($s_Win_Title_BM)
-	Local $clean = GUICreate("IDM Cleaner", 202, 259, $size[0] + $i_xWidth_BM / 2 - 202 / 2, $size[1] + $i_yHight_BM / 2 - 259 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
-	GUISetIcon(@ScriptFullPath, 0, $clean)
+
+	Local $ChildixWidth = 202
+	Local $ChildiyHight = 259
+	Local $sizea = WinGetPos($s_Win_Title_BM)
+	If @error Then
+		;If windows not Found Place it to centre
+		Local $size[2] = [(@DesktopWidth - $ChildixWidth) / 2, (@DesktopHeight - $ChildiyHight) / 2]
+	Else
+		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
+	EndIf
+
+	Local $Clean_GUI = GUICreate("IDM Cleaner", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
 	GUICtrlCreateGroup("Options", 5, 60, 190, 150)
 	Local $Clena_DD = GUICtrlCreateCheckbox("Download Data", 20, 80, 97, 17)
@@ -1106,7 +1138,7 @@ Func _SwCleanerGUI()
 				_ProgressMarquee_Stop($Progress1, 1)
 				Local $sSize = _sGetFileSizeConv(_iGetFileSize($aData))
 
-				MsgBox(64, "Info", $sSize & " Will Removed.", 0, $clean)
+				MsgBox(64, "Info", $sSize & " Will Removed.", 0, $Clean_GUI)
 
 			Case $Button_Clean
 				FileWriteLine($s_Log_File, "")
@@ -1148,7 +1180,7 @@ Func _SwCleanerGUI()
 				_ProgressMarquee_Start($Progress1)
 				$sSize = _sGetFileSizeConv(_iGetFileSize($aData))
 
-				Local $iMsgBoxAnswer = MsgBox(36, "Conform", $sSize & " Will Removed. Continue?", 0, $clean)
+				Local $iMsgBoxAnswer = MsgBox(36, "Conform", $sSize & " Will Removed. Continue?", 0, $Clean_GUI)
 				_ProgressMarquee_Stop($Progress1, 1)
 
 				If $iMsgBoxAnswer = 6 Then
@@ -1157,7 +1189,7 @@ Func _SwCleanerGUI()
 					_ProgressMarquee_Stop($Progress1, 1)
 
 					If $sLockedFiles <> "" Then
-						MsgBox(16, "Warning", "Some File(s) Could Not Removed. View Log For More Information.", 0, $clean)
+						MsgBox(16, "Warning", "Some File(s) Could Not Removed. View Log For More Information.", 0, $Clean_GUI)
 
 						Local $sLockedFile = StringSplit($sLockedFiles, @CRLF, 1)
 						For $i = 1 To $sLockedFile[0] - 1
@@ -1170,7 +1202,7 @@ Func _SwCleanerGUI()
 						If Not FileExists($aData[$i]) Then DirCreate($aData[$i])
 					Next
 
-					MsgBox(64, "Done", "Done.", 0, $clean)
+					MsgBox(64, "Done", "Done.", 0, $Clean_GUI)
 					If $b_RestartIDM Then _RunIDMexe()
 				EndIf
 				FileWriteLine($s_Log_File, "============================= Cleaning Ended =============================")
@@ -1178,14 +1210,23 @@ Func _SwCleanerGUI()
 		EndSwitch
 	WEnd
 	GUISetState(@SW_ENABLE, $hGUI_BM)
-	GUIDelete($clean)
+	GUIDelete($Clean_GUI)
 EndFunc   ;==>_SwCleanerGUI
 
 Func _SwPwCleanerGUI()
 	GUISetState(@SW_DISABLE, $hGUI_BM)
 
-	Local $size = WinGetPos($s_Win_Title_BM)
-	Local $pwCleaner_GUI = GUICreate("Password Cleaner", 178, 60, $size[0] + $i_xWidth_BM / 2 - 178 / 2, $size[1] + $i_yHight_BM / 2 - 60 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
+	Local $ChildixWidth = 178
+	Local $ChildiyHight = 60
+	Local $sizea = WinGetPos($s_Win_Title_BM)
+	If @error Then
+		;If windows not Found Place it to centre
+		Local $size[2] = [(@DesktopWidth - $ChildixWidth) / 2, (@DesktopHeight - $ChildiyHight) / 2]
+	Else
+		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
+	EndIf
+
+	Local $pwCleaner_GUI = GUICreate("Password Cleaner", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 	Local $k = 1
 	Local $j = 0
 	Local $sInfoLabelText = "Total " & $j & " Password Found."
@@ -1238,8 +1279,18 @@ EndFunc   ;==>_SwPwCleanerGUI
 
 Func _SwFileTypeGUI()
 	GUISetState(@SW_DISABLE, $hGUI_BM)
-	Local $size = WinGetPos($s_Win_Title_BM)
-	Local $FileTypeGUI = GUICreate("Add Extra Filetype By Categories", 477, 218, $size[0] + $i_xWidth_BM / 2 - 477 / 2, $size[1] + $i_yHight_BM / 2 - 218 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
+
+	Local $ChildixWidth = 477
+	Local $ChildiyHight = 218
+	Local $sizea = WinGetPos($s_Win_Title_BM)
+	If @error Then
+		;If windows not Found Place it to centre
+		Local $size[2] = [(@DesktopWidth - $ChildixWidth) / 2, (@DesktopHeight - $ChildiyHight) / 2]
+	Else
+		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
+	EndIf
+
+	Local $FileTypeGUI = GUICreate("Add Extra Filetype By Categories", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
 	Local $s_Default_Compressed_FileTypeGUI = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
 	Local $s_Default_Documents_FileTypeGUI = "doc pdf ppt pps docx pptx"
@@ -1749,7 +1800,7 @@ Func _Backup()
 			Return SetError(1)
 		ElseIf StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
-			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote)
+			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
 			Return SetError(1)
 		Else
 			$b_Password = True
@@ -2431,3 +2482,8 @@ Func _Restore()
 	FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")
 EndFunc   ;==>_Restore
 #endregion Restore
+
+Func _RunIBM()
+	_SwBMGUI()
+	_MainBM()
+EndFunc   ;==>_RunIBM

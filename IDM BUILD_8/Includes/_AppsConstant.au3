@@ -1,12 +1,14 @@
-#Region    ;************ Includes ************
+#AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+#region    ;************ Includes ************
 #include-once
-#Include "_RegFunc.au3"
-#EndRegion ;************ Includes ************
+#include <Array.au3>
+#include "_RegFunc.au3"
+#endregion    ;************ Includes ************
 
 #region Common
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
 Global Const $s_Current_Version = "0.9.8"
-#endregion
+#endregion Common
 
 #region Global Variables IDM BM
 Global $hGUI_BM
@@ -68,15 +70,15 @@ Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Lab
 Global $h_Button_Website_Help, $h_Button_Help_Help, $h_Button_Licence_Help, $h_Button_Version_History_Help, $h_Button_Forum_Help
 Global $h_Button_Update_Help
 
-Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5,$h_Status_Info
+Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5, $h_Status_Info
 
 Global $nMsg
-#endregion Global Variables
+#endregion Global Variables IDM BM
 
 #region global Variables
 Global $s_Win_Title_LM = "IDM List Manager" & $s_Current_Version & "(Beta)"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
-Global $i_xWidth_LM = 570, $i_yHight_LM = 180
+Global $i_xWidth_LM = 570, $i_yHight_LM = 153
 Global $hGUI_LM, $MenuItem_list_Catagories_[_iCountKey($s_regpath_IDM) + 1], $fChange = False
 
 Global $MenuItem_File, $MenuItem_File_Analyze, $MenuItem_File_Selected, $MenuItem_File_Selected_ExploreFolder, $MenuItem_File_Selected_ForceJoin
@@ -95,9 +97,8 @@ Global $MenuItem_Help, $MenuItem_Help_h
 
 Global $idListView, $hListView
 
-Global $idLable_Info, $idProgressBar_Info
+Global $h_Status_Info_LM
 
-Global $idInput_Find, $idButton_Find, $idButton_Remove_Find
 #endregion global Variables
 
 Func _sGetAppDataIDMFolder()
@@ -125,7 +126,6 @@ Func _sGetTempPathFolder()
 	Return $TempPath
 EndFunc   ;==>_sGetTempPathFolder
 
-
 Func _sPath_Last_Remove($sPath)
 	Local $s_Saved_Path = ""
 
@@ -152,3 +152,40 @@ Func _SwHelp()
 		ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
 	EndIf
 EndFunc   ;==>_SwHelp
+
+;Return array containging extra past Dwnload Data Path if Exists
+Func _aGetTempPathFolderEx()
+	Local $i = 1
+	Local $tPath, $val, $tPath1, $aPath1, $var, $sub, $aPath, $sCheck
+	While 1
+		$var = RegEnumKey($s_regpath_IDM, $i)
+		If @error Then ExitLoop
+		$i += 1
+
+		$val = RegRead($s_regpath_IDM & "\" & $var, "LocalPath")
+		If @error Then ContinueLoop
+
+		$sub = StringInStr($val, "DwnlData", 0, -1)
+		If $sub Then
+			$tPath &= StringLeft($val, $sub + 7) & "|"
+		EndIf
+	WEnd
+
+	$tPath = StringTrimRight($tPath, 1)
+	$aPath = StringSplit($tPath, "|", 2)
+	_ArraySort($aPath)
+
+	For $i = 0 To UBound($aPath) - 2
+		$sCheck = $aPath[$i]
+		If FileExists($aPath[$i]) Then $tPath1 &= $aPath[$i] & "|"
+
+		If $sCheck = $aPath[$i + 1] Then
+			While $sCheck = $aPath[$i + 1]
+				If $i >= UBound($aPath) - 2 Then ExitLoop
+				$i += 1
+			WEnd
+		EndIf
+	Next
+	$aPath1 = StringSplit($tPath1, "|", 3)
+	Return $aPath1
+EndFunc   ;==>_aGetTempPathFolderEx

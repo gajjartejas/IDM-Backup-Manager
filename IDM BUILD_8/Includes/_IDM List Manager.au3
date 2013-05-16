@@ -22,7 +22,8 @@
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #region Includes
-#Region    ;************ Includes ************
+#region    ;************ Includes ************
+#include <GuiStatusBar.au3>
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <EditConstants.au3>
@@ -31,7 +32,7 @@
 #include "_GUICtrlListView_SaveHTML.au3"
 #include "_GUICtrlListView_SaveCSV.au3"
 #include "_AppsConstant.au3"
-#EndRegion ;************ Includes ************
+#endregion    ;************ Includes ************
 #endregion Includes
 
 #region Export Function
@@ -90,7 +91,7 @@ Func _Expert_IDM_LIST()
 
 	Local $i = 0, $var
 	For $i = 0 To _GUICtrlListView_GetItemCount($hListView) - 1
-		GUICtrlSetData($idLable_Info, "Experting: " & $i & " " & "Please Wait...")
+		_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Experting: " & $i & " " & "Please Wait...")
 		$var = _GUICtrlListView_GetItemText($hListView, $i, 4)
 		Local $var_Url0 = _RegRead($s_regpath_IDM & "\" & $var, "Url0") & @CRLF
 		If @error Then $var_Url0 = ""
@@ -106,7 +107,7 @@ Func _Expert_IDM_LIST()
 			FileWrite($join_file, ">" & @CRLF)
 		EndIf
 	Next
-	GUICtrlSetData($idLable_Info, "Ready")
+	_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Ready")
 	_Enable_Controls()
 EndFunc   ;==>_Expert_IDM_LIST
 
@@ -125,14 +126,14 @@ Func _Expert_IDM_TXT()
 	Local $var
 	For $i = 0 To _GUICtrlListView_GetItemCount($hListView) - 1
 		$var = _GUICtrlListView_GetItemText($hListView, $i, 4)
-		GUICtrlSetData($idLable_Info, "Experting: " & $i & " " & "Please Wait...")
+		_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Experting: " & $i & " " & "Please Wait...")
 		Local $var_Url0 = _RegRead($s_regpath_IDM & "\" & $var, "Url0")
 		If @error Then $var_Url0 = ""
 		If $var_Url0 <> "" Then
 			FileWriteLine($join_file, $var_Url0)
 		EndIf
 	Next
-	GUICtrlSetData($idLable_Info, "Ready")
+	_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Ready")
 	_Enable_Controls()
 EndFunc   ;==>_Expert_IDM_TXT
 #endregion Export Function
@@ -187,10 +188,6 @@ Func WM_NOTIFY($hWnd, $iMsg, $iwParam, $ilParam)
 				Case $NM_RETURN ; The control has the input focus and that the user has pressed the ENTER key
 
 					; No return value
-				Case $NM_SETFOCUS ; The control has received the input focus
-					ConsoleWrite("$NM_SETFOCUS" & @LF)
-
-					; No return value
 			EndSwitch
 	EndSwitch
 	Return $GUI_RUNDEFMSG
@@ -199,7 +196,7 @@ EndFunc   ;==>WM_NOTIFY
 Func WM_GETMINMAXINFO($hWnd, $Msg, $WPARAM, $lParam)
 	#forceref $hWnd,$Msg,$WPARAM
 	Local $tagMaxinfo = DllStructCreate("int;int;int;int;int;int;int;int;int;int", $lParam)
-	DllStructSetData($tagMaxinfo, 7, $i_xWidth_LM ) ; min X
+	DllStructSetData($tagMaxinfo, 7, $i_xWidth_LM) ; min X
 	DllStructSetData($tagMaxinfo, 8, $i_yHight_LM) ; min Y
 	Return 0
 EndFunc   ;==>WM_GETMINMAXINFO
@@ -212,23 +209,6 @@ EndFunc   ;==>MY_WM_SIZE
 #endregion Windows Messages
 
 #region Events
-Func _SwFind()
-	GUICtrlSetState($idButton_Find, $GUI_SHOW)
-	GUICtrlSetState($idInput_Find, $GUI_SHOW)
-	GUICtrlSetState($idButton_Remove_Find, $GUI_SHOW)
-EndFunc   ;==>_SwFind
-
-Func _Cancel_Find()
-	If GUICtrlRead($idInput_Find) = "" Then
-		GUICtrlSetState($idButton_Find, $GUI_HIDE)
-		GUICtrlSetState($idInput_Find, $GUI_HIDE)
-		GUICtrlSetState($idButton_Remove_Find, $GUI_HIDE)
-	Else
-		GUICtrlSetData($idInput_Find, "")
-	EndIf
-	GUICtrlSetData($idLable_Info, "Ready")
-EndFunc   ;==>_Cancel_Find
-
 Func _SwGrid()
 	If BitAND(GUICtrlRead($MenuItem_View_SwGrid), $GUI_CHECKED) Then
 		GUICtrlSetState($MenuItem_View_SwGrid, $GUI_UNCHECKED)
@@ -287,26 +267,22 @@ Func _Join_Fragments()
 		Return -1
 	EndIf
 
-	GUICtrlSetState($idProgressBar_Info, $GUI_SHOW)
 	Local $LocalFileName_, $file_join
 	While 1
 		$LocalFileName_ = FileFindNextFile($search_)
 		If @error Then ExitLoop
 		$file_join = FileOpen($LocalPath & "\" & $LocalFileName_, 0)
-		GUICtrlSetData($idProgressBar_Info, ($b * 100) / $total_frag_file)
 		While 1
 			$sChunk = FileRead($file_join, $iBuffer)
 			If @error = -1 Then ExitLoop
 			FileWrite($join_file, $sChunk)
-			GUICtrlSetData($idLable_Info, "Joining Segment: " & $b & " " & "Please Wait...")
+			_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Joining Segment: " & $b & " " & "Please Wait...")
 		WEnd
 		FileClose($file_join)
 		$b += 1
 	WEnd
 	FileClose($search)
-	GUICtrlSetState($idProgressBar_Info, $GUI_HIDE)
-	GUICtrlSetData($idLable_Info, "DONE")
-	GUICtrlSetData($idProgressBar_Info, 0)
+	_GUICtrlStatusBar_SetText($h_Status_Info_LM, "DONE")
 	_Enable_Controls()
 EndFunc   ;==>_Join_Fragments
 
@@ -335,7 +311,6 @@ EndFunc   ;==>_Open_Folder
 
 Func _Analyze()
 	_Disable_Controls()
-	GUICtrlSetState($idProgressBar_Info, $GUI_SHOW)
 	_GUICtrlListView_BeginUpdate($idListView)
 	_GUICtrlListView_DeleteAllItems($idListView)
 	Local $i = 1
@@ -344,8 +319,7 @@ Func _Analyze()
 	Local $i_TotalKey = _CountKey($s_regpath_IDM)
 
 	While 1
-		GUICtrlSetData($idLable_Info, "Analyzing: " & "Please Wait..." & Round($i / $i_TotalKey * 100) & "%")
-		GUICtrlSetData($idProgressBar_Info, $i / $i_TotalKey * 100)
+		_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Analyzing: " & "Please Wait..." & Round($i / $i_TotalKey * 100) & "%")
 
 		Local $var = RegEnumKey($s_regpath_IDM, $i)
 		If @error <> 0 Then ExitLoop
@@ -410,8 +384,7 @@ Func _Analyze()
 	WEnd
 
 	_GUICtrlListView_EndUpdate($idListView)
-	GUICtrlSetData($idLable_Info, "Ready")
-	GUICtrlSetState($idProgressBar_Info, $GUI_HIDE)
+	_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Ready")
 	_Enable_Controls()
 	Return $no
 EndFunc   ;==>_Analyze
@@ -521,25 +494,6 @@ Func _set_cat_to_menu()
 	WEnd
 	Return $i
 EndFunc   ;==>_set_cat_to_menu
-
-Func _Find()
-	Local $sText = GUICtrlRead($idInput_Find)
-	Local $i = 0
-	If StringLen($sText) <> 0 Then
-		_GUICtrlListView_BeginUpdate($idListView)
-		GUICtrlSetData($idLable_Info, "Finding Please Wait...")
-		While 1
-			If $i = _GUICtrlListView_GetItemCount($hListView) Then ExitLoop
-			If Not StringInStr(_GUICtrlListView_GetItemTextString($hListView, $i), $sText) Then
-				_GUICtrlListView_DeleteItem($hListView, $i)
-				$i -= 1
-			EndIf
-			$i += 1
-		WEnd
-		_GUICtrlListView_EndUpdate($idListView)
-		GUICtrlSetData($idLable_Info, "INFO: " & _GUICtrlListView_GetItemCount($hListView) & " Item Found." & " Contain:" & $sText)
-	EndIf
-EndFunc   ;==>_Find
 
 Func _get_selected_cat()
 	Local $i
@@ -676,10 +630,21 @@ EndFunc   ;==>_Name_Get_From_Path
 #endregion Internal Function
 
 Func _SwLMGUI()
-	GUISetState(@SW_DISABLE, $hGUI_BM)
-	Local $size = WinGetPos($s_Win_Title_BM)
+	GUISetState(@SW_HIDE, $hGUI_BM)
+
+	Local $sizea = WinGetPos($s_Win_Title_BM)
+	If @error Then
+		;If windows not Found Place it to centre
+		Local $size[2] = [(@DesktopWidth - $i_xWidth_LM) / 2, (@DesktopHeight - $i_yHight_LM) / 2]
+	Else
+		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $i_xWidth_LM / 2, $sizea[1] + $i_yHight_BM / 2 - $i_yHight_LM / 2]
+	EndIf
+
+	Local $hParentWin
+	If IsHWnd($hGUI_BM) Then $hParentWin = $hGUI_BM
+
 	#region ### START Koda GUI section ### main gui
-	$hGUI_LM = GUICreate($s_Win_Title_LM, $i_xWidth_LM, $i_yHight_LM, $size[0] + $i_xWidth_BM / 2 - $i_xWidth_LM / 2, $size[1] + $i_yHight_BM / 2 - $i_yHight_LM / 2,  BitOR($GUI_SS_DEFAULT_GUI,$WS_SIZEBOX,$WS_THICKFRAME), BitOR($WS_EX_TOOLWINDOW,$WS_EX_WINDOWEDGE), $hGUI_BM)
+	$hGUI_LM = GUICreate($s_Win_Title_LM, $i_xWidth_LM, $i_yHight_LM, $size[0], $size[1], BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_THICKFRAME, $WS_TABSTOP), -1, $hParentWin)
 
 	#region Menu
 	#region File Menu ;============================================================================================== File Menu
@@ -697,7 +662,7 @@ Func _SwLMGUI()
 	$MenuItem_File_Selected_Properties = GUICtrlCreateMenuItem("&Properties", $MenuItem_File_Selected)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	$MenuItem_File_Split = GUICtrlCreateMenuItem("", $MenuItem_File)
-	$MenuItem_File_Exit = GUICtrlCreateMenuItem("&Exit", $MenuItem_File)
+	$MenuItem_File_Exit = GUICtrlCreateMenuItem("&Close", $MenuItem_File)
 	#endregion File Menu ;============================================================================================== File Menu
 
 	#region Edit Menu ;==============================================================================================Edit Menu
@@ -749,37 +714,34 @@ Func _SwLMGUI()
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	#endregion List View ;==============================================================================================List View
 
+;~ 	#region Find;==============================================================================================Find
+;~ 	$idInput_Find = GUICtrlCreateInput("", 316, 116, 146, 21)
+;~ 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
+;~ 	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Search...")
+;~ 	GUICtrlSetState(-1, $GUI_HIDE)
+
+;~ 	$idButton_Find = GUICtrlCreateButton("Search", 465, 115, 65, 23)
+;~ 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
+;~ 	GUICtrlSetState(-1, $GUI_HIDE)
+
+;~ 	$idButton_Remove_Find = GUICtrlCreateButton("r", 530, 115, 30, 23)
+;~ 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
+;~ 	GUICtrlSetFont(-1, 10, 400, 0, "Webdings")
+;~ 	GUICtrlSetState(-1, $GUI_HIDE)
+;~ 	#endregion Find;==============================================================================================Find
+
 	#region Info;==============================================================================================Info
-	$idLable_Info = GUICtrlCreateLabel("Ready", 10, 115, 325, 17)
-	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT)
-
-	$idProgressBar_Info = GUICtrlCreateProgress(10, 135, 210, 12)
-	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKHEIGHT)
-	GUICtrlSetState(-1, $GUI_HIDE)
+	Local $aParts[1] = [-1]
+	Local $aText[1] = ["INFO: Ready"]
+	$h_Status_Info_LM = _GUICtrlStatusBar_Create($hGUI_LM, $aParts, $aText)
 	#endregion Info;==============================================================================================Info
-
-	#region Find;==============================================================================================Find
-	$idInput_Find = GUICtrlCreateInput("", 316, 136, 146, 21)
-	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Search...")
-	GUICtrlSetState(-1, $GUI_HIDE)
-
-	$idButton_Find = GUICtrlCreateButton("Search", 465, 135, 65, 23)
-	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-	GUICtrlSetState(-1, $GUI_HIDE)
-
-	$idButton_Remove_Find = GUICtrlCreateButton("r", 530, 135, 30, 23)
-	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-	GUICtrlSetFont(-1, 10, 400, 0, "Webdings")
-	GUICtrlSetState(-1, $GUI_HIDE)
-	#endregion Find;==============================================================================================Find
 
 	#endregion GUI
 	_Disable_Button()
 	GUIRegisterMsg($WM_NOTIFY, "WM_NOTIFY")
 	GUIRegisterMsg($WM_GETMINMAXINFO, "WM_GETMINMAXINFO")
 	GUIRegisterMsg($WM_SIZE, "MY_WM_SIZE")
-
+	GUIRegisterMsg($WM_SIZE, "stb_resize")
 	GUISetState(@SW_SHOW)
 	#endregion ### END Koda GUI section ###
 
@@ -805,13 +767,7 @@ Func _MainLM()
 				_Goto()
 
 			Case $MenuItem_Edit_Find
-				_SwFind()
-
-			Case $idButton_Remove_Find
-				_Cancel_Find()
-
-			Case $idButton_Find
-				_Find()
+				_SwFindGUI()
 
 			Case $MenuItem_Edit_Remove
 				_GUICtrlListView_DeleteItemsSelected($hListView)
@@ -854,15 +810,65 @@ Func _MainLM()
 
 			Case $MenuItem_Help_h
 				_SwHelp()
-
 		EndSwitch
 		_Disable_Button()
 	WEnd
-	GUISetState(@SW_ENABLE, $hGUI_BM)
+	GUISetState(@SW_SHOW, $hGUI_BM)
 	GUIDelete($hGUI_LM)
 EndFunc   ;==>_MainLM
+
+Func _SwFindGUI()
+	GUISetState(@SW_DISABLE, $hGUI_LM)
+
+	Local $size = WinGetPos($s_Win_Title_LM)
+	Local $hSearchGUI = GUICreate("Search", 264, 57, $size[0] + $i_xWidth_LM / 2 - 264 / 2, $size[1] + $i_yHight_LM / 2 - 57 / 2, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_LM)
+	Local $hInputFind = GUICtrlCreateInput("", 46, 21, 146, 21)
+	Local $Button_Go = GUICtrlCreateButton("Search", 194, 20, 65, 23)
+	Local $Button_x = GUICtrlCreateButton("X", 11, 20, 30, 23)
+	GUISetState(@SW_SHOW)
+	Local $nMsg
+	While 1
+		$nMsg = GUIGetMsg()
+		Switch $nMsg
+			Case $GUI_EVENT_CLOSE
+				ExitLoop
+
+			Case $Button_Go
+				Local $sText = GUICtrlRead($hInputFind)
+				ConsoleWrite($sText & @LF)
+				Local $i = 0
+				If StringLen($sText) <> 0 Then
+					_GUICtrlListView_BeginUpdate($idListView)
+					While 1
+						_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Finding item: " & $i & " So far...")
+						If $i = _GUICtrlListView_GetItemCount($hListView) Then ExitLoop
+						If Not StringInStr(_GUICtrlListView_GetItemTextString($hListView, $i), $sText) Then
+							_GUICtrlListView_DeleteItem($hListView, $i)
+							$i -= 1
+						EndIf
+						$i += 1
+					WEnd
+					_GUICtrlListView_EndUpdate($idListView)
+					_GUICtrlStatusBar_SetText($h_Status_Info_LM, "INFO: " & _GUICtrlListView_GetItemCount($hListView) & " Item Found." & " Contain:" & $sText)
+				EndIf
+
+			Case $Button_x
+				GUICtrlSetData($hInputFind, "")
+				_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Ready")
+		EndSwitch
+	WEnd
+
+	GUISetState(@SW_ENABLE, $hGUI_LM)
+	GUIDelete($hSearchGUI)
+EndFunc   ;==>_SwFindGUI
 
 Func _RunILM()
 	_SwLMGUI()
 	_MainLM()
 EndFunc   ;==>_RunILM
+
+Func stb_resize($hWnd, $iMsg, $iwParam, $ilParam)
+	#forceref  $iMsg, $iwParam, $ilParam, $hWnd
+	_GUICtrlStatusBar_Resize($h_Status_Info_LM)
+	Return $GUI_RUNDEFMSG
+EndFunc   ;==>stb_resize

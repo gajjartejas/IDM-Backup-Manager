@@ -18,6 +18,16 @@ Icons
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico				;19					  |-20				|
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico				;20					  |-21				|
 #AutoIt3Wrapper_Res_Icon_Add=Resorces\Log.ico					;21					  |-22				|
-
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\StatusInfo.ico			;22					  |-23				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\StatusWarning.ico			;23					  |-24				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\StatusCompled.ico			;24					  |-25				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\StatusError.ico			;25					  |-26				|
+#AutoIt3Wrapper_Res_Icon_Add=Resorces\StatusWorking.ico			;26					  |-27				|
 Resources
 #AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
+
+
+_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWorking);StatusWorking
+_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
+_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled);StatusCompled

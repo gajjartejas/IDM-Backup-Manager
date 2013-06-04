@@ -29,8 +29,7 @@
 ; Example .......: Yes
 ; ===============================================================================================================================
 
-Func _FileIsPathValid($Path, $Verbose = 0)
-	Local $PathOri = $Path
+Func _FileIsPathValid($Path)
 	Local $Excluded[8] = [7, "\\", "?", "*", '"', "<", ">", "|"] ;List of invalid characters
 	Local $Alphabet = StringSplit("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")
 	Local $Reasons = ""
@@ -66,8 +65,5 @@ Func _FileIsPathValid($Path, $Verbose = 0)
 			$Valid = False
 		EndIf
 	Next
-
-	If $Verbose = 2 And $Valid = False Then ConsoleWrite(@CRLF & "Invalid Path: " & $PathOri & $Reasons & @CRLF)
-	If $Verbose = 1 And $Valid = False And @Compiled = False Then ConsoleWrite(@CRLF & "=============" & @CRLF & "Invalid Path: " & $PathOri & $Reasons & @CRLF)
 	Return $Valid
 EndFunc   ;==>_FileIsPathValid

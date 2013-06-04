@@ -23,10 +23,10 @@
 
 #region Includes
 #region    ;************ Includes ************
+#include <WinAPIEx.au3>
 #include <GuiStatusBar.au3>
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
-#include <EditConstants.au3>
 #include <File.au3>
 #include <GuiMenu.au3>
 #include "_GUICtrlListView_SaveHTML.au3"
@@ -47,13 +47,12 @@ Func _Expert_HTML()
 			_Expert_HTML()
 		EndIf
 	EndIf
-	_Disable_Controls()
 
-	_GUICtrlListView_DeleteColumn($hListView, 0)
+	_Disable_Controls()
 	_GUICtrlListView_SaveHTML($hListView, $join_file, "")
+	_Enable_Controls()
+
 	ShellExecute($join_file)
-	_GUICtrlListView_InsertColumn($hListView, 0, "No.", 100)
-	_Analyze()
 EndFunc   ;==>_Expert_HTML
 
 Func _Expert_CSV()
@@ -68,12 +67,10 @@ Func _Expert_CSV()
 		EndIf
 	EndIf
 	_Disable_Controls()
-
-	_GUICtrlListView_DeleteColumn($hListView, 0)
 	_GUICtrlListView_SaveCSV($hListView, $join_file)
+	_Enable_Controls()
+
 	ShellExecute($join_file)
-	_GUICtrlListView_InsertColumn($hListView, 0, "No.", 100)
-	_Analyze()
 EndFunc   ;==>_Expert_CSV
 
 Func _Expert_IDM_LIST()
@@ -108,6 +105,7 @@ Func _Expert_IDM_LIST()
 		EndIf
 	Next
 	_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Ready")
+
 	_Enable_Controls()
 EndFunc   ;==>_Expert_IDM_LIST
 
@@ -640,11 +638,9 @@ Func _SwLMGUI()
 		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $i_xWidth_LM / 2, $sizea[1] + $i_yHight_BM / 2 - $i_yHight_LM / 2]
 	EndIf
 
-	Local $hParentWin
-	If IsHWnd($hGUI_BM) Then $hParentWin = $hGUI_BM
-
 	#region ### START Koda GUI section ### main gui
-	$hGUI_LM = GUICreate($s_Win_Title_LM, $i_xWidth_LM, $i_yHight_LM, $size[0], $size[1], BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_THICKFRAME, $WS_TABSTOP), -1, $hParentWin)
+	$hGUI_LM = GUICreate($s_Win_Title_LM, $i_xWidth_LM, $i_yHight_LM, $size[0], $size[1], BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_THICKFRAME, $WS_TABSTOP))
+;~ 	GUISetFont(8.5, 400, 0, 'Microsoft Sans Serif')
 
 	#region Menu
 	#region File Menu ;============================================================================================== File Menu
@@ -708,27 +704,19 @@ Func _SwLMGUI()
 
 	#region GUI
 	#region List View ;==============================================================================================List View
-	$idListView = GUICtrlCreateListView("No.|Name|File Size|MIME Type|ID|Link", 10, 10, 550, 100)
+	$idListView = GUICtrlCreateListView("No.|Name|File Size|MIME Type|ID|Link", 0, 0, 570, 110)
+	GUICtrlSetFont(-1, 8.5, 400, 0, 'Tahoma')
 	$hListView = GUICtrlGetHandle($idListView)
-	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
+;~ 	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
+	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_DOUBLEBUFFER, $LVS_EX_FULLROWSELECT, $LVS_EX_INFOTIP, $LVS_EX_GRIDLINES,$LVS_EX_HEADERDRAGDROP))
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
+	If $__WINVER >= 0x0600 Then
+		_WinAPI_SetWindowTheme($hListView, 'Explorer');Require Windows Vista or later.
+	EndIf
+	_GUICtrlListView_SetColumn($hListView, 0, "No.", -1, 1)
+	_GUICtrlListView_SetColumn($hListView, 2, "File Size", -1, 1)
+	_GUICtrlListView_SetColumn($hListView, 4, "ID", -1, 1)
 	#endregion List View ;==============================================================================================List View
-
-;~ 	#region Find;==============================================================================================Find
-;~ 	$idInput_Find = GUICtrlCreateInput("", 316, 116, 146, 21)
-;~ 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-;~ 	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Search...")
-;~ 	GUICtrlSetState(-1, $GUI_HIDE)
-
-;~ 	$idButton_Find = GUICtrlCreateButton("Search", 465, 115, 65, 23)
-;~ 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-;~ 	GUICtrlSetState(-1, $GUI_HIDE)
-
-;~ 	$idButton_Remove_Find = GUICtrlCreateButton("r", 530, 115, 30, 23)
-;~ 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-;~ 	GUICtrlSetFont(-1, 10, 400, 0, "Webdings")
-;~ 	GUICtrlSetState(-1, $GUI_HIDE)
-;~ 	#endregion Find;==============================================================================================Find
 
 	#region Info;==============================================================================================Info
 	Local $aParts[1] = [-1]

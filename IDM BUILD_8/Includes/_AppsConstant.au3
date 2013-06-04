@@ -1,9 +1,10 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-#region    ;************ Includes ************
+#Region    ;************ Includes ************
 #include-once
+#Include <WinAPIEx.au3>
 #include <Array.au3>
 #include "_RegFunc.au3"
-#endregion    ;************ Includes ************
+#EndRegion ;************ Includes ************
 
 #region Common
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
@@ -11,9 +12,6 @@ Global Const $s_Current_Version = "0.9.8"
 #endregion Common
 
 #region Global Variables IDM BM
-Global $hGUI_BM
-Global $aData[14]
-
 Global Const $s_Win_Title_BM = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
 Global Const $i_xWidth_BM = 439
 Global Const $i_yHight_BM = 276
@@ -70,15 +68,24 @@ Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Lab
 Global $h_Button_Website_Help, $h_Button_Help_Help, $h_Button_Licence_Help, $h_Button_Version_History_Help, $h_Button_Forum_Help
 Global $h_Button_Update_Help
 
-Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5, $h_Status_Info
+Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
+
+Global $h_Status_Info
+Global $hIcons_StatusInfo = _WinAPI_ShellExtractIcon(@ScriptFullPath, 22, 16, 16);
+Global $hIcons_StatusWarning = _WinAPI_ShellExtractIcon(@ScriptFullPath, 23, 16, 16)
+Global $hIcons_StatusCompled = _WinAPI_ShellExtractIcon(@ScriptFullPath, 24, 16, 16)
+Global $hIcons_StatusError = _WinAPI_ShellExtractIcon(@ScriptFullPath, 25, 16, 16)
+Global $hIcons_StatusWorking = _WinAPI_ShellExtractIcon(@ScriptFullPath, 26, 16, 16)
 
 Global $nMsg
+Global $hGUI_BM
+Global $aData[14]
 #endregion Global Variables IDM BM
 
 #region global Variables
 Global $s_Win_Title_LM = "IDM List Manager" & $s_Current_Version & "(Beta)"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
-Global $i_xWidth_LM = 570, $i_yHight_LM = 153
+Global $i_xWidth_LM = 570, $i_yHight_LM = 150
 Global $hGUI_LM, $MenuItem_list_Catagories_[_iCountKey($s_regpath_IDM) + 1], $fChange = False
 
 Global $MenuItem_File, $MenuItem_File_Analyze, $MenuItem_File_Selected, $MenuItem_File_Selected_ExploreFolder, $MenuItem_File_Selected_ForceJoin
@@ -97,7 +104,7 @@ Global $MenuItem_Help, $MenuItem_Help_h
 
 Global $idListView, $hListView
 
-Global $h_Status_Info_LM
+Global $h_Status_Info_LM, $progress, $h_Progress
 
 #endregion global Variables
 
@@ -155,6 +162,8 @@ EndFunc   ;==>_SwHelp
 
 ;Return array containging extra past Dwnload Data Path if Exists
 Func _aGetTempPathFolderEx()
+	If Not _RegKeyExists($s_regpath_IDM) Then Return SetError(1, 0, 0)
+
 	Local $i = 1
 	Local $tPath, $val, $tPath1, $aPath1, $var, $sub, $aPath, $sCheck
 	While 1
@@ -172,12 +181,17 @@ Func _aGetTempPathFolderEx()
 	WEnd
 
 	$tPath = StringTrimRight($tPath, 1)
-	$aPath = StringSplit($tPath, "|", 2)
+	$aPath = StringSplit($tPath, "|", 3)
+	If @error Then Return SetError(1, 0, 0)
 	_ArraySort($aPath)
 
 	For $i = 0 To UBound($aPath) - 2
 		$sCheck = $aPath[$i]
-		If FileExists($aPath[$i]) Then $tPath1 &= $aPath[$i] & "|"
+		If FileExists($aPath[$i]) Then
+			If StringRight($aPath[$i], 1) <> "\" Then $aPath[$i] &= "\"
+			$tPath1 &= $aPath[$i] & "|"
+		EndIf
+;~ 		ConsoleWrite($aPath[$i] &"   <--"& @LF)
 
 		If $sCheck = $aPath[$i + 1] Then
 			While $sCheck = $aPath[$i + 1]
@@ -186,6 +200,7 @@ Func _aGetTempPathFolderEx()
 			WEnd
 		EndIf
 	Next
+	$tPath1 = StringTrimRight($tPath1, 1)
 	$aPath1 = StringSplit($tPath1, "|", 3)
 	Return $aPath1
 EndFunc   ;==>_aGetTempPathFolderEx

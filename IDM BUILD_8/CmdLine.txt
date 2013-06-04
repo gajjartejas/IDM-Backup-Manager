@@ -1,7 +1,7 @@
 Command Line Parameters:
 
 USAGE:
-IDM Backup Manager.exe 	[swlm] [swdc] [swpwc] [swft] 
+IDM Backup Manager.exe 	[swlm] [swdc] [swpwc] [swft]
 			[backup <file path>]
 			[restore <file path>]
 

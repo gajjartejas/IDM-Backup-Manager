@@ -1,45 +1,20 @@
 #NoTrayIcon
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=..\Extra\icon.ico
-#AutoIt3Wrapper_Outfile=IDM Backup Manager 0.9.8.exe
-#AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_Outfile=idmbm.exe
+#AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_UseUpx=n
-#AutoIt3Wrapper_Compile_Both=y
-#AutoIt3Wrapper_UseX64=y
-#AutoIt3Wrapper_Res_Comment=IDM Backup Manager 0.9.8.0
-#AutoIt3Wrapper_Res_Description=IDM Backup Manager
-#AutoIt3Wrapper_Res_Fileversion=0.9.8.0
-#AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2012-2013 Gajjar Tejas
 #AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
-#AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
-#AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas's Blog
-#AutoIt3Wrapper_Res_Field=Compile Date|%longdate% %time%
-#AutoIt3Wrapper_Res_Field=Internal Name|IDM Backup Manager.exe
-#AutoIt3Wrapper_Res_Field=ProductName|IDM Backup Manager
-#AutoIt3Wrapper_Res_Field=ProductVersion|0.9.8 beta
-#AutoIt3Wrapper_Res_Field=OriginalFilename|IDM Backup Manager.exe
-#AutoIt3Wrapper_Res_Field=Total Commits|322
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Backup.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Open.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Forum.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Help.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Internet.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\License.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\History.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Ok.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\ok32.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Restore.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\search.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Tool.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Update.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\FileType.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Save.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Setting.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\refresh.ico
-#AutoIt3Wrapper_Res_Icon_Add=Resorces\Log.ico
-#AutoIt3Wrapper_Res_File_Add=Resorces\contactme.jpg, rt_rcdata, contactme
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", Dialog, 1000,
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", Icon, 99,
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", Icon, 162,
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", Icon, 164,
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", Icon, 169,
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", Menu, 166,
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", VersionInfo, 1,
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", 24, 1,
+#AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -add "%out%", "%out%", Resources\idmbm.res,,,
 #AutoIt3Wrapper_Run_Obfuscator=y
 #Obfuscator_Parameters=/striponly
 #AutoIt3Wrapper_Versioning=v
@@ -47,7 +22,7 @@
 #AutoIt3Wrapper_Run_cvsWrapper=v
 
 #region Includes
-#region    ;************ Includes ************
+#include <EditConstants.au3>
 #include <ComboConstants.au3>
 #include "Includes\_AET_ButtonSetIcon.au3"
 #include "Includes\_Resources.au3"
@@ -56,16 +31,8 @@
 #include "Includes\_ShellFile_Install.au3"
 #include "Includes\_7Zip.au3"
 #include "Includes\_ProgressMarquee.au3"
-#include "Includes\_IDM List Manager.au3"
-#endregion    ;************ Includes ************
-#endregion Includes
+#include "Includes\_IDM List Manager.au3"#endregion Includes
 
-_CheckIni()
-_CheckSelfProcess()
-_LogSysInfo()
-_CheckComponment()
-_CheckIDMProcess()
-_LogProfilePaths()
 _CheckCmdLine()
 
 #region Main
@@ -390,19 +357,31 @@ Func _MainBM()
 EndFunc   ;==>_MainBM
 
 Func _CheckIni()
+	_LogSysInfo()
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "============================= Check INI =============================")
+
 	If FileExists($s_Setting_File) Then
+
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found.")
+
 		$i_xWinPos = Number(IniRead($s_Setting_File, "Position", "x", $i_xWinPos))
 		$i_yWinPos = Number(IniRead($s_Setting_File, "Position", "y", $i_yWinPos))
 
 		$s_Backup_Dir = IniRead($s_Setting_File, "Default Paths", "Backup_Dir", $s_Backup_Dir)
 		$s_Log_File = IniRead($s_Setting_File, "Default Paths", "Log_File", $s_Log_File)
 
-;~  refresh every time on startup:
-;~ 	$s_AppDataIDMFolder = IniRead($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder);contain back "\"
-;~ 	$s_DwnlData_Folder = IniRead($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder);contain back "\"
+;~		refresh every time on startup:
+;~ 		$s_AppDataIDMFolder = IniRead($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder);contain back "\"
+;~ 		$s_DwnlData_Folder = IniRead($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder);contain back "\"
 
 		$b_AppendLog_File = Number(IniRead($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File))
-		If Not $b_AppendLog_File And FileExists($s_Log_File) Then FileDelete($s_Log_File)
+		If Not $b_AppendLog_File And FileExists($s_Log_File) Then
+			FileDelete($s_Log_File)
+			_LogSysInfo()
+			FileWriteLine($s_Log_File, "============================= Check INI =============================")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Removed Previous Log.")
+		EndIf
 
 		$b_RestartIDM = Number(IniRead($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM))
 
@@ -434,19 +413,25 @@ Func _LogSysInfo()
 	FileWriteLine($s_Log_File, "Service Package: " & @OSServicePack)
 	FileWriteLine($s_Log_File, "Total Memory: " & _sGetFileSizeConv($a_Memory[1] * 1024))
 	FileWriteLine($s_Log_File, "Available Memory: " & _sGetFileSizeConv($a_Memory[2] * 1024))
-	FileWriteLine($s_Log_File, "")
 EndFunc   ;==>_LogSysInfo
 
 Func _CheckComponment()
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "============================= Check DLL =============================")
+
 	Local $sDllCheck = _7ZipCheckDll()
 	If @error Then
 		FileWriteLine($s_Log_File, _Current_Moment() & "Error: " & $sDllCheck & " Not found Exiting....")
 		MsgBox(16, "Error", $sDllCheck & " Not Found Exiting....")
 		Exit -2
 	EndIf
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found.")
 EndFunc   ;==>_CheckComponment
 
 Func _CheckIDMProcess()
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "============================= Check Internet Download Manager =============================")
+
 	Local $ParentWin = ""
 	If IsHWnd($hGUI_BM) Then $ParentWin = $hGUI_BM
 
@@ -456,57 +441,105 @@ Func _CheckIDMProcess()
 		Select
 			Case $iMsgBoxAnswer = 6 ;Yes
 				If ProcessClose("idman.exe") Then
-					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Internet Download Manager Is Closed. Now Cont...")
+					FileWriteLine($s_Log_File, _Current_Moment() & "Info: Internet Download Manager Is Closed By User.")
 				Else
 					FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Could Not Closed.")
 				EndIf
 			Case $iMsgBoxAnswer = 7 ;No
-				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Is Running Now...User Selected No")
+				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Is Running. User Selected No.")
 				MsgBox(48, "Warning", "If Some File is Locked By IDM Backup/Restore Process Will Not Work Correctly.", 0, $ParentWin)
 		EndSelect
+	Else
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Internet Download Manager Is Not Running.")
 	EndIf
-	FileWriteLine($s_Log_File, "")
 EndFunc   ;==>_CheckIDMProcess
 
 Func _LogProfilePaths()
-	FileWriteLine($s_Log_File, "============================= Profile and Paths Assignment =============================")
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $AppDataIDMFolder= " & '"' & $s_AppDataIDMFolder & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_DwnlData_Folder= " & '"' & $s_DwnlData_Folder & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_DwnlData_Folder_= " & '"' & $s_DwnlData_Folder_ & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Setting File $s_Setting_File= " & '"' & $s_Setting_File & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Log File $s_Log_File= " & '"' & $s_Log_File & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Backup Path $s_Backup_Dir= " & '"' & $s_Backup_Dir & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: INI File $s_ini_File= " & '"' & $s_ini_File & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Reg File $s_reg_File= " & '"' & $s_reg_File & '"')
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "============================= Check Profile =============================")
+
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $AppDataIDMFolder= " & @TAB & '"' & $s_AppDataIDMFolder & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_DwnlData_Folder= " & @TAB & '"' & $s_DwnlData_Folder & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_DwnlData_Folder_= " & @TAB & '"' & $s_DwnlData_Folder_ & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Setting File $s_Setting_File= " & @TAB & @TAB & '"' & $s_Setting_File & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Log File $s_Log_File= " & @TAB & @TAB & @TAB & '"' & $s_Log_File & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Backup Path $s_Backup_Dir= " & @TAB & @TAB & '"' & $s_Backup_Dir & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: INI File $s_ini_File= " & @TAB & @TAB & @TAB & '"' & $s_ini_File & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Reg File $s_reg_File= " & @TAB & @TAB & @TAB & '"' & $s_reg_File & '"')
 	FileWriteLine($s_Log_File, "")
 EndFunc   ;==>_LogProfilePaths
 
 Func _CheckCmdLine()
-
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "============================= Check Command Line =============================")
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Checking Command Line: " & $CmdLine[0])
 
 	Switch $CmdLine[0]
 		Case 0
+			_CheckSelfProcess()
+			_CheckIni()
+			_CheckComponment()
+			_CheckIDMProcess()
+			_LogProfilePaths()
 			_RunIBM()
 		Case 1
 			Switch $CmdLine[1]
 				Case "swlm"
+					_CheckSelfProcess()
+					_CheckIni()
+					_CheckComponment()
+					_CheckIDMProcess()
+					_LogProfilePaths()
 					_RunILM()
 				Case "swdc"
+					_CheckSelfProcess()
+					_CheckIni()
+					_CheckComponment()
+					_CheckIDMProcess()
+					_LogProfilePaths()
 					_SwCleanerGUI()
 				Case "swpwc"
+					_CheckSelfProcess()
+					_CheckIni()
+					_CheckComponment()
+					_CheckIDMProcess()
+					_LogProfilePaths()
 					_SwPwCleanerGUI()
 				Case "swft"
+					_CheckSelfProcess()
+					_CheckIni()
+					_CheckComponment()
+					_CheckIDMProcess()
+					_LogProfilePaths()
 					_SwFileTypeGUI()
 				Case Else
-					_SwCMDLineMSGBOX()
+					If FileExists($CmdLine[1]) Then
+						_CheckSelfProcess()
+						_CheckIni()
+						_CheckComponment()
+						_CheckIDMProcess()
+						_LogProfilePaths()
+						_SwBMGUI()
+						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+						GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
+						GUICtrlSetData($h_Input_Restore_Path, $CmdLine[1])
+						GUICtrlSetState($h_TabSheet2, $GUI_SHOW)
+						_MainBM()
+					Else
+						_SwCMDLineMSGBOX()
+					EndIf
 			EndSwitch
 		Case 2
-			_RunIBM()
 			Switch $CmdLine[1]
 				Case "backup"
 					If FileExists($CmdLine[1]) Then
 						If Not FileDelete($CmdLine[2]) Then
+							_CheckSelfProcess()
+							_CheckIni()
+							_CheckComponment()
+							_CheckIDMProcess()
+							_LogProfilePaths()
+							_SwBMGUI()
 							GUICtrlSetState($h_Button_Backup, $GUI_DISABLE)
 							GUICtrlSetData($h_Input_Backup_Path, "")
 							_GUICtrlStatusBar_SetText($h_Status_Info, "Error: File Could Not Deleted")
@@ -520,10 +553,17 @@ Func _CheckCmdLine()
 					EndIf
 				Case "restore"
 					If FileExists($CmdLine[1]) Then
+						_CheckSelfProcess()
+						_CheckIni()
+						_CheckComponment()
+						_CheckIDMProcess()
+						_LogProfilePaths()
+						_SwBMGUI()
 						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 						GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
 						GUICtrlSetData($h_Input_Restore_Path, $CmdLine[1])
 						GUICtrlSetState($h_TabSheet2, $GUI_SHOW)
+						_MainBM()
 					Else
 						MsgBox(16, "Error", "File Not Exists:" & @CRLF & $CmdLine[1], 0, $hGUI_BM)
 						FileWriteLine($s_Log_File, _Current_Moment() & "Error: File Not Exists: " & $CmdLine[2])
@@ -951,13 +991,14 @@ Func _SwBMGUI()
 	#endregion Help ;============================================================================================== Help:
 
 	GUICtrlCreateTabItem("")
-	#region Info Label
-;~ 	$h_Label_Info = GUICtrlCreateLabel("INFO: Full Backup Selected", 12, 253, 413, 17)
 
+	#region Info Label
 	Local $aParts[3] = [400, 650]
 	Local $aText[3] = ["INFO: Ready", @TAB & ""]
 	$h_Status_Info = _GUICtrlStatusBar_Create($hGUI_BM, $aParts, $aText)
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo)
 	#endregion Info Label
+
 	#endregion ### END Koda GUI section ###
 	GUISetState(@SW_SHOW)
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Window Created: " & $s_Win_Title_BM & " With Error Code: " & @error)
@@ -1604,24 +1645,30 @@ Func _SwHistory()
 		_SwEditGUI($s_History_File, "Version History")
 	Else
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: history.txt Not Found.")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 	EndIf
 EndFunc   ;==>_SwHistory
 
 Func _UpdateCheck()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Checking Update Please Wait...")
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 	If _IsInternetConnectedEx() Then
 		Local $Update_VER = InetRead("http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/update.txt", 1)
 		Switch BinaryToString($Update_VER)
 			Case ""
-				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Time Out! Or server May be Unviable")
+				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
+				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", $s_Current_Version
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: You Have Most Recent Version.")
+				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled);StatusCompled
 			Case Else
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
+				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 				ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
 		EndSwitch
 	Else
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Internet Connection Could Not Found")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 	EndIf
 EndFunc   ;==>_UpdateCheck
 
@@ -1629,9 +1676,12 @@ Func _ShellInstall()
 	_ShellFile_Install("Restore IDM Backup", "ibf", @ScriptName, @ScriptFullPath, @ScriptFullPath, 17, False, False)
 	If @error Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Association NOT Created.")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 	Else
 		GUICtrlSetState($h_Button_Associate_Setting, $GUI_DISABLE)
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Info: Association Created.")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled);StatusCompled
+		DllCall("shell32.dll", "none", "SHChangeNotify", "long", 0x8000000, "uint", BitOR(0x0, 0x1000), "ptr", 0, "ptr", 0)
 	EndIf
 EndFunc   ;==>_ShellInstall
 
@@ -1681,16 +1731,19 @@ Func _ChooseAppDataBackupFolder()
 	If _FileIsPathValid($s_AppDataIDMFolder) = "True" Then ;User Selected valid path
 		If StringRight($s_AppDataIDMFolder, 5) = "\IDM\" Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 			GUICtrlSetData($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
 			IniWrite($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder)
 			GUICtrlSetTip($h_Label_BrowseAppDataFolder_Setting, $s_AppDataIDMFolder)
 		Else
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Please Choose Correct Folder Named & 'IDM\'")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 			$s_AppDataIDMFolder = GUICtrlRead($h_Label_BrowseAppDataFolder_Setting)
 		EndIf
 	Else
 		$s_AppDataIDMFolder = GUICtrlRead($h_Label_BrowseAppDataFolder_Setting)
 		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 	EndIf
 EndFunc   ;==>_ChooseAppDataBackupFolder
 
@@ -1703,17 +1756,20 @@ Func _ChooseDwnlDataBackupFolder()
 	If _FileIsPathValid($s_DwnlData_Folder) = "True" Then ;User Selected valid path
 		If StringRight($s_DwnlData_Folder, 10) = "\DwnlData\" Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 			GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
 			IniWrite($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder)
 			$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 			GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
 		Else
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Please Choose Correct Folder Named & 'DwnlData\'")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 			$s_DwnlData_Folder = GUICtrlRead($h_Label_DwnlDataFolder_Setting) ;contain back "\"
 			$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 		EndIf
 	Else
 		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 		$s_DwnlData_Folder = GUICtrlRead($h_Label_DwnlDataFolder_Setting) ;contain back "\"
 		$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 	EndIf
@@ -1738,7 +1794,8 @@ Func _OpenLog()
 	If FileExists($s_Log_File) Then
 		ShellExecute($s_Log_File)
 	Else
-		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: File Could Not Found.Please Choose Correct Location in Setting Tab.")
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: File Could Not Found. Please Choose Correct Location in Setting Tab.")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 	EndIf
 EndFunc   ;==>_OpenLog
 
@@ -1759,20 +1816,25 @@ EndFunc   ;==>_RestoreDefaultSetting
 #region Backup
 Func _ChooseBackupFile()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
+
 	Local $s_Backup_File = FileSaveDialog("Save Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 18, "IDMbackup" & @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & ".ibf", $hGUI_BM)
 	If $s_Backup_File <> "" And StringRight($s_Backup_File, 4) <> ".ibf" Then $s_Backup_File &= ".ibf"
 
 	If @error Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 	Else
 		If FileExists($s_Backup_File) Then
 			If FileDelete($s_Backup_File) = 0 Then
 				GUICtrlSetState($h_Button_Backup, $GUI_DISABLE)
 				GUICtrlSetData($h_Input_Backup_Path, "")
 				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: File Could Not Deleted")
+				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 			Else
 				GUICtrlSetState($h_Button_Backup, $GUI_ENABLE)
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 				GUICtrlSetData($h_Input_Backup_Path, $s_Backup_File)
 			EndIf
 		Else
@@ -1786,6 +1848,7 @@ Func _Backup()
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= Backup Session Started =============================")
 	_ControlUpdateBusy()
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWorking);StatusWorking
 	_CleanINInReg()
 
 	#region ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
@@ -1809,6 +1872,7 @@ Func _Backup()
 			And GUICtrlRead($h_Checkbox_Listl_Backup) = $GUI_UNCHECKED _
 			And GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_UNCHECKED Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Select Backup Type")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
 		_ControlUpdateDefault()
 		Return SetError(1)
 	EndIf
@@ -1818,11 +1882,13 @@ Func _Backup()
 		$s_Password = GUICtrlRead($h_Input_Password_Backup)
 		If $s_Password = "" Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password is Empty")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
 			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password is Empty")
 			_ControlUpdateDefault()
 			Return SetError(1)
 		ElseIf StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
 			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
 			Return SetError(1)
 		Else
@@ -1838,7 +1904,7 @@ Func _Backup()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Checking : Drive Space Please Wait...")
 	If DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) < DirGetSize($s_AppDataIDMFolder) / 1024 / 1024 Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Not Enough  Free Space on Drive. +" & _sGetFileSizeConv(DirGetSize($s_AppDataIDMFolder) - DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) * 1024 * 1024) & " Required")
-
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 		FileWriteLine($s_Log_File, _Current_Moment() & _
 				"Error: Not Enough  Free Space on Drive " & _sDriveGetFromPath($s_Backup_File) & _
 				" Free Space:" & _sGetFileSizeConv((DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) * 1024 * 1024)) & _
@@ -1851,6 +1917,7 @@ Func _Backup()
 	#region ;/Check registry and count--->
 	If Not _RegKeyExists($s_regpath_IDM) Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Registry Entry Is Empty. Nothing To Backup")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 		FileWriteLine($s_Log_File, _Current_Moment() & "Error: Registry Entry Is Empty. Nothing To Backup !")
 		_ControlUpdateDefault()
 		Return SetError(1)
@@ -1894,6 +1961,7 @@ Func _Backup()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: User Selected List Backup")
 
 		IniWrite($s_ini_File, "Default", "Mode", "List")
+
 		;Custom Backup
 	Else
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: User Selected Custom Backup")
@@ -1911,33 +1979,42 @@ Func _Backup()
 
 	_ResetDataAray($aData)
 
+	Local $i_DwnldataNo = 0
 	If $b_DwnlData_Folder = True Then
-		If FileExists($s_DwnlData_Folder) Then
-			$aData[0] = $s_DwnlData_Folder
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_DwnlData_Folder " & "=" & ' "' & $s_DwnlData_Folder & '" ')
-			IniWrite($s_ini_File, "Default", "DwnlData_Folder", True)
+		Local $aPath = _aGetTempPathFolderEx()
+		If @error Then
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: Folder Does Not Exists= " & '"' & $s_DwnlData_Folder & '"')
+			IniWrite($s_ini_File, "Default", "DwnlData_Folder", False)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $s_DwnlData_Folder & '"')
+
+			For $i = 0 To UBound($aPath) - 1
+				$aData[$i] = $aPath[$i]
+				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_DwnlData_Folder_" & $i & "=" & ' "' & $aPath[$i] & '" ')
+			Next
+
+			_ArrayDisplay($aData)
+			IniWrite($s_ini_File, "Default", "DwnlData_Folder", True)
+
+			$i_DwnldataNo = UBound($aPath) - 1
+			ReDim $aData[$i_DwnldataNo + 14]
 		EndIf
-	Else
-		IniWrite($s_ini_File, "Default", "DwnlData_Folder", False)
 	EndIf
 
 	If $b_Grabber_Folder = True Then
 		If FileExists($Grabber_Folder) Then
-			$aData[1] = $Grabber_Folder
+			$aData[1 + $i_DwnldataNo] = $Grabber_Folder
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Grabber_Folder " & "=" & ' "' & $Grabber_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "Grabber_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $Grabber_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: Folder Does Not Exists= " & '"' & $Grabber_Folder & '"')
 		EndIf
 
 		If FileExists($GrabberData_Folder) Then
-			$aData[2] = $GrabberData_Folder
+			$aData[2 + $i_DwnldataNo] = $GrabberData_Folder
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GrabberData_Folder " & "=" & ' "' & $GrabberData_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "GrabberData_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $GrabberData_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: Folder Does Not Exists= " & '"' & $GrabberData_Folder & '"')
 		EndIf
 	Else
 		IniWrite($s_ini_File, "Default", "Grabber_Folder", False)
@@ -1946,11 +2023,11 @@ Func _Backup()
 
 	If $b_Scheduler_Folder = True Then
 		If FileExists($Scheduler_Folder) Then
-			$aData[3] = $Scheduler_Folder
+			$aData[3 + $i_DwnldataNo] = $Scheduler_Folder
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Scheduler_Folder " & "=" & ' "' & $Scheduler_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "Scheduler_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $Scheduler_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: Folder Does Not Exists= " & '"' & $Scheduler_Folder & '"')
 		EndIf
 	Else
 		IniWrite($s_ini_File, "Default", "Scheduler_Folder", False)
@@ -1959,59 +2036,59 @@ Func _Backup()
 	If $b_History_Files = True Then
 
 		If FileExists($UrlHistory_txt_File) Then
-			$aData[4] = $UrlHistory_txt_File
+			$aData[4 + $i_DwnldataNo] = $UrlHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory_txt_File " & "=" & ' "' & $UrlHistory_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $UrlHistory_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $UrlHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($UrlHistory2_txt_File) Then
-			$aData[5] = $UrlHistory2_txt_File
+			$aData[5 + $i_DwnldataNo] = $UrlHistory2_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory2_txt_File " & "=" & ' "' & $UrlHistory2_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $UrlHistory2_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $UrlHistory2_txt_File & '"')
 		EndIf
 
 		If FileExists($GlobalErrors_log_File) Then
-			$aData[6] = $GlobalErrors_log_File
+			$aData[6 + $i_DwnldataNo] = $GlobalErrors_log_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GlobalErrors_log_File " & "=" & ' "' & $GlobalErrors_log_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $GlobalErrors_log_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $GlobalErrors_log_File & '"')
 		EndIf
 
 		If FileExists($urlexclist_dat_File) Then
-			$aData[7] = $urlexclist_dat_File
+			$aData[7 + $i_DwnldataNo] = $urlexclist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $urlexclist_dat_File " & "=" & ' "' & $urlexclist_dat_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $urlexclist_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $urlexclist_dat_File & '"')
 		EndIf
 
 		If FileExists($defextmap_dat_File) Then
-			$aData[8] = $defextmap_dat_File
+			$aData[8 + $i_DwnldataNo] = $defextmap_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $defextmap_dat_File " & "=" & ' "' & $defextmap_dat_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $defextmap_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $defextmap_dat_File & '"')
 		EndIf
 
 		If FileExists($foldresHistory_txt_File) Then
-			$aData[9] = $foldresHistory_txt_File
+			$aData[9 + $i_DwnldataNo] = $foldresHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $foldresHistory_txt_File " & "=" & ' "' & $foldresHistory_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $foldresHistory_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $foldresHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($sts_list_dat_File) Then
-			$aData[10] = $sts_list_dat_File
+			$aData[10 + $i_DwnldataNo] = $sts_list_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $sts_list_dat_File " & "=" & ' "' & $sts_list_dat_File & '" ')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $sts_list_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $sts_list_dat_File & '"')
 		EndIf
 
 		If FileExists($cnlurllist_dat_File) Then
-			$aData[11] = $cnlurllist_dat_File
+			$aData[11 + $i_DwnldataNo] = $cnlurllist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $cnlurllist_dat_File " & "=" & ' "' & $cnlurllist_dat_File & '" ')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $cnlurllist_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $cnlurllist_dat_File & '"')
 		EndIf
 
 		IniWrite($s_ini_File, "Default", "History_Files", True)
@@ -2021,24 +2098,26 @@ Func _Backup()
 
 	#region ;/add INI--->
 	If FileExists($s_ini_File) Then
-		$aData[12] = $s_ini_File
+		$aData[12 + $i_DwnldataNo] = $s_ini_File
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_ini_File & '"')
 	Else
-		$aData[12] = ""
-		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_ini_File & '"')
+		$aData[12 + $i_DwnldataNo] = ""
+		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $s_ini_File & '"')
 	EndIf
 	#endregion ;/add INI--->
 
 	#region ;/add registry--->
 	If FileExists($s_reg_File) Then
-		$aData[13] = $s_reg_File
+		$aData[13 + $i_DwnldataNo] = $s_reg_File
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_reg_File & '"')
 	Else
-		$aData[13] = ""
-		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_reg_File & '"')
+		$aData[13 + $i_DwnldataNo] = ""
+		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $s_reg_File & '"')
 	EndIf
 	#endregion ;/add registry--->
 	#endregion ;/Build Data array and Write INI--->
+
+	_ArrayDisplay($aData)
 
 	#region ;/add Data Files--->
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Adding: Data Files Please Wait...")
@@ -2054,9 +2133,11 @@ Func _Backup()
 	_7ZipShutdown()
 	#endregion ;/add Data Files--->
 
+	ReDim $aData[14]
 	_CleanINInReg()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Done")
 	_ControlUpdateDefault()
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 	If $b_OpenFolder Then _SelectFile($s_Backup_File)
 	FileWriteLine($s_Log_File, "============================= Backup Session Ended =============================")
 EndFunc   ;==>_Backup
@@ -2071,6 +2152,7 @@ Func _ChooseRestoreFile()
 		GUICtrlSetData($h_Input_Restore_Path, $s_Restore_File)
 	EndIf
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 EndFunc   ;==>_ChooseRestoreFile
 
 Func _Restore()
@@ -2078,6 +2160,7 @@ Func _Restore()
 	FileWriteLine($s_Log_File, "============================= Restore Session Started =============================")
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Restoring...")
 	_ControlUpdateBusy()
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWorking);StatusWorking
 	_CleanINInReg()
 
 	#region ;/Define Some variable: $s_Restore_File
@@ -2087,6 +2170,7 @@ Func _Restore()
 	If Not FileExists($s_Restore_File) Then
 		_ControlUpdateDefault()
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Backup File Not Found")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 		Return SetError(1)
 	EndIf
 
@@ -2097,6 +2181,7 @@ Func _Restore()
 			And GUICtrlRead($h_Checkbox_Listl_Restore) = $GUI_UNCHECKED _
 			And GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_UNCHECKED Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Select Restore Type")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 		_ControlUpdateDefault()
 		Return SetError(1)
 	EndIf
@@ -2106,6 +2191,7 @@ Func _Restore()
 		$s_Password = GUICtrlRead($h_Input_Password_Restore)
 		If StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
 			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
 			Return SetError(1)
 		EndIf
@@ -2146,17 +2232,20 @@ Func _Restore()
 		If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
 			If GUICtrlRead($h_Input_Password_Restore) = "" Then
 				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Enter Password")
+				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 				FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
 				_ControlUpdateDefault()
 				Return SetError(1)
 			Else
 				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Incorrect Password or File May Be Damaged.")
+				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 				FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
 				_ControlUpdateDefault()
 				Return SetError(1)
 			EndIf
 		Else
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Check Checkbox --> Enter Password")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
 			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Check Checkbox and Enter The Password")
 			_ControlUpdateDefault()
 			Return SetError(1)
@@ -2499,9 +2588,10 @@ Func _Restore()
 	_CleanINInReg()
 
 	If $b_RestartIDM Then _RunIDMexe()
-	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Done")
 
 	_ControlUpdateDefault()
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Done")
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 	FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")
 EndFunc   ;==>_Restore
 #endregion Restore
@@ -2517,7 +2607,7 @@ Func _SwCMDLineMSGBOX()
 	MsgBox(64, "Info", "Command Line Parameters:" & @CRLF & _
 			"" & @CRLF & _
 			"USAGE:" & @CRLF & _
-			"IDM Backup Manager.exe 	[swlm] [swdc] [swpwc] [swft] " & @CRLF & _
+			"IDM Backup Manager.exe 	[swlm] [swdc] [swpwc] [swft]" & @CRLF & _
 			"			[backup <file path>]" & @CRLF & _
 			"			[restore <file path>]" & @CRLF & _
 			"" & @CRLF & _

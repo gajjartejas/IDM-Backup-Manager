@@ -1,7 +1,6 @@
 v0.9.8
 * To Repair Extract Problem...done
 - to Remove Unsude Icons...done
-* use intget(new way to update,check for update on startup)
 + sw startup licence for reset(use function)...done
 * Log could not open. on first install solve it...done
 * Data cleaner: progress marquee  on data remove...done
@@ -9,7 +8,11 @@ v0.9.8
 * Progress backup and restore...done
 * _CheckCmdLine...done
 + Normal Attributes to delete file...done
+* Use Short name for process...done
 + Log File Improvement
++ setting only backup
+* use intget(new way to update,check for update on startup)
+
 
 v0.9.7
 + to do support link on build

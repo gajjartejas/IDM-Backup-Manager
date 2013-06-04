@@ -2,8 +2,9 @@ v0.9.8 April 24th, 2013
 • Added Command Line Support.
 • Added 64 bit Operating System Support.
 • Added Custom Component Restore.
-• Added Append/Merge Profile.
+• Added Append/Merge Profile on Restore.
 • Added Open Folder after Backup.
+• Added Statusbar.
 • Fixed IDM Restart.
 • Fixed Restore taking too long time on High Compressed Backup File.
 • Improved Data Cleaner.

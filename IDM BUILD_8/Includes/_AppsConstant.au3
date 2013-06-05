@@ -71,11 +71,11 @@ Global $h_Button_Update_Help
 Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
 
 Global $h_Status_Info
-Global $hIcons_StatusInfo = _WinAPI_ShellExtractIcon(@ScriptFullPath, 22, 16, 16);
-Global $hIcons_StatusWarning = _WinAPI_ShellExtractIcon(@ScriptFullPath, 23, 16, 16)
-Global $hIcons_StatusCompled = _WinAPI_ShellExtractIcon(@ScriptFullPath, 24, 16, 16)
-Global $hIcons_StatusError = _WinAPI_ShellExtractIcon(@ScriptFullPath, 25, 16, 16)
-Global $hIcons_StatusWorking = _WinAPI_ShellExtractIcon(@ScriptFullPath, 26, 16, 16)
+Global $hIcons_StatusInfo = _WinAPI_ShellExtractIcon(@ScriptFullPath, 19, 16, 16);
+Global $hIcons_StatusWarning = _WinAPI_ShellExtractIcon(@ScriptFullPath, 20, 16, 16)
+Global $hIcons_StatusCompled = _WinAPI_ShellExtractIcon(@ScriptFullPath, 21, 16, 16)
+Global $hIcons_StatusError = _WinAPI_ShellExtractIcon(@ScriptFullPath, 22, 16, 16)
+Global $hIcons_StatusWorking = _WinAPI_ShellExtractIcon(@ScriptFullPath, 23, 16, 16)
 
 Global $nMsg
 Global $hGUI_BM

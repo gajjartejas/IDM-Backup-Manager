@@ -3,7 +3,6 @@
 #AutoIt3Wrapper_Outfile=idmbm.exe
 #AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_UseUpx=n
-#AutoIt3Wrapper_Res_requestedExecutionLevel=highestAvailable
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 #AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", Dialog, 1000,
@@ -15,6 +14,9 @@
 #AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", VersionInfo, 1,
 #AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", 24, 1,
 #AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -add "%out%", "%out%", Resources\idmbm.res,,,
+#AutoIt3Wrapper_Run_After=del "IDM Backup Manager_Obfuscated.au3"
+#AutoIt3Wrapper_Run_After=del Utilities\ResHacker.ini
+#AutoIt3Wrapper_Run_After=del Utilities\ResHacker.log
 #AutoIt3Wrapper_Run_Obfuscator=y
 #Obfuscator_Parameters=/striponly
 #AutoIt3Wrapper_Versioning=v
@@ -31,7 +33,8 @@
 #include "Includes\_ShellFile_Install.au3"
 #include "Includes\_7Zip.au3"
 #include "Includes\_ProgressMarquee.au3"
-#include "Includes\_IDM List Manager.au3"#endregion Includes
+#include "Includes\_IDM List Manager.au3"
+#endregion Includes
 
 _CheckCmdLine()
 
@@ -773,7 +776,7 @@ Func _SwBMGUI()
 	#region backup ;==============================================================================================Backup:
 
 	$h_TabSheet1 = GUICtrlCreateTabItem("Backup Data")
-	GUICtrlSetImage(-1, @ScriptFullPath, -5)
+	GUICtrlSetImage(-1, @ScriptFullPath, -2)
 	GUICtrlCreateGroup("Backup Location", 24, 44, 390, 55)
 	GUICtrlSetFont(-1, 2, 800, 0, "MS Sans Serif")
 
@@ -781,7 +784,7 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$h_Button_Browse_Backup = GUICtrlCreateButton("", 376, 63, 30, 23)
-	_AET_ButtonSetIcon(-1, 18, 16, 16, 4)
+	_AET_ButtonSetIcon(-1, 15, 16, 16, 4)
 	GUICtrlSetTip(-1, "Browse For Backup File")
 
 	GUICtrlCreateGroup("Options", 24, 104, 390, 100)
@@ -816,7 +819,7 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$h_Button_Backup = GUICtrlCreateButton("Backup Now", 319, 217, 95, 25)
-	_AET_ButtonSetIcon(-1, 11, 16, 16, 0)
+	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
 	GUICtrlSetTip(-1, "Backup Now")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 
@@ -825,14 +828,14 @@ Func _SwBMGUI()
 	#region Restore ;==============================================================================================Restore:
 
 	$h_TabSheet2 = GUICtrlCreateTabItem("Restore Data")
-	GUICtrlSetImage(-1, @ScriptFullPath, -14)
+	GUICtrlSetImage(-1, @ScriptFullPath, -11)
 	GUICtrlCreateGroup("Restore Location", 24, 44, 390, 55)
 	GUICtrlSetFont(-1, 2, 800, 0, "MS Sans Serif")
 
 	$h_Input_Restore_Path = GUICtrlCreateInput("", 33, 64, 336, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 
 	$h_Button_Browse_Restore = GUICtrlCreateButton("", 376, 63, 30, 23)
-	_AET_ButtonSetIcon(-1, 5, 16, 16, 4)
+	_AET_ButtonSetIcon(-1, 2, 16, 16, 4)
 	GUICtrlSetTip(-1, "Browse For Restore File")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -874,7 +877,7 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$h_Button_Restore = GUICtrlCreateButton("Restore Now", 319, 217, 95, 25)
-	_AET_ButtonSetIcon(-1, 11, 16, 16, 0)
+	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
 	GUICtrlSetTip(-1, "Restore Now")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	#endregion Restore ;==============================================================================================Restore:
@@ -882,7 +885,7 @@ Func _SwBMGUI()
 	#region Tools ;============================================================================================== Tools:
 
 	$h_TabSheet3 = GUICtrlCreateTabItem("Tools")
-	GUICtrlSetImage(-1, @ScriptFullPath, -16)
+	GUICtrlSetImage(-1, @ScriptFullPath, -13)
 
 	GUICtrlCreateGroup("Tools", 24, 44, 390, 160)
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
@@ -904,18 +907,18 @@ Func _SwBMGUI()
 
 	#region Setting ;============================================================================================== Setting:
 	$h_TabSheet4 = GUICtrlCreateTabItem("Setting")
-	GUICtrlSetImage(-1, @ScriptFullPath, -20)
+	GUICtrlSetImage(-1, @ScriptFullPath, -17)
 
 	GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
 
 	$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton("Log File Folder:", 32, 60, 107, 25)
-	_AET_ButtonSetIcon(-1, 5, 16, 16, 0)
+	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 
 	$h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 144, 64, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_LogFile_Setting))
 
 	$h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton("Backup Folder:", 32, 92, 107, 25)
-	_AET_ButtonSetIcon(-1, 5, 16, 16, 0)
+	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 
 	$h_Label_BrowseDataBackupFolder_Setting = GUICtrlCreateInput($s_Backup_Dir, 144, 96, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseDataBackupFolder_Setting))
@@ -925,13 +928,13 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("Default IDM Profile", 24, 128, 393, 81)
 
 	$h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton("AppData Folder:", 32, 146, 107, 25)
-	_AET_ButtonSetIcon(-1, 5, 16, 16, 0)
+	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 
 	$h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 144, 150, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseAppDataFolder_Setting))
 
 	$h_Button_DwnlDataFolder_Setting = GUICtrlCreateButton("DwnlData Folder:", 32, 178, 107, 25)
-	_AET_ButtonSetIcon(-1, 5, 16, 16, 0)
+	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 
 	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateInput($s_DwnlData_Folder, 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_DwnlDataFolder_Setting))
@@ -939,19 +942,19 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$h_Button_Open_Log_Setting = GUICtrlCreateButton("", 274, 216, 30, 23)
-	_AET_ButtonSetIcon(-1, 21, 16, 16, 4)
+	_AET_ButtonSetIcon(-1, 18, 16, 16, 4)
 	GUICtrlSetTip(-1, "Open Log File")
 
 	$h_Button_Associate_Setting = GUICtrlCreateButton("", 310, 216, 30, 23)
-	_AET_ButtonSetIcon(-1, 17, 16, 16, 4)
+	_AET_ButtonSetIcon(-1, 14, 16, 16, 4)
 	GUICtrlSetTip(-1, "Association .IBF File")
 
 	$h_Button_More_Setting = GUICtrlCreateButton("", 346, 216, 30, 23)
-	_AET_ButtonSetIcon(-1, 19, 16, 16, 4)
+	_AET_ButtonSetIcon(-1, 16, 16, 16, 4)
 	GUICtrlSetTip(-1, "More Setting")
 
 	$h_Button_RestoreDefault_Setting = GUICtrlCreateButton("", 382, 216, 30, 23)
-	_AET_ButtonSetIcon(-1, 20, 16, 16, 4)
+	_AET_ButtonSetIcon(-1, 17, 16, 16, 4)
 	GUICtrlSetTip(-1, "Restore Default Setting")
 
 	GUICtrlCreateTabItem("")
@@ -960,28 +963,28 @@ Func _SwBMGUI()
 	#region Help ;============================================================================================== Help:
 
 	$h_TabSheet5 = GUICtrlCreateTabItem("Help")
-	GUICtrlSetImage(-1, @ScriptFullPath, -8)
+	GUICtrlSetImage(-1, @ScriptFullPath, -5)
 
 	GUICtrlCreateGroup("Help and Update", 24, 44, 390, 160)
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
 	$h_Button_Website_Help = GUICtrlCreateButton("  Website", 37, 126, 100, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 8, 24, 24, 0)
+	_AET_ButtonSetIcon(-1, 5, 24, 24, 0)
 
 	$h_Button_Help_Help = GUICtrlCreateButton("  Help", 37, 66, 100, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 7, 24, 24, 0)
+	_AET_ButtonSetIcon(-1, 4, 24, 24, 0)
 
 	$h_Button_Licence_Help = GUICtrlCreateButton("  License", 37, 96, 100, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 9, 24, 24, 0)
-
-	$h_Button_Version_History_Help = GUICtrlCreateButton("  Ver History", 146, 66, 100, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 10, 24, 24, 0)
-
-	$h_Button_Forum_Help = GUICtrlCreateButton("  Forum", 146, 96, 100, 30, $BS_left)
 	_AET_ButtonSetIcon(-1, 6, 24, 24, 0)
 
+	$h_Button_Version_History_Help = GUICtrlCreateButton("  Ver History", 146, 66, 100, 30, $BS_left)
+	_AET_ButtonSetIcon(-1, 7, 24, 24, 0)
+
+	$h_Button_Forum_Help = GUICtrlCreateButton("  Forum", 146, 96, 100, 30, $BS_left)
+	_AET_ButtonSetIcon(-1, 3, 24, 24, 0)
+
 	$h_Button_Update_Help = GUICtrlCreateButton("  Update", 146, 126, 100, 30, $BS_left);1111
-	_AET_ButtonSetIcon(-1, 16, 24, 24, 0)
+	_AET_ButtonSetIcon(-1, 13, 24, 24, 0)
 
 	GUICtrlCreatePic("", 260, 55, 150, 145)
 	GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
@@ -1135,11 +1138,11 @@ Func _SwCleanerGUI()
 	Local $Progress1 = GUICtrlCreateProgress(10, 225, 96, 21)
 
 	Local $Button_Clean = GUICtrlCreateButton("", 155, 215, 40, 40)
-	_AET_ButtonSetIcon(-1, 12, 32, 32, 0)
+	_AET_ButtonSetIcon(-1, 9, 32, 32, 0)
 	GUICtrlSetTip(-1, "Clean The Files/Folders", "Clean", 1, 1)
 
 	Local $Button_Analyze = GUICtrlCreateButton("", 110, 215, 40, 40)
-	_AET_ButtonSetIcon(-1, 14, 32, 32, 0)
+	_AET_ButtonSetIcon(-1, 11, 32, 32, 0)
 	GUICtrlSetTip(-1, "Analyze Size of Files/Folders To Clean", "Analyze", 1, 1)
 	GUISetState(@SW_SHOW)
 	FileWriteLine($s_Log_File, "")
@@ -1699,9 +1702,19 @@ Func _ChooseLogFile()
 	$s_Log_File = FileSaveDialog("Save Log File", _sPath_Last_Remove($s_Log_File), "Log File (*.Log)", 2, "LogFile.log", $hGUI_BM)
 	If $s_Log_File <> "" And StringRight($s_Log_File, 4) <> ".log" Then $s_Log_File &= ".log"
 	If Not @error Then
-		GUICtrlSetData($h_Label_LogFile_Setting, $s_Log_File)
-		IniWrite($s_Setting_File, "Default Paths", "Log_File", $s_Log_File)
-		GUICtrlSetTip($h_Label_LogFile_Setting, $s_Log_File)
+		; Check if file opened for writing OK
+		Local $file = FileOpen($s_Log_File, 1)
+		If $file <> -1 Then
+			GUICtrlSetData($h_Label_LogFile_Setting, $s_Log_File)
+			IniWrite($s_Setting_File, "Default Paths", "Log_File", $s_Log_File)
+			GUICtrlSetTip($h_Label_LogFile_Setting, $s_Log_File)
+		Else
+			;Error
+			$s_Log_File = GUICtrlRead($h_Label_LogFile_Setting)
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Unable To Save File. Please Choose Different Location.")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusInfo
+		EndIf
+		FileClose($file)
 	Else
 		$s_Log_File = GUICtrlRead($h_Label_LogFile_Setting)
 	EndIf

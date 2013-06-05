@@ -301,6 +301,9 @@ Func _MainBM()
 			Case $h_Button_DwnlDataFolder_Setting
 				_ChooseDwnlDataBackupFolder()
 
+			Case $h_Label_DwnlDataFolder_Setting
+				_ChangeDwnlDataBackupFolder()
+
 			Case $h_Button_Open_Log_Setting
 				_OpenLog()
 
@@ -936,8 +939,18 @@ Func _SwBMGUI()
 	$h_Button_DwnlDataFolder_Setting = GUICtrlCreateButton("DwnlData Folder:", 32, 178, 107, 25)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 
-	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateInput($s_DwnlData_Folder, 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
-	GUICtrlSetTip(-1, GUICtrlRead($h_Label_DwnlDataFolder_Setting))
+	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateCombo("", 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_COMBO, $CBS_SIMPLE))
+	#region Set Data
+	Local $s_all_DwnlData_Folder = _aGetTempPathFolderEx()
+	Local $i = 0
+	If Not @error Then
+		For $i = 0 To UBound($s_all_DwnlData_Folder) - 1
+			GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_all_DwnlData_Folder[$i])
+		Next
+	EndIf
+	GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
+	#endregion Set Data
+	GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, GUICtrlRead($h_Label_DwnlDataFolder_Setting))
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -1770,7 +1783,7 @@ Func _ChooseDwnlDataBackupFolder()
 		If StringRight($s_DwnlData_Folder, 10) = "\DwnlData\" Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
-			GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
+			GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder, $s_DwnlData_Folder)
 			IniWrite($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder)
 			$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 			GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
@@ -1787,6 +1800,13 @@ Func _ChooseDwnlDataBackupFolder()
 		$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
 	EndIf
 EndFunc   ;==>_ChooseDwnlDataBackupFolder
+
+Func _ChangeDwnlDataBackupFolder()
+	$s_DwnlData_Folder = GUICtrlRead($h_Label_DwnlDataFolder_Setting)
+	IniWrite($s_Setting_File, "Profile Paths", "DwnlData_Folder", $s_DwnlData_Folder)
+	$s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
+	GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
+EndFunc   ;==>_ChangeDwnlDataBackupFolder
 
 Func _WriteINI()
 	IniWrite($s_Setting_File, "Position", "x", $i_xWinPos)
@@ -1992,42 +2012,33 @@ Func _Backup()
 
 	_ResetDataAray($aData)
 
-	Local $i_DwnldataNo = 0
 	If $b_DwnlData_Folder = True Then
-		Local $aPath = _aGetTempPathFolderEx()
-		If @error Then
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: Folder Does Not Exists= " & '"' & $s_DwnlData_Folder & '"')
-			IniWrite($s_ini_File, "Default", "DwnlData_Folder", False)
-		Else
-
-			For $i = 0 To UBound($aPath) - 1
-				$aData[$i] = $aPath[$i]
-				FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_DwnlData_Folder_" & $i & "=" & ' "' & $aPath[$i] & '" ')
-			Next
-
-			_ArrayDisplay($aData)
+		If FileExists($s_DwnlData_Folder) Then
+			$aData[0] = $s_DwnlData_Folder
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_DwnlData_Folder " & "=" & ' "' & $s_DwnlData_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "DwnlData_Folder", True)
-
-			$i_DwnldataNo = UBound($aPath) - 1
-			ReDim $aData[$i_DwnldataNo + 14]
+		Else
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $s_DwnlData_Folder & '"')
 		EndIf
+	Else
+		IniWrite($s_ini_File, "Default", "DwnlData_Folder", False)
 	EndIf
 
 	If $b_Grabber_Folder = True Then
 		If FileExists($Grabber_Folder) Then
-			$aData[1 + $i_DwnldataNo] = $Grabber_Folder
+			$aData[1] = $Grabber_Folder
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Grabber_Folder " & "=" & ' "' & $Grabber_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "Grabber_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: Folder Does Not Exists= " & '"' & $Grabber_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $Grabber_Folder & '"')
 		EndIf
 
 		If FileExists($GrabberData_Folder) Then
-			$aData[2 + $i_DwnldataNo] = $GrabberData_Folder
+			$aData[2] = $GrabberData_Folder
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GrabberData_Folder " & "=" & ' "' & $GrabberData_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "GrabberData_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: Folder Does Not Exists= " & '"' & $GrabberData_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $GrabberData_Folder & '"')
 		EndIf
 	Else
 		IniWrite($s_ini_File, "Default", "Grabber_Folder", False)
@@ -2036,11 +2047,11 @@ Func _Backup()
 
 	If $b_Scheduler_Folder = True Then
 		If FileExists($Scheduler_Folder) Then
-			$aData[3 + $i_DwnldataNo] = $Scheduler_Folder
+			$aData[3] = $Scheduler_Folder
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Scheduler_Folder " & "=" & ' "' & $Scheduler_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "Scheduler_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: Folder Does Not Exists= " & '"' & $Scheduler_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exit= " & '"' & $Scheduler_Folder & '"')
 		EndIf
 	Else
 		IniWrite($s_ini_File, "Default", "Scheduler_Folder", False)
@@ -2049,59 +2060,59 @@ Func _Backup()
 	If $b_History_Files = True Then
 
 		If FileExists($UrlHistory_txt_File) Then
-			$aData[4 + $i_DwnldataNo] = $UrlHistory_txt_File
+			$aData[4] = $UrlHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory_txt_File " & "=" & ' "' & $UrlHistory_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $UrlHistory_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $UrlHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($UrlHistory2_txt_File) Then
-			$aData[5 + $i_DwnldataNo] = $UrlHistory2_txt_File
+			$aData[5] = $UrlHistory2_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory2_txt_File " & "=" & ' "' & $UrlHistory2_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $UrlHistory2_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $UrlHistory2_txt_File & '"')
 		EndIf
 
 		If FileExists($GlobalErrors_log_File) Then
-			$aData[6 + $i_DwnldataNo] = $GlobalErrors_log_File
+			$aData[6] = $GlobalErrors_log_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GlobalErrors_log_File " & "=" & ' "' & $GlobalErrors_log_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $GlobalErrors_log_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $GlobalErrors_log_File & '"')
 		EndIf
 
 		If FileExists($urlexclist_dat_File) Then
-			$aData[7 + $i_DwnldataNo] = $urlexclist_dat_File
+			$aData[7] = $urlexclist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $urlexclist_dat_File " & "=" & ' "' & $urlexclist_dat_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $urlexclist_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $urlexclist_dat_File & '"')
 		EndIf
 
 		If FileExists($defextmap_dat_File) Then
-			$aData[8 + $i_DwnldataNo] = $defextmap_dat_File
+			$aData[8] = $defextmap_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $defextmap_dat_File " & "=" & ' "' & $defextmap_dat_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $defextmap_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $defextmap_dat_File & '"')
 		EndIf
 
 		If FileExists($foldresHistory_txt_File) Then
-			$aData[9 + $i_DwnldataNo] = $foldresHistory_txt_File
+			$aData[9] = $foldresHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $foldresHistory_txt_File " & "=" & ' "' & $foldresHistory_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $foldresHistory_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $foldresHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($sts_list_dat_File) Then
-			$aData[10 + $i_DwnldataNo] = $sts_list_dat_File
+			$aData[10] = $sts_list_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $sts_list_dat_File " & "=" & ' "' & $sts_list_dat_File & '" ')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $sts_list_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $sts_list_dat_File & '"')
 		EndIf
 
 		If FileExists($cnlurllist_dat_File) Then
-			$aData[11 + $i_DwnldataNo] = $cnlurllist_dat_File
+			$aData[11] = $cnlurllist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $cnlurllist_dat_File " & "=" & ' "' & $cnlurllist_dat_File & '" ')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $cnlurllist_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exit= " & '"' & $cnlurllist_dat_File & '"')
 		EndIf
 
 		IniWrite($s_ini_File, "Default", "History_Files", True)
@@ -2111,25 +2122,24 @@ Func _Backup()
 
 	#region ;/add INI--->
 	If FileExists($s_ini_File) Then
-		$aData[12 + $i_DwnldataNo] = $s_ini_File
+		$aData[12] = $s_ini_File
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_ini_File & '"')
 	Else
-		$aData[12 + $i_DwnldataNo] = ""
-		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $s_ini_File & '"')
+		$aData[12] = ""
+		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_ini_File & '"')
 	EndIf
 	#endregion ;/add INI--->
 
 	#region ;/add registry--->
 	If FileExists($s_reg_File) Then
-		$aData[13 + $i_DwnldataNo] = $s_reg_File
+		$aData[13] = $s_reg_File
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_reg_File & '"')
 	Else
-		$aData[13 + $i_DwnldataNo] = ""
-		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found Reason: File Does Not Exists= " & '"' & $s_reg_File & '"')
+		$aData[13] = ""
+		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_reg_File & '"')
 	EndIf
 	#endregion ;/add registry--->
 	#endregion ;/Build Data array and Write INI--->
-
 	_ArrayDisplay($aData)
 
 	#region ;/add Data Files--->

@@ -1,10 +1,10 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-#Region    ;************ Includes ************
+#region    ;************ Includes ************
 #include-once
-#Include <WinAPIEx.au3>
+#include <WinAPIEx.au3>
 #include <Array.au3>
 #include "_RegFunc.au3"
-#EndRegion ;************ Includes ************
+#endregion    ;************ Includes ************
 
 #region Common
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
@@ -24,8 +24,10 @@ Global Const $s_License_File = @ScriptDir & "\License.txt"
 Global Const $s_ini_File = @TempDir & "\" & "idm_guest_Setting.ini"
 Global Const $s_reg_File = @TempDir & "\IDMregistry.reg"
 
-;~ Global Const $s_Setting_File = @ScriptDir & "\SettingFile.ini" ;for portable
+;for portable
+;~ Global Const $s_Setting_File = @ScriptDir & "\SettingFile.ini"
 ;~ Global $s_Log_File = @ScriptDir & "\LogFile.log" ;for portable
+
 Global Const $s_Setting_File = @AppDataDir & "\IDM Backup Manager" & "\SettingFile.ini" ;for installer
 Global $s_Log_File = @AppDataDir & "\IDM Backup Manager" & "\LogFile.log" ;for installer
 Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
@@ -35,10 +37,11 @@ Global $b_RestartIDM = 0
 Global $b_OpenFolder = 1
 
 Global $s_AppDataIDMFolder = _sGetAppDataIDMFolder() ;contain back "\"
-Global $s_DwnlData_Folder = _sGetTempPathFolder() ;contain back "\"
-Global $s_DwnlData_Folder_ = _sPath_Last_Remove($s_DwnlData_Folder) ;contain back "\"
+Global $s_TempPath = _sGetTempPathFolder() ;contain back "\"
+Global $DwnlData_Folder = $s_TempPath & "DwnlData\"
+Global $GrabberData_Folder = $s_TempPath & "GrabberData\"
+
 Global $Grabber_Folder = $s_AppDataIDMFolder & "Grabber\"
-Global $GrabberData_Folder = $s_AppDataIDMFolder & "GrabberData\"
 Global $Scheduler_Folder = $s_AppDataIDMFolder & "Scheduler\"
 
 Global $UrlHistory_txt_File = $s_AppDataIDMFolder & "UrlHistory.txt"
@@ -61,7 +64,7 @@ Global $h_Checkbox_Listl_Restore, $h_Checkbox_Full_Restore
 
 Global $h_Button_List_Manager_Tools, $h_Button_Clean_Manager_Tools, $h_Button_Clean_Password_Tools, $h_Button_Cat_Tools
 
-Global $h_Button_BrowseLogFile_Setting, $h_Button_BrowseDataBackupFolder_Setting, $h_Button_BrowseAppDataFolder_Setting, $h_Button_DwnlDataFolder_Setting
+Global $h_Button_BrowseLogFile_Setting, $h_Button_BrowseDataBackupFolder_Setting, $h_Button_BrowseAppDataFolder_Setting, $h_Button_TempDataFolder_Setting
 Global $h_Button_Open_Log_Setting, $h_Button_Associate_Setting, $h_Button_More_Setting, $h_Button_RestoreDefault_Setting
 Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Label_BrowseAppDataFolder_Setting, $h_Label_DwnlDataFolder_Setting
 
@@ -71,7 +74,7 @@ Global $h_Button_Update_Help
 Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
 
 Global $h_Status_Info
-Global $hIcons_StatusInfo = _WinAPI_ShellExtractIcon(@ScriptFullPath, 19, 16, 16);
+Global $hIcons_StatusInfo = _WinAPI_ShellExtractIcon(@ScriptFullPath, 19, 16, 16)
 Global $hIcons_StatusWarning = _WinAPI_ShellExtractIcon(@ScriptFullPath, 20, 16, 16)
 Global $hIcons_StatusCompled = _WinAPI_ShellExtractIcon(@ScriptFullPath, 21, 16, 16)
 Global $hIcons_StatusError = _WinAPI_ShellExtractIcon(@ScriptFullPath, 22, 16, 16)
@@ -125,9 +128,8 @@ Func _sGetTempPathFolder()
 
 	If FileExists($TempPath) Then
 		If StringRight($TempPath, 1) <> "\" Then $TempPath &= "\"
-		$TempPath &= "DwnlData\"
 	Else
-		$TempPath = @AppDataDir & "\" & "IDM" & "\" & "DwnlData\"
+		$TempPath = @AppDataDir & "\IDM\"
 	EndIf
 
 	Return $TempPath
@@ -160,7 +162,7 @@ Func _SwHelp()
 	EndIf
 EndFunc   ;==>_SwHelp
 
-;Return array containging extra past Dwnload Data Path if Exists
+;Return array containging extra past Dwnload Data(Root) Path if Exists
 Func _aGetTempPathFolderEx()
 	If Not _RegKeyExists($s_regpath_IDM) Then Return SetError(1, 0, 0)
 
@@ -176,7 +178,8 @@ Func _aGetTempPathFolderEx()
 
 		$sub = StringInStr($val, "DwnlData", 0, -1)
 		If $sub Then
-			$tPath &= StringLeft($val, $sub + 7) & "|"
+;~ 			$tPath &= StringLeft($val, $sub + 7) & "|"
+			$tPath &= StringLeft($val, $sub - 1) & "|"
 		EndIf
 	WEnd
 

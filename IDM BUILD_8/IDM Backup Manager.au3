@@ -948,7 +948,7 @@ Func _SwBMGUI()
 			GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_all_DwnlData_Folder[$i])
 		Next
 	EndIf
-	GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder)
+	GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_DwnlData_Folder, $s_DwnlData_Folder)
 	#endregion Set Data
 	GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, GUICtrlRead($h_Label_DwnlDataFolder_Setting))
 
@@ -1536,8 +1536,8 @@ Func _iGetMaxKey($s_regpath_IDM)
 		$k += 1
 	WEnd
 	$iMaxKey = _ArrayMax($MaxKey, 1)
-	If @error Then Return SetError(1)
-	Return $iMaxKey
+	If @error Then Return SetError(1, 0, 0)
+	Return $iMaxKey + 1
 EndFunc   ;==>_iGetMaxKey
 
 Func _AppendRegKeys()
@@ -1545,13 +1545,23 @@ Func _AppendRegKeys()
 
 	_FileOrFolderDeleteWithLog($s_reg_File_Tmp)
 
-	Local $iHostKeys = _iGetMaxKey($s_regpath_IDM);expt
-	If @error Then Return SetError(-1)
+	Local $iCounter = 0
+
+	;Try to Get Max Key From Reg if Exists
+	If _RegValueExists($s_regpath_IDM & "\maxID", "maxID") Then
+		$iCounter = RegRead("HKEY_CURRENT_USER\Software\DownloadManager\", "maxID")
+		If @error Then $iCounter = 0
+	EndIf
+
+	If $iCounter = 0 Then
+		$iCounter = _iGetMaxKey($s_regpath_IDM);expt
+		If @error Then Return SetError(1, 0, 0)
+	EndIf
 
 	Local $h_reg_File = FileOpen($s_reg_File, 0);Read
 	Local $h_reg_File_Tmp = FileOpen($s_reg_File_Tmp, 32 + 1);append mode Use Unicode UTF16 Little Endian reading and writing mode.
 
-	Local $iCounter = $iHostKeys + 1
+
 	Local $sLine, $asplit
 
 	; Check if file opened for reading OK
@@ -2599,6 +2609,7 @@ Func _Restore()
 
 	_RegWrite($s_regpath_IDM, "AppDataIDMFolder", $REG_SZ, $s_AppDataIDMFolder)
 	_RegWrite($s_regpath_IDM, "TempPath", $REG_SZ, $s_DwnlData_Folder_)
+	_RegWrite($s_regpath_IDM & "\maxID", "maxID", $REG_DWORD, _iGetMaxKey($s_regpath_IDM))
 	#endregion ;/Restore Host Registry from stored in tmp Registry--->
 
 	#region ;/Remove tmp Registry--->

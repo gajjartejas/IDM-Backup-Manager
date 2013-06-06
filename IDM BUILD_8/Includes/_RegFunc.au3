@@ -2,26 +2,27 @@
 
 #Region    ;************ Includes ************
 #include-once
-#Include <APIConstants.au3>
+#Include <Constants.au3>
+;~ #Include <APIConstants.au3>
 #EndRegion ;************ Includes ************
 ; ===============================================================================================================================
 ; Title:	_RegFunc
 ; Author:	Erik Pilsits
 ; Version:	2.0.7
 ; ===============================================================================================================================
-;~ Global Const $REG_QWORD = 11
+Global Const $REG_QWORD = 11
 
-;~ Global Const $HKEY_CLASSES_ROOT = 0x80000000
-;~ Global Const $HKEY_CURRENT_USER = 0x80000001
-;~ Global Const $HKEY_LOCAL_MACHINE = 0x80000002
-;~ Global Const $HKEY_USERS = 0x80000003
-;~ Global Const $HKEY_CURRENT_CONFIG = 0x80000005
-;~ Global Const $KEY_WRITE = 0x20006
-;~ Global Const $KEY_READ = 0x20019
-;~ Global Const $REG_OPTION_NON_VOLATILE = 0x0000
-;~ Global Const $REG_OPTION_VOLATILE = 0x0001
-;~ Global Const $KEY_WOW64_64KEY = 0x0100
-;~ Global Const $KEY_WOW64_32KEY = 0x0200
+Global Const $HKEY_CLASSES_ROOT = 0x80000000
+Global Const $HKEY_CURRENT_USER = 0x80000001
+Global Const $HKEY_LOCAL_MACHINE = 0x80000002
+Global Const $HKEY_USERS = 0x80000003
+Global Const $HKEY_CURRENT_CONFIG = 0x80000005
+Global Const $KEY_WRITE = 0x20006
+Global Const $KEY_READ = 0x20019
+Global Const $REG_OPTION_NON_VOLATILE = 0x0000
+Global Const $REG_OPTION_VOLATILE = 0x0001
+Global Const $KEY_WOW64_64KEY = 0x0100
+Global Const $KEY_WOW64_32KEY = 0x0200
 
 Global Const $__g_RF_Is64BitOS = (StringInStr(@OSArch, "64") <> 0)
 

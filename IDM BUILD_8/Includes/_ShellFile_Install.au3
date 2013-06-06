@@ -1,5 +1,7 @@
 #AutoIt3Wrapper_Au3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+#Region    ;************ Includes ************
 #include-once
+#EndRegion ;************ Includes ************
 
 Func _ShellFile_Install($sText, $sFileType, $sName = @ScriptName, $sFilePath = @ScriptFullPath, $sIconPath = @ScriptFullPath, $iIcon = 0, $fAllUsers = False, $fExtended = False)
 	Local $i64Bit = '', $sRegistryKey = ''

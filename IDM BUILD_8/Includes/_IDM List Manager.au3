@@ -22,8 +22,8 @@
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #region Includes
-#region    ;************ Includes ************
-#include <WinAPIEx.au3>
+#Region    ;************ Includes ************
+;~ #include <WinAPIEx.au3>;~~~
 #include <GuiStatusBar.au3>
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
@@ -32,7 +32,7 @@
 #include "_GUICtrlListView_SaveHTML.au3"
 #include "_GUICtrlListView_SaveCSV.au3"
 #include "_AppsConstant.au3"
-#endregion    ;************ Includes ************
+#EndRegion ;************ Includes ************
 #endregion Includes
 
 #region Export Function

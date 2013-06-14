@@ -6,16 +6,7 @@
 #endregion    ;************ Includes ************
 
 ; #VARIABLES# ===================================================================================================================
-Global $7zDll
-If @OSArch = "X64" Then
-	If @AutoItX64 Then
-		$7zDll = @ScriptDir & "\" & "7-zip64.dll";64os on 64autoit
-	Else
-		$7zDll = @ScriptDir & "\" & "7-zip32.dll" ;64os on 32autoit
-	EndIf
-Else
-	$7zDll = @ScriptDir & "\" & "7-zip32.dll" ;32os on 32autoit
-EndIf
+Global $7zDll =_7ZipGetDll()
 
 Global Const $FNAME_MAX32 = 512
 Global $hArchiveProc
@@ -167,3 +158,19 @@ EndFunc   ;==>_7ZipControlStartup
 Func _7ZipCheckDll()
 	If Not FileExists($7zDll) Then Return SetError(1, 0, $7zDll)
 EndFunc   ;==>_7ZipCheckDll
+
+Func _7ZipGetDll()
+	Local $ScriptDir = @ScriptDir
+	If Not StringRight($ScriptDir, 1) = "\" Then $ScriptDir &= "\"
+
+	If @OSArch = "X64" Then
+		If @AutoItX64 Then
+			$7zDll = $ScriptDir & "\" & "7-zip64.dll";64os on 64autoit
+		Else
+			$7zDll = $ScriptDir & "\" & "7-zip32.dll" ;64os on 32autoit
+		EndIf
+	Else
+		$7zDll = $ScriptDir & "\" & "7-zip32.dll" ;32os on 32autoit
+	EndIf
+	Return $7zDll
+EndFunc   ;==>_7ZipGetDll

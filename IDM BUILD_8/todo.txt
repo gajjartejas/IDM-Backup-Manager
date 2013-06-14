@@ -11,8 +11,8 @@ v0.9.8
 * Use Short name for process...done
 + Log File Improvement
 + setting only backup
-+ Sound Backup
-+ GrabberData Directory Dose not Backup in Custom Profile.
++ Sound Backup...done
++ GrabberData Directory Dose not Backup in Custom Profile...done
 * use intget(new way to update,check for update on startup)
 
 

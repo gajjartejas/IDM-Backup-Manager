@@ -1551,6 +1551,65 @@ Func _iGetMaxKey($s_regpath_IDM)
 	Return $iMaxKey + 1
 EndFunc   ;==>_iGetMaxKey
 
+Func _ConvertRegProfile()
+	Local $s_reg_File_Tmp = @TempDir & "\IDMregistryTmp.reg"
+
+	_FileOrFolderDeleteWithLog($s_reg_File_Tmp)
+
+	Local $h_reg_File = FileOpen($s_reg_File, 0)
+
+	;append mode Use Unicode UTF16 Little Endian reading and writing mode.
+	Local $h_reg_File_Tmp = FileOpen($s_reg_File_Tmp, 32 + 1)
+
+	Local $Pathex = StringReplace('"' & $DwnlData_Folder & @UserName & "\", "\", "\\")
+	Local $sLine, $final, $str, $strLen, $asp, $iN, $asp2
+
+	While 1
+		$sLine = FileReadLine($h_reg_File)
+		If @error = -1 Then ExitLoop
+		;===========================================
+		$final = ""
+		If StringLeft($sLine, 16) = '"LocalFileName"=' Then
+			$str = '"LocalFileName"='
+			$strLen = 17
+		ElseIf StringLeft($sLine, 12) = '"LocalPath"=' Then
+			$str = '"LocalPath"='
+			$strLen = 13
+		ElseIf StringLeft($sLine, 14) = '"LogFileName"=' Then
+			$str = '"LogFileName"='
+			$strLen = 15
+		Else
+			FileWrite($h_reg_File_Tmp, $sLine & @CRLF)
+			ContinueLoop
+		EndIf
+
+		$asp = StringSplit(StringTrimLeft($sLine, $strLen), "DwnlData\\", 3)
+		If @error Then ContinueLoop
+
+		$iN = UBound($asp) - 1
+		$asp2 = StringSplit($asp[$iN], "\\", 3)
+		If @error Then ContinueLoop
+
+		For $i = 1 To UBound($asp2) - 1
+			$final &= $asp2[$i] & "\\"
+		Next;
+
+		$final = StringTrimRight($final, 2);
+		FileWrite($h_reg_File_Tmp, $str & $Pathex & $final & @CRLF)
+		;===========================================
+	WEnd
+	FileClose($h_reg_File)
+	FileClose($h_reg_File_Tmp)
+
+	If Not FileDelete($s_reg_File) Then Return SetError(2)
+	If Not FileMove($s_reg_File_Tmp, $s_reg_File) Then Return SetError(3)
+
+	;Cleaneup
+	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
+
+	Return 1
+EndFunc   ;==>_ConvertRegProfile
+
 Func _AppendRegKeys()
 	Local $s_reg_File_Tmp = @TempDir & "\IDMregistryTmp.reg"
 
@@ -1571,8 +1630,6 @@ Func _AppendRegKeys()
 
 	Local $h_reg_File = FileOpen($s_reg_File, 0);Read
 	Local $h_reg_File_Tmp = FileOpen($s_reg_File_Tmp, 32 + 1);append mode Use Unicode UTF16 Little Endian reading and writing mode.
-
-
 	Local $sLine, $asplit
 
 	; Check if file opened for reading OK
@@ -1710,7 +1767,7 @@ Func _UpdateCheck()
 EndFunc   ;==>_UpdateCheck
 
 Func _ShellInstall()
-	_ShellFile_Install("Restore IDM Backup", "ibf", @ScriptName, @ScriptFullPath, @ScriptFullPath, 17, False, False)
+	_ShellFile_Install("Restore IDM Backup", "ibf", @ScriptName, @ScriptFullPath, @ScriptFullPath, 14, False, False)
 	If @error Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Association NOT Created.")
 		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
@@ -1997,6 +2054,7 @@ Func _Backup()
 	Local $b_DwnlData_Folder = False
 	Local $b_Grabber_Folder = False
 	Local $b_Scheduler_Folder = False
+	Local $b_Sound_Folder = False
 	Local $b_History_Files = False
 
 	IniWrite($s_ini_File, "Default", "AppDataIDMFolder", $s_AppDataIDMFolder)
@@ -2011,6 +2069,7 @@ Func _Backup()
 		$b_DwnlData_Folder = True
 		$b_Grabber_Folder = True
 		$b_Scheduler_Folder = True
+		$b_Sound_Folder = True
 		$b_History_Files = True
 
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: User Selected Full Backup")
@@ -2084,59 +2143,71 @@ Func _Backup()
 		IniWrite($s_ini_File, "Default", "Scheduler_Folder", False)
 	EndIf
 
+	If $b_Sound_Folder = True Then
+		If FileExists($Sound_Folder) Then
+			$aData[4] = $Sound_Folder
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Sound_Folder " & "=" & ' "' & $Sound_Folder & '" ')
+			IniWrite($s_ini_File, "Default", "Sound_Folder", True)
+		Else
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exists= " & '"' & $Sound_Folder & '"')
+		EndIf
+	Else
+		IniWrite($s_ini_File, "Default", "Sound_Folder", False)
+	EndIf
+
 	If $b_History_Files = True Then
 
 		If FileExists($UrlHistory_txt_File) Then
-			$aData[4] = $UrlHistory_txt_File
+			$aData[5] = $UrlHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory_txt_File " & "=" & ' "' & $UrlHistory_txt_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $UrlHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($UrlHistory2_txt_File) Then
-			$aData[5] = $UrlHistory2_txt_File
+			$aData[6] = $UrlHistory2_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory2_txt_File " & "=" & ' "' & $UrlHistory2_txt_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $UrlHistory2_txt_File & '"')
 		EndIf
 
 		If FileExists($GlobalErrors_log_File) Then
-			$aData[6] = $GlobalErrors_log_File
+			$aData[7] = $GlobalErrors_log_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GlobalErrors_log_File " & "=" & ' "' & $GlobalErrors_log_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $GlobalErrors_log_File & '"')
 		EndIf
 
 		If FileExists($urlexclist_dat_File) Then
-			$aData[7] = $urlexclist_dat_File
+			$aData[8] = $urlexclist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $urlexclist_dat_File " & "=" & ' "' & $urlexclist_dat_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $urlexclist_dat_File & '"')
 		EndIf
 
 		If FileExists($defextmap_dat_File) Then
-			$aData[8] = $defextmap_dat_File
+			$aData[9] = $defextmap_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $defextmap_dat_File " & "=" & ' "' & $defextmap_dat_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $defextmap_dat_File & '"')
 		EndIf
 
 		If FileExists($foldresHistory_txt_File) Then
-			$aData[9] = $foldresHistory_txt_File
+			$aData[10] = $foldresHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $foldresHistory_txt_File " & "=" & ' "' & $foldresHistory_txt_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $foldresHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($sts_list_dat_File) Then
-			$aData[10] = $sts_list_dat_File
+			$aData[11] = $sts_list_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $sts_list_dat_File " & "=" & ' "' & $sts_list_dat_File & '" ')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $sts_list_dat_File & '"')
 		EndIf
 
 		If FileExists($cnlurllist_dat_File) Then
-			$aData[11] = $cnlurllist_dat_File
+			$aData[12] = $cnlurllist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $cnlurllist_dat_File " & "=" & ' "' & $cnlurllist_dat_File & '" ')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $cnlurllist_dat_File & '"')
@@ -2149,20 +2220,20 @@ Func _Backup()
 
 	#region ;/add INI--->
 	If FileExists($s_ini_File) Then
-		$aData[12] = $s_ini_File
+		$aData[13] = $s_ini_File
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_ini_File & '"')
 	Else
-		$aData[12] = ""
+		$aData[13] = ""
 		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_ini_File & '"')
 	EndIf
 	#endregion ;/add INI--->
 
 	#region ;/add registry--->
 	If FileExists($s_reg_File) Then
-		$aData[13] = $s_reg_File
+		$aData[14] = $s_reg_File
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_reg_File & '"')
 	Else
-		$aData[13] = ""
+		$aData[14] = ""
 		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_reg_File & '"')
 	EndIf
 	#endregion ;/add registry--->
@@ -2183,7 +2254,6 @@ Func _Backup()
 	_7ZipShutdown()
 	#endregion ;/add Data Files--->
 
-	ReDim $aData[14]
 	_CleanINInReg()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Done")
 	_ControlUpdateDefault()
@@ -2218,9 +2288,9 @@ Func _Restore()
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: $s_Restore_File= " & '"' & $s_Restore_File & '"')
 
 	If Not FileExists($s_Restore_File) Then
-		_ControlUpdateDefault()
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Backup File Not Found")
 		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+		_ControlUpdateDefault()
 		Return SetError(1)
 	EndIf
 
@@ -2243,6 +2313,7 @@ Func _Restore()
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
 			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
+			_ControlUpdateDefault()
 			Return SetError(1)
 		EndIf
 	Else
@@ -2263,8 +2334,8 @@ Func _Restore()
 
 	If $foo <> 0 And FileExists($s_ini_File) Then ;Check if INI available and Succeful Extract
 
-		Local $Guest_AppDataIDMFolder = IniRead($s_ini_File, "Default", "AppDataIDMFolder", "") ;True C:\Users\Tejas\AppData\Roaming\IDM\
-		Local $Guest_TempPath = IniRead($s_ini_File, "Default", "TempPath", "");C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\
+;~ 		Local $Guest_AppDataIDMFolder = IniRead($s_ini_File, "Default", "AppDataIDMFolder", "") ;True C:\Users\Tejas\AppData\Roaming\IDM\
+;~ 		Local $Guest_TempPath = IniRead($s_ini_File, "Default", "TempPath", "");C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\
 ;~ 		Local $Guest_IDMver = IniRead($s_ini_File, "Default", "idmvers", "");v6.07b10 Full
 ;~ 		Local $Guest_Keys = IniRead($s_ini_File, "Default", "Keys", "");1191
 ;~ 		Local $Guest_Password = IniRead($s_ini_File, "Default", "Password", "");True
@@ -2275,6 +2346,7 @@ Func _Restore()
 		Local $Guest_Grabber_Folder = IniRead($s_ini_File, "Default", "Grabber_Folder", "True");True
 		Local $Guest_GrabberData_Folder = IniRead($s_ini_File, "Default", "GrabberData_Folder", "True");True
 		Local $Guest_Scheduler_Folder = IniRead($s_ini_File, "Default", "Scheduler_Folder", "True");True
+		Local $Guest_Sound_Folder = IniRead($s_ini_File, "Default", "Sound_Folder", "True");True
 		Local $Guest_History_Files = IniRead($s_ini_File, "Default", "History_Files", "True");True
 
 		If $s_Password = "" Then FileWriteLine($s_Log_File, _Current_Moment() & "Info: Backup Files is Not Password Protected")
@@ -2326,6 +2398,11 @@ Func _Restore()
 			If $Guest_Scheduler_Folder = "True" Then _FileOrFolderDeleteWithLog($Scheduler_Folder)
 		EndIf
 
+		If GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_CHECKED Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Sound Please Wait...")
+			If $Guest_Sound_Folder = "True" Then _FileOrFolderDeleteWithLog($Sound_Folder)
+		EndIf
+
 		If GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: History And Logs Please Wait...")
 			If $Guest_History_Files = "True" Then
@@ -2346,12 +2423,14 @@ Func _Restore()
 	Local $b_DwnlData_Folder = False
 	Local $b_Grabber_Folder = False
 	Local $b_Scheduler_Folder = False
+	Local $b_Sound_Folder = False
 	Local $b_History_Files = False
 
 	If GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_CHECKED Then ;Full Restore
 		$b_DwnlData_Folder = True
 		$b_Grabber_Folder = True
 		$b_Scheduler_Folder = True
+		$b_Sound_Folder = True
 		$b_History_Files = True
 	Else
 		If GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Then $b_DwnlData_Folder = True
@@ -2370,6 +2449,7 @@ Func _Restore()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Files And Folders...")
 
 		_ResetDataAray($aData)
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Files and Folder Please Wait...")
 
 		If $Guest_DwnlData_Folder = "True" Then
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
@@ -2384,25 +2464,21 @@ Func _Restore()
 	#endregion Restore DwnlData\
 
 	_ResetDataAray($aData)
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Files and Folder Please Wait...")
 
 	#region Restore GrabberData\
 	;If Grabber Data Selectde Then
 	If $b_Grabber_Folder Then
 		If $Guest_Grabber_Folder = "True" Then
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Grabber_Folder= " & '"' & $Guest_Grabber_Folder & '"')
-
 			$aData[1] = "Grabber" & "\"
-		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Grabber_Folder= " & '"' & $Guest_Grabber_Folder & '"')
 		EndIf
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Grabber_Folder= " & '"' & $Guest_Grabber_Folder & '"')
 
 		If $Guest_GrabberData_Folder = "True" Then
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_GrabberData_Folder= " & '"' & $Guest_GrabberData_Folder & '"')
-
 			$aData[2] = "GrabberData" & "\"
-		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_GrabberData_Folder= " & '"' & $Guest_GrabberData_Folder & '"')
 		EndIf
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_GrabberData_Folder= " & '"' & $Guest_GrabberData_Folder & '"')
+
 	EndIf
 	#endregion Restore GrabberData\
 
@@ -2410,14 +2486,21 @@ Func _Restore()
 	;If Scheduler Data Selectde Then
 	If $b_Scheduler_Folder Then
 		If $Guest_Scheduler_Folder = "True" Then
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Scheduler_Folder= " & '"' & $Guest_Scheduler_Folder & '"')
-
 			$aData[3] = "Scheduler" & "\"
-		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Scheduler_Folder= " & '"' & $Guest_Scheduler_Folder & '"')
 		EndIf
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Scheduler_Folder= " & '"' & $Guest_Scheduler_Folder & '"')
 	EndIf
 	#endregion Restore Scheduler\
+
+	#region Restore Sound\
+	;If Scheduler Data Selectde Then
+	If $b_Sound_Folder Then
+		If $Guest_Sound_Folder = "True" Then
+			$aData[3] = "Scheduler" & "\"
+		EndIf
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Sound_Folder= " & '"' & $Guest_Sound_Folder & '"')
+	EndIf
+	#endregion Restore Sound\
 
 	#region Restore History_Files
 	;If History_Files Selectde Then
@@ -2431,11 +2514,8 @@ Func _Restore()
 			$aData[9] = "foldresHistory.txt"
 			$aData[10] = "sts_list.dat"
 			$aData[11] = "cnlurllist.dat"
-
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_History_Files= " & '"' & $Guest_History_Files & '"')
-		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_History_Files= " & '"' & $Guest_History_Files & '"')
 		EndIf
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_History_Files= " & '"' & $Guest_History_Files & '"')
 	EndIf
 	#endregion Restore History_Files
 
@@ -2473,17 +2553,9 @@ Func _Restore()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Registry Profile")
 
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Converting: Profile Please Wait...")
-		_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_TempPath & "DwnlData" & "\" & $Guest_Username), "\", "\\"), StringReplace($DwnlData_Folder & @UserName, "\", "\\"))
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder & "DwnlData" & "\" & $Guest_Username), "\", "\\"))
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($DwnlData_Folder & @UserName, "\", "\\") & " Error Code" & @error)
 
-		_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder & "GrabberData" & "\" & $Guest_Username), "\", "\\"), StringReplace($s_AppDataIDMFolder & "GrabberData" & "\" & @UserName, "\", "\\"))
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder & "GrabberData" & "\" & $Guest_Username), "\", "\\"))
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_AppDataIDMFolder & "GrabberData" & "\" & @UserName, "\", "\\") & " Error Code" & @error)
-
-		_ReplaceStringInFile($s_reg_File, StringReplace(($Guest_AppDataIDMFolder), "\", "\\"), StringReplace($s_AppDataIDMFolder, "\", "\\"))
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Searching-->" & StringReplace(($Guest_AppDataIDMFolder), "\", "\\"))
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Replacing-->" & StringReplace($s_AppDataIDMFolder, "\", "\\") & " Error Code" & @error)
+		_ConvertRegProfile()
+		If @error Then FileWriteLine($s_Log_File, _Current_Moment() & "Error: Error Occured during Converting Profile Error Code:" & @error)
 
 		;Folder Renames
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
@@ -2493,10 +2565,10 @@ Func _Restore()
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $DwnlData_Folder & $Guest_Username)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & @UserName & " Error Code" & @error)
 		EndIf
-		If FileExists($s_AppDataIDMFolder & "GrabberData\" & $Guest_Username) Then
-			DirMove($s_AppDataIDMFolder & "GrabberData\" & $Guest_Username, $s_AppDataIDMFolder & "GrabberData\" & @UserName)
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $s_AppDataIDMFolder & "GrabberData\" & $Guest_Username)
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $s_AppDataIDMFolder & "GrabberData\" & @UserName & " Error Code" & @error)
+		If FileExists($DwnlData_Folder & "GrabberData\" & $Guest_Username) Then
+			DirMove($DwnlData_Folder & "GrabberData\" & $Guest_Username, $DwnlData_Folder & "GrabberData\" & @UserName)
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $DwnlData_Folder & "GrabberData\" & $Guest_Username)
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & "GrabberData\" & @UserName & " Error Code" & @error)
 		EndIf
 	Else
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Profile Conversion Not Selected.")

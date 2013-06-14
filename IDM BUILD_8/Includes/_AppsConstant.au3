@@ -43,6 +43,7 @@ Global $GrabberData_Folder = $s_TempPath & "GrabberData\"
 
 Global $Grabber_Folder = $s_AppDataIDMFolder & "Grabber\"
 Global $Scheduler_Folder = $s_AppDataIDMFolder & "Scheduler\"
+Global $Sound_Folder = $s_AppDataIDMFolder & "Sounds\"
 
 Global $UrlHistory_txt_File = $s_AppDataIDMFolder & "UrlHistory.txt"
 Global $UrlHistory2_txt_File = $s_AppDataIDMFolder & "UrlHistory2.txt"
@@ -82,7 +83,7 @@ Global $hIcons_StatusWorking = _WinAPI_ShellExtractIcon(@ScriptFullPath, 23, 16,
 
 Global $nMsg
 Global $hGUI_BM
-Global $aData[14]
+Global $aData[15]
 #endregion Global Variables IDM BM
 
 #region global Variables

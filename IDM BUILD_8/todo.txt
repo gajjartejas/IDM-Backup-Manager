@@ -1,3 +1,6 @@
+v0.9.9
+* use intget(new way to update,check for update on startup)
+
 v0.9.8
 * To Repair Extract Problem...done
 - to Remove Unsude Icons...done
@@ -13,7 +16,7 @@ v0.9.8
 + setting only backup
 + Sound Backup...done
 + GrabberData Directory Dose not Backup in Custom Profile...done
-* use intget(new way to update,check for update on startup)
+* folder rename bug??? while restoring.
 
 
 v0.9.7

@@ -21,7 +21,6 @@
 #Obfuscator_Parameters=/striponly
 #AutoIt3Wrapper_Versioning=v
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Run_cvsWrapper=v
 
 #region Includes
 #include <EditConstants.au3>
@@ -94,7 +93,7 @@ Func _MainBM()
 
 			Case $h_Checkbox_Full_Backup
 				If GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_CHECKED Then
-					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Full Backup Selected")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Backup Every Thing")
 
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Backup, $GUI_DISABLE)
@@ -112,7 +111,7 @@ Func _MainBM()
 
 			Case $h_Checkbox_Listl_Backup
 				If GUICtrlRead($h_Checkbox_Listl_Backup) = $GUI_CHECKED Then
-					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: List Backup Selected. Only IDM List and Setting Backup")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Backup List of Downloads Without Backing Up Data")
 					GUICtrlSetState($h_Checkbox_UnFinished_DD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_GD_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_UnFinished_SD_Backup, $GUI_DISABLE)
@@ -129,7 +128,7 @@ Func _MainBM()
 
 			Case $h_Checkbox_UnFinished_SD_Backup
 				If GUICtrlRead($h_Checkbox_UnFinished_SD_Backup) = $GUI_CHECKED Then
-					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Backup Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Backup Scheduler and Queues")
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
@@ -145,7 +144,7 @@ Func _MainBM()
 
 			Case $h_Checkbox_UnFinished_GD_Backup
 				If GUICtrlRead($h_Checkbox_UnFinished_GD_Backup) = $GUI_CHECKED Then
-					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Backup Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Backup Grabber Data")
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
@@ -161,7 +160,7 @@ Func _MainBM()
 
 			Case $h_Checkbox_UnFinished_DD_Backup
 				If GUICtrlRead($h_Checkbox_UnFinished_DD_Backup) = $GUI_CHECKED Then
-					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Backup Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Backup Downloaded Data")
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
@@ -177,7 +176,7 @@ Func _MainBM()
 
 			Case $h_Checkbox_UnFinished_HL_Backup
 				If GUICtrlRead($h_Checkbox_UnFinished_HL_Backup) = $GUI_CHECKED Then
-					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Custom Backup Selected.")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Backup History, Logs and Sound")
 					GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
 					GUICtrlSetState($h_Checkbox_Listl_Backup, $GUI_DISABLE)
 				Else
@@ -810,16 +809,22 @@ Func _SwBMGUI()
 
 	$h_Checkbox_Full_Backup = GUICtrlCreateCheckbox("Full Backup", 200, 128, 107, 17)
 	GUICtrlSetState(-1, $GUI_CHECKED)
+	GUICtrlSetTip(-1, "Backup Every Thing")
 	$h_Checkbox_Listl_Backup = GUICtrlCreateCheckbox("Only List Backup", 310, 128, 97, 17)
 	GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetTip(-1, "Backup List of Downloads Without Backing Up Data")
 	$h_Checkbox_UnFinished_DD_Backup = GUICtrlCreateCheckbox("Downloaded Data", 200, 149, 107, 17)
 	GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetTip(-1, "Backup Downloaded Data")
 	$h_Checkbox_UnFinished_GD_Backup = GUICtrlCreateCheckbox("Grabber Data", 310, 149, 97, 17)
 	GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetTip(-1, "Backup Grabber Data")
 	$h_Checkbox_UnFinished_SD_Backup = GUICtrlCreateCheckbox("Scheduler/Queues", 200, 170, 107, 17)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Checkbox_UnFinished_HL_Backup = GUICtrlCreateCheckbox("History and Logs", 310, 170, 97, 17)
+	GUICtrlSetTip(-1, "Backup Scheduler and Queues")
+	$h_Checkbox_UnFinished_HL_Backup = GUICtrlCreateCheckbox("Other Data", 310, 170, 97, 17)
 	GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetTip(-1, "Backup History, Logs and Sound")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$h_Button_Backup = GUICtrlCreateButton("Backup Now", 319, 217, 95, 25)
@@ -2054,7 +2059,6 @@ Func _Backup()
 	Local $b_DwnlData_Folder = False
 	Local $b_Grabber_Folder = False
 	Local $b_Scheduler_Folder = False
-	Local $b_Sound_Folder = False
 	Local $b_History_Files = False
 
 	IniWrite($s_ini_File, "Default", "AppDataIDMFolder", $s_AppDataIDMFolder)
@@ -2069,7 +2073,6 @@ Func _Backup()
 		$b_DwnlData_Folder = True
 		$b_Grabber_Folder = True
 		$b_Scheduler_Folder = True
-		$b_Sound_Folder = True
 		$b_History_Files = True
 
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: User Selected Full Backup")
@@ -2143,74 +2146,69 @@ Func _Backup()
 		IniWrite($s_ini_File, "Default", "Scheduler_Folder", False)
 	EndIf
 
-	If $b_Sound_Folder = True Then
-		If FileExists($Sound_Folder) Then
-			$aData[4] = $Sound_Folder
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Sound_Folder " & "=" & ' "' & $Sound_Folder & '" ')
-			IniWrite($s_ini_File, "Default", "Sound_Folder", True)
-		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exists= " & '"' & $Sound_Folder & '"')
-		EndIf
-	Else
-		IniWrite($s_ini_File, "Default", "Sound_Folder", False)
-	EndIf
-
 	If $b_History_Files = True Then
 
 		If FileExists($UrlHistory_txt_File) Then
-			$aData[5] = $UrlHistory_txt_File
+			$aData[4] = $UrlHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory_txt_File " & "=" & ' "' & $UrlHistory_txt_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $UrlHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($UrlHistory2_txt_File) Then
-			$aData[6] = $UrlHistory2_txt_File
+			$aData[5] = $UrlHistory2_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory2_txt_File " & "=" & ' "' & $UrlHistory2_txt_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $UrlHistory2_txt_File & '"')
 		EndIf
 
 		If FileExists($GlobalErrors_log_File) Then
-			$aData[7] = $GlobalErrors_log_File
+			$aData[6] = $GlobalErrors_log_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GlobalErrors_log_File " & "=" & ' "' & $GlobalErrors_log_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $GlobalErrors_log_File & '"')
 		EndIf
 
 		If FileExists($urlexclist_dat_File) Then
-			$aData[8] = $urlexclist_dat_File
+			$aData[7] = $urlexclist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $urlexclist_dat_File " & "=" & ' "' & $urlexclist_dat_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $urlexclist_dat_File & '"')
 		EndIf
 
 		If FileExists($defextmap_dat_File) Then
-			$aData[9] = $defextmap_dat_File
+			$aData[8] = $defextmap_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $defextmap_dat_File " & "=" & ' "' & $defextmap_dat_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $defextmap_dat_File & '"')
 		EndIf
 
 		If FileExists($foldresHistory_txt_File) Then
-			$aData[10] = $foldresHistory_txt_File
+			$aData[9] = $foldresHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $foldresHistory_txt_File " & "=" & ' "' & $foldresHistory_txt_File & '"')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $foldresHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($sts_list_dat_File) Then
-			$aData[11] = $sts_list_dat_File
+			$aData[10] = $sts_list_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $sts_list_dat_File " & "=" & ' "' & $sts_list_dat_File & '" ')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $sts_list_dat_File & '"')
 		EndIf
 
 		If FileExists($cnlurllist_dat_File) Then
-			$aData[12] = $cnlurllist_dat_File
+			$aData[11] = $cnlurllist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $cnlurllist_dat_File " & "=" & ' "' & $cnlurllist_dat_File & '" ')
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $cnlurllist_dat_File & '"')
+		EndIf
+
+		If FileExists($Sound_Folder) Then
+			$aData[12] = $Sound_Folder
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Sound_Folder " & "=" & ' "' & $Sound_Folder & '" ')
+		Else
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $Sound_Folder & '"')
 		EndIf
 
 		IniWrite($s_ini_File, "Default", "History_Files", True)
@@ -2325,8 +2323,8 @@ Func _Restore()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Reading Backup File Please Wait...")
 
 	_ResetDataAray($aData)
-	$aData[12] = "idm_guest_Setting.ini"
-	$aData[13] = "IDMregistry.reg"
+	$aData[13] = "idm_guest_Setting.ini"
+	$aData[14] = "IDMregistry.reg"
 
 	_7ZipStartup()
 	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
@@ -2346,7 +2344,6 @@ Func _Restore()
 		Local $Guest_Grabber_Folder = IniRead($s_ini_File, "Default", "Grabber_Folder", "True");True
 		Local $Guest_GrabberData_Folder = IniRead($s_ini_File, "Default", "GrabberData_Folder", "True");True
 		Local $Guest_Scheduler_Folder = IniRead($s_ini_File, "Default", "Scheduler_Folder", "True");True
-		Local $Guest_Sound_Folder = IniRead($s_ini_File, "Default", "Sound_Folder", "True");True
 		Local $Guest_History_Files = IniRead($s_ini_File, "Default", "History_Files", "True");True
 
 		If $s_Password = "" Then FileWriteLine($s_Log_File, _Current_Moment() & "Info: Backup Files is Not Password Protected")
@@ -2398,11 +2395,6 @@ Func _Restore()
 			If $Guest_Scheduler_Folder = "True" Then _FileOrFolderDeleteWithLog($Scheduler_Folder)
 		EndIf
 
-		If GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_CHECKED Then
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Sound Please Wait...")
-			If $Guest_Sound_Folder = "True" Then _FileOrFolderDeleteWithLog($Sound_Folder)
-		EndIf
-
 		If GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: History And Logs Please Wait...")
 			If $Guest_History_Files = "True" Then
@@ -2414,6 +2406,7 @@ Func _Restore()
 				_FileOrFolderDeleteWithLog($foldresHistory_txt_File)
 				_FileOrFolderDeleteWithLog($sts_list_dat_File)
 				_FileOrFolderDeleteWithLog($cnlurllist_dat_File)
+				_FileOrFolderDeleteWithLog($Sound_Folder)
 			EndIf
 		EndIf
 	EndIf
@@ -2423,14 +2416,12 @@ Func _Restore()
 	Local $b_DwnlData_Folder = False
 	Local $b_Grabber_Folder = False
 	Local $b_Scheduler_Folder = False
-	Local $b_Sound_Folder = False
 	Local $b_History_Files = False
 
 	If GUICtrlRead($h_Checkbox_Full_Restore) = $GUI_CHECKED Then ;Full Restore
 		$b_DwnlData_Folder = True
 		$b_Grabber_Folder = True
 		$b_Scheduler_Folder = True
-		$b_Sound_Folder = True
 		$b_History_Files = True
 	Else
 		If GUICtrlRead($h_Checkbox_UnFinished_DD_Restore) = $GUI_CHECKED Then $b_DwnlData_Folder = True
@@ -2442,29 +2433,21 @@ Func _Restore()
 
 	#region ;/Restore Data--->
 
+	_ResetDataAray($aData)
+
+	#region Restore part-1
+
 	#region Restore DwnlData\
 	;If Unfinished Download Data Selectde Then
 	If $b_DwnlData_Folder Then
-
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring Files And Folders...")
-
-		_ResetDataAray($aData)
-		_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Files and Folder Please Wait...")
-
 		If $Guest_DwnlData_Folder = "True" Then
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
 			$aData[0] = "DwnlData" & "\"
 		Else
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
 		EndIf
-
-		_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: DwnlData Folder Please Wait...")
-		$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_TempPath, $aData, $s_Password)
 	EndIf
 	#endregion Restore DwnlData\
-
-	_ResetDataAray($aData)
-	_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Files and Folder Please Wait...")
 
 	#region Restore GrabberData\
 	;If Grabber Data Selectde Then
@@ -2478,10 +2461,15 @@ Func _Restore()
 			$aData[2] = "GrabberData" & "\"
 		EndIf
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_GrabberData_Folder= " & '"' & $Guest_GrabberData_Folder & '"')
-
 	EndIf
 	#endregion Restore GrabberData\
+	$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_TempPath, $aData, $s_Password)
+	#endregion Restore part-1
 
+	_ResetDataAray($aData)
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Files and Folder Please Wait...")
+
+	#region Restore part-2
 	#region Restore Scheduler\
 	;If Scheduler Data Selectde Then
 	If $b_Scheduler_Folder Then
@@ -2491,16 +2479,6 @@ Func _Restore()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Scheduler_Folder= " & '"' & $Guest_Scheduler_Folder & '"')
 	EndIf
 	#endregion Restore Scheduler\
-
-	#region Restore Sound\
-	;If Scheduler Data Selectde Then
-	If $b_Sound_Folder Then
-		If $Guest_Sound_Folder = "True" Then
-			$aData[3] = "Scheduler" & "\"
-		EndIf
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Sound_Folder= " & '"' & $Guest_Sound_Folder & '"')
-	EndIf
-	#endregion Restore Sound\
 
 	#region Restore History_Files
 	;If History_Files Selectde Then
@@ -2514,6 +2492,7 @@ Func _Restore()
 			$aData[9] = "foldresHistory.txt"
 			$aData[10] = "sts_list.dat"
 			$aData[11] = "cnlurllist.dat"
+			$aData[12] = "Sounds" & "\"
 		EndIf
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_History_Files= " & '"' & $Guest_History_Files & '"')
 	EndIf
@@ -2521,9 +2500,10 @@ Func _Restore()
 
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: AppDataIDMFolder Folder Please Wait...")
 	$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_AppDataIDMFolder, $aData, $s_Password)
-	#endregion ;/Restore Data--->
+	#endregion Restore part-2
 
 	_7ZipShutdown()
+	#endregion ;/Restore Data--->
 
 	#region ;/Remove Temp Registry File--->
 	If _RegKeyExists($s_regpath_IDM & "_tmp") Then

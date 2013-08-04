@@ -31,7 +31,7 @@
 ; Example .......: Yes
 ; ===============================================================================================================================
 
-Func _FileIsPathValid($Path)
+Func _IsFilePathValid($Path)
 	Local $Excluded[8] = [7, "\\", "?", "*", '"', "<", ">", "|"] ;List of invalid characters
 	Local $Alphabet = StringSplit("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")
 	Local $Reasons = ""

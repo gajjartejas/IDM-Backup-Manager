@@ -1,5 +1,8 @@
 v0.9.9
 * use intget(new way to update,check for update on startup)
+* folder rename bug??? while restoring.
++ setting only backup
++ Log File Improvement
 
 v0.9.8
 * To Repair Extract Problem...done
@@ -12,12 +15,9 @@ v0.9.8
 * _CheckCmdLine...done
 + Normal Attributes to delete file...done
 * Use Short name for process...done
-+ Log File Improvement
-+ setting only backup
 + Sound Backup...done
 + GrabberData Directory Dose not Backup in Custom Profile...done
-* folder rename bug??? while restoring.
-
++ Log File Improvement...done
 
 v0.9.7
 + to do support link on build

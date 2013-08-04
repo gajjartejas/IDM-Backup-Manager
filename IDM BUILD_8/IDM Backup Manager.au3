@@ -27,7 +27,7 @@
 #include <ComboConstants.au3>
 #include "Includes\_AET_ButtonSetIcon.au3"
 #include "Includes\_Resources.au3"
-#include "Includes\_FileIsPathValid.au3"
+#include "Includes\_IsFilePathValid.au3"
 #include "Includes\_RunWithReducedPrivileges.au3"
 #include "Includes\_ShellFile_Install.au3"
 #include "Includes\_7Zip.au3"
@@ -364,11 +364,10 @@ EndFunc   ;==>_MainBM
 Func _CheckIni()
 	_LogSysInfo()
 	FileWriteLine($s_Log_File, "")
-	FileWriteLine($s_Log_File, "============================= Check INI =============================")
 
 	If FileExists($s_Setting_File) Then
 
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found.")
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Check Setting File: Found")
 
 		$i_xWinPos = Number(IniRead($s_Setting_File, "Position", "x", $i_xWinPos))
 		$i_yWinPos = Number(IniRead($s_Setting_File, "Position", "y", $i_yWinPos))
@@ -384,8 +383,7 @@ Func _CheckIni()
 		If Not $b_AppendLog_File And FileExists($s_Log_File) Then
 			FileDelete($s_Log_File)
 			_LogSysInfo()
-			FileWriteLine($s_Log_File, "============================= Check INI =============================")
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Removed Previous Log.")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Previous Log Removed.")
 		EndIf
 
 		$b_RestartIDM = Number(IniRead($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM))
@@ -421,8 +419,6 @@ Func _LogSysInfo()
 EndFunc   ;==>_LogSysInfo
 
 Func _CheckComponment()
-	FileWriteLine($s_Log_File, "")
-	FileWriteLine($s_Log_File, "============================= Check DLL =============================")
 
 	Local $sDllCheck = _7ZipCheckDll()
 	If @error Then
@@ -430,12 +426,10 @@ Func _CheckComponment()
 		MsgBox(16, "Error", $sDllCheck & " Not Found Exiting....")
 		Exit -2
 	EndIf
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found.")
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Check DLL: Found")
 EndFunc   ;==>_CheckComponment
 
 Func _CheckIDMProcess()
-	FileWriteLine($s_Log_File, "")
-	FileWriteLine($s_Log_File, "============================= Check Internet Download Manager =============================")
 
 	Local $ParentWin = ""
 	If IsHWnd($hGUI_BM) Then $ParentWin = $hGUI_BM
@@ -464,8 +458,8 @@ Func _LogProfilePaths()
 	FileWriteLine($s_Log_File, "============================= Check Profile =============================")
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $AppDataIDMFolder= " & @TAB & '"' & $s_AppDataIDMFolder & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_TempPath= " & @TAB & '"' & $s_TempPath & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $DwnlData_Folder= " & @TAB & '"' & $DwnlData_Folder & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_TempPath= " & @TAB & @TAB & '"' & $s_TempPath & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $DwnlData_Folder= " & @TAB & @TAB & '"' & $DwnlData_Folder & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $GrabberData_Folder= " & @TAB & '"' & $GrabberData_Folder & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Setting File $s_Setting_File= " & @TAB & @TAB & '"' & $s_Setting_File & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Log File $s_Log_File= " & @TAB & @TAB & @TAB & '"' & $s_Log_File & '"')
@@ -477,8 +471,8 @@ EndFunc   ;==>_LogProfilePaths
 
 Func _CheckCmdLine()
 	FileWriteLine($s_Log_File, "")
-	FileWriteLine($s_Log_File, "============================= Check Command Line =============================")
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Checking Command Line: " & $CmdLine[0])
+	FileWriteLine($s_Log_File, "============================= Command Line Check =============================")
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: No of Command Line Parameters Passed: " & $CmdLine[0])
 
 	Switch $CmdLine[0]
 		Case 0
@@ -1822,7 +1816,7 @@ Func _ChooseDataBackupFolder()
 	$s_Backup_Dir = FileSelectFolder("Choose a folder to save file...", "", 7, $s_Backup_Dir, $hGUI_BM)
 	If StringRight($s_Backup_Dir, 1) <> "\" Then $s_Backup_Dir &= "\"
 
-	If _FileIsPathValid($s_Backup_Dir) = "True" Then ;User Selected valid path
+	If _IsFilePathValid($s_Backup_Dir) Then ;User Selected valid path
 		GUICtrlSetData($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
 		IniWrite($s_Setting_File, "Default Paths", "Backup_Dir", $s_Backup_Dir)
 		GUICtrlSetTip($h_Label_BrowseDataBackupFolder_Setting, $s_Backup_Dir)
@@ -1837,7 +1831,7 @@ Func _ChooseAppDataBackupFolder()
 	$s_AppDataIDMFolder = FileSelectFolder("Choose a folder to save file...", "", 7, $s_AppDataIDMFolder, $hGUI_BM)
 	If StringRight($s_AppDataIDMFolder, 1) <> "\" Then $s_AppDataIDMFolder &= "\"
 
-	If _FileIsPathValid($s_AppDataIDMFolder) = "True" Then ;User Selected valid path
+	If _IsFilePathValid($s_AppDataIDMFolder) Then ;User Selected valid path
 		If StringRight($s_AppDataIDMFolder, 5) = "\IDM\" Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
@@ -1862,7 +1856,7 @@ Func _ChooseTempDataBackupFolder()
 	$s_TempPath = FileSelectFolder("Choose a folder...", "", 7, $s_TempPath, $hGUI_BM)
 	If StringRight($s_TempPath, 1) <> "\" Then $s_TempPath &= "\"
 
-	If _FileIsPathValid($s_TempPath) = "True" Then ;User Selected valid path
+	If _IsFilePathValid($s_TempPath) Then ;User Selected valid path
 		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 		GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_TempPath, $s_TempPath)

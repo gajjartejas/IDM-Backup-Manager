@@ -136,25 +136,6 @@ Func _sGetTempPathFolder()
 	Return $TempPath
 EndFunc   ;==>_sGetTempPathFolder
 
-Func _sPath_Last_Remove($sPath)
-	Local $s_Saved_Path = ""
-
-	If StringRight($sPath, 1) <> "\" Then $sPath &= "\"
-
-	Local $split_path = StringSplit($sPath, "\")
-
-	If @error = 1 Then
-		Return $sPath
-	ElseIf $split_path[0] = 2 Then
-		Return $sPath
-	Else
-		For $i = 1 To $split_path[0] - 2 Step 1
-			$s_Saved_Path &= $split_path[$i] & "\"
-		Next
-		Return $s_Saved_Path
-	EndIf
-EndFunc   ;==>_sPath_Last_Remove
-
 Func _SwHelp()
 	If FileExists(@ScriptDir & "\Help.chm") Then
 		ShellExecute(@ScriptDir & "\Help.chm")

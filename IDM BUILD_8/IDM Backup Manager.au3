@@ -23,6 +23,7 @@
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #region Includes
+#Region    ;************ Includes ************
 #include <EditConstants.au3>
 #include <ComboConstants.au3>
 #include "Includes\_AET_ButtonSetIcon.au3"
@@ -33,8 +34,10 @@
 #include "Includes\_7Zip.au3"
 #include "Includes\_ProgressMarquee.au3"
 #include "Includes\_IDM List Manager.au3"
+#EndRegion ;************ Includes ************
 #endregion Includes
 
+_LogRemove()
 _CheckCmdLine()
 
 #region Main
@@ -379,13 +382,6 @@ Func _CheckIni()
 ;~ 		$s_AppDataIDMFolder = IniRead($s_Setting_File, "Profile Paths", "AppDataIDMFolder", $s_AppDataIDMFolder);contain back "\"
 ;~ 		$s_TempPath = IniRead($s_Setting_File, "Profile Paths", "TempPath", $DwnlData_Folder);contain back "\"
 
-		$b_AppendLog_File = Number(IniRead($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File))
-		If Not $b_AppendLog_File And FileExists($s_Log_File) Then
-			FileDelete($s_Log_File)
-			_LogSysInfo()
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Previous Log Removed.")
-		EndIf
-
 		$b_RestartIDM = Number(IniRead($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM))
 
 		$b_OpenFolder = Number(IniRead($s_Setting_File, "More Setting", "Open_Folder", $b_OpenFolder))
@@ -403,8 +399,6 @@ EndFunc   ;==>_CheckSelfProcess
 
 Func _LogSysInfo()
 	Local $a_Memory = MemGetStats()
-	FileWriteLine($s_Log_File, "")
-	FileWriteLine($s_Log_File, "============================= New Session Started at " & _Current_Moment() & "=============================")
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= System Information =============================")
 	FileWriteLine($s_Log_File, "Module Name and Version: " & $s_Win_Title_BM)
@@ -455,7 +449,7 @@ EndFunc   ;==>_CheckIDMProcess
 
 Func _LogProfilePaths()
 	FileWriteLine($s_Log_File, "")
-	FileWriteLine($s_Log_File, "============================= Check Profile =============================")
+	FileWriteLine($s_Log_File, "============================= Check Profile ==================================")
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $AppDataIDMFolder= " & @TAB & '"' & $s_AppDataIDMFolder & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_TempPath= " & @TAB & @TAB & '"' & $s_TempPath & '"')
@@ -469,7 +463,13 @@ Func _LogProfilePaths()
 	FileWriteLine($s_Log_File, "")
 EndFunc   ;==>_LogProfilePaths
 
+Func _LogRemove()
+	$b_AppendLog_File = Number(IniRead($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File))
+	If Not $b_AppendLog_File And FileExists($s_Log_File) Then FileDelete($s_Log_File)
+EndFunc   ;==>_LogRemove
+
 Func _CheckCmdLine()
+
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= Command Line Check =============================")
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: No of Command Line Parameters Passed: " & $CmdLine[0])
@@ -693,75 +693,6 @@ Func _ControlUpdateDefault()
 EndFunc   ;==>_ControlUpdateDefault
 #endregion control Functions
 
-#region Misc Functions(App Indepedent)
-Func _iGetFileSize($aFiles)
-	Local $i, $iSize = 0
-
-	For $i = 0 To UBound($aFiles) - 1
-		If Not FileExists($aFiles[$i]) Then ContinueLoop
-		If _IsDir($aFiles[$i]) Then
-			$iSize += DirGetSize($aFiles[$i])
-		Else
-			$iSize += FileGetSize($aFiles[$i])
-		EndIf
-	Next
-	Return $iSize
-EndFunc   ;==>_iGetFileSize
-
-Func _sDriveGetFromPath($path)
-	Local $szDrive, $szDir, $szFName, $szExt
-	Local $TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
-	Return $TestPath[1]
-EndFunc   ;==>_sDriveGetFromPath
-
-;Get Filesize Conversion
-Func _sGetFileSizeConv($iBytes)
-	If $iBytes >= 0 And $iBytes <= 1024 Then
-		Return $iBytes & " Bytes"
-	ElseIf $iBytes > 1024 And $iBytes <= 1048576 Then
-		Return Round($iBytes / (1024), 2) & " KB"
-	ElseIf $iBytes > 1048576 And $iBytes <= 1073741824 Then
-		Return Round($iBytes / (1048576), 2) & " MB"
-	ElseIf $iBytes > 1073741824 Then
-		Return Round($iBytes / (1073741824), 2) & " GB"
-	EndIf
-EndFunc   ;==>_sGetFileSizeConv
-
-Func _IsDir($sFilePath)
-	Return Number(FileExists($sFilePath) And StringInStr(FileGetAttrib($sFilePath), "D", 2, 1) > 0)
-EndFunc   ;==>_IsDir
-
-Func _Current_Moment()
-	Return @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":" & @MIN & ":" & @SEC & " --> "
-EndFunc   ;==>_Current_Moment
-
-Func _iFileOrFolderRemove($aFiles)
-	Local $i, $sFileLocked
-
-	For $i = 0 To UBound($aFiles) - 1
-		If ($aFiles[$i] = "") Or (Not FileExists($aFiles[$i])) Then ContinueLoop
-
-		If _IsDir($aFiles[$i]) Then
-			If Not DirRemove($aFiles[$i], 1) Then $sFileLocked &= $aFiles[$i] & @CRLF
-		Else
-			FileSetAttrib($aFiles[$i], "-R+A")
-			If Not FileDelete($aFiles[$i]) Then $sFileLocked &= $aFiles[$i] & @CRLF
-		EndIf
-	Next
-	Return $sFileLocked
-EndFunc   ;==>_iFileOrFolderRemove
-
-Func _IsInternetConnectedEx() ; Returns 1 = ON or 0 = OFF
-	Local $is_Return = DllCall("wininet.dll", "int", "InternetGetConnectedState", "int", 0, "int", 0)
-	If (@error) Or ($is_Return[0] = 0) Then Return SetError(1, 0, 0)
-	Return 1
-EndFunc   ;==>_IsInternetConnectedEx
-
-Func _SelectFile($filename) ;Select file in Explorer
-	If FileExists($filename) Then Run("explorer /select, " & '"' & $filename & '"')
-EndFunc   ;==>_SelectFile
-#endregion Misc Functions(App Indepedent)
-
 #region GUIS
 Func _SwBMGUI()
 	#region ### START Koda GUI section ###
@@ -875,7 +806,7 @@ Func _SwBMGUI()
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	$h_Checkbox_UnFinished_SD_Restore = GUICtrlCreateCheckbox("Scheduler/Queues", 200, 170, 107, 17)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Checkbox_UnFinished_HL_Restore = GUICtrlCreateCheckbox("History and Logs", 310, 170, 97, 17)
+	$h_Checkbox_UnFinished_HL_Restore = GUICtrlCreateCheckbox("Other Data", 310, 170, 97, 17)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
@@ -1682,6 +1613,8 @@ Func _onExit()
 	IniWrite($s_Setting_File, "Position", "x", $WinPos[0])
 	IniWrite($s_Setting_File, "Position", "y", $WinPos[1])
 	If $b_RestartIDM Then _RunIDMexe()
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "================================= Exit =======================================")
 	Exit 0
 EndFunc   ;==>_onExit
 
@@ -2006,6 +1939,7 @@ Func _Backup()
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
 			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
+			_ControlUpdateDefault()
 			Return SetError(1)
 		Else
 			$b_Password = True
@@ -2101,7 +2035,7 @@ Func _Backup()
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $DwnlData_Folder " & "=" & ' "' & $DwnlData_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "DwnlData_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exists= " & '"' & $DwnlData_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $DwnlData_Folder Reason: Folder Does Not Exists= " & '"' & $DwnlData_Folder & '"')
 		EndIf
 	Else
 		IniWrite($s_ini_File, "Default", "DwnlData_Folder", False)
@@ -2113,7 +2047,7 @@ Func _Backup()
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Grabber_Folder " & "=" & ' "' & $Grabber_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "Grabber_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exists= " & '"' & $Grabber_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $Grabber_Folder Reason: Folder Does Not Exists= " & '"' & $Grabber_Folder & '"')
 		EndIf
 
 		If FileExists($GrabberData_Folder) Then
@@ -2121,7 +2055,7 @@ Func _Backup()
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GrabberData_Folder " & "=" & ' "' & $GrabberData_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "GrabberData_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exists= " & '"' & $GrabberData_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $GrabberData_Folder Reason: Folder Does Not Exists= " & '"' & $GrabberData_Folder & '"')
 		EndIf
 	Else
 		IniWrite($s_ini_File, "Default", "Grabber_Folder", False)
@@ -2134,7 +2068,7 @@ Func _Backup()
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Scheduler_Folder " & "=" & ' "' & $Scheduler_Folder & '" ')
 			IniWrite($s_ini_File, "Default", "Scheduler_Folder", True)
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: Folder Does Not Exists= " & '"' & $Scheduler_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $Scheduler_Folder Reason: Folder Does Not Exists= " & '"' & $Scheduler_Folder & '"')
 		EndIf
 	Else
 		IniWrite($s_ini_File, "Default", "Scheduler_Folder", False)
@@ -2146,63 +2080,63 @@ Func _Backup()
 			$aData[4] = $UrlHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory_txt_File " & "=" & ' "' & $UrlHistory_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $UrlHistory_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $UrlHistory_txt_File Reason: File Does Not Exists= " & '"' & $UrlHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($UrlHistory2_txt_File) Then
 			$aData[5] = $UrlHistory2_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $UrlHistory2_txt_File " & "=" & ' "' & $UrlHistory2_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $UrlHistory2_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $UrlHistory2_txt_File Reason: File Does Not Exists= " & '"' & $UrlHistory2_txt_File & '"')
 		EndIf
 
 		If FileExists($GlobalErrors_log_File) Then
 			$aData[6] = $GlobalErrors_log_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $GlobalErrors_log_File " & "=" & ' "' & $GlobalErrors_log_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $GlobalErrors_log_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $GlobalErrors_log_File Reason: File Does Not Exists= " & '"' & $GlobalErrors_log_File & '"')
 		EndIf
 
 		If FileExists($urlexclist_dat_File) Then
 			$aData[7] = $urlexclist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $urlexclist_dat_File " & "=" & ' "' & $urlexclist_dat_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $urlexclist_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $urlexclist_dat_File Reason: File Does Not Exists= " & '"' & $urlexclist_dat_File & '"')
 		EndIf
 
 		If FileExists($defextmap_dat_File) Then
 			$aData[8] = $defextmap_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $defextmap_dat_File " & "=" & ' "' & $defextmap_dat_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $defextmap_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $defextmap_dat_File Reason: File Does Not Exists= " & '"' & $defextmap_dat_File & '"')
 		EndIf
 
 		If FileExists($foldresHistory_txt_File) Then
 			$aData[9] = $foldresHistory_txt_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $foldresHistory_txt_File " & "=" & ' "' & $foldresHistory_txt_File & '"')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $foldresHistory_txt_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $foldresHistory_txt_File Reason: File Does Not Exists= " & '"' & $foldresHistory_txt_File & '"')
 		EndIf
 
 		If FileExists($sts_list_dat_File) Then
 			$aData[10] = $sts_list_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $sts_list_dat_File " & "=" & ' "' & $sts_list_dat_File & '" ')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $sts_list_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $sts_list_dat_File Reason: File Does Not Exists= " & '"' & $sts_list_dat_File & '"')
 		EndIf
 
 		If FileExists($cnlurllist_dat_File) Then
 			$aData[11] = $cnlurllist_dat_File
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $cnlurllist_dat_File " & "=" & ' "' & $cnlurllist_dat_File & '" ')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $cnlurllist_dat_File & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $cnlurllist_dat_File Reason: File Does Not Exists= " & '"' & $cnlurllist_dat_File & '"')
 		EndIf
 
 		If FileExists($Sound_Folder) Then
 			$aData[12] = $Sound_Folder
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $Sound_Folder " & "=" & ' "' & $Sound_Folder & '" ')
 		Else
-			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exists= " & '"' & $Sound_Folder & '"')
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $Sound_Folder Reason: File Does Not Exists= " & '"' & $Sound_Folder & '"')
 		EndIf
 
 		IniWrite($s_ini_File, "Default", "History_Files", True)
@@ -2216,7 +2150,7 @@ Func _Backup()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_ini_File & '"')
 	Else
 		$aData[13] = ""
-		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_ini_File & '"')
+		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $s_ini_File Reason: File Does Not Exits= " & '"' & $s_ini_File & '"')
 	EndIf
 	#endregion ;/add INI--->
 
@@ -2226,11 +2160,10 @@ Func _Backup()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_reg_File & '"')
 	Else
 		$aData[14] = ""
-		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added Reason: File Does Not Exits= " & '"' & $s_reg_File & '"')
+		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $s_ini_File Reason: File Does Not Exits= " & '"' & $s_reg_File & '"')
 	EndIf
 	#endregion ;/add registry--->
 	#endregion ;/Build Data array and Write INI--->
-	_ArrayDisplay($aData)
 
 	#region ;/add Data Files--->
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Adding: Data Files Please Wait...")
@@ -2239,10 +2172,15 @@ Func _Backup()
 	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
 	Local $foo = _7ZipAdd($hGUI_BM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
 
-	Local $sFile = StringSplit($foo, @CRLF, 1)
-	For $i = 1 To $sFile[0]
-		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Adding..= " & '"' & $sFile[$i] & '"')
-	Next
+	If $foo <> 0 Then
+		Local $sFile = StringSplit($foo, @CRLF, 1)
+		For $i = 1 To $sFile[0]
+			If $sFile[$i] <> "" Then FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & $sFile[$i])
+		Next
+	Else
+		FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & "Unknown Error Occured.")
+	EndIf
+
 	_7ZipShutdown()
 	#endregion ;/add Data Files--->
 

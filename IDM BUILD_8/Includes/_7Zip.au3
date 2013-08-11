@@ -86,7 +86,7 @@ Func _7ZipAdd($hWnd, $s7z_File_Save_Name, $aDestinationFolders, $sCompression, $
 
 	If $iFlagDll = 2 Then _7ZipShutdown()
 	If Not $aRet[0] Then Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
-	Return SetError(1, 0, 0)
+	Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
 EndFunc   ;==>_7ZipAdd
 
 Func _7ZipExtractEx($hWnd, $sZipFile, $sDestinationFolder, $aFile_To_Extracr, $sPassword)
@@ -127,7 +127,7 @@ Func _7ZipExtractEx($hWnd, $sZipFile, $sDestinationFolder, $aFile_To_Extracr, $s
 
 	If $iFlagDll = 2 Then _7ZipShutdown()
 	If Not $aRet[0] Then Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
-	Return SetError(1, 0, 0)
+	Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
 EndFunc   ;==>_7ZipExtractEx
 
 Func _7ZipSetOwnerWindowEx($hWnd, $sProcFunc)

@@ -1,39 +1,39 @@
-#NoTrayIcon
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=..\Extra\icon.ico
-#AutoIt3Wrapper_Outfile=IDM List Manager 0.9.8.exe
-#AutoIt3Wrapper_Compression=4
-#AutoIt3Wrapper_UseUpx=n
-#AutoIt3Wrapper_Res_Comment=IDM List Manager 0.9.8.0
-#AutoIt3Wrapper_Res_Description=Join Unfinished Downloaded Files, Remove Download From List and much more.
-#AutoIt3Wrapper_Res_Fileversion=0.9.8.0
-#AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-13
-#AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
-#AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas
-#AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
-#AutoIt3Wrapper_Res_Field=Internal Name|IDM List Manager.exe
-#AutoIt3Wrapper_Res_Field=Product Name|IDM List Manager
-#AutoIt3Wrapper_Res_Field=Product Version|0.9.8 beta
-#AutoIt3Wrapper_Res_Field=Total Commits|31
-#AutoIt3Wrapper_Run_Obfuscator=y
-#Obfuscator_Parameters=/striponly
-#AutoIt3Wrapper_Run_cvsWrapper=v
-#AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+;~ #NoTrayIcon
+;~ #region ;**** Directives created by AutoIt3Wrapper_GUI ****
+;~ #AutoIt3Wrapper_Icon=..\Extra\icon.ico
+;~ #AutoIt3Wrapper_Outfile=IDM List Manager 0.9.8.exe
+;~ #AutoIt3Wrapper_Compression=4
+;~ #AutoIt3Wrapper_UseUpx=n
+;~ #AutoIt3Wrapper_Res_Comment=IDM List Manager 0.9.8.0
+;~ #AutoIt3Wrapper_Res_Description=Join Unfinished Downloaded Files, Remove Download From List and much more.
+;~ #AutoIt3Wrapper_Res_Fileversion=0.9.8.0
+;~ #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-13
+;~ #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
+;~ #AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas
+;~ #AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
+;~ #AutoIt3Wrapper_Res_Field=Internal Name|IDM List Manager.exe
+;~ #AutoIt3Wrapper_Res_Field=Product Name|IDM List Manager
+;~ #AutoIt3Wrapper_Res_Field=Product Version|0.9.8 beta
+;~ #AutoIt3Wrapper_Res_Field=Total Commits|31
+;~ #AutoIt3Wrapper_Run_Obfuscator=y
+;~ #Obfuscator_Parameters=/striponly
+;~ #AutoIt3Wrapper_Run_cvsWrapper=v
+;~ #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+;~ #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#region Includes
+#AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+
 #Region    ;************ Includes ************
-;~ #include <WinAPIEx.au3>;~~~
+#include-once
+#Include "_AppsFun.au3"
 #include <GuiStatusBar.au3>
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
-#include <File.au3>
 #include <GuiMenu.au3>
 #include "_GUICtrlListView_SaveHTML.au3"
 #include "_GUICtrlListView_SaveCSV.au3"
 #include "_AppsConstant.au3"
 #EndRegion ;************ Includes ************
-#endregion Includes
 
 #region Export Function
 Func _Expert_HTML()
@@ -579,53 +579,6 @@ Func ListView_RClick()
 EndFunc   ;==>ListView_RClick
 
 #endregion Events
-
-#region Internal Function
-Func _CountKey($sRegpath)
-	Local $k = 1
-	While 1
-		RegEnumKey($sRegpath, $k)
-		If @error <> 0 Then ExitLoop
-		$k += 1
-	WEnd
-	Return $k - 1
-EndFunc   ;==>_CountKey
-
-Func _Resize_Text($text)
-	Return "Goto " & StringLeft($text, 20) & "...."
-EndFunc   ;==>_Resize_Text
-
-Func _File_Size($Rn)
-	If $Rn > 0 And $Rn <= 1024 Then
-		Return $Rn & " BYTES"
-	ElseIf $Rn > 1024 And $Rn <= 1048576 Then
-		Return Round($Rn / (1024), 2) & " KB"
-	ElseIf $Rn > 1048576 And $Rn <= 1073741824 Then
-		Return Round($Rn / (1048576), 2) & " MB"
-	ElseIf $Rn > 1073741824 Then
-		Return Round($Rn / (1073741824), 2) & " GB"
-	EndIf
-EndFunc   ;==>_File_Size
-
-Func _Drive_Get_From_Path($path)
-	Local $szDrive, $szDir, $szFName, $szExt
-	Local $TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
-	Return $TestPath[1]
-EndFunc   ;==>_Drive_Get_From_Path
-
-Func _Ext_Get_From_Path($path)
-	Local $szDrive, $szDir, $szFName, $szExt
-	Local $TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
-	Return $TestPath[4]
-EndFunc   ;==>_Ext_Get_From_Path
-
-Func _Name_Get_From_Path($path)
-	Local $szDrive, $szDir, $szFName, $szExt
-	Local $TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
-	Return $TestPath[3]
-EndFunc   ;==>_Name_Get_From_Path
-
-#endregion Internal Function
 
 Func _SwLMGUI()
 	GUISetState(@SW_HIDE, $hGUI_BM)

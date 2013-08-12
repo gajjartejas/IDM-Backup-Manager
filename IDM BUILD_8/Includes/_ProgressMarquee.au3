@@ -1,11 +1,9 @@
-
 #AutoIt3Wrapper_Au3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-
-#Region    ;************ Includes ************
+#region    ;************ Includes ************
 #include-once
-#Include <ProgressConstants.au3>
-#Include <WindowsConstants.au3>
-#EndRegion ;************ Includes ************
+#include <ProgressConstants.au3>
+#include <WindowsConstants.au3>
+#endregion    ;************ Includes ************
 
 Func _ProgressMarquee_Start($iControlID)
 	GUICtrlSetStyle($iControlID, BitOR($PBS_SMOOTH, $PBS_MARQUEE, $WS_TABSTOP))

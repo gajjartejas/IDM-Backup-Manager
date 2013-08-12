@@ -90,7 +90,7 @@ Global $aData[15]
 Global $s_Win_Title_LM = "IDM List Manager" & $s_Current_Version & "(Beta)"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
 Global $i_xWidth_LM = 570, $i_yHight_LM = 150
-Global $hGUI_LM, $MenuItem_list_Catagories_[_iCountKey($s_regpath_IDM) + 1], $fChange = False
+Global $hGUI_LM, $MenuItem_list_Catagories_[1], $fChange = False
 
 Global $MenuItem_File, $MenuItem_File_Analyze, $MenuItem_File_Selected, $MenuItem_File_Selected_ExploreFolder, $MenuItem_File_Selected_ForceJoin
 Global $MenuItem_File_Selected_Remove, $MenuItem_File_Selected_Goto, $MenuItem_File_Selected_Properties, $MenuItem_File_Split, $MenuItem_File_Exit

@@ -1,9 +1,7 @@
-
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-
-#Region    ;************ Includes ************
+#region    ;************ Includes ************
 #include-once
-#EndRegion ;************ Includes ************
+#endregion    ;************ Includes ************
 ; #INDEX# =======================================================================================================================
 ; Title .........: _FileIsPathValid UDF
 ; AutoIt Version : 3.3.6+
@@ -68,4 +66,4 @@ Func _IsFilePathValid($Path)
 		EndIf
 	Next
 	Return $Valid
-EndFunc   ;==>_FileIsPathValid
+EndFunc   ;==>_IsFilePathValid

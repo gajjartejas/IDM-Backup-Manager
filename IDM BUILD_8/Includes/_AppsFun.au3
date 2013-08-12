@@ -1,8 +1,8 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-#Region    ;************ Includes ************
+#region    ;************ Includes ************
 #include-once
-#Include <File.au3>
-#EndRegion ;************ Includes ************
+#include <File.au3>
+#endregion    ;************ Includes ************
 
 #region Misc Functions(App Indepedent For IDMBM)
 Func _iGetFileSize($aFiles)
@@ -90,7 +90,7 @@ Func _sPath_Last_Remove($sPath)
 		Return $s_Saved_Path
 	EndIf
 EndFunc   ;==>_sPath_Last_Remove
-#endregion Misc Functions(App Indepedent)
+#endregion Misc Functions(App Indepedent For IDMBM)
 
 #region Misc Functions(App Indepedent For IDMLM)
 Func _CountKey($sRegpath)
@@ -137,4 +137,4 @@ Func _Name_Get_From_Path($path)
 	Return $TestPath[3]
 EndFunc   ;==>_Name_Get_From_Path
 
-#endregion Internal Function
+#endregion Misc Functions(App Indepedent For IDMLM)

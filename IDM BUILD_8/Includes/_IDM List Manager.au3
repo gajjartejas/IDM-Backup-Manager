@@ -23,9 +23,9 @@
 
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 
-#Region    ;************ Includes ************
+#region    ;************ Includes ************
 #include-once
-#Include "_AppsFun.au3"
+#include "_AppsFun.au3"
 #include <GuiStatusBar.au3>
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
@@ -33,7 +33,7 @@
 #include "_GUICtrlListView_SaveHTML.au3"
 #include "_GUICtrlListView_SaveCSV.au3"
 #include "_AppsConstant.au3"
-#EndRegion ;************ Includes ************
+#endregion    ;************ Includes ************
 
 #region Export Function
 Func _Expert_HTML()
@@ -483,6 +483,7 @@ Func _Disable_Button()
 EndFunc   ;==>_Disable_Button
 
 Func _set_cat_to_menu()
+	ReDim $MenuItem_list_Catagories_[_iCountKey($s_regpath_IDM) + 1]
 	Local $i = 1
 	While 1
 		Local $var = RegEnumKey($s_regpath_IDM & "\FoldersTree\", $i)
@@ -661,7 +662,7 @@ Func _SwLMGUI()
 	GUICtrlSetFont(-1, 8.5, 400, 0, 'Tahoma')
 	$hListView = GUICtrlGetHandle($idListView)
 ;~ 	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
-	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_DOUBLEBUFFER, $LVS_EX_FULLROWSELECT, $LVS_EX_INFOTIP, $LVS_EX_GRIDLINES,$LVS_EX_HEADERDRAGDROP))
+	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_DOUBLEBUFFER, $LVS_EX_FULLROWSELECT, $LVS_EX_INFOTIP, $LVS_EX_GRIDLINES, $LVS_EX_HEADERDRAGDROP))
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	If $__WINVER >= 0x0600 Then
 		_WinAPI_SetWindowTheme($hListView, 'Explorer');Require Windows Vista or later.

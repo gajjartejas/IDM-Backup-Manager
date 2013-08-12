@@ -23,7 +23,7 @@
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #region Includes
-#Region    ;************ Includes ************
+#region    ;************ Includes ************
 #include <EditConstants.au3>
 #include <ComboConstants.au3>
 #include "Includes\_AET_ButtonSetIcon.au3"
@@ -34,7 +34,7 @@
 #include "Includes\_7Zip.au3"
 #include "Includes\_ProgressMarquee.au3"
 #include "Includes\_IDM List Manager.au3"
-#EndRegion ;************ Includes ************
+#endregion    ;************ Includes ************
 #endregion Includes
 
 _LogRemove()
@@ -450,7 +450,6 @@ EndFunc   ;==>_CheckIDMProcess
 Func _LogProfilePaths()
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= Check Profile ==================================")
-
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $AppDataIDMFolder= " & @TAB & '"' & $s_AppDataIDMFolder & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_TempPath= " & @TAB & @TAB & '"' & $s_TempPath & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $DwnlData_Folder= " & @TAB & @TAB & '"' & $DwnlData_Folder & '"')
@@ -614,6 +613,7 @@ Func _ControlUpdateBusy()
 	GUICtrlSetState($h_Checkbox_UnFinished_SD_Restore, $GUI_DISABLE)
 	GUICtrlSetState($h_Checkbox_UnFinished_HL_Restore, $GUI_DISABLE)
 
+	GUICtrlSetState($h_Checkbox_Append_Registry_Restore, $GUI_DISABLE)
 	GUICtrlSetState($h_Label_Append_Registry_Restore, $GUI_DISABLE)
 
 	GUICtrlSetState($h_Button_Restore, $GUI_DISABLE)

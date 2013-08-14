@@ -37,8 +37,7 @@
 #endregion    ;************ Includes ************
 #endregion Includes
 
-_LogRemove()
-_CheckCmdLine()
+_StartupBM()
 
 #region Main
 Func _MainBM()
@@ -360,6 +359,9 @@ Func _MainBM()
 			Case $h_Button_Associate_Setting
 				_ShellInstall()
 
+			Case $h_Picture_About
+				ShellExecute("http://www.facebook.com/gajjartejas26")
+
 		EndSwitch
 	WEnd
 EndFunc   ;==>_MainBM
@@ -468,11 +470,14 @@ Func _LogRemove()
 EndFunc   ;==>_LogRemove
 
 Func _CheckCmdLine()
-
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= Command Line Check =============================")
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: No of Command Line Parameters Passed: " & $CmdLine[0])
+EndFunc   ;==>_CheckCmdLine
 
+Func _StartupBM()
+	_LogRemove()
+	_CheckCmdLine()
 	Switch $CmdLine[0]
 		Case 0
 			_CheckSelfProcess()
@@ -480,7 +485,8 @@ Func _CheckCmdLine()
 			_CheckComponment()
 			_CheckIDMProcess()
 			_LogProfilePaths()
-			_RunIBM()
+			_SwBMGUI()
+			_MainBM()
 		Case 1
 			Switch $CmdLine[1]
 				Case "swlm"
@@ -571,7 +577,7 @@ Func _CheckCmdLine()
 					_SwCMDLineMSGBOX()
 			EndSwitch
 	EndSwitch
-EndFunc   ;==>_CheckCmdLine
+EndFunc   ;==>_StartupBM
 #endregion Main
 
 #region control Functions
@@ -940,7 +946,7 @@ Func _SwBMGUI()
 	$h_Button_Update_Help = GUICtrlCreateButton("  Update", 146, 126, 100, 30, $BS_left);1111
 	_AET_ButtonSetIcon(-1, 13, 24, 24, 0)
 
-	GUICtrlCreatePic("", 260, 55, 150, 145)
+	$h_Picture_About = GUICtrlCreatePic("", 260, 55, 150, 145)
 	GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
 	_ResourceSetImageToCtrl(-1, "contactme")
 
@@ -1451,9 +1457,7 @@ Func _FileOrFolderDeleteWithLog($sFile)
 EndFunc   ;==>_FileOrFolderDeleteWithLog
 
 Func _iGetMaxKey($s_regpath_IDM)
-	Local $k = 1
-	Local $j = 0
-	Local $var, $iMaxKey
+	Local $k = 1, $j = 0, $var, $iMaxKey
 
 	While 1
 		$var = RegEnumKey($s_regpath_IDM, $k)
@@ -1462,7 +1466,7 @@ Func _iGetMaxKey($s_regpath_IDM)
 		$k += 1
 	WEnd
 
-	If $j = 0 Then Return 0
+	If $j = 0 Then Return SetError(1, 0, 0)
 
 	Local $MaxKey[$j]
 	$k = 1
@@ -1491,6 +1495,9 @@ Func _ConvertRegProfile()
 	;append mode Use Unicode UTF16 Little Endian reading and writing mode.
 	Local $h_reg_File_Tmp = FileOpen($s_reg_File_Tmp, 32 + 1)
 
+	; Check if file opened for reading OK
+	If $h_reg_File = -1 Or $h_reg_File_Tmp = -1 Then Return SetError(1, 0, 0)
+
 	Local $Pathex = StringReplace('"' & $DwnlData_Folder & @UserName & "\", "\", "\\")
 	Local $sLine, $final, $str, $strLen, $asp, $iN, $asp2
 
@@ -1498,7 +1505,6 @@ Func _ConvertRegProfile()
 		$sLine = FileReadLine($h_reg_File)
 		If @error = -1 Then ExitLoop
 		;===========================================
-		$final = ""
 		If StringLeft($sLine, 16) = '"LocalFileName"=' Then
 			$str = '"LocalFileName"='
 			$strLen = 17
@@ -1531,8 +1537,8 @@ Func _ConvertRegProfile()
 	FileClose($h_reg_File)
 	FileClose($h_reg_File_Tmp)
 
-	If Not FileDelete($s_reg_File) Then Return SetError(2)
-	If Not FileMove($s_reg_File_Tmp, $s_reg_File) Then Return SetError(3)
+	If Not FileDelete($s_reg_File) Then Return SetError(1, 0, 0)
+	If Not FileMove($s_reg_File_Tmp, $s_reg_File) Then Return SetError(1, 0, 0)
 
 	;Cleaneup
 	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
@@ -1550,12 +1556,10 @@ Func _AppendRegKeys()
 	;Try to Get Max Key From Reg if Exists
 	If _RegValueExists($s_regpath_IDM & "\maxID", "maxID") Then
 		$iCounter = RegRead("HKEY_CURRENT_USER\Software\DownloadManager\", "maxID")
-		If @error Then $iCounter = 0
-	EndIf
-
-	If $iCounter = 0 Then
-		$iCounter = _iGetMaxKey($s_regpath_IDM);expt
-		If @error Then Return SetError(1, 0, 0)
+		If @error Then
+			$iCounter = _iGetMaxKey($s_regpath_IDM);Otherwise Use Function
+			If @error Then Return SetError(1, 0, 0)
+		EndIf
 	EndIf
 
 	Local $h_reg_File = FileOpen($s_reg_File, 0);Read
@@ -1563,7 +1567,7 @@ Func _AppendRegKeys()
 	Local $sLine, $asplit
 
 	; Check if file opened for reading OK
-	If $h_reg_File = -1 Or $h_reg_File_Tmp = -1 Then Return SetError(1)
+	If $h_reg_File = -1 Or $h_reg_File_Tmp = -1 Then Return SetError(1, 0, 0)
 
 	; Read in lines of text until the EOF is reached
 	While 1
@@ -1589,19 +1593,19 @@ Func _AppendRegKeys()
 	FileClose($h_reg_File)
 	FileClose($h_reg_File_Tmp)
 
-	If Not FileDelete($s_reg_File) Then Return SetError(2)
-	If Not FileMove($s_reg_File_Tmp, $s_reg_File) Then Return SetError(3)
+	If Not FileDelete($s_reg_File) Then Return SetError(1, 0, 0)
+	If Not FileMove($s_reg_File_Tmp, $s_reg_File) Then Return SetError(1, 0, 0)
 
 	;Cleaneup
 	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
 
-	Return 1
+	Return SetError(0, 0, 1)
 EndFunc   ;==>_AppendRegKeys
 
 Func _RunIDMexe()
 	Local $s_IDMexe_Path = RegRead($s_regpath_IDM, "ExePath")
 	If Not FileExists($s_IDMexe_Path) Then $s_IDMexe_Path = @ProgramFilesDir & "\" & "Internet Download Manager\IDMan.exe"
-	If Not FileExists($s_IDMexe_Path) Then Return SetError(1)
+	If Not FileExists($s_IDMexe_Path) Then Return SetError(1, 0, 0)
 	If ProcessExists("idman.exe") Then
 		ProcessClose("idman.exe")
 		_RunWithReducedPrivileges($s_IDMexe_Path, "/onboot")
@@ -1642,8 +1646,6 @@ Func _ARCHIVERPROC($hWnd, $Msg, $nState, $ExInfo)
 
 	If $nState = 0 Then
 		Local $EXTRACTINGINFO = DllStructCreate($tagEXTRACTINGINFO, $ExInfo)
-
-;~ 		Local $sStr = StringRight(DllStructGetData($EXTRACTINGINFO, "szSourceFileName"), 50)
 
 		$iFileSize = DllStructGetData($EXTRACTINGINFO, "dwFileSize")
 		$iWriteSize = DllStructGetData($EXTRACTINGINFO, "dwWriteSize")
@@ -2172,14 +2174,10 @@ Func _Backup()
 	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
 	Local $foo = _7ZipAdd($hGUI_BM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
 
-	If $foo <> 0 Then
-		Local $sFile = StringSplit($foo, @CRLF, 1)
-		For $i = 1 To $sFile[0]
-			If $sFile[$i] <> "" Then FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & $sFile[$i])
-		Next
-	Else
-		FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & "Unknown Error Occured.")
-	EndIf
+	Local $sFile = StringSplit($foo, @CRLF, 1)
+	For $i = 1 To $sFile[0]
+		If $sFile[$i] <> "" Then FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & $sFile[$i])
+	Next
 
 	_7ZipShutdown()
 	#endregion ;/add Data Files--->
@@ -2395,7 +2393,15 @@ Func _Restore()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_GrabberData_Folder= " & '"' & $Guest_GrabberData_Folder & '"')
 	EndIf
 	#endregion Restore GrabberData\
+
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring DwnlData & GrabberData Folder Please Wait...")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: DwnlData & GrabberData Folder Please Wait...")
 	$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_TempPath, $aData, $s_Password)
+
+	Local $sFile = StringSplit($foo, @CRLF, 1)
+	For $i = 1 To $sFile[0]
+		If $sFile[$i] <> "" Then FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & $sFile[$i])
+	Next
 	#endregion Restore part-1
 
 	_ResetDataAray($aData)
@@ -2430,8 +2436,15 @@ Func _Restore()
 	EndIf
 	#endregion Restore History_Files
 
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring AppDataIDMFolder Folder Please Wait...")
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: AppDataIDMFolder Folder Please Wait...")
+
 	$foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, $s_AppDataIDMFolder, $aData, $s_Password)
+
+	$sFile = StringSplit($foo, @CRLF, 1)
+	For $i = 1 To $sFile[0]
+		If $sFile[$i] <> "" Then FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & $sFile[$i])
+	Next
 	#endregion Restore part-2
 
 	_7ZipShutdown()
@@ -2552,7 +2565,8 @@ Func _Restore()
 				_CopyRegTempKeyWithLog($s_regpath_IDM & "_tmp" & "\" & "FoldersTree", $s_regpath_IDM & "\" & "FoldersTree")
 			Else
 				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Found" & "=" & ' "' & $s_regpath_IDM & "_tmp" & "\" & "FoldersTree" & '" ')
-				Local $i = 1, $key
+				Local $key
+				$i = 1
 				While 1
 					$key = RegEnumKey($s_regpath_IDM & "\FoldersTree\", $i)
 					If @error <> 0 Then ExitLoop
@@ -2630,11 +2644,6 @@ Func _Restore()
 	FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")
 EndFunc   ;==>_Restore
 #endregion Restore
-
-Func _RunIBM()
-	_SwBMGUI()
-	_MainBM()
-EndFunc   ;==>_RunIBM
 
 Func _SwCMDLineMSGBOX()
 	Local $ParentWin = ""

@@ -592,101 +592,105 @@ Func _SwLMGUI()
 		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $i_xWidth_LM / 2, $sizea[1] + $i_yHight_BM / 2 - $i_yHight_LM / 2]
 	EndIf
 
-	#region ### START Koda GUI section ### main gui
-	$hGUI_LM = GUICreate($s_Win_Title_LM, $i_xWidth_LM, $i_yHight_LM, $size[0], $size[1], BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_THICKFRAME, $WS_TABSTOP))
-;~ 	GUISetFont(8.5, 400, 0, 'Microsoft Sans Serif')
+	If IsHWnd($hGUI_LM) Then
+		GUISetState(@SW_SHOW, $hGUI_LM)
+	Else
+		#region ### START Koda GUI section ### main gui
+		$hGUI_LM = GUICreate($s_Win_Title_LM, $i_xWidth_LM, $i_yHight_LM, $size[0], $size[1], BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_THICKFRAME, $WS_TABSTOP))
+;~ 		GUISetFont(8.5, 400, 0, 'Microsoft Sans Serif')
 
-	#region Menu
-	#region File Menu ;============================================================================================== File Menu
-	$MenuItem_File = GUICtrlCreateMenu("&File")
-	$MenuItem_File_Analyze = GUICtrlCreateMenuItem("&Analyze(Refresh)", $MenuItem_File)
-	$MenuItem_File_Selected = GUICtrlCreateMenu("&Selected", $MenuItem_File)
-	$MenuItem_File_Selected_ExploreFolder = GUICtrlCreateMenuItem("&Explore Folder", $MenuItem_File_Selected)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	$MenuItem_File_Selected_ForceJoin = GUICtrlCreateMenuItem("F&orce Join", $MenuItem_File_Selected)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	$MenuItem_File_Selected_Remove = GUICtrlCreateMenuItem("&Remove", $MenuItem_File_Selected)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	$MenuItem_File_Selected_Goto = GUICtrlCreateMenuItem("&Goto", $MenuItem_File_Selected)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	$MenuItem_File_Selected_Properties = GUICtrlCreateMenuItem("&Properties", $MenuItem_File_Selected)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	$MenuItem_File_Split = GUICtrlCreateMenuItem("", $MenuItem_File)
-	$MenuItem_File_Exit = GUICtrlCreateMenuItem("&Close", $MenuItem_File)
-	#endregion File Menu ;============================================================================================== File Menu
+		#region Menu
+		#region File Menu ;============================================================================================== File Menu
+		$MenuItem_File = GUICtrlCreateMenu("&File")
+		$MenuItem_File_Analyze = GUICtrlCreateMenuItem("&Analyze(Refresh)", $MenuItem_File)
+		$MenuItem_File_Selected = GUICtrlCreateMenu("&Selected", $MenuItem_File)
+		$MenuItem_File_Selected_ExploreFolder = GUICtrlCreateMenuItem("&Explore Folder", $MenuItem_File_Selected)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+		$MenuItem_File_Selected_ForceJoin = GUICtrlCreateMenuItem("F&orce Join", $MenuItem_File_Selected)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+		$MenuItem_File_Selected_Remove = GUICtrlCreateMenuItem("&Remove", $MenuItem_File_Selected)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+		$MenuItem_File_Selected_Goto = GUICtrlCreateMenuItem("&Goto", $MenuItem_File_Selected)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+		$MenuItem_File_Selected_Properties = GUICtrlCreateMenuItem("&Properties", $MenuItem_File_Selected)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+		$MenuItem_File_Split = GUICtrlCreateMenuItem("", $MenuItem_File)
+		$MenuItem_File_Exit = GUICtrlCreateMenuItem("&Close", $MenuItem_File)
+		#endregion File Menu ;============================================================================================== File Menu
 
-	#region Edit Menu ;==============================================================================================Edit Menu
-	$MenuItem_Edit = GUICtrlCreateMenu("&Edit")
-	$MenuItem_Edit_Remove = GUICtrlCreateMenuItem("&Clear Selected Entry", $MenuItem_Edit)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	$MenuItem_Edit_Remove_All = GUICtrlCreateMenuItem("C&lear All Entry", $MenuItem_Edit)
-	$MenuItem_Edit_Find = GUICtrlCreateMenuItem("&Find...", $MenuItem_Edit)
-	#endregion Edit Menu ;==============================================================================================Edit Menu
+		#region Edit Menu ;==============================================================================================Edit Menu
+		$MenuItem_Edit = GUICtrlCreateMenu("&Edit")
+		$MenuItem_Edit_Remove = GUICtrlCreateMenuItem("&Clear Selected Entry", $MenuItem_Edit)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+		$MenuItem_Edit_Remove_All = GUICtrlCreateMenuItem("C&lear All Entry", $MenuItem_Edit)
+		$MenuItem_Edit_Find = GUICtrlCreateMenuItem("&Find...", $MenuItem_Edit)
+		#endregion Edit Menu ;==============================================================================================Edit Menu
 
-	#region Tools Menu ;==============================================================================================Tools Menu
-	$MenuItem_Tools = GUICtrlCreateMenu("T&ools")
-	$MenuItem_Tools_Expert = GUICtrlCreateMenu("&Expert", $MenuItem_Tools)
-	$MenuItem__Tools_Expert_asIDM = GUICtrlCreateMenuItem("To IDM E&xpert File", $MenuItem_Tools_Expert)
-	$MenuItem_Tools_Expert_asText = GUICtrlCreateMenuItem("To IDM &Text File", $MenuItem__Tools_Expert_asIDM)
-	$MenuItem__Tools_Expert_asHTML = GUICtrlCreateMenuItem("As HTML Re&port File", $MenuItem__Tools_Expert_asIDM)
-	$MenuItem__Tools_Expert_asCSV = GUICtrlCreateMenuItem("As CSV &Report File", $MenuItem__Tools_Expert_asIDM)
-	#endregion Tools Menu ;==============================================================================================Tools Menu
+		#region Tools Menu ;==============================================================================================Tools Menu
+		$MenuItem_Tools = GUICtrlCreateMenu("T&ools")
+		$MenuItem_Tools_Expert = GUICtrlCreateMenu("&Expert", $MenuItem_Tools)
+		$MenuItem__Tools_Expert_asIDM = GUICtrlCreateMenuItem("To IDM E&xpert File", $MenuItem_Tools_Expert)
+		$MenuItem_Tools_Expert_asText = GUICtrlCreateMenuItem("To IDM &Text File", $MenuItem__Tools_Expert_asIDM)
+		$MenuItem__Tools_Expert_asHTML = GUICtrlCreateMenuItem("As HTML Re&port File", $MenuItem__Tools_Expert_asIDM)
+		$MenuItem__Tools_Expert_asCSV = GUICtrlCreateMenuItem("As CSV &Report File", $MenuItem__Tools_Expert_asIDM)
+		#endregion Tools Menu ;==============================================================================================Tools Menu
 
-	#region View Menu ;==============================================================================================View Menu
-	$MenuItem_View = GUICtrlCreateMenu("&View")
+		#region View Menu ;==============================================================================================View Menu
+		$MenuItem_View = GUICtrlCreateMenu("&View")
 
-	$MenuItem_list = GUICtrlCreateMenu("L&ist", $MenuItem_View)
-	$MenuItem_View_List_AllDownloads = GUICtrlCreateMenuItem("&All Downloads", $MenuItem_list, -1, 1)
-	GUICtrlSetState(-1, $GUI_CHECKED)
-	$MenuItem_View_List_FinishedDownloads = GUICtrlCreateMenuItem("&Finished Downloads", $MenuItem_list, -1, 1)
-	$MenuItem_View_List_UnFinished = GUICtrlCreateMenuItem("&UnFinished Downloads", $MenuItem_list, -1, 1)
-	$MenuItem_View_List_UnFinished_Data = GUICtrlCreateMenuItem("UnFinished Downloads &Data", $MenuItem_list, -1, 1)
+		$MenuItem_list = GUICtrlCreateMenu("L&ist", $MenuItem_View)
+		$MenuItem_View_List_AllDownloads = GUICtrlCreateMenuItem("&All Downloads", $MenuItem_list, -1, 1)
+		GUICtrlSetState(-1, $GUI_CHECKED)
+		$MenuItem_View_List_FinishedDownloads = GUICtrlCreateMenuItem("&Finished Downloads", $MenuItem_list, -1, 1)
+		$MenuItem_View_List_UnFinished = GUICtrlCreateMenuItem("&UnFinished Downloads", $MenuItem_list, -1, 1)
+		$MenuItem_View_List_UnFinished_Data = GUICtrlCreateMenuItem("UnFinished Downloads &Data", $MenuItem_list, -1, 1)
 
-	$MenuItem_View_Categories_list_all = GUICtrlCreateMenu("&Catagories", $MenuItem_View)
-	$MenuItem_View_Categories_list_CatArray = GUICtrlCreateMenuItem("A&ll", $MenuItem_View_Categories_list_all, -1, 1)
-	GUICtrlSetState(-1, $GUI_CHECKED)
-	$i_Cat_Item = _set_cat_to_menu()
+		$MenuItem_View_Categories_list_all = GUICtrlCreateMenu("&Catagories", $MenuItem_View)
+		$MenuItem_View_Categories_list_CatArray = GUICtrlCreateMenuItem("A&ll", $MenuItem_View_Categories_list_all, -1, 1)
+		GUICtrlSetState(-1, $GUI_CHECKED)
+		$i_Cat_Item = _set_cat_to_menu()
 
-	$MenuItem_View_SwGrid = GUICtrlCreateMenuItem("&Show Grid Lines", $MenuItem_View)
-	GUICtrlSetState(-1, $GUI_CHECKED)
-	$MenuItem_View_AutoArrange = GUICtrlCreateMenuItem("A&uto Arrange", $MenuItem_View)
+		$MenuItem_View_SwGrid = GUICtrlCreateMenuItem("&Show Grid Lines", $MenuItem_View)
+		GUICtrlSetState(-1, $GUI_CHECKED)
+		$MenuItem_View_AutoArrange = GUICtrlCreateMenuItem("A&uto Arrange", $MenuItem_View)
 
-	$MenuItem_Help = GUICtrlCreateMenu("&?")
-	$MenuItem_Help_h = GUICtrlCreateMenuItem("Help", $MenuItem_Help)
-	#endregion View Menu ;==============================================================================================View Menu
-	#endregion Menu
+		$MenuItem_Help = GUICtrlCreateMenu("&?")
+		$MenuItem_Help_h = GUICtrlCreateMenuItem("Help", $MenuItem_Help)
+		#endregion View Menu ;==============================================================================================View Menu
+		#endregion Menu
 
-	#region GUI
-	#region List View ;==============================================================================================List View
-	$idListView = GUICtrlCreateListView("No.|Name|File Size|MIME Type|ID|Link", 0, 0, 570, 110)
-	GUICtrlSetFont(-1, 8.5, 400, 0, 'Tahoma')
-	$hListView = GUICtrlGetHandle($idListView)
-;~ 	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
-	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_DOUBLEBUFFER, $LVS_EX_FULLROWSELECT, $LVS_EX_INFOTIP, $LVS_EX_GRIDLINES, $LVS_EX_HEADERDRAGDROP))
-	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	If $__WINVER >= 0x0600 Then
-		_WinAPI_SetWindowTheme($hListView, 'Explorer');Require Windows Vista or later.
+		#region GUI
+		#region List View ;==============================================================================================List View
+		$idListView = GUICtrlCreateListView("No.|Name|File Size|MIME Type|ID|Link", 0, 0, 570, 110)
+		GUICtrlSetFont(-1, 8.5, 400, 0, 'Tahoma')
+		$hListView = GUICtrlGetHandle($idListView)
+;~ 		_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER, $LVS_EX_HEADERDRAGDROP))
+		_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_DOUBLEBUFFER, $LVS_EX_FULLROWSELECT, $LVS_EX_INFOTIP, $LVS_EX_GRIDLINES, $LVS_EX_HEADERDRAGDROP))
+		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
+		If $__WINVER >= 0x0600 Then
+			_WinAPI_SetWindowTheme($hListView, 'Explorer');Require Windows Vista or later.
+		EndIf
+		_GUICtrlListView_SetColumn($hListView, 0, "No.", -1, 1)
+		_GUICtrlListView_SetColumn($hListView, 2, "File Size", -1, 1)
+		_GUICtrlListView_SetColumn($hListView, 4, "ID", -1, 1)
+		#endregion List View ;==============================================================================================List View
+
+		#region Info;==============================================================================================Info
+		Local $aParts[1] = [-1]
+		Local $aText[1] = ["INFO: Ready"]
+		$h_Status_Info_LM = _GUICtrlStatusBar_Create($hGUI_LM, $aParts, $aText)
+		#endregion Info;==============================================================================================Info
+
+		#endregion GUI
+		#endregion ### END Koda GUI section ###
 	EndIf
-	_GUICtrlListView_SetColumn($hListView, 0, "No.", -1, 1)
-	_GUICtrlListView_SetColumn($hListView, 2, "File Size", -1, 1)
-	_GUICtrlListView_SetColumn($hListView, 4, "ID", -1, 1)
-	#endregion List View ;==============================================================================================List View
 
-	#region Info;==============================================================================================Info
-	Local $aParts[1] = [-1]
-	Local $aText[1] = ["INFO: Ready"]
-	$h_Status_Info_LM = _GUICtrlStatusBar_Create($hGUI_LM, $aParts, $aText)
-	#endregion Info;==============================================================================================Info
-
-	#endregion GUI
 	_Disable_Button()
 	GUIRegisterMsg($WM_NOTIFY, "WM_NOTIFY")
 	GUIRegisterMsg($WM_GETMINMAXINFO, "WM_GETMINMAXINFO")
 	GUIRegisterMsg($WM_SIZE, "MY_WM_SIZE")
 	GUIRegisterMsg($WM_SIZE, "stb_resize")
 	GUISetState(@SW_SHOW)
-	#endregion ### END Koda GUI section ###
-
 EndFunc   ;==>_SwLMGUI
 
 Func _MainLM()
@@ -756,7 +760,7 @@ Func _MainLM()
 		_Disable_Button()
 	WEnd
 	GUISetState(@SW_SHOW, $hGUI_BM)
-	GUIDelete($hGUI_LM)
+	GUISetState(@SW_HIDE, $hGUI_LM)
 EndFunc   ;==>_MainLM
 
 Func _SwFindGUI()

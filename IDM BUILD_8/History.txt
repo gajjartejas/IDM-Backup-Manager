@@ -5,7 +5,6 @@ v0.9.8 April 24th, 2013
 • Fixed Sound Directory Dose not Backup in Custom Mode.
 • Fixed IDM GrabberData Folder Dose not Backup in Custom Profile Mode.
 • Added Command Line Support.
-• Added 64 bit Operating System Support.
 • Added Custom Component Restore.
 • Added Append/Merge Profile on Restore.
 • Added Open Folder after Backup.

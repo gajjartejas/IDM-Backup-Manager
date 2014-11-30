@@ -29,6 +29,7 @@
 #include <GuiStatusBar.au3>
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
+#include <WinAPITheme.au3>
 #include <GuiMenu.au3>
 #include "_GUICtrlListView_SaveHTML.au3"
 #include "_GUICtrlListView_SaveCSV.au3"

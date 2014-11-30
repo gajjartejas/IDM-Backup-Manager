@@ -8,7 +8,7 @@
 ; Author:	Erik Pilsits
 ; Version:	2.0.7
 ; ===============================================================================================================================
-Global Const $REG_QWORD = 11
+;Global Const $REG_QWORD = 11
 
 Global Const $HKEY_CLASSES_ROOT = 0x80000000
 Global Const $HKEY_CURRENT_USER = 0x80000001

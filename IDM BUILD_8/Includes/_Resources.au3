@@ -149,7 +149,7 @@ Func _ResourceGetAsImage($ResName, $ResType = 10, $DLL = -1) ; $RT_RCDATA = 10
 		_MemGlobalUnlock($hData)
 		$pStream = DllCall("ole32.dll", "int", "CreateStreamOnHGlobal", "ptr", $hData, "int", 1, "ptr*", 0)
 		$pStream = $pStream[3]
-		$hImage = DllCall($ghGDIPDll, "int", "GdipCreateBitmapFromStream", "ptr", $pStream, "ptr*", 0)
+		$hImage = DllCall($__g_hGDIPDll, "int", "GdipCreateBitmapFromStream", "ptr", $pStream, "ptr*", 0)
 		$hImage = $hImage[2]
 		_WinAPI_DeleteObject($pStream)
 		; next line must be commented otherwise animated GIFs will not work
@@ -222,7 +222,7 @@ Func _ResourceSetImageToCtrl($CtrlId, $ResName, $ResType = 10, $DLL = -1) ; $RT_
 		_MemGlobalUnlock($hData)
 		$pStream = DllCall("ole32.dll", "int", "CreateStreamOnHGlobal", "ptr", $hData, "int", 1, "ptr*", 0)
 		$pStream = $pStream[3]
-		$pBitmap = DllCall($ghGDIPDll, "int", "GdipCreateBitmapFromStream", "ptr", $pStream, "ptr*", 0)
+		$pBitmap = DllCall($__g_hGDIPDll, "int", "GdipCreateBitmapFromStream", "ptr", $pStream, "ptr*", 0)
 		$pBitmap = $pBitmap[2]
 		$hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($pBitmap)
 		_SetBitmapToCtrl($CtrlId, $hBitmap)

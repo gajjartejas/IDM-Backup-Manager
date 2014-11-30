@@ -1,26 +1,29 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-#region    ;************ Includes ************
+#Region    ;************ Includes ************
 #include-once
 #include <String.au3>
-#endregion    ;************ Includes ************
+#EndRegion    ;************ Includes ************
 
 ; #VARIABLES# ===================================================================================================================
+
 Global $7zDll = _7ZipGetDll()
 
+#Au3Stripper_Off
 Global Const $FNAME_MAX32 = 512
 Global $hArchiveProc
 Global $hDLL_7ZIP = 0
-
-; #STRUCTURES# ==================================================================================================================
-;~ Global $tagINDIVIDUALINFO = "int dwOriginalSize;int dwCompressedSize;int dwCRC;uint uFlag;uint uOSType;short wRatio;" & _
-;~ 		"short wDate;short wTime;char szFileName[" & $FNAME_MAX32 + 1 & "];char dummy1[3];" & _
-;~ 		"char szAttribute[8];char szMode[8]"
 
 Global Const $tagEXTRACTINGINFO = "int dwFileSize;int dwWriteSize;char szSourceFileName[" & $FNAME_MAX32 + 1 & "];" & _
 		"char dummy1[3];char szDestFileName[" & $FNAME_MAX32 + 1 & "];char dummy[3]"
 
 Global Const $tagEXTRACTINGINFOEX = $tagEXTRACTINGINFO & ";dword dwCompressedSize;dword dwCRC;uint uOSType;short wRatio;" & _
 		"short wDate;short wTime;char szAttribute[8];char szMode[8]"
+#Au3Stripper_On
+
+; #STRUCTURES# ==================================================================================================================
+;~ Global $tagINDIVIDUALINFO = "int dwOriginalSize;int dwCompressedSize;int dwCRC;uint uFlag;uint uOSType;short wRatio;" & _
+;~ 		"short wDate;short wTime;char szFileName[" & $FNAME_MAX32 + 1 & "];char dummy1[3];" & _
+;~ 		"char szAttribute[8];char szMode[8]"
 
 Func _7ZipStartup()
 	$hDLL_7ZIP = DllOpen($7zDll) ; Open x32 dll from no compiled path

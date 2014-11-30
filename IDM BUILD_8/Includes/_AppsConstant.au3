@@ -1,8 +1,8 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 #region    ;************ Includes ************
 #include-once
-#include <WinAPIEx.au3>
 #include <Array.au3>
+#include <WinAPIShellEx.au3>
 #include "_RegFunc.au3"
 #endregion    ;************ Includes ************
 

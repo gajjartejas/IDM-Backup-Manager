@@ -8,7 +8,7 @@ v0.9.8 April 24th, 2013
 • Added Custom Component Restore.
 • Added Append/Merge Profile on Restore.
 • Added Open Folder after Backup.
-• Added Statusbar with Icons.
+• Added Status bar with Icons.
 • Added Automatically Detect All Possible IDM Temporary Directory.
 • Improved Data Cleaner.
 • Improved Profile Conversion.

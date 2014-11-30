@@ -1,8 +1,8 @@
 #NoTrayIcon
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Outfile=idmbm.exe
+#AutoIt3Wrapper_Outfile_x64=idmbm64.exe
 #AutoIt3Wrapper_Compression=0
-#AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 #AutoIt3Wrapper_Run_After=Utilities\ResHacker.exe -delete "%out%", "%out%", Dialog, 1000,
@@ -17,13 +17,16 @@
 #AutoIt3Wrapper_Run_After=del "IDM Backup Manager_Obfuscated.au3"
 #AutoIt3Wrapper_Run_After=del Utilities\ResHacker.ini
 #AutoIt3Wrapper_Run_After=del Utilities\ResHacker.log
-#AutoIt3Wrapper_Run_Obfuscator=y
-#Obfuscator_Parameters=/striponly
+#AutoIt3Wrapper_Run_After=Utilities\upx.exe --best --overlay=copy "%out%"
+#AutoIt3Wrapper_Run_After=del "IDM Backup Manager_stripped.au3"
+#AutoIt3Wrapper_Run_After=del Utilities\ResHacker.log
+#AutoIt3Wrapper_Run_Tidy=y
+#AutoIt3Wrapper_Run_Au3Stripper=y
+#Au3Stripper_Parameters=/so
 #AutoIt3Wrapper_Versioning=v
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#region Includes
-#region    ;************ Includes ************
+#Region Includes
 #include <EditConstants.au3>
 #include <ComboConstants.au3>
 #include "Includes\_AET_ButtonSetIcon.au3"
@@ -34,12 +37,11 @@
 #include "Includes\_7Zip.au3"
 #include "Includes\_ProgressMarquee.au3"
 #include "Includes\_IDM List Manager.au3"
-#endregion    ;************ Includes ************
-#endregion Includes
+#EndRegion Includes
 
 _StartupBM()
 
-#region Main
+#Region Main
 Func _MainBM()
 	While 1
 		$nMsg = GUIGetMsg()
@@ -351,7 +353,7 @@ Func _MainBM()
 				_SwHelp()
 
 			Case $h_Button_Website_Help
-				ShellExecute("http://gajjartejas26.blogspot.com")
+				ShellExecute("http://www.gajjartejas.in")
 
 			Case $h_Button_Forum_Help
 				ShellExecute("http://forum.1067081.n5.nabble.com/IDM-Backup-Manager-f3.html")
@@ -452,10 +454,10 @@ EndFunc   ;==>_CheckIDMProcess
 Func _LogProfilePaths()
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= Check Profile ==================================")
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $AppDataIDMFolder= " & @TAB & '"' & $s_AppDataIDMFolder & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $s_TempPath= " & @TAB & @TAB & '"' & $s_TempPath & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $DwnlData_Folder= " & @TAB & @TAB & '"' & $DwnlData_Folder & '"')
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finilized Path $GrabberData_Folder= " & @TAB & '"' & $GrabberData_Folder & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finalized Path $AppDataIDMFolder= " & @TAB & '"' & $s_AppDataIDMFolder & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finalized Path $s_TempPath= " & @TAB & @TAB & '"' & $s_TempPath & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finalized Path $DwnlData_Folder= " & @TAB & @TAB & '"' & $DwnlData_Folder & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Finalized Path $GrabberData_Folder= " & @TAB & '"' & $GrabberData_Folder & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Setting File $s_Setting_File= " & @TAB & @TAB & '"' & $s_Setting_File & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Log File $s_Log_File= " & @TAB & @TAB & @TAB & '"' & $s_Log_File & '"')
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Backup Path $s_Backup_Dir= " & @TAB & @TAB & '"' & $s_Backup_Dir & '"')
@@ -578,13 +580,13 @@ Func _StartupBM()
 			EndSwitch
 	EndSwitch
 EndFunc   ;==>_StartupBM
-#endregion Main
+#EndRegion Main
 
-#region control Functions
+#Region control Functions
 Func _ControlUpdateBusy()
 	GUICtrlSetState($h_Tab1, $GUI_DISABLE)
 
-	#region ;for backup
+	#Region ;for backup
 	GUICtrlSetState($h_Input_Backup_Path, $GUI_DISABLE)
 	GUICtrlSetState($h_Button_Browse_Backup, $GUI_DISABLE)
 
@@ -601,9 +603,9 @@ Func _ControlUpdateBusy()
 	GUICtrlSetState($h_Checkbox_UnFinished_HL_Backup, $GUI_DISABLE)
 
 	GUICtrlSetState($h_Button_Backup, $GUI_DISABLE)
-	#endregion ;for backup
+	#EndRegion ;for backup
 
-	#region  ;for Restore
+	#Region  ;for Restore
 	GUICtrlSetState($h_Input_Restore_Path, $GUI_DISABLE)
 	GUICtrlSetState($h_Button_Browse_Restore, $GUI_DISABLE)
 
@@ -623,14 +625,14 @@ Func _ControlUpdateBusy()
 	GUICtrlSetState($h_Label_Append_Registry_Restore, $GUI_DISABLE)
 
 	GUICtrlSetState($h_Button_Restore, $GUI_DISABLE)
-	#endregion  ;for Restore
+	#EndRegion  ;for Restore
 EndFunc   ;==>_ControlUpdateBusy
 
 Func _ControlUpdateDefault()
 	GUICtrlSetState($h_Tab1, $GUI_ENABLE)
 	WinActivate($s_Win_Title_BM)
 
-	#region ;for backup
+	#Region ;for backup
 	GUICtrlSetState($h_Input_Backup_Path, $GUI_ENABLE)
 	GUICtrlSetState($h_Button_Browse_Backup, $GUI_ENABLE)
 
@@ -659,9 +661,9 @@ Func _ControlUpdateDefault()
 	EndIf
 
 	If GUICtrlRead($h_Input_Backup_Path) <> "" And Not FileExists(GUICtrlRead($h_Input_Backup_Path)) Then GUICtrlSetState($h_Button_Backup, $GUI_ENABLE)
-	#endregion ;for backup
+	#EndRegion ;for backup
 
-	#region ;for restore
+	#Region ;for restore
 	GUICtrlSetState($h_Input_Restore_Path, $GUI_ENABLE)
 	GUICtrlSetState($h_Button_Browse_Restore, $GUI_ENABLE)
 
@@ -695,19 +697,19 @@ Func _ControlUpdateDefault()
 	If FileExists(GUICtrlRead($h_Input_Restore_Path)) Then GUICtrlSetState($h_Button_Restore, $GUI_ENABLE)
 
 	_GUICtrlStatusBar_SetText($h_Status_Info, "", 1)
-	#endregion ;for restore
+	#EndRegion ;for restore
 EndFunc   ;==>_ControlUpdateDefault
-#endregion control Functions
+#EndRegion control Functions
 
-#region GUIS
+#Region GUIS
 Func _SwBMGUI()
-	#region ### START Koda GUI section ###
+	#Region ### START Koda GUI section ###
 
 	$hGUI_BM = GUICreate($s_Win_Title_BM, $i_xWidth_BM, $i_yHight_BM, $i_xWinPos, $i_yWinPos)
 
 	$h_Tab1 = GUICtrlCreateTab(10, 10, 420, 240)
 
-	#region backup ;==============================================================================================Backup:
+	#Region backup ;==============================================================================================Backup:
 
 	$h_TabSheet1 = GUICtrlCreateTabItem("Backup Data")
 	GUICtrlSetImage(-1, @ScriptFullPath, -2)
@@ -763,9 +765,9 @@ Func _SwBMGUI()
 	GUICtrlSetTip(-1, "Backup Now")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 
-	#endregion backup ;==============================================================================================Backup:
+	#EndRegion backup ;==============================================================================================Backup:
 
-	#region Restore ;==============================================================================================Restore:
+	#Region Restore ;==============================================================================================Restore:
 
 	$h_TabSheet2 = GUICtrlCreateTabItem("Restore Data")
 	GUICtrlSetImage(-1, @ScriptFullPath, -11)
@@ -820,9 +822,9 @@ Func _SwBMGUI()
 	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
 	GUICtrlSetTip(-1, "Restore Now")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	#endregion Restore ;==============================================================================================Restore:
+	#EndRegion Restore ;==============================================================================================Restore:
 
-	#region Tools ;============================================================================================== Tools:
+	#Region Tools ;============================================================================================== Tools:
 
 	$h_TabSheet3 = GUICtrlCreateTabItem("Tools")
 	GUICtrlSetImage(-1, @ScriptFullPath, -13)
@@ -843,9 +845,9 @@ Func _SwBMGUI()
 	$h_Button_Cat_Tools = GUICtrlCreateButton("Add Extra File Types in Categories", 315, 64, 80, 60, $BS_MULTILINE)
 	GUICtrlSetTip(-1, "Add Extra File Types in Categories")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	#endregion Tools ;============================================================================================== Tools:
+	#EndRegion Tools ;============================================================================================== Tools:
 
-	#region Setting ;============================================================================================== Setting:
+	#Region Setting ;============================================================================================== Setting:
 	$h_TabSheet4 = GUICtrlCreateTabItem("Setting")
 	GUICtrlSetImage(-1, @ScriptFullPath, -17)
 
@@ -882,7 +884,7 @@ Func _SwBMGUI()
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 
 	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateCombo("", 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_COMBO, $CBS_SIMPLE))
-	#region Set Data
+	#Region Set Data
 	Local $s_all_DwnlData_Folder = _aGetTempPathFolderEx()
 	Local $i = 0
 	If Not @error Then
@@ -891,7 +893,7 @@ Func _SwBMGUI()
 		Next
 	EndIf
 	GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_TempPath, $s_TempPath)
-	#endregion Set Data
+	#EndRegion Set Data
 	GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, _
 			"DwnlData Folder: " & @CRLF & _
 			$DwnlData_Folder & @CRLF & _
@@ -918,9 +920,9 @@ Func _SwBMGUI()
 	GUICtrlSetTip(-1, "Restore Default Setting")
 
 	GUICtrlCreateTabItem("")
-	#endregion Setting ;============================================================================================== Setting:
+	#EndRegion Setting ;============================================================================================== Setting:
 
-	#region Help ;============================================================================================== Help:
+	#Region Help ;============================================================================================== Help:
 
 	$h_TabSheet5 = GUICtrlCreateTabItem("Help")
 	GUICtrlSetImage(-1, @ScriptFullPath, -5)
@@ -951,18 +953,18 @@ Func _SwBMGUI()
 	_ResourceSetImageToCtrl(-1, "contactme")
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	#endregion Help ;============================================================================================== Help:
+	#EndRegion Help ;============================================================================================== Help:
 
 	GUICtrlCreateTabItem("")
 
-	#region Info Label
+	#Region Info Label
 	Local $aParts[3] = [400, 650]
 	Local $aText[3] = ["INFO: Ready", @TAB & ""]
 	$h_Status_Info = _GUICtrlStatusBar_Create($hGUI_BM, $aParts, $aText)
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo)
-	#endregion Info Label
+	#EndRegion Info Label
 
-	#endregion ### END Koda GUI section ###
+	#EndRegion ### END Koda GUI section ###
 	GUISetState(@SW_SHOW)
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Window Created: " & $s_Win_Title_BM & " With Error Code: " & @error)
 EndFunc   ;==>_SwBMGUI
@@ -1001,7 +1003,7 @@ Func _SwEditGUI($sTXTFile, $s_Title)
 EndFunc   ;==>_SwEditGUI
 
 Func _SwMoreSettingGUI()
-	#region ### START Koda GUI section ###
+	#Region ### START Koda GUI section ###
 	GUISetState(@SW_DISABLE, $hGUI_BM)
 
 	Local $ChildixWidth = 351
@@ -1026,7 +1028,7 @@ Func _SwMoreSettingGUI()
 	Local $h_Close = GUICtrlCreateButton("Close", 256, 96, 75, 25)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUISetState(@SW_SHOW)
-	#endregion ### END Koda GUI section ###
+	#EndRegion ### END Koda GUI section ###
 	Local $nMsg
 	While 1
 		$nMsg = GUIGetMsg()
@@ -1435,9 +1437,9 @@ Func _SwFileTypeGUI()
 	GUISetState(@SW_ENABLE, $hGUI_BM)
 	GUIDelete($FileTypeGUI)
 EndFunc   ;==>_SwFileTypeGUI
-#endregion GUIS
+#EndRegion GUIS
 
-#region system & process Functions(idm related)
+#Region system & process Functions(idm related)
 Func _FileOrFolderDeleteWithLog($sFile)
 	If FileExists($sFile) Then
 		If _IsDir($sFile) Then
@@ -1639,7 +1641,7 @@ Func _CopyRegTempKeyWithLog($sSrcKey, $sDestKey)
 	EndIf
 EndFunc   ;==>_CopyRegTempKeyWithLog
 
-#obfuscator_off
+#Au3Stripper_Off
 Func _ARCHIVERPROC($hWnd, $Msg, $nState, $ExInfo)
 	Local $iFileSize, $iWriteSize, $iPercent = 0
 	#forceref $hWnd,$Msg
@@ -1658,16 +1660,16 @@ Func _ARCHIVERPROC($hWnd, $Msg, $nState, $ExInfo)
 
 	Return 1
 EndFunc   ;==>_ARCHIVERPROC
-#Obfuscator_On
+#Au3Stripper_On
 
 Func _ResetDataAray(ByRef $aData)
 	For $i = 0 To UBound($aData) - 1
 		$aData[$i] = ""
 	Next
 EndFunc   ;==>_ResetDataAray
-#endregion system & process Functions(idm related)
+#EndRegion system & process Functions(idm related)
 
-#region Help
+#Region Help
 Func _SwHistory()
 	If FileExists($s_History_File) Then
 		_SwEditGUI($s_History_File, "Version History")
@@ -1692,7 +1694,7 @@ Func _UpdateCheck()
 			Case Else
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
-				ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
+				ShellExecute("http://www.gajjartejas.in/p/idm-backup-manager.html")
 		EndSwitch
 	Else
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Internet Connection Could Not Found")
@@ -1720,9 +1722,9 @@ Func _SwLicense()
 		MsgBox(64, "License", "IDM Backup Manager v" & $s_Current_Version & "(Beta) Copyright (c) 2012-2013, Gajjar Tejas" & @CRLF & "7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)" & @CRLF & @CRLF & "THE SOFTWARE IS PROVIDED" & '"' & "AS IS" & '"' & "AND THE AUTHOR DISCLAIMS ALL WARRANTIESWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FORANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGESWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ANACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OFOR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.", 0, $hGUI_BM)
 	EndIf
 EndFunc   ;==>_SwLicense
-#endregion Help
+#EndRegion Help
 
-#region Setting
+#Region Setting
 Func _ChooseLogFile()
 	$s_Log_File = FileSaveDialog("Save Log File", _sPath_Last_Remove($s_Log_File), "Log File (*.Log)", 2, "LogFile.log", $hGUI_BM)
 	If $s_Log_File <> "" And StringRight($s_Log_File, 4) <> ".log" Then $s_Log_File &= ".log"
@@ -1862,9 +1864,9 @@ Func _RestoreDefaultSetting()
 		EndIf
 	EndIf
 EndFunc   ;==>_RestoreDefaultSetting
-#endregion Setting
+#EndRegion Setting
 
-#region Backup
+#Region Backup
 Func _ChooseBackupFile()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
@@ -1902,7 +1904,7 @@ Func _Backup()
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWorking);StatusWorking
 	_CleanINInReg()
 
-	#region ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
+	#Region ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
 	Local $s_Backup_File = GUICtrlRead($h_Input_Backup_Path)
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: User Selected Backup to  " & "=" & ' "' & $s_Backup_File & '"')
 
@@ -1913,9 +1915,9 @@ Func _Backup()
 		$s_Compression_Level = "1-No Compression"
 	EndIf
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Compression Level " & "=" & ' "' & $s_Compression_Level & '"')
-	#endregion ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
+	#EndRegion ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
 
-	#region ;/Check Password, Drive Space, Condition and PreRequestes--->
+	#Region ;/Check Password, Drive Space, Condition and PreRequestes--->
 	If GUICtrlRead($h_Checkbox_UnFinished_SD_Backup) = $GUI_UNCHECKED _
 			And GUICtrlRead($h_Checkbox_UnFinished_GD_Backup) = $GUI_UNCHECKED _
 			And GUICtrlRead($h_Checkbox_UnFinished_HL_Backup) = $GUI_UNCHECKED _
@@ -1964,9 +1966,9 @@ Func _Backup()
 		_ControlUpdateDefault()
 		Return SetError(1)
 	EndIf
-	#endregion ;/Check Password, Drive Space, Condition and PreRequestes--->
+	#EndRegion ;/Check Password, Drive Space, Condition and PreRequestes--->
 
-	#region ;/Check registry and count--->
+	#Region ;/Check registry and count--->
 	If Not _RegKeyExists($s_regpath_IDM) Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Registry Entry Is Empty. Nothing To Backup")
 		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
@@ -1978,14 +1980,14 @@ Func _Backup()
 		Local $iTotalKey = _iCountKey($s_regpath_IDM)
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Total Registry Need to Backup = " & '"' & $iTotalKey & '"')
 	EndIf
-	#endregion ;/Check registry and count--->
+	#EndRegion ;/Check registry and count--->
 
-	#region ;/Expert registry --->
+	#Region ;/Expert registry --->
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Backingup: Registry Registry Please Wait...")
 	_RegBackup($s_reg_File, $s_regpath_IDM)
-	#endregion ;/Expert registry --->
+	#EndRegion ;/Expert registry --->
 
-	#region ;/define backup type--->
+	#Region ;/define backup type--->
 	Local $b_DwnlData_Folder = False
 	Local $b_Grabber_Folder = False
 	Local $b_Scheduler_Folder = False
@@ -2025,9 +2027,9 @@ Func _Backup()
 
 		IniWrite($s_ini_File, "Default", "Mode", "Custom")
 	EndIf
-	#endregion ;/define backup type--->
+	#EndRegion ;/define backup type--->
 
-	#region ;/Build Data array and Write INI--->
+	#Region ;/Build Data array and Write INI--->
 
 	_ResetDataAray($aData)
 
@@ -2146,7 +2148,7 @@ Func _Backup()
 		IniWrite($s_ini_File, "Default", "History_Files", False)
 	EndIf
 
-	#region ;/add INI--->
+	#Region ;/add INI--->
 	If FileExists($s_ini_File) Then
 		$aData[13] = $s_ini_File
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_ini_File & '"')
@@ -2154,9 +2156,9 @@ Func _Backup()
 		$aData[13] = ""
 		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $s_ini_File Reason: File Does Not Exits= " & '"' & $s_ini_File & '"')
 	EndIf
-	#endregion ;/add INI--->
+	#EndRegion ;/add INI--->
 
-	#region ;/add registry--->
+	#Region ;/add registry--->
 	If FileExists($s_reg_File) Then
 		$aData[14] = $s_reg_File
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Found $s_ini_File " & "=" & ' "' & $s_reg_File & '"')
@@ -2164,10 +2166,10 @@ Func _Backup()
 		$aData[14] = ""
 		FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Not Added $s_ini_File Reason: File Does Not Exits= " & '"' & $s_reg_File & '"')
 	EndIf
-	#endregion ;/add registry--->
-	#endregion ;/Build Data array and Write INI--->
+	#EndRegion ;/add registry--->
+	#EndRegion ;/Build Data array and Write INI--->
 
-	#region ;/add Data Files--->
+	#Region ;/add Data Files-#Au3Stripper_Off-->
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Adding: Data Files Please Wait...")
 
 	_7ZipStartup()
@@ -2180,7 +2182,7 @@ Func _Backup()
 	Next
 
 	_7ZipShutdown()
-	#endregion ;/add Data Files--->
+	#EndRegion ;/add Data Files-#Au3Stripper_Off-->
 
 	_CleanINInReg()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Done")
@@ -2189,9 +2191,9 @@ Func _Backup()
 	If $b_OpenFolder Then _SelectFile($s_Backup_File)
 	FileWriteLine($s_Log_File, "============================= Backup Session Ended =============================")
 EndFunc   ;==>_Backup
-#endregion Backup
+#EndRegion Backup
 
-#region Restore
+#Region Restore
 Func _ChooseRestoreFile()
 	Local $s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 3, "*.ibf", $hGUI_BM)
 	If @error Then
@@ -2211,7 +2213,7 @@ Func _Restore()
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWorking);StatusWorking
 	_CleanINInReg()
 
-	#region ;/Define Some variable: $s_Restore_File
+	#Region ;/Define Some variable: $s_Restore_File
 	Local $s_Restore_File = GUICtrlRead($h_Input_Restore_Path)
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: $s_Restore_File= " & '"' & $s_Restore_File & '"')
 
@@ -2247,9 +2249,9 @@ Func _Restore()
 	Else
 		$s_Password = ""
 	EndIf
-	#endregion ;/Define Some variable: $s_Restore_File
+	#EndRegion ;/Define Some variable: $s_Restore_File
 
-	#region ;/Check Backup File, Read Guest ini setting and Check For Password
+	#Region ;/Check Backup File, Read Guest ini setting and Check For Password
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Reading Backup File Please Wait...")
 
 	_ResetDataAray($aData)
@@ -2300,9 +2302,9 @@ Func _Restore()
 			Return SetError(1)
 		EndIf
 	EndIf
-	#endregion ;/Check Backup File, Read Guest ini setting and Check For Password
+	#EndRegion ;/Check Backup File, Read Guest ini setting and Check For Password
 
-	#region ;/Remove TempPath--->
+	#Region ;/Remove TempPath--->
 
 	;if Append/Merge Not Selected then Pre Delete as per Componments
 	If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_UNCHECKED Then
@@ -2340,9 +2342,9 @@ Func _Restore()
 			EndIf
 		EndIf
 	EndIf
-	#endregion ;/Remove TempPath--->
+	#EndRegion ;/Remove TempPath--->
 
-	#region ;/define Restore type--->
+	#Region ;/define Restore type--->
 	Local $b_DwnlData_Folder = False
 	Local $b_Grabber_Folder = False
 	Local $b_Scheduler_Folder = False
@@ -2359,15 +2361,15 @@ Func _Restore()
 		If GUICtrlRead($h_Checkbox_UnFinished_SD_Restore) = $GUI_CHECKED Then $b_Scheduler_Folder = True
 		If GUICtrlRead($h_Checkbox_UnFinished_HL_Restore) = $GUI_CHECKED Then $b_History_Files = True
 	EndIf
-	#endregion ;/define Restore type--->
+	#EndRegion ;/define Restore type--->
 
-	#region ;/Restore Data--->
+	#Region ;/Restore Data--->
 
 	_ResetDataAray($aData)
 
-	#region Restore part-1
+	#Region Restore part-1
 
-	#region Restore DwnlData\
+	#Region Restore DwnlData\
 	;If Unfinished Download Data Selectde Then
 	If $b_DwnlData_Folder Then
 		If $Guest_DwnlData_Folder = "True" Then
@@ -2377,9 +2379,9 @@ Func _Restore()
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_DwnlData_Folder= " & '"' & $Guest_DwnlData_Folder & '"')
 		EndIf
 	EndIf
-	#endregion Restore DwnlData\
+	#EndRegion Restore DwnlData\
 
-	#region Restore GrabberData\
+	#Region Restore GrabberData\
 	;If Grabber Data Selectde Then
 	If $b_Grabber_Folder Then
 		If $Guest_Grabber_Folder = "True" Then
@@ -2392,7 +2394,7 @@ Func _Restore()
 		EndIf
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_GrabberData_Folder= " & '"' & $Guest_GrabberData_Folder & '"')
 	EndIf
-	#endregion Restore GrabberData\
+	#EndRegion Restore GrabberData\
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring DwnlData & GrabberData Folder Please Wait...")
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: DwnlData & GrabberData Folder Please Wait...")
@@ -2402,13 +2404,13 @@ Func _Restore()
 	For $i = 1 To $sFile[0]
 		If $sFile[$i] <> "" Then FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & $sFile[$i])
 	Next
-	#endregion Restore part-1
+	#EndRegion Restore part-1
 
 	_ResetDataAray($aData)
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Files and Folder Please Wait...")
 
-	#region Restore part-2
-	#region Restore Scheduler\
+	#Region Restore part-2
+	#Region Restore Scheduler\
 	;If Scheduler Data Selectde Then
 	If $b_Scheduler_Folder Then
 		If $Guest_Scheduler_Folder = "True" Then
@@ -2416,9 +2418,9 @@ Func _Restore()
 		EndIf
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_Scheduler_Folder= " & '"' & $Guest_Scheduler_Folder & '"')
 	EndIf
-	#endregion Restore Scheduler\
+	#EndRegion Restore Scheduler\
 
-	#region Restore History_Files
+	#Region Restore History_Files
 	;If History_Files Selectde Then
 	If $b_History_Files Then
 		If $Guest_History_Files = "True" Then
@@ -2434,7 +2436,7 @@ Func _Restore()
 		EndIf
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: $Guest_History_Files= " & '"' & $Guest_History_Files & '"')
 	EndIf
-	#endregion Restore History_Files
+	#EndRegion Restore History_Files
 
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Restoring AppDataIDMFolder Folder Please Wait...")
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: AppDataIDMFolder Folder Please Wait...")
@@ -2445,19 +2447,19 @@ Func _Restore()
 	For $i = 1 To $sFile[0]
 		If $sFile[$i] <> "" Then FileWriteLine($s_Log_File, _Current_Moment() & "7z Log: = " & $sFile[$i])
 	Next
-	#endregion Restore part-2
+	#EndRegion Restore part-2
 
 	_7ZipShutdown()
-	#endregion ;/Restore Data--->
+	#EndRegion ;/Restore Data--->
 
-	#region ;/Remove Temp Registry File--->
+	#Region ;/Remove Temp Registry File--->
 	If _RegKeyExists($s_regpath_IDM & "_tmp") Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Temp Registry Please Wait...")
 		If Not RegDelete($s_regpath_IDM & "_tmp") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ' & "Error Code:" & @error)
 	EndIf
-	#endregion ;/Remove Temp Registry File--->
+	#EndRegion ;/Remove Temp Registry File--->
 
-	#region ;/CAppend/Merge--->
+	#Region ;/CAppend/Merge--->
 	;Append/Merge Registry Checkbox Is Checked Then
 	If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Appending/Merging Profile")
@@ -2468,9 +2470,9 @@ Func _Restore()
 	Else
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Append/Merge Profile Not Selected.")
 	EndIf
-	#endregion ;/CAppend/Merge--->
+	#EndRegion ;/CAppend/Merge--->
 
-	#region ;/Convert Profile--->
+	#Region ;/Convert Profile--->
 	;Convert Registry Checkbox Is Checked Then
 	If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 
@@ -2498,9 +2500,9 @@ Func _Restore()
 	Else
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Profile Conversion Not Selected.")
 	EndIf
-	#endregion ;/Convert Profile--->
+	#EndRegion ;/Convert Profile--->
 
-	#region ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
+	#Region ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
 	If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Creating: Temp Registry Please Wait...")
 		If _RegKeyExists($s_regpath_IDM) Then _RegCopyKeyNoTree($s_regpath_IDM, $s_regpath_IDM & "_tmp")
@@ -2527,9 +2529,9 @@ Func _Restore()
 		EndIf
 		If _RegKeyExists($s_regpath_IDM & "\" & "SpecialKeys") Then _RegCopyKey($s_regpath_IDM & "\" & "SpecialKeys", $s_regpath_IDM & "_tmp" & "\" & "SpecialKeys")
 	EndIf
-	#endregion ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
+	#EndRegion ;/Read Host Registry and store in tmp Registory(Free From Registry Conversion)--->
 
-	#region ;/Remove Host Registry--->
+	#Region ;/Remove Host Registry--->
 	;if Append/Merge Not Selected then
 	If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_UNCHECKED Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Registry Please Wait...")
@@ -2537,15 +2539,15 @@ Func _Restore()
 			If Not RegDelete($s_regpath_IDM) Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Host Registry " & "=" & ' "' & $s_regpath_IDM & '" ' & "Error Code:" & @error)
 		EndIf
 	EndIf
-	#endregion ;/Remove Host Registry--->
+	#EndRegion ;/Remove Host Registry--->
 
-	#region ;/Restore Guest Registry-->
+	#Region ;/Restore Guest Registry-->
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: Registry Please Wait...")
 	;If Registry Restore allowed via Checkbox
 	_RegImport($s_reg_File)
-	#endregion ;/Restore Guest Registry-->
+	#EndRegion ;/Restore Guest Registry-->
 
-	#region ;/Restore Host Registry from stored in tmp Registry--->
+	#Region ;/Restore Host Registry from stored in tmp Registry--->
 	If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
 
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Restoring: Host Registry To tmp Registry  Please Wait...")
@@ -2625,14 +2627,14 @@ Func _Restore()
 	_RegWrite($s_regpath_IDM, "AppDataIDMFolder", $REG_SZ, $s_AppDataIDMFolder)
 	_RegWrite($s_regpath_IDM, "TempPath", $REG_SZ, $s_TempPath)
 	_RegWrite($s_regpath_IDM & "\maxID", "maxID", $REG_DWORD, _iGetMaxKey($s_regpath_IDM))
-	#endregion ;/Restore Host Registry from stored in tmp Registry--->
+	#EndRegion ;/Restore Host Registry from stored in tmp Registry--->
 
-	#region ;/Remove tmp Registry--->
+	#Region ;/Remove tmp Registry--->
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Removing: Temp Registry Please Wait...")
 	If _RegKeyExists($s_regpath_IDM & "_tmp") Then
 		If Not RegDelete($s_regpath_IDM & "_tmp") Then FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Could Not Delete Registry " & "=" & ' "' & $s_regpath_IDM & "_tmp" & '" ' & "Error Code:" & @error)
 	EndIf
-	#endregion ;/Remove tmp Registry--->
+	#EndRegion ;/Remove tmp Registry--->
 
 	_CleanINInReg()
 
@@ -2643,7 +2645,7 @@ Func _Restore()
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 	FileWriteLine($s_Log_File, "============================= Restore Session Ended =============================")
 EndFunc   ;==>_Restore
-#endregion Restore
+#EndRegion Restore
 
 Func _SwCMDLineMSGBOX()
 	Local $ParentWin = ""

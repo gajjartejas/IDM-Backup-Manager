@@ -29,7 +29,7 @@ Global Const $s_reg_File = @TempDir & "\IDMregistry.reg"
 ;~ Global $s_Log_File = @ScriptDir & "\LogFile.log" ;for portable
 
 Global Const $s_Setting_File = @AppDataDir & "\IDM Backup Manager" & "\SettingFile.ini" ;for installer
-Global $s_Log_File = @AppDataDir & "\IDM Backup Manager" & "\LogFile.log" ;for installer
+Global $s_Log_File = @AppDataDir & "\IDM Backup Manager\LogFile.log" ;for installer
 Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
 
 Global $b_AppendLog_File = 1
@@ -70,7 +70,7 @@ Global $h_Button_Open_Log_Setting, $h_Button_Associate_Setting, $h_Button_More_S
 Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Label_BrowseAppDataFolder_Setting, $h_Label_DwnlDataFolder_Setting
 
 Global $h_Button_Website_Help, $h_Button_Help_Help, $h_Button_Licence_Help, $h_Button_Version_History_Help, $h_Button_Forum_Help
-Global $h_Button_Update_Help, $h_Picture_About
+Global $h_Button_Update_Help, $h_Picture_Facebook_About,$h_Picture_Twitter_About
 
 Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
 

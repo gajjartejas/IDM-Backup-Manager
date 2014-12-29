@@ -1,4 +1,4 @@
-v0.9.8 April 24th, 2013
+v0.9.8 December 28th, 2014
 
 • Fixed IDM Restart.
 • Fixed Restore taking too long time on High Compressed Backup File.

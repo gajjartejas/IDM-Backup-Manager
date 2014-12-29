@@ -1,7 +1,6 @@
-#NoTrayIcon
+ï»¿#NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Outfile=idmbm.exe
-#AutoIt3Wrapper_Outfile_x64=idmbm64.exe
 #AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
@@ -17,7 +16,7 @@
 #AutoIt3Wrapper_Run_After=del "IDM Backup Manager_Obfuscated.au3"
 #AutoIt3Wrapper_Run_After=del Utilities\ResHacker.ini
 #AutoIt3Wrapper_Run_After=del Utilities\ResHacker.log
-#AutoIt3Wrapper_Run_After=Utilities\upx.exe --best --overlay=copy "%out%"
+#AutoIt3Wrapper_Run_After=Utilities\upx.exe --best --all-methods --overlay=copy "%out%"
 #AutoIt3Wrapper_Run_After=del "IDM Backup Manager_stripped.au3"
 #AutoIt3Wrapper_Run_After=del Utilities\ResHacker.log
 #AutoIt3Wrapper_Run_Tidy=y
@@ -361,8 +360,11 @@ Func _MainBM()
 			Case $h_Button_Associate_Setting
 				_ShellInstall()
 
-			Case $h_Picture_About
+			Case $h_Picture_Facebook_About
 				ShellExecute("http://www.facebook.com/gajjartejas26")
+
+			Case $h_Picture_Twitter_About
+				ShellExecute("http://www.twitter.com/gajjartejas")
 
 		EndSwitch
 	WEnd
@@ -797,7 +799,7 @@ Func _SwBMGUI()
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
 			"EXAMPLE:" & @CRLF & _
-			"In case of If You Want To Restore Backup of Cybercafé to Your Home PC", "Convert Profile", 1, 1)
+			"In case of If You Want To Restore Backup of Cybercafï¿½ to Your Home PC", "Convert Profile", 1, 1)
 
 	$h_Checkbox_Append_Registry_Restore = GUICtrlCreateCheckbox("", 38, 180, 13, 17)
 	$h_Label_Append_Registry_Restore = GUICtrlCreateLabel("Append/Merge(Disabled)", 54, 182, 130, 17)
@@ -948,9 +950,20 @@ Func _SwBMGUI()
 	$h_Button_Update_Help = GUICtrlCreateButton("  Update", 146, 126, 100, 30, $BS_left);1111
 	_AET_ButtonSetIcon(-1, 13, 24, 24, 0)
 
-	$h_Picture_About = GUICtrlCreatePic("", 260, 55, 150, 145)
-	GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
-	_ResourceSetImageToCtrl(-1, "contactme")
+	;$h_Picture_About = GUICtrlCreatePic("", 260, 55, 150, 145)
+	;GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
+	;_ResourceSetImageToCtrl(-1, "contactme")
+
+	$h_Picture_Facebook_About = GUICtrlCreatePic("", 330, 206, 40, 40)
+	GUICtrlSetTip(-1, "Connect to Facebook", "Facebook", 1, 1)
+	_ResourceSetImageToCtrl(-1, "facebooklogo")
+
+	$h_Picture_Twitter_About = GUICtrlCreatePic("", 374, 206, 40, 40)
+	GUICtrlSetTip(-1, "Connect to Twitter", "Twitter", 1, 1)
+	_ResourceSetImageToCtrl(-1, "twitterlogo")
+
+	;GUICtrlCreatePic("D:\Pictures\Saved Pictures\facebook-logo-new-old-comparison.jpg", 286, 206, 40, 40)
+	;GUICtrlSetTip(-1, "Connect to Facebook", "Facebook", 1, 1)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion Help ;============================================================================================== Help:
@@ -1727,6 +1740,7 @@ EndFunc   ;==>_SwLicense
 #Region Setting
 Func _ChooseLogFile()
 	$s_Log_File = FileSaveDialog("Save Log File", _sPath_Last_Remove($s_Log_File), "Log File (*.Log)", 2, "LogFile.log", $hGUI_BM)
+
 	If $s_Log_File <> "" And StringRight($s_Log_File, 4) <> ".log" Then $s_Log_File &= ".log"
 	If Not @error Then
 		; Check if file opened for writing OK
@@ -1750,7 +1764,7 @@ EndFunc   ;==>_ChooseLogFile
 Func _ChooseDataBackupFolder()
 	If Not FileExists($s_Backup_Dir) Then DirCreate($s_Backup_Dir)
 
-	$s_Backup_Dir = FileSelectFolder("Choose a folder to save file...", "", 7, $s_Backup_Dir, $hGUI_BM)
+	$s_Backup_Dir = FileSelectFolder("Choose a folder to save file...", $s_Backup_Dir, 7, $s_Backup_Dir, $hGUI_BM)
 	If StringRight($s_Backup_Dir, 1) <> "\" Then $s_Backup_Dir &= "\"
 
 	If _IsFilePathValid($s_Backup_Dir) Then ;User Selected valid path
@@ -1765,7 +1779,7 @@ EndFunc   ;==>_ChooseDataBackupFolder
 Func _ChooseAppDataBackupFolder()
 	If Not FileExists($s_AppDataIDMFolder) Then DirCreate($s_AppDataIDMFolder)
 
-	$s_AppDataIDMFolder = FileSelectFolder("Choose a folder to save file...", "", 7, $s_AppDataIDMFolder, $hGUI_BM)
+	$s_AppDataIDMFolder = FileSelectFolder("Choose a folder to save file...", $s_AppDataIDMFolder, 7, $s_AppDataIDMFolder, $hGUI_BM)
 	If StringRight($s_AppDataIDMFolder, 1) <> "\" Then $s_AppDataIDMFolder &= "\"
 
 	If _IsFilePathValid($s_AppDataIDMFolder) Then ;User Selected valid path
@@ -1790,7 +1804,7 @@ EndFunc   ;==>_ChooseAppDataBackupFolder
 Func _ChooseTempDataBackupFolder()
 	If Not FileExists($s_TempPath) Then DirCreate($s_TempPath)
 
-	$s_TempPath = FileSelectFolder("Choose a folder...", "", 7, $s_TempPath, $hGUI_BM)
+	$s_TempPath = FileSelectFolder("Choose a folder...", $s_TempPath, 7, $s_TempPath, $hGUI_BM)
 	If StringRight($s_TempPath, 1) <> "\" Then $s_TempPath &= "\"
 
 	If _IsFilePathValid($s_TempPath) Then ;User Selected valid path

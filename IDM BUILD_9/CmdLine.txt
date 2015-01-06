@@ -1,0 +1,15 @@
+Command Line Parameters:
+
+USAGE:
+IDM Backup Manager.exe 	[swlm] [swdc] [swpwc] [swft]
+			[backup <file path>]
+			[restore <file path>]
+
+Where:
+	swlm 		Run IDM List Manager
+	swdc 		Run Data Cleaner
+	swpwc		Run Password Cleaner
+	swft		Run FileType
+
+	backup		Run Backup
+	restore		Run Restore

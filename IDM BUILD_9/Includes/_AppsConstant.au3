@@ -8,7 +8,7 @@
 
 #region Common
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
-Global Const $s_Current_Version = "0.9.8"
+Global Const $s_Current_Version = "0.9.9"
 #endregion Common
 
 #region Global Variables IDM BM

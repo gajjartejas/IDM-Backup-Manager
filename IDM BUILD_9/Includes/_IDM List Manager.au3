@@ -1,26 +1,3 @@
-;~ #NoTrayIcon
-;~ #region ;**** Directives created by AutoIt3Wrapper_GUI ****
-;~ #AutoIt3Wrapper_Icon=..\Extra\icon.ico
-;~ #AutoIt3Wrapper_Outfile=IDM List Manager 0.9.8.exe
-;~ #AutoIt3Wrapper_Compression=4
-;~ #AutoIt3Wrapper_UseUpx=n
-;~ #AutoIt3Wrapper_Res_Comment=IDM List Manager 0.9.8.0
-;~ #AutoIt3Wrapper_Res_Description=Join Unfinished Downloaded Files, Remove Download From List and much more.
-;~ #AutoIt3Wrapper_Res_Fileversion=0.9.8.0
-;~ #AutoIt3Wrapper_Res_LegalCopyright=©Gajjar Tejas 2012-13
-;~ #AutoIt3Wrapper_Res_Field=AutoIt Version|%AutoItVer%
-;~ #AutoIt3Wrapper_Res_Field=CompanyName|Gajjar Tejas
-;~ #AutoIt3Wrapper_Res_Field=Compile date|%longdate% %time%
-;~ #AutoIt3Wrapper_Res_Field=Internal Name|IDM List Manager.exe
-;~ #AutoIt3Wrapper_Res_Field=Product Name|IDM List Manager
-;~ #AutoIt3Wrapper_Res_Field=Product Version|0.9.8 beta
-;~ #AutoIt3Wrapper_Res_Field=Total Commits|31
-;~ #AutoIt3Wrapper_Run_Obfuscator=y
-;~ #Obfuscator_Parameters=/striponly
-;~ #AutoIt3Wrapper_Run_cvsWrapper=v
-;~ #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-;~ #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
-
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 
 #region    ;************ Includes ************

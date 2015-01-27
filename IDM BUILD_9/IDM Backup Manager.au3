@@ -28,6 +28,9 @@
 #Region Includes
 #include <EditConstants.au3>
 #include <ComboConstants.au3>
+#include <InetConstants.au3>
+#include <MsgBoxConstants.au3>
+#include <FileConstants.au3>
 #include "Includes\_AET_ButtonSetIcon.au3"
 #include "Includes\_Resources.au3"
 #include "Includes\_IsFilePathValid.au3"
@@ -1695,20 +1698,60 @@ EndFunc   ;==>_SwHistory
 Func _UpdateCheck()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Checking Update Please Wait...")
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
+
+
 	If _IsInternetConnectedEx() Then
-		Local $Update_VER = InetRead("http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/update.txt", 1)
-		Switch BinaryToString($Update_VER)
+
+		; Save the downloaded file to the temporary folder.
+		Local $sFilePath = @TempDir & "\update.txt"
+
+		If FileExists($sFilePath) Then FileDelete($sFilePath)
+
+		; Download the file in the background with the selected option of 'force a reload from the remote site.'
+		Local $hDownload = InetGet("http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/update.txt", $sFilePath, $INET_FORCERELOAD, $INET_DOWNLOADBACKGROUND)
+
+		; Wait for the download to complete by monitoring when the 2nd index value of InetGetInfo returns True.
+		Do
+			Sleep(250)
+		Until InetGetInfo($hDownload, $INET_DOWNLOADCOMPLETE)
+
+		If @error Then
+			If FileExists($sFilePath) Then FileDelete($sFilePath)
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+			Return
+		EndIf
+
+		; Close the handle returned by InetGet.
+		InetClose($hDownload)
+
+		Local $hFileOpen = FileOpen($sFilePath, $FO_READ)
+
+		If $hFileOpen = -1 Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+			Return
+		EndIf
+
+		; Read the contents of the file using the handle returned by FileOpen.
+		Local $sFileRead = FileRead($hFileOpen)
+
+		Switch BinaryToString($sFileRead)
 			Case ""
 				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", $s_Current_Version
+			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", "0.9.8", $s_Current_Version
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: You Have Most Recent Version.")
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled);StatusCompled
 			Case Else
-				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($Update_VER))
+				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($sFileRead))
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 				ShellExecute("http://www.gajjartejas.in/p/idm-backup-manager.html")
 		EndSwitch
+
+		; Delete the file.
+		If FileExists($sFilePath) Then FileDelete($sFilePath)
+
 	Else
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Internet Connection Could Not Found")
 		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError

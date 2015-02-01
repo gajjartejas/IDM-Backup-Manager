@@ -1,0 +1,19 @@
+
+============================= New Session Started at 2015-01-25 14:04:49 --> =============================
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.5(Beta)
+Module Path: C:\Users\Tejas\Desktop\PROJECT\branches\project\IDM\IDM BUILD_5\IDM Backup Manager.exe
+OS Type: WIN32_NT
+OS Version: WIN_7
+Service Package: Service Pack 1
+Total Memory: 2096568
+Available Memory: 1450112
+
+============================= Variable Assignment =============================
+2015-01-25 14:04:49 --> Internet Download Manager Is Running Now...User Selected No
+2015-01-25 14:04:50 --> $AppDataIDMFolder = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2015-01-25 14:04:50 --> $TempPath = "C:\Users\Tejas\AppData\Roaming\IDM\"  Error Code:0
+2015-01-25 14:04:50 --> Finilized Path $AppDataIDMFolder= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2015-01-25 14:04:50 --> Finilized Path $TempPath= "C:\Users\Tejas\AppData\Roaming\IDM\"
+2015-01-25 14:04:50 --> Window Created: IDM Backup Manager0.9.5(Beta) With Error Code: 0

@@ -61,6 +61,7 @@ Func _MainBM()
 					GUICtrlSetData($h_Input_Password_Backup, "password")
 				EndIf
 
+
 			Case $h_Checkbox_Password_Restore
 				If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
 					GUICtrlSetState($h_Input_Password_Restore, $GUI_ENABLE)
@@ -408,7 +409,7 @@ EndFunc   ;==>_CheckSelfProcess
 
 Func _LogSysInfo()
 	Local $a_Memory = MemGetStats()
-	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "");df
 	FileWriteLine($s_Log_File, "============================= System Information =============================")
 	FileWriteLine($s_Log_File, "Module Name and Version: " & $s_Win_Title_BM)
 	FileWriteLine($s_Log_File, "Module Path: " & @ScriptFullPath)
@@ -853,7 +854,7 @@ Func _SwBMGUI()
 	#EndRegion Tools ;============================================================================================== Tools:
 
 	#Region Setting ;============================================================================================== Setting:
-	$h_TabSheet4 = GUICtrlCreateTabItem("Setting")
+	$h_TabSheet4 = GUICtrlCreateTabItem("Options")
 	GUICtrlSetImage(-1, @ScriptFullPath, -17)
 
 	GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)

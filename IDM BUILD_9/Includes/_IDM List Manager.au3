@@ -1,6 +1,6 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 
-#region    ;************ Includes ************
+#Region    ;************ Includes ************
 #include-once
 #include "_AppsFun.au3"
 #include <GuiStatusBar.au3>
@@ -11,9 +11,9 @@
 #include "_GUICtrlListView_SaveHTML.au3"
 #include "_GUICtrlListView_SaveCSV.au3"
 #include "_AppsConstant.au3"
-#endregion    ;************ Includes ************
+#EndRegion    ;************ Includes ************
 
-#region Export Function
+#Region Export Function
 Func _Expert_HTML()
 	Local $join_file = FileSaveDialog("Save Your File", $s_Backup_Dir, "webpage (*.htm)", 16, "Download_List.htm")
 	If @error Then Return -1
@@ -112,9 +112,9 @@ Func _Expert_IDM_TXT()
 	_GUICtrlStatusBar_SetText($h_Status_Info_LM, "Ready")
 	_Enable_Controls()
 EndFunc   ;==>_Expert_IDM_TXT
-#endregion Export Function
+#EndRegion Export Function
 
-#region Windows Messages
+#Region Windows Messages
 Func WM_NOTIFY($hWnd, $iMsg, $iwParam, $ilParam)
 	#forceref $hWnd, $iMsg, $iwParam
 	Local $hWndFrom, $iCode, $tNMHDR, $hWndListView, $tInfo, $B_DESCENDING
@@ -182,9 +182,9 @@ Func MY_WM_SIZE($hWnd, $iMsg, $iwParam, $ilParam)
 	Return 'GUI_RUNDEFMSG'
 EndFunc   ;==>MY_WM_SIZE
 
-#endregion Windows Messages
+#EndRegion Windows Messages
 
-#region Events
+#Region Events
 Func _SwGrid()
 	If BitAND(GUICtrlRead($MenuItem_View_SwGrid), $GUI_CHECKED) Then
 		GUICtrlSetState($MenuItem_View_SwGrid, $GUI_UNCHECKED)
@@ -263,18 +263,115 @@ Func _Join_Fragments()
 EndFunc   ;==>_Join_Fragments
 
 Func _Details()
-	Local $avArray[2][6]
-	Local $avArray1[6]
+	Local $avArray[2][45]
+
+	Local $avArray1[45]
+
+	Local $avArray0[45]
+
 	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 	$avArray1[0] = _RegRead($s_regpath_IDM & "\" & $ID[5], "FileName") ;Name:
-	$avArray1[1] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName") ;Path:
-	$avArray1[2] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LastModified") ;Last Modified:
-	$avArray1[3] = _RegRead($s_regpath_IDM & "\" & $ID[5], "lastTryDate") ;Last Try Date:
-	$avArray1[4] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Referer") ;Referer URL:
-	$avArray1[5] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Url0") ;Download Link:
-	Local $avArray[2][6] = [["Name", "Path", "Last Modified", "Last Try Date", "Referer URL", "Download Link"],[$avArray1[0], $avArray1[1], $avArray1[2], $avArray1[3], $avArray1[4], $avArray1[5]]]
+;~ 	$avArray1[1] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName") ;Path:
+;~ 	$avArray1[2] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LastModified") ;Last Modified:
+;~ 	$avArray1[3] = _RegRead($s_regpath_IDM & "\" & $ID[5], "lastTryDate") ;Last Try Date:
+;~ 	$avArray1[4] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Referer") ;Referer URL:
+;~ 	$avArray1[5] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Url0") ;Download Link:
+	$avArray1[1] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalFileName") ;Download Link:
+	$avArray1[2] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath") ;Download Link:
+	$avArray1[3] = _RegRead($s_regpath_IDM & "\" & $ID[5], "LogFileName") ;Download Link:
+	$avArray1[4] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Host") ;Download Link:
+	$avArray1[5] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Path") ;Download Link:
+	$avArray1[6] = _RegRead($s_regpath_IDM & "\" & $ID[5], "FileName") ;Download Link:
+	$avArray1[7] = _RegRead($s_regpath_IDM & "\" & $ID[5], "User") ;Download Link:
+	$avArray1[8] = BinaryToString(_RegRead($s_regpath_IDM & "\" & $ID[5], "EncPassword"), 4) ;Download Link:
+	$avArray1[9] = _RegRead($s_regpath_IDM & "\" & $ID[5], "UA") ;Download Link:
+	$avArray1[10] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Referer") ;Download Link:
+	$avArray1[11] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Cookie") ;Download Link:
+	$avArray1[12] = _RegRead($s_regpath_IDM & "\" & $ID[5], "TPswitch") ;Download Link:
+	$avArray1[13] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Port") ;Download Link:
+	$avArray1[14] = _RegRead($s_regpath_IDM & "\" & $ID[5], "categoryID") ;Download Link:
+	$avArray1[15] = _RegRead($s_regpath_IDM & "\" & $ID[5], "CISBU") ;Download Link:
+	$avArray1[16] = _RegRead($s_regpath_IDM & "\" & $ID[5], "cFlags") ;Download Link:
+	$avArray1[17] = _RegRead($s_regpath_IDM & "\" & $ID[5], "cFromDll") ;Download Link:
+	$avArray1[18] = _RegRead($s_regpath_IDM & "\" & $ID[5], "FRCType") ;Download Link:
+	$avArray1[19] = _RegRead($s_regpath_IDM & "\" & $ID[5], "owWPage") ;Download Link:
+	$avArray1[20] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Url0") ;Download Link:
+	$avArray1[21] = _File_Size(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "FRFileSize"))) ;Download Link:
+	$avArray1[22] = _RegRead($s_regpath_IDM & "\" & $ID[5], "AccLngH") ;Download Link:
+	$avArray1[23] = _RegRead($s_regpath_IDM & "\" & $ID[5], "AccH") ;Download Link:
+	$avArray1[24] = Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "st_time")) ;Download Link:
+	$avArray1[25] = _RegRead($s_regpath_IDM & "\" & $ID[5], "dateAdded") ;Download Link:
+	$avArray1[26] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Status") ;Download Link:
+	$avArray1[27] = _RegRead($s_regpath_IDM & "\" & $ID[5], "queueID") ;Download Link:
+	$avArray1[28] = _RegRead($s_regpath_IDM & "\" & $ID[5], "lastTryDate") ;Download Link:
+	$avArray1[29] = _RegRead($s_regpath_IDM & "\" & $ID[5], "U0_c") ;Download Link:
+	$avArray1[30] = _RegRead($s_regpath_IDM & "\" & $ID[5], "U0_u") ;Download Link:
+	$avArray1[31] = BinaryToString(_RegRead($s_regpath_IDM & "\" & $ID[5], "U0_EncP"), 4) ;Download Link:
+	$avArray1[32] = _RegRead($s_regpath_IDM & "\" & $ID[5], "bOUD_Ch") ;Download Link:
+	$avArray1[33] = Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "EncLNFSW")) ;Download Link:
+	$avArray1[34] = _RegRead($s_regpath_IDM & "\" & $ID[5], "FR_FNCD") ;Download Link:
+	$avArray1[35] = _RegRead($s_regpath_IDM & "\" & $ID[5], "bGICompl") ;Download Link:
+	$avArray1[36] = _RegRead($s_regpath_IDM & "\" & $ID[5], "bRetAfFR") ;Download Link:
+	$avArray1[37] = _File_Size(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "FileSize"))) ;Download Link:
+	$avArray1[38] = _File_Size(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "Downloaded"))) ;Download Link:
+	$avArray1[39] = _File_Size(_RegRead($s_regpath_IDM & "\" & $ID[5], "Speed")) ;Download Link:
+	$avArray1[40] = _RegRead($s_regpath_IDM & "\" & $ID[5], "needER") ;Download Link:
+	$avArray1[41] = _RegRead($s_regpath_IDM & "\" & $ID[5], "fGDFE") ;Download Link:
+	$avArray1[42] = _RegRead($s_regpath_IDM & "\" & $ID[5], "bSaved") ;Download Link:
+	$avArray1[43] = _RegRead($s_regpath_IDM & "\" & $ID[5], "WDescription") ;Download Link:
+	$avArray1[44] = _RegRead($s_regpath_IDM & "\" & $ID[5], "lastResult") ;Download Link:
+
+	$avArray0[0] = "	xxxxxx	"
+	$avArray0[1] = "	LocalFileName	"
+	$avArray0[2] = "	LocalPath	"
+	$avArray0[3] = "	LogFileName	"
+	$avArray0[4] = "	Host	"
+	$avArray0[5] = "	Path	"
+	$avArray0[6] = "	FileName	"
+	$avArray0[7] = "	User	"
+	$avArray0[8] = "	EncPassword	"
+	$avArray0[9] = "	UA	"
+	$avArray0[10] = "	Referer	"
+	$avArray0[11] = "	Cookie	"
+	$avArray0[12] = "	TPswitch	"
+	$avArray0[13] = "	Port	"
+	$avArray0[14] = "	categoryID	"
+	$avArray0[15] = "	CISBU	"
+	$avArray0[16] = "	cFlags	"
+	$avArray0[17] = "	cFromDll	"
+	$avArray0[18] = "	FRCType	"
+	$avArray0[19] = "	owWPage	"
+	$avArray0[20] = "	Url0	"
+	$avArray0[21] = "	FRFileSize	"
+	$avArray0[22] = "	AccLngH	"
+	$avArray0[23] = "	AccH	"
+	$avArray0[24] = "	st_time	"
+	$avArray0[25] = "	dateAdded	"
+	$avArray0[26] = "	Status	"
+	$avArray0[27] = "	queueID	"
+	$avArray0[28] = "	lastTryDate	"
+	$avArray0[29] = "	U0_c	"
+	$avArray0[30] = "	U0_u	"
+	$avArray0[31] = "	U0_EncP	"
+	$avArray0[32] = "	bOUD_Ch	"
+	$avArray0[33] = "	EncLNFSW	"
+	$avArray0[34] = "	FR_FNCD	"
+	$avArray0[35] = "	bGICompl	"
+	$avArray0[36] = "	bRetAfFR	"
+	$avArray0[37] = "	FileSize	"
+	$avArray0[38] = "	Downloaded	"
+	$avArray0[39] = "	Speed	"
+	$avArray0[40] = "	needER	"
+	$avArray0[41] = "	fGDFE	"
+	$avArray0[42] = "	bSaved	"
+	$avArray0[43] = "	WDescription	"
+	$avArray0[44] = "	lastResult	"
+
+
+	Local $avArray[2][45] = [[$avArray0[0], $avArray0[1], $avArray0[2], $avArray0[3], $avArray0[4], $avArray0[5], $avArray0[6], $avArray0[7], $avArray0[8], $avArray0[9], $avArray0[10], $avArray0[11], $avArray0[12], $avArray0[13], $avArray0[14], $avArray0[15], $avArray0[16], $avArray0[17], $avArray0[18], $avArray0[19], $avArray0[20], $avArray0[21], $avArray0[22], $avArray0[23], $avArray0[24], $avArray0[25], $avArray0[26], $avArray0[27], $avArray0[28], $avArray0[29], $avArray0[30], $avArray0[31], $avArray0[32], $avArray0[33], $avArray0[34], $avArray0[35], $avArray0[36], $avArray0[37], $avArray0[38], $avArray0[39], $avArray0[40], $avArray0[41], $avArray0[42], $avArray0[43]], [$avArray1[0], $avArray1[1], $avArray1[2], $avArray1[3], $avArray1[4], $avArray1[5], $avArray1[6], $avArray1[7], $avArray1[8], $avArray1[9], $avArray1[10], $avArray1[11], $avArray1[12], $avArray1[13], $avArray1[14], $avArray1[15], $avArray1[16], $avArray1[17], $avArray1[18], $avArray1[19], $avArray1[20], $avArray1[21], $avArray1[22], $avArray1[23], $avArray1[24], $avArray1[25], $avArray1[26], $avArray1[27], $avArray1[28], $avArray1[29], $avArray1[30], $avArray1[31], $avArray1[32], $avArray1[33], $avArray1[34], $avArray1[35], $avArray1[36], $avArray1[37], $avArray1[38], $avArray1[39], $avArray1[40], $avArray1[41], $avArray1[42], $avArray1[43]]]
 
 	_ArrayDisplay($avArray, "Properites", 6, 1)
+
 EndFunc   ;==>_Details
 
 Func _Open_Folder()
@@ -557,7 +654,7 @@ Func ListView_RClick()
 	EndIf
 EndFunc   ;==>ListView_RClick
 
-#endregion Events
+#EndRegion Events
 
 Func _SwLMGUI()
 	GUISetState(@SW_HIDE, $hGUI_BM)
@@ -573,12 +670,12 @@ Func _SwLMGUI()
 	If IsHWnd($hGUI_LM) Then
 		GUISetState(@SW_SHOW, $hGUI_LM)
 	Else
-		#region ### START Koda GUI section ### main gui
+		#Region ### START Koda GUI section ### main gui
 		$hGUI_LM = GUICreate($s_Win_Title_LM, $i_xWidth_LM, $i_yHight_LM, $size[0], $size[1], BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_THICKFRAME, $WS_TABSTOP))
 ;~ 		GUISetFont(8.5, 400, 0, 'Microsoft Sans Serif')
 
-		#region Menu
-		#region File Menu ;============================================================================================== File Menu
+		#Region Menu
+		#Region File Menu ;============================================================================================== File Menu
 		$MenuItem_File = GUICtrlCreateMenu("&File")
 		$MenuItem_File_Analyze = GUICtrlCreateMenuItem("&Analyze(Refresh)", $MenuItem_File)
 		$MenuItem_File_Selected = GUICtrlCreateMenu("&Selected", $MenuItem_File)
@@ -594,26 +691,26 @@ Func _SwLMGUI()
 		GUICtrlSetState(-1, $GUI_DISABLE)
 		$MenuItem_File_Split = GUICtrlCreateMenuItem("", $MenuItem_File)
 		$MenuItem_File_Exit = GUICtrlCreateMenuItem("&Close", $MenuItem_File)
-		#endregion File Menu ;============================================================================================== File Menu
+		#EndRegion File Menu ;============================================================================================== File Menu
 
-		#region Edit Menu ;==============================================================================================Edit Menu
+		#Region Edit Menu ;==============================================================================================Edit Menu
 		$MenuItem_Edit = GUICtrlCreateMenu("&Edit")
 		$MenuItem_Edit_Remove = GUICtrlCreateMenuItem("&Clear Selected Entry", $MenuItem_Edit)
 		GUICtrlSetState(-1, $GUI_DISABLE)
 		$MenuItem_Edit_Remove_All = GUICtrlCreateMenuItem("C&lear All Entry", $MenuItem_Edit)
 		$MenuItem_Edit_Find = GUICtrlCreateMenuItem("&Find...", $MenuItem_Edit)
-		#endregion Edit Menu ;==============================================================================================Edit Menu
+		#EndRegion Edit Menu ;==============================================================================================Edit Menu
 
-		#region Tools Menu ;==============================================================================================Tools Menu
+		#Region Tools Menu ;==============================================================================================Tools Menu
 		$MenuItem_Tools = GUICtrlCreateMenu("T&ools")
 		$MenuItem_Tools_Expert = GUICtrlCreateMenu("&Expert", $MenuItem_Tools)
 		$MenuItem__Tools_Expert_asIDM = GUICtrlCreateMenuItem("To IDM E&xpert File", $MenuItem_Tools_Expert)
 		$MenuItem_Tools_Expert_asText = GUICtrlCreateMenuItem("To IDM &Text File", $MenuItem__Tools_Expert_asIDM)
 		$MenuItem__Tools_Expert_asHTML = GUICtrlCreateMenuItem("As HTML Re&port File", $MenuItem__Tools_Expert_asIDM)
 		$MenuItem__Tools_Expert_asCSV = GUICtrlCreateMenuItem("As CSV &Report File", $MenuItem__Tools_Expert_asIDM)
-		#endregion Tools Menu ;==============================================================================================Tools Menu
+		#EndRegion Tools Menu ;==============================================================================================Tools Menu
 
-		#region View Menu ;==============================================================================================View Menu
+		#Region View Menu ;==============================================================================================View Menu
 		$MenuItem_View = GUICtrlCreateMenu("&View")
 
 		$MenuItem_list = GUICtrlCreateMenu("L&ist", $MenuItem_View)
@@ -634,11 +731,11 @@ Func _SwLMGUI()
 
 		$MenuItem_Help = GUICtrlCreateMenu("&?")
 		$MenuItem_Help_h = GUICtrlCreateMenuItem("Help", $MenuItem_Help)
-		#endregion View Menu ;==============================================================================================View Menu
-		#endregion Menu
+		#EndRegion View Menu ;==============================================================================================View Menu
+		#EndRegion Menu
 
-		#region GUI
-		#region List View ;==============================================================================================List View
+		#Region GUI
+		#Region List View ;==============================================================================================List View
 		$idListView = GUICtrlCreateListView("No.|Name|File Size|MIME Type|ID|Link", 0, 0, 570, 110)
 		GUICtrlSetFont(-1, 8.5, 400, 0, 'Tahoma')
 		$hListView = GUICtrlGetHandle($idListView)
@@ -651,16 +748,16 @@ Func _SwLMGUI()
 		_GUICtrlListView_SetColumn($hListView, 0, "No.", -1, 1)
 		_GUICtrlListView_SetColumn($hListView, 2, "File Size", -1, 1)
 		_GUICtrlListView_SetColumn($hListView, 4, "ID", -1, 1)
-		#endregion List View ;==============================================================================================List View
+		#EndRegion List View ;==============================================================================================List View
 
-		#region Info;==============================================================================================Info
+		#Region Info;==============================================================================================Info
 		Local $aParts[1] = [-1]
 		Local $aText[1] = ["INFO: Ready"]
 		$h_Status_Info_LM = _GUICtrlStatusBar_Create($hGUI_LM, $aParts, $aText)
-		#endregion Info;==============================================================================================Info
+		#EndRegion Info;==============================================================================================Info
 
-		#endregion GUI
-		#endregion ### END Koda GUI section ###
+		#EndRegion GUI
+		#EndRegion ### END Koda GUI section ###
 	EndIf
 
 	_Disable_Button()

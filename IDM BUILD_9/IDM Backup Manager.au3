@@ -16,7 +16,7 @@
 #AutoIt3Wrapper_Run_After=del "IDM Backup Manager_Obfuscated.au3"
 #AutoIt3Wrapper_Run_After=del Utilities\ResHacker.ini
 #AutoIt3Wrapper_Run_After=del Utilities\ResHacker.log
-#AutoIt3Wrapper_Run_After=Utilities\upx.exe --best --all-methods --overlay=copy "%out%"
+#AutoIt3Wrapper_Run_After=Utilities\upx.exe --best --compress-icons=0 --all-methods --overlay=copy "%out%"
 #AutoIt3Wrapper_Run_After=del "IDM Backup Manager_stripped.au3"
 #AutoIt3Wrapper_Run_After=del Utilities\ResHacker.log
 #AutoIt3Wrapper_Run_Tidy=y
@@ -1776,7 +1776,7 @@ Func _SwLicense()
 	If FileExists($s_License_File) Then
 		_SwEditGUI($s_License_File, "License")
 	Else
-		MsgBox(64, "License", "IDM Backup Manager v" & $s_Current_Version & "(Beta) Copyright (c) 2012-2013, Gajjar Tejas" & @CRLF & "7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)" & @CRLF & @CRLF & "THE SOFTWARE IS PROVIDED" & '"' & "AS IS" & '"' & "AND THE AUTHOR DISCLAIMS ALL WARRANTIESWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FORANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGESWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ANACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OFOR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.", 0, $hGUI_BM)
+		MsgBox(64, "License", "IDM Backup Manager v" & $s_Current_Version & "(Beta) Copyright (c) 2012-2015, Gajjar Tejas" & @CRLF & "7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)" & @CRLF & @CRLF & "THE SOFTWARE IS PROVIDED" & '"' & "AS IS" & '"' & "AND THE AUTHOR DISCLAIMS ALL WARRANTIESWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FORANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGESWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ANACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OFOR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.", 0, $hGUI_BM)
 	EndIf
 EndFunc   ;==>_SwLicense
 #EndRegion Help

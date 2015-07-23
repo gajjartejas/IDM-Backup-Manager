@@ -1,5 +1,5 @@
 v0.9.9
-* use intget(new way to update,check for update on startup)
+* use intget(new way to update,check for update on startup)...done
 * folder rename bug??? while restoring.
 + setting only backup
 + Log File Improvement

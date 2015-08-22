@@ -365,10 +365,10 @@ Func _MainBM()
 				_ShellInstall()
 
 			Case $h_Picture_Facebook_About
-				ShellExecute("http://www.facebook.com/gajjartejas26")
+				ShellExecute("https://www.facebook.com/gajjartejas26")
 
 			Case $h_Picture_Twitter_About
-				ShellExecute("http://www.twitter.com/gajjartejas")
+				ShellExecute("https://www.twitter.com/gajjartejas")
 
 		EndSwitch
 	WEnd
@@ -409,7 +409,7 @@ EndFunc   ;==>_CheckSelfProcess
 
 Func _LogSysInfo()
 	Local $a_Memory = MemGetStats()
-	FileWriteLine($s_Log_File, "");df
+	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= System Information =============================")
 	FileWriteLine($s_Log_File, "Module Name and Version: " & $s_Win_Title_BM)
 	FileWriteLine($s_Log_File, "Module Path: " & @ScriptFullPath)
@@ -477,15 +477,15 @@ Func _LogRemove()
 	If Not $b_AppendLog_File And FileExists($s_Log_File) Then FileDelete($s_Log_File)
 EndFunc   ;==>_LogRemove
 
-Func _CheckCmdLine()
+Func _LogCmdLine()
 	FileWriteLine($s_Log_File, "")
 	FileWriteLine($s_Log_File, "============================= Command Line Check =============================")
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: No of Command Line Parameters Passed: " & $CmdLine[0])
-EndFunc   ;==>_CheckCmdLine
+EndFunc   ;==>_LogCmdLine
 
 Func _StartupBM()
 	_LogRemove()
-	_CheckCmdLine()
+	_LogCmdLine()
 	Switch $CmdLine[0]
 		Case 0
 			_CheckSelfProcess()
@@ -727,7 +727,7 @@ Func _SwBMGUI()
 
 	$h_Button_Browse_Backup = GUICtrlCreateButton("", 376, 63, 30, 23)
 	_AET_ButtonSetIcon(-1, 15, 16, 16, 4)
-	GUICtrlSetTip(-1, "Browse For Backup File")
+	GUICtrlSetTip(-1, "Save Backup File")
 
 	GUICtrlCreateGroup("Options", 24, 104, 390, 100)
 	GUICtrlSetFont(-1, 1, 800, 0, "MS Sans Serif")
@@ -1929,6 +1929,8 @@ Func _ChooseBackupFile()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
 
+	If Not FileExists($s_Backup_Dir) Then DirCreate($s_Backup_Dir)
+
 	Local $s_Backup_File = FileSaveDialog("Save Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 18, "IDMbackup" & @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & ".ibf", $hGUI_BM)
 	If $s_Backup_File <> "" And StringRight($s_Backup_File, 4) <> ".ibf" Then $s_Backup_File &= ".ibf"
 
@@ -2253,6 +2255,9 @@ EndFunc   ;==>_Backup
 
 #Region Restore
 Func _ChooseRestoreFile()
+
+	If Not FileExists($s_Backup_Dir) Then DirCreate($s_Backup_Dir)
+
 	Local $s_Restore_File = FileOpenDialog("Open Backup File", $s_Backup_Dir, "IDM Backup File (*.ibf)|All Files(*.*)", 3, "*.ibf", $hGUI_BM)
 	If @error Then
 	Else

@@ -2013,7 +2013,7 @@ Func _Backup()
 		$b_Password = False
 		$s_Password = ""
 	EndIf
-	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Password= " & '"' & $b_Password & '"')
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Password= " & '"' & _HexToString($b_Password) & '"')
 
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Checking : Drive Space Please Wait...")
 	If DriveSpaceFree(_sDriveGetFromPath($s_Backup_File)) < DirGetSize($s_AppDataIDMFolder) / 1024 / 1024 Then
@@ -2032,7 +2032,7 @@ Func _Backup()
 	If Not _RegKeyExists($s_regpath_IDM) Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Registry Entry Is Empty. Nothing To Backup")
 		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-		FileWriteLine($s_Log_File, _Current_Moment() & "Error: Registry Entry Is Empty. Nothing To Backup !")
+		FileWriteLine($s_Log_File, _Current_Moment() & "Error: Registry Entry Is Empty. Nothing To Backup!")
 		_ControlUpdateDefault()
 		Return SetError(1)
 	Else

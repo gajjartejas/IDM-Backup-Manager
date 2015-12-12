@@ -231,6 +231,7 @@ Func _Join_Fragments()
 		Return -2
 	EndIf
 
+
 	If $FileExt = "" Then
 		$pattern = "Unknown File (*.*)"
 	Else
@@ -296,7 +297,7 @@ Func _Details()
 	$avArray1[18] = _RegRead($s_regpath_IDM & "\" & $ID[5], "FRCType") ;Download Link:
 	$avArray1[19] = _RegRead($s_regpath_IDM & "\" & $ID[5], "owWPage") ;Download Link:
 	$avArray1[20] = _RegRead($s_regpath_IDM & "\" & $ID[5], "Url0") ;Download Link:
-	$avArray1[21] = _File_Size(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "FRFileSize"))) ;Download Link:
+	$avArray1[21] = _sGetFileSizeConv(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "FRFileSize"))) ;Download Link:
 	$avArray1[22] = _RegRead($s_regpath_IDM & "\" & $ID[5], "AccLngH") ;Download Link:
 	$avArray1[23] = _RegRead($s_regpath_IDM & "\" & $ID[5], "AccH") ;Download Link:
 	$avArray1[24] = Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "st_time")) ;Download Link:
@@ -312,9 +313,9 @@ Func _Details()
 	$avArray1[34] = _RegRead($s_regpath_IDM & "\" & $ID[5], "FR_FNCD") ;Download Link:
 	$avArray1[35] = _RegRead($s_regpath_IDM & "\" & $ID[5], "bGICompl") ;Download Link:
 	$avArray1[36] = _RegRead($s_regpath_IDM & "\" & $ID[5], "bRetAfFR") ;Download Link:
-	$avArray1[37] = _File_Size(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "FileSize"))) ;Download Link:
-	$avArray1[38] = _File_Size(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "Downloaded"))) ;Download Link:
-	$avArray1[39] = _File_Size(_RegRead($s_regpath_IDM & "\" & $ID[5], "Speed")) ;Download Link:
+	$avArray1[37] = _sGetFileSizeConv(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "FileSize"))) ;Download Link:
+	$avArray1[38] = _sGetFileSizeConv(Number(_RegRead($s_regpath_IDM & "\" & $ID[5], "Downloaded"))) ;Download Link:
+	$avArray1[39] = _sGetFileSizeConv(_RegRead($s_regpath_IDM & "\" & $ID[5], "Speed")) ;Download Link:
 	$avArray1[40] = _RegRead($s_regpath_IDM & "\" & $ID[5], "needER") ;Download Link:
 	$avArray1[41] = _RegRead($s_regpath_IDM & "\" & $ID[5], "fGDFE") ;Download Link:
 	$avArray1[42] = _RegRead($s_regpath_IDM & "\" & $ID[5], "bSaved") ;Download Link:
@@ -411,21 +412,21 @@ Func _Analyze()
 
 		If BitAND(GUICtrlRead($MenuItem_View_Categories_list_CatArray), $GUI_CHECKED) Then
 			If BitAND(GUICtrlRead($MenuItem_View_List_AllDownloads), $GUI_CHECKED) Then
-				GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
+				GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 				$no += 1
 			ElseIf BitAND(GUICtrlRead($MenuItem_View_List_FinishedDownloads), $GUI_CHECKED) Then
 				If $status = 3 Then
-					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
+					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
 				EndIf
 			ElseIf BitAND(GUICtrlRead($MenuItem_View_List_UnFinished), $GUI_CHECKED) Then
 				If $status = 2 Or $status = 0 Then
-					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
+					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
 				EndIf
 			ElseIf BitAND(GUICtrlRead($MenuItem_View_List_UnFinished_Data), $GUI_CHECKED) Then
 				If FileExists($LocalFileName) Then
-					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
+					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
 				EndIf
 			EndIf
@@ -433,21 +434,21 @@ Func _Analyze()
 		Else
 			If $s_current_selectde_cat = $cat_id Then
 				If BitAND(GUICtrlRead($MenuItem_View_List_AllDownloads), $GUI_CHECKED) Then
-					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
+					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
 				ElseIf BitAND(GUICtrlRead($MenuItem_View_List_FinishedDownloads), $GUI_CHECKED) Then
 					If $status = 3 Then
-						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
+						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 						$no += 1
 					EndIf
 				ElseIf BitAND(GUICtrlRead($MenuItem_View_List_UnFinished), $GUI_CHECKED) Then
 					If $status = 2 Or $status = 0 Then
-						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
+						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 						$no += 1
 					EndIf
 				ElseIf BitAND(GUICtrlRead($MenuItem_View_List_UnFinished_Data), $GUI_CHECKED) Then
 					If FileExists($LocalFileName) Then
-						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _File_Size($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
+						GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 						$no += 1
 					EndIf
 				EndIf
@@ -466,7 +467,7 @@ Func _Remove()
 	Local $ID = StringSplit(GUICtrlRead(GUICtrlRead($idListView, "id")), "|")
 	Local $FileName = _RegRead($s_regpath_IDM & "\" & $ID[5], "LocalPath")
 	Local $iMsgBoxAnswer
-	$iMsgBoxAnswer = MsgBox(36, "Conform Delete", "Are you sure you want to delete selected downloads from IDM list of downloads?." & @CRLF & "Delete completely downloaded files from your hard disk as well. Be careful ! ", 0, $hGUI_LM)
+	$iMsgBoxAnswer = MsgBox(36, "Confirm Delete", "Are you sure you want to delete selected downloads from IDM list of downloads?." & @CRLF & "Delete completely downloaded files from your hard disk as well. Be careful ! ", 0, $hGUI_LM)
 	Select
 		Case $iMsgBoxAnswer = 6 ;Yes
 			If FileExists($FileName) Then FileDelete($FileName)
@@ -677,7 +678,7 @@ Func _SwLMGUI()
 		#Region Menu
 		#Region File Menu ;============================================================================================== File Menu
 		$MenuItem_File = GUICtrlCreateMenu("&File")
-		$MenuItem_File_Analyze = GUICtrlCreateMenuItem("&Analyze(Refresh)", $MenuItem_File)
+		$MenuItem_File_Analyze = GUICtrlCreateMenuItem("&Refresh", $MenuItem_File)
 		$MenuItem_File_Selected = GUICtrlCreateMenu("&Selected", $MenuItem_File)
 		$MenuItem_File_Selected_ExploreFolder = GUICtrlCreateMenuItem("&Explore Folder", $MenuItem_File_Selected)
 		GUICtrlSetState(-1, $GUI_DISABLE)
@@ -831,6 +832,7 @@ Func _MainLM()
 
 			Case $MenuItem_Help_h
 				_SwHelp()
+
 		EndSwitch
 		_Disable_Button()
 	WEnd
@@ -885,7 +887,9 @@ EndFunc   ;==>_SwFindGUI
 
 Func _RunILM()
 	_SwLMGUI()
+	_Analyze()
 	_MainLM()
+
 EndFunc   ;==>_RunILM
 
 Func stb_resize($hWnd, $iMsg, $iwParam, $ilParam)

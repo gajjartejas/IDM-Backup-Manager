@@ -1,16 +1,16 @@
 file name 			:
 download path			:
 log file			:
-website				
-user agent
-coockie
-category
-frcType
-webpage original 
-direct link
-file size
-added date
-status downloaded /pendind
-last date try
-percentage downloaded 
-speed
+website 			:
+user agent 			:
+coockie 			:
+category 			:
+frcType 			:
+webpage original  		:
+direct link 			:
+file size 			:
+added date 			:
+status downloaded /pendind 	:
+last date try 			:
+percentage downloaded  		:
+speed 			 	:

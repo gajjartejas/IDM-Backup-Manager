@@ -433,14 +433,14 @@ Func _CheckComponment()
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Check DLL: Found")
 EndFunc   ;==>_CheckComponment
 
-Func _CheckIDMProcess()
+Func _WarnAndCloseIDM()
 
 	Local $ParentWin = ""
 	If IsHWnd($hGUI_BM) Then $ParentWin = $hGUI_BM
 
 	If ProcessExists("idman.exe") Then ;**** Check the process "idman.exe" exists or not ***
 		Local $iMsgBoxAnswer
-		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. Do You Want To Close IDM?", 0, $ParentWin)
+		$iMsgBoxAnswer = MsgBox(36, "IDM Need To Close", "IDM is Running in Background. If Some File is Locked By IDM Backup/Restore Process Will Not Work Correctly. Do You Want To Close IDM?", 0, $ParentWin)
 		Select
 			Case $iMsgBoxAnswer = 6 ;Yes
 				If ProcessClose("idman.exe") Then
@@ -450,12 +450,11 @@ Func _CheckIDMProcess()
 				EndIf
 			Case $iMsgBoxAnswer = 7 ;No
 				FileWriteLine($s_Log_File, _Current_Moment() & "Warning: Internet Download Manager Is Running. User Selected No.")
-				MsgBox(48, "Warning", "If Some File is Locked By IDM Backup/Restore Process Will Not Work Correctly.", 0, $ParentWin)
 		EndSelect
 	Else
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Internet Download Manager Is Not Running.")
 	EndIf
-EndFunc   ;==>_CheckIDMProcess
+EndFunc   ;==>_WarnAndCloseIDM
 
 Func _LogProfilePaths()
 	FileWriteLine($s_Log_File, "")
@@ -491,7 +490,6 @@ Func _StartupBM()
 			_CheckSelfProcess()
 			_CheckIni()
 			_CheckComponment()
-			_CheckIDMProcess()
 			_LogProfilePaths()
 			_SwBMGUI()
 			_MainBM()
@@ -501,28 +499,24 @@ Func _StartupBM()
 					_CheckSelfProcess()
 					_CheckIni()
 					_CheckComponment()
-					_CheckIDMProcess()
 					_LogProfilePaths()
 					_RunILM()
 				Case "swdc"
 					_CheckSelfProcess()
 					_CheckIni()
 					_CheckComponment()
-					_CheckIDMProcess()
 					_LogProfilePaths()
 					_SwCleanerGUI()
 				Case "swpwc"
 					_CheckSelfProcess()
 					_CheckIni()
 					_CheckComponment()
-					_CheckIDMProcess()
 					_LogProfilePaths()
 					_SwPwCleanerGUI()
 				Case "swft"
 					_CheckSelfProcess()
 					_CheckIni()
 					_CheckComponment()
-					_CheckIDMProcess()
 					_LogProfilePaths()
 					_SwFileTypeGUI()
 				Case Else
@@ -530,7 +524,6 @@ Func _StartupBM()
 						_CheckSelfProcess()
 						_CheckIni()
 						_CheckComponment()
-						_CheckIDMProcess()
 						_LogProfilePaths()
 						_SwBMGUI()
 						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
@@ -550,7 +543,6 @@ Func _StartupBM()
 							_CheckSelfProcess()
 							_CheckIni()
 							_CheckComponment()
-							_CheckIDMProcess()
 							_LogProfilePaths()
 							_SwBMGUI()
 							GUICtrlSetState($h_Button_Backup, $GUI_DISABLE)
@@ -569,7 +561,6 @@ Func _StartupBM()
 						_CheckSelfProcess()
 						_CheckIni()
 						_CheckComponment()
-						_CheckIDMProcess()
 						_LogProfilePaths()
 						_SwBMGUI()
 						_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
@@ -803,7 +794,7 @@ Func _SwBMGUI()
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
 			"EXAMPLE:" & @CRLF & _
-			"In case of If You Want To Restore Backup of Cybercaf� to Your Home PC", "Convert Profile", 1, 1)
+			"In case of If You Want To Restore Backup of Cybercafe to Your Home PC", "Convert Profile", 1, 1)
 
 	$h_Checkbox_Append_Registry_Restore = GUICtrlCreateCheckbox("", 38, 180, 13, 17)
 	$h_Label_Append_Registry_Restore = GUICtrlCreateLabel("Append/Merge(Disabled)", 54, 182, 130, 17)
@@ -1760,6 +1751,13 @@ Func _UpdateCheck()
 EndFunc   ;==>_UpdateCheck
 
 Func _ShellInstall()
+	Local $iMsgBoxAnswer = MsgBox(36, "Associate IBF File?", "Would you like to associate ibf(IDM Backup File)?", 0, $hGUI_BM)
+	If $iMsgBoxAnswer = 6 Then;Yes
+		_AssociateIBFFile()
+	EndIf
+EndFunc   ;==>_ShellInstall
+
+Func _AssociateIBFFile()
 	_ShellFile_Install("Restore IDM Backup", "ibf", @ScriptName, @ScriptFullPath, @ScriptFullPath, 14, False, False)
 	If @error Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Association NOT Created.")
@@ -1770,13 +1768,13 @@ Func _ShellInstall()
 		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled);StatusCompled
 		DllCall("shell32.dll", "none", "SHChangeNotify", "long", 0x8000000, "uint", BitOR(0x0, 0x1000), "ptr", 0, "ptr", 0)
 	EndIf
-EndFunc   ;==>_ShellInstall
+EndFunc   ;==>_AssociateIBFFile
 
 Func _SwLicense()
 	If FileExists($s_License_File) Then
 		_SwEditGUI($s_License_File, "License")
 	Else
-		MsgBox(64, "License", "IDM Backup Manager v" & $s_Current_Version & "(Beta) Copyright (c) 2012-2015, Gajjar Tejas" & @CRLF & "7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)" & @CRLF & @CRLF & "THE SOFTWARE IS PROVIDED" & '"' & "AS IS" & '"' & "AND THE AUTHOR DISCLAIMS ALL WARRANTIESWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FORANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGESWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ANACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OFOR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.", 0, $hGUI_BM)
+		MsgBox(64, "License", "IDM Backup Manager v" & $s_Current_Version & "(Beta) Copyright (c) 2012-2016, Gajjar Tejas" & @CRLF & "7-Zip Copyright (C) 1999-2013 Igor Pavlov (GPL)" & @CRLF & @CRLF & "THE SOFTWARE IS PROVIDED" & '"' & "AS IS" & '"' & "AND THE AUTHOR DISCLAIMS ALL WARRANTIESWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FORANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGESWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ANACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OFOR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.", 0, $hGUI_BM)
 	EndIf
 EndFunc   ;==>_SwLicense
 #EndRegion Help
@@ -1963,6 +1961,9 @@ Func _Backup()
 	_ControlUpdateBusy()
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWorking);StatusWorking
 	_CleanINInReg()
+
+	;close IDM If running
+	_WarnAndCloseIDM();
 
 	#Region ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
 	Local $s_Backup_File = GUICtrlRead($h_Input_Backup_Path)
@@ -2275,6 +2276,9 @@ Func _Restore()
 	_ControlUpdateBusy()
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWorking);StatusWorking
 	_CleanINInReg()
+
+	;close IDM If running
+	_WarnAndCloseIDM();
 
 	#Region ;/Define Some variable: $s_Restore_File
 	Local $s_Restore_File = GUICtrlRead($h_Input_Restore_Path)

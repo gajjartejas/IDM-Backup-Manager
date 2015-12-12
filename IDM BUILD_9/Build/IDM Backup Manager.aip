@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="11.6.2" version="11.6.2" Modules="architect" RootPath="." Language="en" Id="{F0DAFAB2-DCA6-4BF5-B01B-F9301BD9245B}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="11.6.2" version="12.5" Modules="architect" RootPath="." Language="en" Id="{F0DAFAB2-DCA6-4BF5-B01B-F9301BD9245B}">
   <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
     <ROW Name="HiddenItems" Value="ActSyncAppComponent"/>
   </COMPONENT>
@@ -134,7 +134,7 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiControlConditionComponent">
     <ROW Dialog_="ShortcutsDlg" Control_="StartupShorcutsCheckBox" Action="Hide" Condition="(Not Installed)"/>
     <ROW Dialog_="ShortcutsDlg" Control_="QuickLaunchShorcutsCheckBox" Action="Hide" Condition="(Not Installed) AND (VersionNT&lt;&quot;601&quot;)"/>
-    <ATTRIBUTE name="DeletedRows" value="ShortcutsDlg#StartupShorcutsCheckBox#Show#(Not Installed)@ShortcutsDlg#QuickLaunchShorcutsCheckBox#Show#(Not Installed) AND (VersionNT&lt;&quot;601&quot;)"/>
+    <ATTRIBUTE name="DeletedRows" value="ShortcutsDlg#QuickLaunchShorcutsCheckBox#Show#(Not Installed) AND (VersionNT&lt;&quot;601&quot;)@ShortcutsDlg#StartupShorcutsCheckBox#Show#(Not Installed)"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
     <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="LicenseAgreementDlg" Condition="AI_INSTALL" Ordering="1"/>
@@ -265,7 +265,7 @@
     <ROW ContentType="application/x-zip-compressed" Extension_="ibf" Component_="idmbm.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiProgIdComponent">
-    <ROW ProgId="[|Manufacturer].[|ProductName]" Description="IDM Backup Manager File" Icon_="ext.exe"/>
+    <ROW ProgId="[|Manufacturer].[|ProductName]" Description="IDM Backup Manager File" Icon_="ext.exe" MacDefaultDocType="true"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiRegLocatorComponent">
     <ROW Signature_="AI_EXE_PATH_CU" Root="1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Type="2"/>
@@ -308,28 +308,28 @@
     <ROW XmlAttribute="xsischemaLocation" XmlElement="swidsoftware_identification_tag" Name="xsi:schemaLocation" Flags="14" Order="3" Value="http://standards.iso.org/iso/19770/-2/2008/schema.xsd software_identification_tag.xsd"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.XmlElementComponent">
-    <ROW XmlElement="swidbuild" ParentElement="swidnumeric" Name="swid:build" Order="2" Flags="14" Text="8"/>
-    <ROW XmlElement="swidentitlement_required_indicator" ParentElement="swidsoftware_identification_tag" Name="swid:entitlement_required_indicator" Order="0" Flags="14" Text="false"/>
-    <ROW XmlElement="swidmajor" ParentElement="swidnumeric" Name="swid:major" Order="0" Flags="14" Text="0"/>
-    <ROW XmlElement="swidminor" ParentElement="swidnumeric" Name="swid:minor" Order="1" Flags="14" Text="9"/>
-    <ROW XmlElement="swidname" ParentElement="swidproduct_version" Name="swid:name" Order="0" Flags="14" Text="[ProductVersion]"/>
-    <ROW XmlElement="swidname_1" ParentElement="swidsoftware_creator" Name="swid:name" Order="0" Flags="14" Text="[Manufacturer]"/>
-    <ROW XmlElement="swidname_2" ParentElement="swidsoftware_licensor" Name="swid:name" Order="0" Flags="14" Text="[Manufacturer]"/>
-    <ROW XmlElement="swidname_3" ParentElement="swidtag_creator" Name="swid:name" Order="0" Flags="14" Text="[Manufacturer]"/>
-    <ROW XmlElement="swidnumeric" ParentElement="swidproduct_version" Name="swid:numeric" Order="1" Flags="14"/>
-    <ROW XmlElement="swidproduct_title" ParentElement="swidsoftware_identification_tag" Name="swid:product_title" Order="1" Flags="14" Text="[ProductName]"/>
-    <ROW XmlElement="swidproduct_version" ParentElement="swidsoftware_identification_tag" Name="swid:product_version" Order="2" Flags="14"/>
-    <ROW XmlElement="swidregid" ParentElement="swidsoftware_creator" Name="swid:regid" Order="1" Flags="14" Text="regid.1995-09.com.example"/>
-    <ROW XmlElement="swidregid_1" ParentElement="swidsoftware_licensor" Name="swid:regid" Order="1" Flags="14" Text="regid.1995-09.com.example"/>
-    <ROW XmlElement="swidregid_2" ParentElement="swidtag_creator" Name="swid:regid" Order="1" Flags="14" Text="regid.1995-09.com.example"/>
-    <ROW XmlElement="swidreview" ParentElement="swidnumeric" Name="swid:review" Order="3" Flags="14" Text="0"/>
-    <ROW XmlElement="swidsoftware_creator" ParentElement="swidsoftware_identification_tag" Name="swid:software_creator" Order="3" Flags="14"/>
-    <ROW XmlElement="swidsoftware_id" ParentElement="swidsoftware_identification_tag" Name="swid:software_id" Order="5" Flags="14"/>
-    <ROW XmlElement="swidsoftware_identification_tag" Name="swid:software_identification_tag" Order="0" Flags="14"/>
-    <ROW XmlElement="swidsoftware_licensor" ParentElement="swidsoftware_identification_tag" Name="swid:software_licensor" Order="4" Flags="14"/>
-    <ROW XmlElement="swidtag_creator" ParentElement="swidsoftware_identification_tag" Name="swid:tag_creator" Order="6" Flags="14"/>
-    <ROW XmlElement="swidtag_creator_regid" ParentElement="swidsoftware_id" Name="swid:tag_creator_regid" Order="1" Flags="14" Text="regid.1995-09.com.example"/>
-    <ROW XmlElement="swidunique_id" ParentElement="swidsoftware_id" Name="swid:unique_id" Order="0" Flags="14" Text="211ca459-f137-4f82-bc77-c55d42e10125"/>
+    <ROW XmlElement="swidbuild" ParentElement="swidnumeric" Name="swid:build" Condition="1" Order="2" Flags="14" Text="8"/>
+    <ROW XmlElement="swidentitlement_required_indicator" ParentElement="swidsoftware_identification_tag" Name="swid:entitlement_required_indicator" Condition="1" Order="0" Flags="14" Text="false"/>
+    <ROW XmlElement="swidmajor" ParentElement="swidnumeric" Name="swid:major" Condition="1" Order="0" Flags="14" Text="0"/>
+    <ROW XmlElement="swidminor" ParentElement="swidnumeric" Name="swid:minor" Condition="1" Order="1" Flags="14" Text="9"/>
+    <ROW XmlElement="swidname" ParentElement="swidproduct_version" Name="swid:name" Condition="1" Order="0" Flags="14" Text="[ProductVersion]"/>
+    <ROW XmlElement="swidname_1" ParentElement="swidsoftware_creator" Name="swid:name" Condition="1" Order="0" Flags="14" Text="[Manufacturer]"/>
+    <ROW XmlElement="swidname_2" ParentElement="swidsoftware_licensor" Name="swid:name" Condition="1" Order="0" Flags="14" Text="[Manufacturer]"/>
+    <ROW XmlElement="swidname_3" ParentElement="swidtag_creator" Name="swid:name" Condition="1" Order="0" Flags="14" Text="[Manufacturer]"/>
+    <ROW XmlElement="swidnumeric" ParentElement="swidproduct_version" Name="swid:numeric" Condition="1" Order="1" Flags="14"/>
+    <ROW XmlElement="swidproduct_title" ParentElement="swidsoftware_identification_tag" Name="swid:product_title" Condition="1" Order="1" Flags="14" Text="[ProductName]"/>
+    <ROW XmlElement="swidproduct_version" ParentElement="swidsoftware_identification_tag" Name="swid:product_version" Condition="1" Order="2" Flags="14"/>
+    <ROW XmlElement="swidregid" ParentElement="swidsoftware_creator" Name="swid:regid" Condition="1" Order="1" Flags="14" Text="regid.1995-09.com.example"/>
+    <ROW XmlElement="swidregid_1" ParentElement="swidsoftware_licensor" Name="swid:regid" Condition="1" Order="1" Flags="14" Text="regid.1995-09.com.example"/>
+    <ROW XmlElement="swidregid_2" ParentElement="swidtag_creator" Name="swid:regid" Condition="1" Order="1" Flags="14" Text="regid.1995-09.com.example"/>
+    <ROW XmlElement="swidreview" ParentElement="swidnumeric" Name="swid:review" Condition="1" Order="3" Flags="14" Text="0"/>
+    <ROW XmlElement="swidsoftware_creator" ParentElement="swidsoftware_identification_tag" Name="swid:software_creator" Condition="1" Order="3" Flags="14"/>
+    <ROW XmlElement="swidsoftware_id" ParentElement="swidsoftware_identification_tag" Name="swid:software_id" Condition="1" Order="5" Flags="14"/>
+    <ROW XmlElement="swidsoftware_identification_tag" Name="swid:software_identification_tag" Condition="1" Order="0" Flags="14"/>
+    <ROW XmlElement="swidsoftware_licensor" ParentElement="swidsoftware_identification_tag" Name="swid:software_licensor" Condition="1" Order="4" Flags="14"/>
+    <ROW XmlElement="swidtag_creator" ParentElement="swidsoftware_identification_tag" Name="swid:tag_creator" Condition="1" Order="6" Flags="14"/>
+    <ROW XmlElement="swidtag_creator_regid" ParentElement="swidsoftware_id" Name="swid:tag_creator_regid" Condition="1" Order="1" Flags="14" Text="regid.1995-09.com.example"/>
+    <ROW XmlElement="swidunique_id" ParentElement="swidsoftware_id" Name="swid:unique_id" Condition="1" Order="0" Flags="14" Text="211ca459-f137-4f82-bc77-c55d42e10125"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.XmlFileComponent">
     <ROW XmlFile="regid.199509.com.example_ProductName.swidtag" FileName="REGID1~1.SWI|regid.1995-09.com.example_211ca459-f137-4f82-bc77-c55d42e10125.swidtag" DirProperty="APPDIR" Component="ProductInformation" RootElement="swidsoftware_identification_tag" Flags="25" Version="1.0" Encoding="UTF-8" IndentUnits="2"/>

@@ -107,18 +107,6 @@ Func _Resize_Text($text)
 	Return "Goto " & StringLeft($text, 20) & "...."
 EndFunc   ;==>_Resize_Text
 
-Func _File_Size($Rn)
-	If $Rn > 0 And $Rn <= 1024 Then
-		Return $Rn & " BYTES"
-	ElseIf $Rn > 1024 And $Rn <= 1048576 Then
-		Return Round($Rn / (1024), 2) & " KB"
-	ElseIf $Rn > 1048576 And $Rn <= 1073741824 Then
-		Return Round($Rn / (1048576), 2) & " MB"
-	ElseIf $Rn > 1073741824 Then
-		Return Round($Rn / (1073741824), 2) & " GB"
-	EndIf
-EndFunc   ;==>_File_Size
-
 Func _Drive_Get_From_Path($path)
 	Local $szDrive, $szDir, $szFName, $szExt
 	Local $TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)

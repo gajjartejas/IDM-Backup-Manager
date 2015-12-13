@@ -1,17 +1,19 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-#region    ;************ Includes ************
+#Region    ;************ Includes ************
 #include-once
 #include <Array.au3>
 #include <WinAPIShellEx.au3>
 #include "_RegFunc.au3"
-#endregion    ;************ Includes ************
+#EndRegion    ;************ Includes ************
 
-#region Common
+#Region Common
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
 Global Const $s_Current_Version = "0.9.9"
-#endregion Common
+Global Const $IS_PORTABLE = False
 
-#region Global Variables IDM BM
+#EndRegion Common
+
+#Region Global Variables IDM BM
 Global Const $s_Win_Title_BM = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
 Global Const $i_xWidth_BM = 439
 Global Const $i_yHight_BM = 276
@@ -24,16 +26,19 @@ Global Const $s_License_File = @ScriptDir & "\License.txt"
 Global Const $s_ini_File = @TempDir & "\" & "idm_guest_Setting.ini"
 Global Const $s_reg_File = @TempDir & "\IDMregistry.reg"
 
-;for portable
-;~ Global Const $s_Setting_File = @ScriptDir & "\SettingFile.ini"
-;~ Global $s_Log_File = @ScriptDir & "\LogFile.log" ;for portable
+Global $s_Setting_File = ""
+Global $s_Log_File = ""
+Global $s_Backup_Dir = ""
 
-;for installer
-Global Const $s_Setting_File = @AppDataDir & "\IDM Backup Manager" & "\SettingFile.ini" ;for installer
-Global $s_Log_File = @AppDataDir & "\IDM Backup Manager\LogFile.log" ;for installer
-
-
-Global $s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
+If ($IS_PORTABLE) Then
+	$s_Setting_File = @ScriptDir & "\SettingFile.ini"
+	$s_Log_File = @ScriptDir & "\LogFile.log"
+	$s_Backup_Dir = @ScriptDir & "\IDM Backup Files\"
+Else
+	$s_Setting_File = @AppDataDir & "\IDM Backup Manager" & "\SettingFile.ini"
+	$s_Log_File = @AppDataDir & "\IDM Backup Manager\LogFile.log"
+	$s_Backup_Dir = @MyDocumentsDir & "\IDM Backup Files\"
+EndIf
 
 Global $b_AppendLog_File = 1
 Global $b_RestartIDM = 0
@@ -73,7 +78,7 @@ Global $h_Button_Open_Log_Setting, $h_Button_Associate_Setting, $h_Button_More_S
 Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Label_BrowseAppDataFolder_Setting, $h_Label_DwnlDataFolder_Setting
 
 Global $h_Button_Website_Help, $h_Button_Help_Help, $h_Button_Licence_Help, $h_Button_Version_History_Help, $h_Button_Forum_Help
-Global $h_Button_Update_Help, $h_Picture_Facebook_About,$h_Picture_Twitter_About
+Global $h_Button_Update_Help, $h_Picture_Facebook_About, $h_Picture_Twitter_About
 
 Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
 
@@ -87,9 +92,9 @@ Global $hIcons_StatusWorking = _WinAPI_ShellExtractIcon(@ScriptFullPath, 23, 16,
 Global $nMsg
 Global $hGUI_BM
 Global $aData[15]
-#endregion Global Variables IDM BM
+#EndRegion Global Variables IDM BM
 
-#region global Variables
+#Region global Variables
 Global $s_Win_Title_LM = "IDM List Manager" & $s_Current_Version & "(Beta)"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
 Global $i_xWidth_LM = 570, $i_yHight_LM = 150
@@ -113,7 +118,7 @@ Global $idListView, $hListView
 
 Global $h_Status_Info_LM, $progress, $h_Progress
 
-#endregion global Variables
+#EndRegion global Variables
 
 Func _sGetAppDataIDMFolder()
 

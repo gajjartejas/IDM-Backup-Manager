@@ -1,10 +1,10 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
-#region    ;************ Includes ************
+#Region    ;************ Includes ************
 #include-once
 #include <File.au3>
-#endregion    ;************ Includes ************
+#EndRegion    ;************ Includes ************
 
-#region Misc Functions(App Indepedent For IDMBM)
+#Region Misc Functions(App Indepedent For IDMBM)
 Func _iGetFileSize($aFiles)
 	Local $i, $iSize = 0
 
@@ -27,16 +27,14 @@ EndFunc   ;==>_sDriveGetFromPath
 
 ;Get Filesize Conversion
 Func _sGetFileSizeConv($iBytes)
-	If $iBytes >= 0 And $iBytes <= 1024 Then
-		Return $iBytes & " Bytes"
-	ElseIf $iBytes > 1024 And $iBytes <= 1048576 Then
-		Return Round($iBytes / (1024), 2) & " KB"
-	ElseIf $iBytes > 1048576 And $iBytes <= 1073741824 Then
-		Return Round($iBytes / (1048576), 2) & " MB"
-	ElseIf $iBytes > 1073741824 Then
-		Return Round($iBytes / (1073741824), 2) & " GB"
-	EndIf
+	Local $iIndex = 0, $aArray = [' bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB']
+	While $iBytes > 1023
+		$iIndex += 1
+		$iBytes /= 1024
+	WEnd
+	Return Round($iBytes) & $aArray[$iIndex]
 EndFunc   ;==>_sGetFileSizeConv
+
 
 Func _IsDir($sFilePath)
 	Return Number(FileExists($sFilePath) And StringInStr(FileGetAttrib($sFilePath), "D", 2, 1) > 0)
@@ -90,9 +88,9 @@ Func _sPath_Last_Remove($sPath)
 		Return $s_Saved_Path
 	EndIf
 EndFunc   ;==>_sPath_Last_Remove
-#endregion Misc Functions(App Indepedent For IDMBM)
+#EndRegion Misc Functions(App Indepedent For IDMBM)
 
-#region Misc Functions(App Indepedent For IDMLM)
+#Region Misc Functions(App Indepedent For IDMLM)
 Func _CountKey($sRegpath)
 	Local $k = 1
 	While 1
@@ -125,4 +123,4 @@ Func _Name_Get_From_Path($path)
 	Return $TestPath[3]
 EndFunc   ;==>_Name_Get_From_Path
 
-#endregion Misc Functions(App Indepedent For IDMLM)
+#EndRegion Misc Functions(App Indepedent For IDMLM)

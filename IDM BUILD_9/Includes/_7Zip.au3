@@ -132,6 +132,30 @@ Func _7ZipExtractEx($hWnd, $sZipFile, $sDestinationFolder, $aFile_To_Extracr, $s
 	Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
 EndFunc   ;==>_7ZipExtractEx
 
+Func _7ZipList($hWnd,$sDestinationFile, $sPassword)
+
+	Local $iFlagDll = _7ZipControlStartup()
+	If $iFlagDll = 0 Then Return SetError(2, 0, 0)
+
+	If $sPassword <> "" Then
+		$sPassword = " -p" & '"' & $sPassword & '" '
+	EndIf
+
+	Local $sCMD = " l " & " " & '"' & $sDestinationFile & '"'& $sPassword & " -r DwnlData\Tejas\* -hide"
+
+	Local $tOutBuffer = DllStructCreate("char[32768]")
+
+	Local $aRet = DllCall($hDLL_7ZIP, "int", "SevenZip", _
+			"hwnd", $hWnd, _
+			"str", $sCMD, _
+			"ptr", DllStructGetPtr($tOutBuffer), _
+			"int", DllStructGetSize($tOutBuffer))
+
+	If $iFlagDll = 2 Then _7ZipShutdown()
+	If Not $aRet[0] Then Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
+	Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
+EndFunc   ;==>_7ZipAdd
+
 Func _7ZipSetOwnerWindowEx($hWnd, $sProcFunc)
 	If $hDLL_7ZIP <= 0 Then Return SetError(2, 0, 0)
 	If $hArchiveProc Then DllCallbackFree($hArchiveProc)

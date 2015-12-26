@@ -300,17 +300,51 @@ Func _MainBM()
 					EndIf
 				EndIf
 
+				#Region BrowseLogFile
 			Case $h_Button_BrowseLogFile_Setting
+				_ShowMenu($hGUI_BM, $nMsg, $h_Button_BrowseLogFile_Setting_Context)
+
+			Case $h_Button_BrowseLogFile_Setting_Context0
+				ConsoleWrite("==============================================test" & @CRLF)
 				_ChooseLogFile()
 
+			Case $h_Button_BrowseLogFile_Setting_Context1
+				_SelectFile(GUICtrlRead($h_Label_LogFile_Setting))
+				#EndRegion BrowseLogFile
+
+				#Region BrowseDataBackupFolder
 			Case $h_Button_BrowseDataBackupFolder_Setting
+				_ShowMenu($hGUI_BM, $nMsg, $h_Button_BrowseDataBackupFolder_Setting_Context)
+
+			Case $h_Button_BrowseDataBackupFolder_Setting_Context0
 				_ChooseDataBackupFolder()
 
+			Case $h_Button_BrowseDataBackupFolder_Setting_Context1
+				_SelectFile(GUICtrlRead($h_Label_BrowseDataBackupFolder_Setting))
+
+				#EndRegion BrowseDataBackupFolder
+
+				#Region BrowseAppDataFolder
 			Case $h_Button_BrowseAppDataFolder_Setting
+				_ShowMenu($hGUI_BM, $nMsg, $h_Button_BrowseAppDataFolder_Setting_Context)
+
+			Case $h_Button_BrowseAppDataFolder_Setting_Context0
 				_ChooseAppDataBackupFolder()
 
+			Case $h_Button_BrowseAppDataFolder_Setting_Context1
+				_SelectFile(GUICtrlRead($h_Label_BrowseAppDataFolder_Setting))
+				#EndRegion BrowseAppDataFolder
+
+				#Region TempDataFolder
 			Case $h_Button_TempDataFolder_Setting
+				_ShowMenu($hGUI_BM, $nMsg, $h_Button_TempDataFolder_Setting_Context)
+
+			Case $h_Button_TempDataFolder_Setting_Context0
 				_ChooseTempDataBackupFolder()
+
+			Case $h_Button_TempDataFolder_Setting_Context1
+				_SelectFile(GUICtrlRead($h_Label_DwnlDataFolder_Setting))
+				#EndRegion TempDataFolder
 
 			Case $h_Label_DwnlDataFolder_Setting
 				_ChangeTempDataBackupFolder()
@@ -787,12 +821,18 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("Restore Location", 24, 44, 390, 55)
 	GUICtrlSetFont(-1, 2, 800, 0, "MS Sans Serif")
 
-	$h_Input_Restore_Path = GUICtrlCreateInput("", 33, 64, 336, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Input_Restore_Path = GUICtrlCreateInput("", 33, 64, 306, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 
-	$h_Button_Browse_Restore = GUICtrlCreateButton("", 376, 63, 30, 23)
+	$h_Button_Browse_Restore = GUICtrlCreateButton("", 346, 63, 30, 23)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 4)
 	GUICtrlSetTip(-1, "Browse For Restore File")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$h_Button_Restore_Archive_Info = GUICtrlCreateButton("", 380, 63, 30, 23)
+	_AET_ButtonSetIcon(-1, 19, 16, 16, 4)
+	GUICtrlSetTip(-1, "Show information about backup file")
+	GUICtrlSetState(-1, $GUI_DISABLE)
+
 
 	GUICtrlCreateGroup("Options", 24, 104, 390, 100)
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
@@ -831,11 +871,6 @@ Func _SwBMGUI()
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Button_Restore_Archive_Info = GUICtrlCreateButton("Info", 216, 217, 95, 25)
-	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
-	GUICtrlSetTip(-1, "Show information about backup file")
-	GUICtrlSetState(-1, $GUI_DISABLE)
-
 	$h_Button_Restore = GUICtrlCreateButton("Restore Now", 319, 217, 95, 25)
 	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
 	GUICtrlSetTip(-1, "Restore Now")
@@ -853,7 +888,7 @@ Func _SwBMGUI()
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
 	$h_Button_List_Manager_Tools = GUICtrlCreateButton("Downloads List Manager", 45, 64, 80, 60, $BS_MULTILINE)
-;~ 	If Not FileExists(@ScriptDir & "\IDM List Manager.exe") Then GUICtrlSetState(-1, $GUI_DISABLE)
+
 	GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloaded Files, Remove Download From List and much more.")
 
 	$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Data Cleaner", 135, 64, 80, 60, $BS_MULTILINE)
@@ -873,28 +908,44 @@ Func _SwBMGUI()
 
 	GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
 
+	#Region Setting - BrowseLogFile
 	$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton(" Log File Folder:", 32, 60, 107, 25, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
+	$h_Button_BrowseLogFile_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseLogFile_Setting)
+	$h_Button_BrowseLogFile_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseLogFile_Setting_Context)
+	$h_Button_BrowseLogFile_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseLogFile_Setting_Context)
 
 	$h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 144, 64, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_LogFile_Setting))
+	#EndRegion Setting - BrowseLogFile
 
+	#Region Setting - BrowseDataBackupFolder
 	$h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton(" Backup Folder:", 32, 92, 107, 25, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
+	$h_Button_BrowseDataBackupFolder_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseDataBackupFolder_Setting)
+	$h_Button_BrowseDataBackupFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseDataBackupFolder_Setting_Context)
+	$h_Button_BrowseDataBackupFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseDataBackupFolder_Setting_Context)
 
 	$h_Label_BrowseDataBackupFolder_Setting = GUICtrlCreateInput($s_Backup_Dir, 144, 96, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseDataBackupFolder_Setting))
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	#EndRegion Setting - BrowseDataBackupFolder
 
+	#Region Setting - BrowseAppDataFolder
 	GUICtrlCreateGroup("Default IDM Profile", 24, 128, 393, 81)
 
 	$h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton(" AppData Folder:", 32, 146, 107, 25, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
+	$h_Button_BrowseAppDataFolder_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseAppDataFolder_Setting)
+	$h_Button_BrowseAppDataFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseAppDataFolder_Setting_Context)
+	$h_Button_BrowseAppDataFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseAppDataFolder_Setting_Context)
 
 	$h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 144, 150, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseAppDataFolder_Setting))
+	#EndRegion Setting - BrowseAppDataFolder
 
+	#Region Setting - TempDataFolder
 	$h_Button_TempDataFolder_Setting = GUICtrlCreateButton(" Temp Folder:", 32, 178, 107, 25, $BS_left)
 	GUICtrlSetTip(-1, _
 			"Temporary directory is required for storing file parts during download." & @CRLF & _
@@ -902,6 +953,9 @@ Func _SwBMGUI()
 			"different physical drives for temporary directory and ""Save To"" folders" & @CRLF & _
 			"for faster assembling of downloaded files.")
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
+	$h_Button_TempDataFolder_Setting_Context = GUICtrlCreateContextMenu($h_Button_TempDataFolder_Setting)
+	$h_Button_TempDataFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_TempDataFolder_Setting_Context)
+	$h_Button_TempDataFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_TempDataFolder_Setting_Context)
 
 	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateCombo("", 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_COMBO, $CBS_SIMPLE))
 	#Region Set Data
@@ -914,6 +968,7 @@ Func _SwBMGUI()
 	EndIf
 	GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_TempPath, $s_TempPath)
 	#EndRegion Set Data
+
 	GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, _
 			"DwnlData Folder: " & @CRLF & _
 			$DwnlData_Folder & @CRLF & _
@@ -922,6 +977,7 @@ Func _SwBMGUI()
 			$GrabberData_Folder)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	#EndRegion Setting - TempDataFolder
 
 	$h_Button_Open_Log_Setting = GUICtrlCreateButton("", 274, 216, 30, 23)
 	_AET_ButtonSetIcon(-1, 18, 16, 16, 4)
@@ -1471,8 +1527,11 @@ EndFunc   ;==>_SwFileTypeGUI
 
 Func _SwFileInformation()
 
-	Local $ChildixWidth = 450
-	Local $ChildiyHight = 445
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "============================= File Info Started =============================")
+
+	Local $ChildixWidth = 433
+	Local $ChildiyHight = 401
 
 	Local $sizea = WinGetPos($s_Win_Title_BM)
 	If @error Then
@@ -1484,8 +1543,8 @@ Func _SwFileInformation()
 
 	Local $FileInformationGUI = GUICreate("Add Extra Filetype By Categories", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
-	Local $lblTitle = GUICtrlCreateLabel("Backup From Tejas PC", 0, 0, 434, 33, BitOR($SS_CENTER, $WS_CLIPSIBLINGS))
-	GUICtrlSetFont(-1, 18, 400, 0, "MS Sans Serif")
+	Local $lblTitle = GUICtrlCreateLabel("Backup From ", 8, 8, 417, 48, BitOR($SS_CENTER, $WS_CLIPSIBLINGS))
+	GUICtrlSetFont(-1, 16, 400, 0, "Microsoft Sans Serif")
 	GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKVCENTER + $GUI_DOCKHEIGHT)
 	GUICtrlCreateGroup("Backup File Property", 8, 56, 417, 113)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKHEIGHT)
@@ -1497,13 +1556,13 @@ Func _SwFileInformation()
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	GUICtrlCreateLabel("Total Downloads:", 16, 143, 87, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	Local $lblFileName = GUICtrlCreateLabel("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 112, 80, 306, 17)
+	Local $lblFileName = GUICtrlCreateLabel("", 112, 80, 306, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblFileSize = GUICtrlCreateLabel("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 112, 101, 306, 17)
+	Local $lblFileSize = GUICtrlCreateLabel("", 112, 101, 306, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblFileSizeUncompressed = GUICtrlCreateLabel("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 112, 122, 306, 17)
+	Local $lblFileSizeUncompressed = GUICtrlCreateLabel("", 112, 122, 306, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblTotalDownloads = GUICtrlCreateLabel("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 112, 143, 306, 17)
+	Local $lblTotalDownloads = GUICtrlCreateLabel("", 112, 143, 306, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("Backup Modes and Folders", 8, 176, 417, 137)
@@ -1522,19 +1581,19 @@ Func _SwFileInformation()
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	GUICtrlCreateLabel("Temp Folder:", 16, 284, 66, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	Local $lblBackupMode = GUICtrlCreateLabel("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 128, 200, 290, 17)
+	Local $lblBackupMode = GUICtrlCreateLabel("", 128, 200, 290, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblDownloadDataFolder = GUICtrlCreateLabel("xxxxxxxxxxxxxxx", 128, 221, 79, 17)
+	Local $lblDownloadDataFolder = GUICtrlCreateLabel("", 128, 221, 79, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	Local $lblGrabberFolder = GUICtrlCreateLabel("xxxxxxxxxxxxxxx", 290, 221, 127, 17)
+	Local $lblGrabberFolder = GUICtrlCreateLabel("", 290, 221, 127, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblSchedulerFolder = GUICtrlCreateLabel("xxxxxxxxxxxxxxx", 128, 242, 79, 17)
+	Local $lblSchedulerFolder = GUICtrlCreateLabel("", 128, 242, 79, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	Local $lblHistoryFolder = GUICtrlCreateLabel("xxxxxxxxxxxxxxx", 290, 242, 127, 17)
+	Local $lblHistoryFolder = GUICtrlCreateLabel("", 290, 242, 127, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblAppDataIDMFolder = GUICtrlCreateLabel("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 128, 263, 290, 17)
+	Local $lblAppDataIDMFolder = GUICtrlCreateLabel("", 128, 263, 290, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblTempFolder = GUICtrlCreateLabel("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 128, 287, 290, 17)
+	Local $lblTempFolder = GUICtrlCreateLabel("", 128, 287, 290, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("System Properties", 8, 320, 417, 73)
@@ -1547,19 +1606,20 @@ Func _SwFileInformation()
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	GUICtrlCreateLabel("Computer Name:", 217, 365, 83, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	Local $lblOSVersion = GUICtrlCreateLabel("xxxxxxxxxxxxxxx", 128, 344, 79, 17)
+	Local $lblOSVersion = GUICtrlCreateLabel("", 128, 344, 79, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	Local $lblOSServicePack = GUICtrlCreateLabel("xxxxxxxxxxxxxxx", 304, 344, 111, 17)
+	Local $lblOSServicePack = GUICtrlCreateLabel("", 304, 344, 111, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblComputerName = GUICtrlCreateLabel("xxxxxxxxxxxxxxx", 304, 365, 111, 17)
+	Local $lblComputerName = GUICtrlCreateLabel("", 304, 365, 111, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblOSArch = GUICtrlCreateLabel("xxxxxxxxxxxxxxx", 128, 365, 79, 17)
+	Local $lblOSArch = GUICtrlCreateLabel("", 128, 365, 79, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	#Region Backup File
 	Local $s_Restore_File = GUICtrlRead($h_Input_Restore_Path)
 
+	FileWriteLine($s_Log_File, _Current_Moment() & "Info: $s_Restore_File= " & '"' & $s_Restore_File & '"')
 	;Check backup File
 	If Not FileExists($s_Restore_File) Then
 		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Backup File Not Found")
@@ -1575,6 +1635,7 @@ Func _SwFileInformation()
 		If StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
+			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
 			_ControlUpdateDefault()
 			Return SetError(1)
 		EndIf
@@ -1589,16 +1650,28 @@ Func _SwFileInformation()
 	_ResetDataAray($aData)
 	$aData[13] = "idm_guest_Setting.ini"
 
-	Local $foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, @TempDir, $aData, $s_Password);Extract ini,reg File -> Check For Password
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Getting File Info...")
+	_ControlUpdateBusy()
+	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWorking);StatusWorking
 
+	;remove extracted ini
+	_FileOrFolderDeleteWithLog($s_ini_File)
+
+	Local $foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, @TempDir, $aData, $s_Password);Extract ini,reg File -> Check For Password
+	_7ZipShutdown()
 	If $foo <> 0 And FileExists($s_ini_File) Then ;Check if INI available and Succeful Extract
+
+		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Ready")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
+		_ControlUpdateDefault()
+		FileWriteLine($s_Log_File, _Current_Moment() & "Success!")
 
 		;Show GUI
 		GUISetState(@SW_SHOW)
 		GUISetState(@SW_DISABLE, $hGUI_BM)
 
 		GUICtrlSetData($lblTitle, "Backup From " & IniRead($s_ini_File, "Default", "Username", "") & " PC")
-		GUICtrlSetData($lblFileName, "not yet im")
+		GUICtrlSetData($lblFileName, _Name_Get_From_Path($s_Restore_File))
 		GUICtrlSetData($lblFileSize, _sGetFileSizeConv(FileGetSize($s_Restore_File)))
 		GUICtrlSetData($lblFileSizeUncompressed, "not yet im")
 		GUICtrlSetData($lblTotalDownloads, IniRead($s_ini_File, "Default", "Keys", ""))
@@ -1615,7 +1688,6 @@ Func _SwFileInformation()
 		GUICtrlSetData($lblOSArch, IniRead($s_ini_File, "GuestSystemInfo", "OSArch", ""))
 		GUICtrlSetData($lblComputerName, IniRead($s_ini_File, "GuestSystemInfo", "ComputerName", ""))
 	Else
-
 		GUISetState(@SW_ENABLE, $hGUI_BM)
 		GUIDelete($FileInformationGUI)
 
@@ -1623,31 +1695,34 @@ Func _SwFileInformation()
 			If GUICtrlRead($h_Input_Password_Restore) = "" Then
 				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Enter Password")
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+				FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
 				_ControlUpdateDefault()
 				Return SetError(1)
 			Else
 				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Incorrect Password or File May Be Damaged.")
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+				FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
 				_ControlUpdateDefault()
 				Return SetError(1)
 			EndIf
 		Else
 			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Check Checkbox --> Enter Password")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Check Checkbox and Enter The Password")
 			_ControlUpdateDefault()
 			Return SetError(1)
 		EndIf
 	EndIf
 	#EndRegion Backup File
 
-
 	Local $nMsg
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
 			Case $GUI_EVENT_CLOSE
+				;remove extracted ini
+				_FileOrFolderDeleteWithLog($s_ini_File)
 				ExitLoop
-
 		EndSwitch
 	WEnd
 

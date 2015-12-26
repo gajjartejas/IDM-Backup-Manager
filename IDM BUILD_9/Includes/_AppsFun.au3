@@ -136,4 +136,23 @@ Func _ShowMenu($hWnd, $CtrlID, $nContextID)
 	_TrackPopupMenu($hWnd, $hMenu, $x, $y)
 EndFunc   ;==>_ShowMenu
 
+; Convert the client (GUI) coordinates to screen (desktop) coordinates
+Func _ClientToScreen($hWnd, ByRef $x, ByRef $y)
+	Local $stPoint = DllStructCreate("int;int")
+
+	DllStructSetData($stPoint, 1, $x)
+	DllStructSetData($stPoint, 2, $y)
+
+	DllCall("user32.dll", "int", "ClientToScreen", "hwnd", $hWnd, "ptr", DllStructGetPtr($stPoint))
+
+	$x = DllStructGetData($stPoint, 1)
+	$y = DllStructGetData($stPoint, 2)
+	; release Struct not really needed as it is a local
+	$stPoint = 0
+EndFunc   ;==>_ClientToScreen
+
+; Show at the given coordinates (x, y) the popup menu (hMenu) which belongs to a given GUI window (hWnd)
+Func _TrackPopupMenu($hWnd, $hMenu, $x, $y)
+	DllCall("user32.dll", "int", "TrackPopupMenuEx", "hwnd", $hMenu, "int", 0, "int", $x, "int", $y, "hwnd", $hWnd, "ptr", 0)
+EndFunc   ;==>_TrackPopupMenu
 #EndRegion Misc Functions(App Indepedent For IDMLM)

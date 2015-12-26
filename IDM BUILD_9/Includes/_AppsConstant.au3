@@ -68,12 +68,21 @@ Global $h_Input_Password_Backup, $h_Combo_Compression_Level_Backup, $h_Checkbox_
 
 Global $h_Button_Browse_Restore, $h_Checkbox_Password_Restore, $h_Checkbox_Convert_Registry_Restore, $h_Label_Convert_Registry_Restore
 Global $h_Checkbox_UnFinished_DD_Restore, $h_Checkbox_UnFinished_GD_Restore, $h_Checkbox_UnFinished_SD_Restore, $h_Checkbox_UnFinished_HL_Restore
-Global $h_Checkbox_Append_Registry_Restore, $h_Input_Password_Restore, $h_Label_Append_Registry_Restore, $h_Button_Restore, $h_Input_Restore_Path ,$h_Button_Restore_Archive_Info
+Global $h_Checkbox_Append_Registry_Restore, $h_Input_Password_Restore, $h_Label_Append_Registry_Restore, $h_Button_Restore, $h_Input_Restore_Path, $h_Button_Restore_Archive_Info
 Global $h_Checkbox_Listl_Restore, $h_Checkbox_Full_Restore
 
 Global $h_Button_List_Manager_Tools, $h_Button_Clean_Manager_Tools, $h_Button_Clean_Password_Tools, $h_Button_Cat_Tools
 
-Global $h_Button_BrowseLogFile_Setting, $h_Button_BrowseDataBackupFolder_Setting, $h_Button_BrowseAppDataFolder_Setting, $h_Button_TempDataFolder_Setting
+;
+Global $h_Button_BrowseLogFile_Setting, $h_Button_BrowseLogFile_Setting_Context, $h_Button_BrowseLogFile_Setting_Context0, $h_Button_BrowseLogFile_Setting_Context1
+
+Global $h_Button_BrowseDataBackupFolder_Setting, $h_Button_BrowseDataBackupFolder_Setting_Context, $h_Button_BrowseDataBackupFolder_Setting_Context0, $h_Button_BrowseDataBackupFolder_Setting_Context1
+
+Global $h_Button_BrowseAppDataFolder_Setting, $h_Button_BrowseAppDataFolder_Setting_Context, $h_Button_BrowseAppDataFolder_Setting_Context0, $h_Button_BrowseAppDataFolder_Setting_Context1
+
+Global $h_Button_TempDataFolder_Setting,$h_Button_TempDataFolder_Setting_Context,$h_Button_TempDataFolder_Setting_Context0,$h_Button_TempDataFolder_Setting_Context1
+;
+
 Global $h_Button_Open_Log_Setting, $h_Button_Associate_Setting, $h_Button_More_Setting, $h_Button_RestoreDefault_Setting
 Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Label_BrowseAppDataFolder_Setting, $h_Label_DwnlDataFolder_Setting
 

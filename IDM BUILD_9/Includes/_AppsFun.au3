@@ -35,7 +35,6 @@ Func _sGetFileSizeConv($iBytes)
 	Return Round($iBytes) & $aArray[$iIndex]
 EndFunc   ;==>_sGetFileSizeConv
 
-
 Func _IsDir($sFilePath)
 	Return Number(FileExists($sFilePath) And StringInStr(FileGetAttrib($sFilePath), "D", 2, 1) > 0)
 EndFunc   ;==>_IsDir
@@ -122,5 +121,19 @@ Func _Name_Get_From_Path($path)
 	Local $TestPath = _PathSplit($path, $szDrive, $szDir, $szFName, $szExt)
 	Return $TestPath[3]
 EndFunc   ;==>_Name_Get_From_Path
+
+; Show dropdown menu on control
+Func _ShowMenu($hWnd, $CtrlID, $nContextID)
+	Local $arPos, $x, $y
+	Local $hMenu = GUICtrlGetHandle($nContextID)
+
+	$arPos = ControlGetPos($hWnd, "", $CtrlID)
+
+	$x = $arPos[0]
+	$y = $arPos[1] + $arPos[3]
+
+	_ClientToScreen($hWnd, $x, $y)
+	_TrackPopupMenu($hWnd, $hMenu, $x, $y)
+EndFunc   ;==>_ShowMenu
 
 #EndRegion Misc Functions(App Indepedent For IDMLM)

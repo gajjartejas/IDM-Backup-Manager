@@ -1,6 +1,9 @@
 v0.9.9 January 28th, 2015
 
-• Fixed IDM Restart.
+• Minor Bug Fixes.
+• Added Backup File Innformation.
+• Some icons Changed.
+• Improved Backup.
 
 v0.9.8 December 28th, 2014
 

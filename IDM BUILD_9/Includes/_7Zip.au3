@@ -53,7 +53,13 @@ Func _7ZipAdd($hWnd, $s7z_File_Save_Name, $aDestinationFolders, $sCompression, $
 
 	For $i = 0 To UBound($aDestinationFolders) - 1
 		If $aDestinationFolders[$i] = "" Then ContinueLoop
-		$aDestinationFolders[$i] = _StringInsert($aDestinationFolders[$i], " -ir!" & '"', -StringLen($aDestinationFolders[$i])) & '"'
+
+		If _IsDir($aDestinationFolders[$i]) Then
+			$aDestinationFolders[$i] = _StringInsert($aDestinationFolders[$i], " -i!" & '"', -StringLen($aDestinationFolders[$i])) & '"'
+		Else
+			$aDestinationFolders[$i] = _StringInsert($aDestinationFolders[$i], " " & '"', -StringLen($aDestinationFolders[$i])) & '"'
+		EndIf
+
 		$tDATA &= $aDestinationFolders[$i]
 	Next
 
@@ -131,30 +137,6 @@ Func _7ZipExtractEx($hWnd, $sZipFile, $sDestinationFolder, $aFile_To_Extracr, $s
 	If Not $aRet[0] Then Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
 	Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
 EndFunc   ;==>_7ZipExtractEx
-
-Func _7ZipList($hWnd,$sDestinationFile, $sPassword)
-
-	Local $iFlagDll = _7ZipControlStartup()
-	If $iFlagDll = 0 Then Return SetError(2, 0, 0)
-
-	If $sPassword <> "" Then
-		$sPassword = " -p" & '"' & $sPassword & '" '
-	EndIf
-
-	Local $sCMD = " l " & " " & '"' & $sDestinationFile & '"'& $sPassword & " -r DwnlData\Tejas\* -hide"
-
-	Local $tOutBuffer = DllStructCreate("char[32768]")
-
-	Local $aRet = DllCall($hDLL_7ZIP, "int", "SevenZip", _
-			"hwnd", $hWnd, _
-			"str", $sCMD, _
-			"ptr", DllStructGetPtr($tOutBuffer), _
-			"int", DllStructGetSize($tOutBuffer))
-
-	If $iFlagDll = 2 Then _7ZipShutdown()
-	If Not $aRet[0] Then Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
-	Return SetError(0, 0, DllStructGetData($tOutBuffer, 1))
-EndFunc   ;==>_7ZipAdd
 
 Func _7ZipSetOwnerWindowEx($hWnd, $sProcFunc)
 	If $hDLL_7ZIP <= 0 Then Return SetError(2, 0, 0)

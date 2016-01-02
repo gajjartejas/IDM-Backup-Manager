@@ -32,7 +32,7 @@ Func _sGetFileSizeConv($iBytes)
 		$iIndex += 1
 		$iBytes /= 1024
 	WEnd
-	Return Round($iBytes) & $aArray[$iIndex]
+	Return Round($iBytes,2) & $aArray[$iIndex]
 EndFunc   ;==>_sGetFileSizeConv
 
 Func _IsDir($sFilePath)
@@ -156,3 +156,6 @@ Func _TrackPopupMenu($hWnd, $hMenu, $x, $y)
 	DllCall("user32.dll", "int", "TrackPopupMenuEx", "hwnd", $hMenu, "int", 0, "int", $x, "int", $y, "hwnd", $hWnd, "ptr", 0)
 EndFunc   ;==>_TrackPopupMenu
 #EndRegion Misc Functions(App Indepedent For IDMLM)
+
+
+

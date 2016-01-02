@@ -35,6 +35,7 @@
 #include <GUIConstantsEx.au3>
 #include <StaticConstants.au3>
 #include <WindowsConstants.au3>
+#include <Date.au3>
 
 #include "Includes\_AET_ButtonSetIcon.au3"
 #include "Includes\_Resources.au3"
@@ -305,7 +306,6 @@ Func _MainBM()
 				_ShowMenu($hGUI_BM, $nMsg, $h_Button_BrowseLogFile_Setting_Context)
 
 			Case $h_Button_BrowseLogFile_Setting_Context0
-				ConsoleWrite("==============================================test" & @CRLF)
 				_ChooseLogFile()
 
 			Case $h_Button_BrowseLogFile_Setting_Context1
@@ -1045,8 +1045,8 @@ Func _SwBMGUI()
 	GUICtrlCreateTabItem("")
 
 	#Region Info Label
-	Local $aParts[3] = [400, 650]
-	Local $aText[3] = ["INFO: Ready", @TAB & ""]
+	Local $aParts[2] = [400, 650]
+	Local $aText[2] = ["INFO: Ready", @TAB & ""]
 	$h_Status_Info = _GUICtrlStatusBar_Create($hGUI_BM, $aParts, $aText)
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo)
 	#EndRegion Info Label
@@ -1541,7 +1541,7 @@ Func _SwFileInformation()
 		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
 	EndIf
 
-	Local $FileInformationGUI = GUICreate("Add Extra Filetype By Categories", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
+	Local $FileInformationGUI = GUICreate("Backup File Information", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
 	Local $lblTitle = GUICtrlCreateLabel("Backup From ", 8, 8, 417, 48, BitOR($SS_CENTER, $WS_CLIPSIBLINGS))
 	GUICtrlSetFont(-1, 16, 400, 0, "Microsoft Sans Serif")
@@ -1552,7 +1552,7 @@ Func _SwFileInformation()
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	GUICtrlCreateLabel("File Size:", 16, 101, 46, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	GUICtrlCreateLabel("File Size(Original):", 16, 122, 87, 17)
+	GUICtrlCreateLabel("File Date(UTC):", 16, 122, 87, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	GUICtrlCreateLabel("Total Downloads:", 16, 143, 87, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
@@ -1560,7 +1560,7 @@ Func _SwFileInformation()
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
 	Local $lblFileSize = GUICtrlCreateLabel("", 112, 101, 306, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
-	Local $lblFileSizeUncompressed = GUICtrlCreateLabel("", 112, 122, 306, 17)
+	Local $lblFileDate = GUICtrlCreateLabel("", 112, 122, 306, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
 	Local $lblTotalDownloads = GUICtrlCreateLabel("", 112, 143, 306, 17)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKTOP)
@@ -1645,7 +1645,7 @@ Func _SwFileInformation()
 
 	;Startup 7z
 	_7ZipStartup()
-	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
+	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC_EXT")
 
 	_ResetDataAray($aData)
 	$aData[13] = "idm_guest_Setting.ini"
@@ -1670,18 +1670,18 @@ Func _SwFileInformation()
 		GUISetState(@SW_SHOW)
 		GUISetState(@SW_DISABLE, $hGUI_BM)
 
-		GUICtrlSetData($lblTitle, "Backup From " & IniRead($s_ini_File, "Default", "Username", "") & " PC")
+		GUICtrlSetData($lblTitle, "Backup From " & IniRead($s_ini_File, "Default", "Username", "Not Available") & " PC")
 		GUICtrlSetData($lblFileName, _Name_Get_From_Path($s_Restore_File))
 		GUICtrlSetData($lblFileSize, _sGetFileSizeConv(FileGetSize($s_Restore_File)))
-		GUICtrlSetData($lblFileSizeUncompressed, "not yet im")
-		GUICtrlSetData($lblTotalDownloads, IniRead($s_ini_File, "Default", "Keys", ""))
-		GUICtrlSetData($lblBackupMode, IniRead($s_ini_File, "Default", "Mode", ""))
-		GUICtrlSetData($lblDownloadDataFolder, IniRead($s_ini_File, "Default", "DwnlData_Folder", ""))
-		GUICtrlSetData($lblGrabberFolder, IniRead($s_ini_File, "Default", "Grabber_Folder", ""))
-		GUICtrlSetData($lblSchedulerFolder, IniRead($s_ini_File, "Default", "Scheduler_Folder", ""))
-		GUICtrlSetData($lblHistoryFolder, IniRead($s_ini_File, "Default", "History_Files", ""))
-		GUICtrlSetData($lblAppDataIDMFolder, IniRead($s_ini_File, "Default", "AppDataIDMFolder", ""))
-		GUICtrlSetData($lblTempFolder, IniRead($s_ini_File, "Default", "TempPath", ""))
+		GUICtrlSetData($lblFileDate, IniRead($s_ini_File, "Default", "FileDate", "Not Available"))
+		GUICtrlSetData($lblTotalDownloads, IniRead($s_ini_File, "Default", "Keys", "Not Available"))
+		GUICtrlSetData($lblBackupMode, IniRead($s_ini_File, "Default", "Mode", "Not Available"))
+		GUICtrlSetData($lblDownloadDataFolder, IniRead($s_ini_File, "Default", "DwnlData_Folder", "Not Available"))
+		GUICtrlSetData($lblGrabberFolder, IniRead($s_ini_File, "Default", "Grabber_Folder", "Not Available"))
+		GUICtrlSetData($lblSchedulerFolder, IniRead($s_ini_File, "Default", "Scheduler_Folder", "Not Available"))
+		GUICtrlSetData($lblHistoryFolder, IniRead($s_ini_File, "Default", "History_Files", "Not Available"))
+		GUICtrlSetData($lblAppDataIDMFolder, IniRead($s_ini_File, "Default", "AppDataIDMFolder", "Not Available"))
+		GUICtrlSetData($lblTempFolder, IniRead($s_ini_File, "Default", "TempPath", "Not Available"))
 
 		GUICtrlSetData($lblOSVersion, IniRead($s_ini_File, "GuestSystemInfo", "OSVersion", ""))
 		GUICtrlSetData($lblOSServicePack, IniRead($s_ini_File, "GuestSystemInfo", "OSServicePack", ""))
@@ -1934,24 +1934,50 @@ Func _CopyRegTempKeyWithLog($sSrcKey, $sDestKey)
 EndFunc   ;==>_CopyRegTempKeyWithLog
 
 #Au3Stripper_Off
-Func _ARCHIVERPROC($hWnd, $Msg, $nState, $ExInfo)
-	Local $iFileSize, $iWriteSize, $iPercent = 0
+Func _ARCHIVERPROC_ADD($hWnd, $Msg, $nState, $ExInfo)
+	Local $sFileName
 	#forceref $hWnd,$Msg
 
 	If $nState = 0 Then
 		Local $EXTRACTINGINFO = DllStructCreate($tagEXTRACTINGINFO, $ExInfo)
 
-		$iFileSize = DllStructGetData($EXTRACTINGINFO, "dwFileSize")
-		$iWriteSize = DllStructGetData($EXTRACTINGINFO, "dwWriteSize")
+		;$iFileSize = DllStructGetData($EXTRACTINGINFO, "dwFileSize")
+		;$iWriteSize = DllStructGetData($EXTRACTINGINFO, "dwWriteSize")
+		$sFileName = DllStructGetData($EXTRACTINGINFO, "szSourceFileName")
+		;$iPercent = Int($iWriteSize / $iFileSize * 100)
 
-		$iPercent = Int($iWriteSize / $iFileSize * 100)
+		;_GUICtrlStatusBar_SetText($h_Status_Info, $iPercent & " %", 1)
 
-		_GUICtrlStatusBar_SetText($h_Status_Info, $iPercent & " %", 1)
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Adding: ..." & StringRight($sFileName, 40))
+
 		Return 1
 	EndIf
 
 	Return 1
-EndFunc   ;==>_ARCHIVERPROC
+EndFunc   ;==>_ARCHIVERPROC_ADD
+
+Func _ARCHIVERPROC_EXT($hWnd, $Msg, $nState, $ExInfo)
+	Local $sFileName
+	#forceref $hWnd,$Msg
+
+	If $nState = 0 Then
+		Local $EXTRACTINGINFO = DllStructCreate($tagEXTRACTINGINFO, $ExInfo)
+
+		;$iFileSize = DllStructGetData($EXTRACTINGINFO, "dwFileSize")
+		;$iWriteSize = DllStructGetData($EXTRACTINGINFO, "dwWriteSize")
+		$sFileName = DllStructGetData($EXTRACTINGINFO, "szSourceFileName")
+		;$iPercent = Int($iWriteSize / $iFileSize * 100)
+
+		;_GUICtrlStatusBar_SetText($h_Status_Info, $iPercent & " %", 1)
+
+		_GUICtrlStatusBar_SetText($h_Status_Info, "Extracting: ..." & StringRight($sFileName, 40))
+
+		Return 1
+	EndIf
+
+	Return 1
+EndFunc   ;==>_ARCHIVERPROC_EXT
+
 #Au3Stripper_On
 
 Func _ResetDataAray(ByRef $aData)
@@ -2346,6 +2372,12 @@ Func _Backup()
 	IniWrite($s_ini_File, "Default", "Password", $b_Password)
 	IniWrite($s_ini_File, "Default", "Username", @UserName)
 
+	; Show local date/time as UTC
+	Local $tTime = _Date_Time_EncodeFileTime(@MON, @MDAY, @YEAR, @HOUR, @MIN, @SEC)
+	Local $tLocal = _Date_Time_LocalFileTimeToFileTime($tTime)
+
+	IniWrite($s_ini_File, "Default", "FileDate", _Date_Time_FileTimeToStr($tLocal, 1))
+
 	IniWrite($s_ini_File, "GuestSystemInfo", "ComputerName", @ComputerName)
 	IniWrite($s_ini_File, "GuestSystemInfo", "LogonDNSDomain", @LogonDNSDomain)
 	IniWrite($s_ini_File, "GuestSystemInfo", "LogonDomain", @LogonDomain)
@@ -2538,7 +2570,7 @@ Func _Backup()
 	_GUICtrlStatusBar_SetText($h_Status_Info, "Adding: Data Files Please Wait...")
 
 	_7ZipStartup()
-	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
+	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC_ADD")
 	Local $foo = _7ZipAdd($hGUI_BM, $s_Backup_File, $aData, $s_Compression_Level, $s_Password)
 
 	Local $sFile = StringSplit($foo, @CRLF, 1)
@@ -2637,7 +2669,7 @@ Func _Restore()
 	$aData[14] = "IDMregistry.reg"
 
 	_7ZipStartup()
-	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC")
+	_7ZipSetOwnerWindowEx($hGUI_BM, "_ARCHIVERPROC_EXT")
 	Local $foo = _7ZipExtractEx($hGUI_BM, $s_Restore_File, @TempDir, $aData, $s_Password);Extract ini,reg File -> Check For Password
 
 	If $foo <> 0 And FileExists($s_ini_File) Then ;Check if INI available and Succeful Extract

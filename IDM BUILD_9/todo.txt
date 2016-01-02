@@ -4,6 +4,7 @@ v0.9.9
 + setting only backup
 + Log File Improvement
 + Cloud Backup
++ Backup File Innformation...done
 
 v0.9.8
 * To Repair Extract Problem...done

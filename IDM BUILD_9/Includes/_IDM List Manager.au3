@@ -371,7 +371,9 @@ Func _Details()
 
 	Local $avArray[2][45] = [[$avArray0[0], $avArray0[1], $avArray0[2], $avArray0[3], $avArray0[4], $avArray0[5], $avArray0[6], $avArray0[7], $avArray0[8], $avArray0[9], $avArray0[10], $avArray0[11], $avArray0[12], $avArray0[13], $avArray0[14], $avArray0[15], $avArray0[16], $avArray0[17], $avArray0[18], $avArray0[19], $avArray0[20], $avArray0[21], $avArray0[22], $avArray0[23], $avArray0[24], $avArray0[25], $avArray0[26], $avArray0[27], $avArray0[28], $avArray0[29], $avArray0[30], $avArray0[31], $avArray0[32], $avArray0[33], $avArray0[34], $avArray0[35], $avArray0[36], $avArray0[37], $avArray0[38], $avArray0[39], $avArray0[40], $avArray0[41], $avArray0[42], $avArray0[43]], [$avArray1[0], $avArray1[1], $avArray1[2], $avArray1[3], $avArray1[4], $avArray1[5], $avArray1[6], $avArray1[7], $avArray1[8], $avArray1[9], $avArray1[10], $avArray1[11], $avArray1[12], $avArray1[13], $avArray1[14], $avArray1[15], $avArray1[16], $avArray1[17], $avArray1[18], $avArray1[19], $avArray1[20], $avArray1[21], $avArray1[22], $avArray1[23], $avArray1[24], $avArray1[25], $avArray1[26], $avArray1[27], $avArray1[28], $avArray1[29], $avArray1[30], $avArray1[31], $avArray1[32], $avArray1[33], $avArray1[34], $avArray1[35], $avArray1[36], $avArray1[37], $avArray1[38], $avArray1[39], $avArray1[40], $avArray1[41], $avArray1[42], $avArray1[43]]]
 
-	_ArrayDisplay($avArray, "Properites", 6, 1)
+	;_NotepadArrayDisPlay($avArray, "test")
+	;_ArrayDisplay($avArray, "Properites", 6, 1)
+		_ArrayDisplay($avArray, "Properites",Default,1 + 16 + 64, Default, "AA|BB|cc", Default, 0xDDFFDD,Default)
 
 EndFunc   ;==>_Details
 

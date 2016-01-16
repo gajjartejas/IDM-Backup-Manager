@@ -1,7 +1,7 @@
 v0.9.9 January 28th, 2015
 
 • Minor Bug Fixes.
-• Added Backup File Information.
+• Added Backup File Innformation.
 • Some icons Changed.
 • Improved Backup.
 

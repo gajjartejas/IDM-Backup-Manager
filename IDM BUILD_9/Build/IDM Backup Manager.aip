@@ -10,10 +10,10 @@
     <ROW Property="AI_ThemeStyle" Value="default" MsiKey="AI_ThemeStyle"/>
     <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPCOMMENTS" Value="IDM Backup Manager is a free software that can backup files from InterDownload Manager.This installer database contains the logic and data required to install IDM Backup Manager." ValueLocId="*"/>
-    <ROW Property="ARPCONTACT" Value="support@gajjartejas.in"/>
+    <ROW Property="ARPCONTACT" Value="gajjartejas26@gmail.com"/>
     <ROW Property="ARPHELPLINK" Value="http://official-forum-of-technology-and-software-blog-by-gajjar-tejas.1067081.n5.nabble.com/IDM-Backup-Manager-f3.html"/>
     <ROW Property="ARPPRODUCTICON" Value="icon.exe" Type="8"/>
-    <ROW Property="ARPURLINFOABOUT" Value="http://gajjartejas.in/p/idm-backup-manager.html"/>
+    <ROW Property="ARPURLINFOABOUT" Value="http://www.gajjartejas26.blogspot.com/p/idm-backup-manager.html"/>
     <ROW Property="AiPreferFastOem" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="AiPreventAutoPin" Value="System.AppUserModel.ExcludeFromShowInNewInstall"/>
     <ROW Property="CTRLS" Value="3"/>

@@ -398,7 +398,7 @@ Func _MainBM()
 				_SwHelp()
 
 			Case $h_Button_Website_Help
-				ShellExecute("http://www.gajjartejas.in")
+				ShellExecute("http://www.gajjartejas26.blogspot.com")
 
 			Case $h_Button_Forum_Help
 				ShellExecute("http://forum.1067081.n5.nabble.com/IDM-Backup-Manager-f3.html")
@@ -2048,7 +2048,7 @@ Func _UpdateCheck()
 			Case Else
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($sFileRead))
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
-				ShellExecute("http://www.gajjartejas.in/p/idm-backup-manager.html")
+				ShellExecute("http://www.gajjartejas26.blogspot.com/p/idm-backup-manager.html")
 		EndSwitch
 
 		; Delete the file.

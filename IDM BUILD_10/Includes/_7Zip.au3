@@ -125,7 +125,10 @@ Func _7ZipExtractEx($hWnd, $sZipFile, $sDestinationFolder, $aFile_To_Extracr, $s
 
 	Local $sCMD = ' x "' & $sZipFile & '" ' & $sPassword & "-y -o" & '"' & $sDestinationFolder & '"' & " " & $tDATA & " -hide"
 
+	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $sCMD = ' & $sCMD & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+
 	Local $tOutBuffer = DllStructCreate("char[32768]")
+
 
 	Local $aRet = DllCall($hDLL_7ZIP, "int", "SevenZip", _
 			"hwnd", $hWnd, _

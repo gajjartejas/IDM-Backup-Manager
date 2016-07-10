@@ -401,7 +401,7 @@ Func _MainBM()
 				ShellExecute("http://www.gajjartejas.in")
 
 			Case $h_Button_Forum_Help
-				ShellExecute("http://forum.1067081.n5.nabble.com/IDM-Backup-Manager-f3.html")
+				ShellExecute("http://www.gajjartejas.in/p/idm-backup-manager.html")
 
 			Case $h_Button_Associate_Setting
 				_ShellInstall()
@@ -888,7 +888,6 @@ Func _SwBMGUI()
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
 	$h_Button_List_Manager_Tools = GUICtrlCreateButton("Downloads List Manager", 45, 64, 80, 60, $BS_MULTILINE)
-
 	GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloaded Files, Remove Download From List and much more.")
 
 	$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Data Cleaner", 135, 64, 80, 60, $BS_MULTILINE)
@@ -899,6 +898,13 @@ Func _SwBMGUI()
 
 	$h_Button_Cat_Tools = GUICtrlCreateButton("Add Extra File Types in Categories", 315, 64, 80, 60, $BS_MULTILINE)
 	GUICtrlSetTip(-1, "Add Extra File Types in Categories")
+
+
+	$h_Button_Make_Portable_Tools = GUICtrlCreateButton("Make IDM Portable", 45, 132, 80, 60, $BS_MULTILINE)
+	GUICtrlSetTip(-1, "Make Internet Download Manager Portable")
+
+	ConsoleWrite($h_Button_Make_Portable_Tools & @CRLF)
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion Tools ;============================================================================================== Tools:
 
@@ -1015,13 +1021,13 @@ Func _SwBMGUI()
 	$h_Button_Licence_Help = GUICtrlCreateButton("  License", 37, 96, 100, 30, $BS_left)
 	_AET_ButtonSetIcon(-1, 6, 24, 24, 0)
 
-	$h_Button_Version_History_Help = GUICtrlCreateButton("  Ver History", 146, 66, 100, 30, $BS_left)
+	$h_Button_Version_History_Help = GUICtrlCreateButton("  Version History", 146, 66, 150, 30, $BS_left)
 	_AET_ButtonSetIcon(-1, 7, 24, 24, 0)
 
-	$h_Button_Forum_Help = GUICtrlCreateButton("  Forum", 146, 96, 100, 30, $BS_left)
+	$h_Button_Forum_Help = GUICtrlCreateButton("  Request New Features", 146, 96, 150, 30, $BS_left)
 	_AET_ButtonSetIcon(-1, 3, 24, 24, 0)
 
-	$h_Button_Update_Help = GUICtrlCreateButton("  Update", 146, 126, 100, 30, $BS_left);1111
+	$h_Button_Update_Help = GUICtrlCreateButton("  Check For Update", 146, 126, 150, 30, $BS_left);1111
 	_AET_ButtonSetIcon(-1, 13, 24, 24, 0)
 
 	;$h_Picture_About = GUICtrlCreatePic("", 260, 55, 150, 145)
@@ -2607,9 +2613,6 @@ Func _ChooseRestoreFile()
 
 EndFunc   ;==>_ChooseRestoreFile
 
-Func _RestoreInfo()
-
-EndFunc   ;==>_RestoreInfo
 
 Func _Restore()
 
@@ -2891,7 +2894,7 @@ Func _Restore()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
 
 		If FileExists($DwnlData_Folder & $Guest_Username) Then
-			DirMove($DwnlData_Folder & $Guest_Username, $DwnlData_Folder & @UserName)
+			DirMove($DwnlData_Folder & $Guest_Username, $DwnlData_Folder & @UserName, $FC_OVERWRITE)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $DwnlData_Folder & $Guest_Username)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & @UserName & " Error Code" & @error)
 		EndIf

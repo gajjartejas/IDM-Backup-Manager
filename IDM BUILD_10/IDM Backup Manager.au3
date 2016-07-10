@@ -1786,24 +1786,25 @@ Func _iGetMaxKey($s_regpath_IDM)
 EndFunc   ;==>_iGetMaxKey
 
 Func _ConvertRegProfile()
-	Local $s_reg_File_Tmp = @TempDir & "\IDMregistryTmp.reg"
 
+	Local $s_reg_File_Tmp = @TempDir & "\IDMregistryTmp.reg"
 	_FileOrFolderDeleteWithLog($s_reg_File_Tmp)
 
 	Local $h_reg_File = FileOpen($s_reg_File, 0)
-
-	;append mode Use Unicode UTF16 Little Endian reading and writing mode.
 	Local $h_reg_File_Tmp = FileOpen($s_reg_File_Tmp, 32 + 1)
 
 	; Check if file opened for reading OK
 	If $h_reg_File = -1 Or $h_reg_File_Tmp = -1 Then Return SetError(1, 0, 0)
 
 	Local $Pathex = StringReplace('"' & $DwnlData_Folder & @UserName & "\", "\", "\\")
+
 	Local $sLine, $final, $str, $strLen, $asp, $iN, $asp2
 
 	While 1
 		$sLine = FileReadLine($h_reg_File)
-		If @error = -1 Then ExitLoop
+
+
+		If @error = -1 Or @error = 1 Then ExitLoop
 		;===========================================
 		If StringLeft($sLine, 16) = '"LocalFileName"=' Then
 			$str = '"LocalFileName"='
@@ -1828,17 +1829,28 @@ Func _ConvertRegProfile()
 
 		For $i = 1 To UBound($asp2) - 1
 			$final &= $asp2[$i] & "\\"
-		Next;
+		Next
 
 		$final = StringTrimRight($final, 2);
-		FileWrite($h_reg_File_Tmp, $str & $Pathex & $final & @CRLF)
+
+		$final = $str & $Pathex & $final & @CRLF
+
+		FileWrite($h_reg_File_Tmp, $final)
+
+		ConsoleWrite("$sLine = " & $sLine & @CRLF)
+		ConsoleWrite("$sLine1 = " & $final & @CRLF & @CRLF)
+
+		$final = ""
+
 		;===========================================
 	WEnd
 	FileClose($h_reg_File)
 	FileClose($h_reg_File_Tmp)
+	ConsoleWrite("FileClose " & @CRLF & @CRLF)
 
+	Exit
 	If Not FileDelete($s_reg_File) Then Return SetError(1, 0, 0)
-	If Not FileMove($s_reg_File_Tmp, $s_reg_File) Then Return SetError(1, 0, 0)
+	If Not FileMove($s_reg_File_Tmp, $s_reg_File, 8 + 1) Then Return SetError(1, 0, 0)
 
 	;Cleaneup
 	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
@@ -1894,7 +1906,7 @@ Func _AppendRegKeys()
 	FileClose($h_reg_File_Tmp)
 
 	If Not FileDelete($s_reg_File) Then Return SetError(1, 0, 0)
-	If Not FileMove($s_reg_File_Tmp, $s_reg_File) Then Return SetError(1, 0, 0)
+	If Not FileMove($s_reg_File_Tmp, $s_reg_File, 8 + 1) Then Return SetError(1, 0, 0)
 
 	;Cleaneup
 	If FileExists($s_reg_File_Tmp) Then FileDelete($s_reg_File_Tmp)
@@ -2894,12 +2906,12 @@ Func _Restore()
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
 
 		If FileExists($DwnlData_Folder & $Guest_Username) Then
-			DirMove($DwnlData_Folder & $Guest_Username, $DwnlData_Folder & @UserName, $FC_OVERWRITE)
+			DirMove($DwnlData_Folder & $Guest_Username, $DwnlData_Folder & @UserName, 1)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $DwnlData_Folder & $Guest_Username)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & @UserName & " Error Code" & @error)
 		EndIf
 		If FileExists($DwnlData_Folder & "GrabberData\" & $Guest_Username) Then
-			DirMove($DwnlData_Folder & "GrabberData\" & $Guest_Username, $DwnlData_Folder & "GrabberData\" & @UserName)
+			DirMove($DwnlData_Folder & "GrabberData\" & $Guest_Username, $DwnlData_Folder & "GrabberData\" & @UserName, 1)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $DwnlData_Folder & "GrabberData\" & $Guest_Username)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & "GrabberData\" & @UserName & " Error Code" & @error)
 		EndIf

@@ -1,7 +1,11 @@
-v0.9.9 January 28th, 2015
+v1.0.0 July 15th, 2016
+
+• Minor Bug Fixes related to restore in profile conversion.
+
+v0.9.9 January 26th, 2016
 
 • Minor Bug Fixes.
-• Added Backup File Innformation.
+• Added Backup File Information.
 • Some icons Changed.
 • Improved Backup.
 

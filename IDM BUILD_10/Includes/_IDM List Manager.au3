@@ -322,7 +322,7 @@ Func _Details()
 	$avArray1[43] = _RegRead($s_regpath_IDM & "\" & $ID[5], "WDescription") ;Download Link:
 	$avArray1[44] = _RegRead($s_regpath_IDM & "\" & $ID[5], "lastResult") ;Download Link:
 
-	$avArray0[0] = "	xxxxxx	"
+	$avArray0[0] = "	FileName	"
 	$avArray0[1] = "	LocalFileName	"
 	$avArray0[2] = "	LocalPath	"
 	$avArray0[3] = "	LogFileName	"

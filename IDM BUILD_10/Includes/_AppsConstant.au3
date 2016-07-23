@@ -8,13 +8,13 @@
 
 #Region Common
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
-Global Const $s_Current_Version = "0.9.9"
+Global Const $s_Current_Version = "1.0.0"
 Global Const $IS_PORTABLE = False
 
 #EndRegion Common
 
 #Region Global Variables IDM BM
-Global Const $s_Win_Title_BM = "IDM Backup Manager" & $s_Current_Version & "(Beta)"
+Global Const $s_Win_Title_BM = "IDM Backup Manager" & $s_Current_Version
 Global Const $i_xWidth_BM = 439
 Global Const $i_yHight_BM = 276
 Global $i_xWinPos = (@DesktopWidth - $i_xWidth_BM) / 2
@@ -157,7 +157,7 @@ Func _SwHelp()
 	If FileExists(@ScriptDir & "\Help.chm") Then
 		ShellExecute(@ScriptDir & "\Help.chm")
 	Else
-		ShellExecute("http://gajjartejas26.blogspot.com/p/idm-backup-manager.html")
+		ShellExecute("http://www.tejasgajjar.in/p/idm-backup-manager.html")
 	EndIf
 EndFunc   ;==>_SwHelp
 

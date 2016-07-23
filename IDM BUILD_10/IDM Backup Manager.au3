@@ -45,6 +45,7 @@
 #include "Includes\_7Zip.au3"
 #include "Includes\_ProgressMarquee.au3"
 #include "Includes\_IDM List Manager.au3"
+#include "Includes\_MoveDirEx.au3"
 #EndRegion Includes
 
 _StartupBM()
@@ -398,10 +399,10 @@ Func _MainBM()
 				_SwHelp()
 
 			Case $h_Button_Website_Help
-				ShellExecute("http://www.gajjartejas.in")
+				ShellExecute("http://www.tejasgajjar.in")
 
 			Case $h_Button_Forum_Help
-				ShellExecute("http://www.gajjartejas.in/p/idm-backup-manager.html")
+				ShellExecute("http://www.tejasgajjar.in/p/idm-backup-manager.html")
 
 			Case $h_Button_Associate_Setting
 				_ShellInstall()
@@ -900,8 +901,9 @@ Func _SwBMGUI()
 	GUICtrlSetTip(-1, "Add Extra File Types in Categories")
 
 
-	$h_Button_Make_Portable_Tools = GUICtrlCreateButton("Make IDM Portable", 45, 132, 80, 60, $BS_MULTILINE)
-	GUICtrlSetTip(-1, "Make Internet Download Manager Portable")
+	$h_Button_Make_Portable_Tools = GUICtrlCreateButton("More Tools Coming Soon...", 45, 132, 80, 60, $BS_MULTILINE)
+;~ 	GUICtrlSetTip(-1, "Make Internet Download Manager Portable")
+	GUICtrlSetState($h_Button_Make_Portable_Tools, $GUI_DISABLE)
 
 	ConsoleWrite($h_Button_Make_Portable_Tools & @CRLF)
 
@@ -1021,13 +1023,13 @@ Func _SwBMGUI()
 	$h_Button_Licence_Help = GUICtrlCreateButton("  License", 37, 96, 100, 30, $BS_left)
 	_AET_ButtonSetIcon(-1, 6, 24, 24, 0)
 
-	$h_Button_Version_History_Help = GUICtrlCreateButton("  Version History", 146, 66, 150, 30, $BS_left)
+	$h_Button_Version_History_Help = GUICtrlCreateButton("  View Version History", 146, 66, 230, 30, $BS_left)
 	_AET_ButtonSetIcon(-1, 7, 24, 24, 0)
 
-	$h_Button_Forum_Help = GUICtrlCreateButton("  Request New Features", 146, 96, 150, 30, $BS_left)
+	$h_Button_Forum_Help = GUICtrlCreateButton("  Request New Features or Bug Report", 146, 96, 230, 30, $BS_left)
 	_AET_ButtonSetIcon(-1, 3, 24, 24, 0)
 
-	$h_Button_Update_Help = GUICtrlCreateButton("  Check For Update", 146, 126, 150, 30, $BS_left);1111
+	$h_Button_Update_Help = GUICtrlCreateButton("  Check For Updated Version", 146, 126, 230, 30, $BS_left);1111
 	_AET_ButtonSetIcon(-1, 13, 24, 24, 0)
 
 	;$h_Picture_About = GUICtrlCreatePic("", 260, 55, 150, 145)
@@ -1848,7 +1850,6 @@ Func _ConvertRegProfile()
 	FileClose($h_reg_File_Tmp)
 	ConsoleWrite("FileClose " & @CRLF & @CRLF)
 
-	Exit
 	If Not FileDelete($s_reg_File) Then Return SetError(1, 0, 0)
 	If Not FileMove($s_reg_File_Tmp, $s_reg_File, 8 + 1) Then Return SetError(1, 0, 0)
 
@@ -2060,13 +2061,13 @@ Func _UpdateCheck()
 			Case ""
 				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", "0.9.8", $s_Current_Version
+			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", "0.9.8", "0.9.9", $s_Current_Version
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: You Have Most Recent Version.")
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled);StatusCompled
 			Case Else
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($sFileRead))
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
-				ShellExecute("http://www.gajjartejas.in/p/idm-backup-manager.html")
+				ShellExecute("http://www.tejasgajjar.in/p/idm-backup-manager.html")
 		EndSwitch
 
 		; Delete the file.

@@ -1,3 +1,5 @@
+#AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: _MoveDirEx
 ; Description ...:
@@ -22,14 +24,14 @@ Func _MoveDirEx($source, $dest)
 
 	FileMove($source & "\*.*", $dest, 1 + 8) ;Move all source files first
 	If @error Then Return -1
-	$hSearch = FileFindFirstFile($source & "\*.*") ;Now find any remaining (in this case: folders)
+	Local $hSearch = FileFindFirstFile($source & "\*.*") ;Now find any remaining (in this case: folders)
 
 	If $hSearch = -1 Then
 		Return -2 ;No folders
 	EndIf
 
 	While 1
-		$hFilename = FileFindNextFile($hSearch)
+		Local $hFilename = FileFindNextFile($hSearch)
 		If @error Then ExitLoop ;No more files
 		DirMove($source & "\" & $hFilename, $dest, 1);move subdir and all contents to new location
 	WEnd

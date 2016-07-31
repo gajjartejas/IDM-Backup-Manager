@@ -2906,16 +2906,22 @@ Func _Restore()
 		;Folder Renames
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Converting Folder Profile")
 
+		Local $status
 		If FileExists($DwnlData_Folder & $Guest_Username) Then
-			DirMove($DwnlData_Folder & $Guest_Username, $DwnlData_Folder & @UserName, 1)
+			;DirMove($DwnlData_Folder & $Guest_Username, $DwnlData_Folder & @UserName, 1)
+			$status = _MoveDirEx($DwnlData_Folder & $Guest_Username, $DwnlData_Folder & @UserName)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $DwnlData_Folder & $Guest_Username)
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & @UserName & " Error Code" & @error)
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & @UserName & " Error Code" & $status)
 		EndIf
 		If FileExists($DwnlData_Folder & "GrabberData\" & $Guest_Username) Then
-			DirMove($DwnlData_Folder & "GrabberData\" & $Guest_Username, $DwnlData_Folder & "GrabberData\" & @UserName, 1)
+			;DirMove($DwnlData_Folder & "GrabberData\" & $Guest_Username, $DwnlData_Folder & "GrabberData\" & @UserName, 1)
+			$status = _MoveDirEx($DwnlData_Folder & "GrabberData\" & $Guest_Username, $DwnlData_Folder & "GrabberData\" & @UserName)
 			FileWriteLine($s_Log_File, _Current_Moment() & "Info: Renaming-->" & $DwnlData_Folder & "GrabberData\" & $Guest_Username)
-			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & "GrabberData\" & @UserName & " Error Code" & @error)
+			FileWriteLine($s_Log_File, _Current_Moment() & "Info: To-->" & $DwnlData_Folder & "GrabberData\" & @UserName & " Error Code" & $status)
 		EndIf
+
+		_FileOrFolderDeleteWithLog($DwnlData_Folder & $Guest_Username)
+
 	Else
 		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Profile Conversion Not Selected.")
 	EndIf

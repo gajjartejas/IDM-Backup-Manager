@@ -1,0 +1,63 @@
+
+============================= Command Line Check =============================
+2016-03-06 12:33:09 --> Info: No of Command Line Parameters Passed: 0
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.9(Beta)
+Module Path: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\IDM Backup Manager.au3
+Is Module 64 bit?: 0
+Dll: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\7-zip32.dll
+OS Type: WIN32_NT
+OS Version: WIN_10
+Service Package: 
+Total Memory: 2 GB
+Available Memory: 972.98 MB
+
+2016-03-06 12:33:11 --> Info: Check DLL: Found
+
+============================= Check Profile ==================================
+2016-03-06 12:33:11 --> Info: Finalized Path $AppDataIDMFolder= 	"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-03-06 12:33:11 --> Info: Finalized Path $s_TempPath= 		"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-03-06 12:33:11 --> Info: Finalized Path $DwnlData_Folder= 		"C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\"
+2016-03-06 12:33:11 --> Info: Finalized Path $GrabberData_Folder= 	"C:\Users\Tejas\AppData\Roaming\IDM\GrabberData\"
+2016-03-06 12:33:11 --> Info: Setting File $s_Setting_File= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\SettingFile.ini"
+2016-03-06 12:33:11 --> Info: Log File $s_Log_File= 			"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\LogFile.log"
+2016-03-06 12:33:11 --> Info: Backup Path $s_Backup_Dir= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\IDM Backup Files\"
+2016-03-06 12:33:11 --> Info: INI File $s_ini_File= 			"C:\Users\Tejas\AppData\Local\Temp\idm_guest_Setting.ini"
+2016-03-06 12:33:11 --> Info: Reg File $s_reg_File= 			"C:\Users\Tejas\AppData\Local\Temp\IDMregistry.reg"
+
+2016-03-06 12:33:11 --> Info: Window Created: IDM Backup Manager0.9.9(Beta) With Error Code: 0
+
+================================= Exit =======================================
+
+============================= Command Line Check =============================
+2016-07-15 20:11:12 --> Info: No of Command Line Parameters Passed: 0
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager0.9.9(Beta)
+Module Path: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\idmbm.exe
+Is Module 64 bit?: 0
+Dll: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\7-zip32.dll
+OS Type: WIN32_NT
+OS Version: WIN_8
+Service Package: 
+Total Memory: 2 GB
+Available Memory: 836.73 MB
+
+2016-07-15 20:11:12 --> Info: Check Setting File: Found
+2016-07-15 20:11:12 --> Info: Check DLL: Found
+
+============================= Check Profile ==================================
+2016-07-15 20:11:12 --> Info: Finalized Path $AppDataIDMFolder= 	"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-07-15 20:11:12 --> Info: Finalized Path $s_TempPath= 		"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-07-15 20:11:12 --> Info: Finalized Path $DwnlData_Folder= 		"C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\"
+2016-07-15 20:11:12 --> Info: Finalized Path $GrabberData_Folder= 	"C:\Users\Tejas\AppData\Roaming\IDM\GrabberData\"
+2016-07-15 20:11:12 --> Info: Setting File $s_Setting_File= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\SettingFile.ini"
+2016-07-15 20:11:12 --> Info: Log File $s_Log_File= 			"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\LogFile.log"
+2016-07-15 20:11:12 --> Info: Backup Path $s_Backup_Dir= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_9\IDM Backup Files\"
+2016-07-15 20:11:12 --> Info: INI File $s_ini_File= 			"C:\Users\Tejas\AppData\Local\Temp\idm_guest_Setting.ini"
+2016-07-15 20:11:12 --> Info: Reg File $s_reg_File= 			"C:\Users\Tejas\AppData\Local\Temp\IDMregistry.reg"
+
+2016-07-15 20:11:13 --> Info: Window Created: IDM Backup Manager0.9.9(Beta) With Error Code: 0
+
+================================= Exit =======================================

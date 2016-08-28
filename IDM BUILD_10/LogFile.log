@@ -1,0 +1,287 @@
+
+============================= Command Line Check =============================
+2016-08-17 22:56:13 --> Info: No of Command Line Parameters Passed: 0
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager1.0.0
+Module Path: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\IDM Backup Manager.exe
+Is Module 64 bit?: 0
+Dll: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\7-zip32.dll
+OS Type: WIN32_NT
+OS Version: WIN_8
+Service Package: 
+Total Memory: 2 GB
+Available Memory: 418.36 MB
+
+2016-08-17 22:56:26 --> Info: Check DLL: Found
+
+============================= Check Profile ==================================
+2016-08-17 22:56:26 --> Info: Finalized Path $AppDataIDMFolder= 	"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-08-17 22:56:26 --> Info: Finalized Path $s_TempPath= 		"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-08-17 22:56:26 --> Info: Finalized Path $DwnlData_Folder= 		"C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\"
+2016-08-17 22:56:26 --> Info: Finalized Path $GrabberData_Folder= 	"C:\Users\Tejas\AppData\Roaming\IDM\GrabberData\"
+2016-08-17 22:56:26 --> Info: Setting File $s_Setting_File= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\SettingFile.ini"
+2016-08-17 22:56:26 --> Info: Log File $s_Log_File= 			"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\LogFile.log"
+2016-08-17 22:56:26 --> Info: Backup Path $s_Backup_Dir= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\IDM Backup Files\"
+2016-08-17 22:56:26 --> Info: INI File $s_ini_File= 			"C:\Users\Tejas\AppData\Local\Temp\idm_guest_Setting.ini"
+2016-08-17 22:56:26 --> Info: Reg File $s_reg_File= 			"C:\Users\Tejas\AppData\Local\Temp\IDMregistry.reg"
+
+2016-08-17 22:56:26 --> Info: Window Created: IDM Backup Manager1.0.0 With Error Code: 0
+
+============================= Backup Session Started =============================
+2016-08-17 22:57:05 --> Warning: Internet Download Manager Is Running. User Selected No.
+2016-08-17 22:57:05 --> Info: User Selected Backup to  = "C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\IDM Backup Files\IDMbackup20160817225653.ibf"
+2016-08-17 22:57:05 --> Info: Compression Level = "1-No Compression"
+2016-08-17 22:57:05 --> Info: Password= "0xFalse"
+2016-08-17 22:57:06 --> Info: Total Registry Need to Backup = "174"
+2016-08-17 22:57:07 --> Info: User Selected Full Backup
+2016-08-17 22:57:07 --> Info: Found $DwnlData_Folder = "C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\" 
+2016-08-17 22:57:07 --> Info: Found $Grabber_Folder = "C:\Users\Tejas\AppData\Roaming\IDM\Grabber\" 
+2016-08-17 22:57:07 --> Warning: Not Added $GrabberData_Folder Reason: Folder Does Not Exists= "C:\Users\Tejas\AppData\Roaming\IDM\GrabberData\"
+2016-08-17 22:57:07 --> Info: Found $Scheduler_Folder = "C:\Users\Tejas\AppData\Roaming\IDM\Scheduler\" 
+2016-08-17 22:57:07 --> Info: Found $UrlHistory_txt_File = "C:\Users\Tejas\AppData\Roaming\IDM\UrlHistory.txt"
+2016-08-17 22:57:07 --> Info: Found $UrlHistory2_txt_File = "C:\Users\Tejas\AppData\Roaming\IDM\UrlHistory2.txt"
+2016-08-17 22:57:07 --> Info: Found $GlobalErrors_log_File = "C:\Users\Tejas\AppData\Roaming\IDM\GlobalErrors.log"
+2016-08-17 22:57:07 --> Info: Found $urlexclist_dat_File = "C:\Users\Tejas\AppData\Roaming\IDM\urlexclist.dat"
+2016-08-17 22:57:07 --> Info: Found $defextmap_dat_File = "C:\Users\Tejas\AppData\Roaming\IDM\defextmap.dat"
+2016-08-17 22:57:07 --> Info: Found $foldresHistory_txt_File = "C:\Users\Tejas\AppData\Roaming\IDM\foldresHistory.txt"
+2016-08-17 22:57:07 --> Warning: Not Added $sts_list_dat_File Reason: File Does Not Exists= "C:\Users\Tejas\AppData\Roaming\IDM\sts_list.dat"
+2016-08-17 22:57:07 --> Info: Found $cnlurllist_dat_File = "C:\Users\Tejas\AppData\Roaming\IDM\cnlurllist.dat" 
+2016-08-17 22:57:07 --> Warning: Not Added $Sound_Folder Reason: File Does Not Exists= "C:\Users\Tejas\AppData\Roaming\IDM\Sounds\"
+2016-08-17 22:57:07 --> Info: Found $s_ini_File = "C:\Users\Tejas\AppData\Local\Temp\idm_guest_Setting.ini"
+2016-08-17 22:57:07 --> Info: Found $s_ini_File = "C:\Users\Tejas\AppData\Local\Temp\IDMregistry.reg"
+2016-08-17 22:57:16 --> 7z Log: = 7-Zip (a) 9.22 beta  Copyright (c) 1999-2011 Igor Pavlov  2011-04-18
+2016-08-17 22:57:16 --> 7z Log: = Scanning
+2016-08-17 22:57:16 --> 7z Log: = Creating archive C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\IDM Backup Files\IDMbackup20160817225653.ibf
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1459794215f1_0\1459794215f1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1464530662f1_0\1464530662f1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1465139451f1_0\1465139451f1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1466444881f1_0\1466444881f1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1467543932f1_0\1467543932f1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1467543965f3_0\1467543965f3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1467543998f5_0\1467543998f5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1471140602f1_0\1471140602f1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\192_168_43_1_55\192_168_43_1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\192_168_43_1_56\192_168_43_1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\38-windows-phone-internals-1-2_34\38-windows-phone-internals-1-2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\down_filepuma_com
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\down_filepuma_com1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\down_filepuma_com2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\down_filepuma_com3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\down_filepuma_com4
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\down_filepuma_com5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\down_filepuma_com6
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\down_filepuma_com7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\en_miui_com_38\en_miui_com
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow-1_com_152\files_downloadnow-1_com
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow-1_com_152\files_downloadnow-1_com2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow-1_com_152\files_downloadnow-1_com3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow-1_com_152\files_downloadnow-1_com4
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow-1_com_152\files_downloadnow-1_com5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow-1_com_152\files_downloadnow-1_com6
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow-1_com_152\files_downloadnow-1_com7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\files_downloadnow_com
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\files_downloadnow_com1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\files_downloadnow_com2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\files_downloadnow_com3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\files_downloadnow_com4
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\files_downloadnow_com5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\files_downloadnow_com6
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\files_downloadnow_com7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\tlu_dl_delivery_mp_microsoft_com
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\tlu_dl_delivery_mp_microsoft_com1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\tlu_dl_delivery_mp_microsoft_com2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\tlu_dl_delivery_mp_microsoft_com3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\tlu_dl_delivery_mp_microsoft_com4
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\tlu_dl_delivery_mp_microsoft_com5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\tlu_dl_delivery_mp_microsoft_com6
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\tlu_dl_delivery_mp_microsoft_com7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed.zip
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip
+2016-08-17 22:57:16 --> 7z Log: = Compressing  foldresHistory.txt
+2016-08-17 22:57:16 --> 7z Log: = Compressing  UrlHistory.txt
+2016-08-17 22:57:16 --> 7z Log: = Compressing  IDMregistry.reg
+2016-08-17 22:57:16 --> 7z Log: = Compressing  idm_guest_Setting.ini
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\TL-WR841N_11.0_231\TL-WR841N_11.0.pdf
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\disk-defrag-setup_176\disk-defrag-setup.exe
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\InputToolsSetup_45\InputToolsSetup.exe
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4.4.2.exe
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\Universal-USB-Installer-1.9.6._27\Universal-USB-Installer-1.9.6..exe
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64.exe
+2016-08-17 22:57:16 --> 7z Log: = Compressing  cnlurllist.dat
+2016-08-17 22:57:16 --> 7z Log: = Compressing  defextmap.dat
+2016-08-17 22:57:16 --> 7z Log: = Compressing  urlexclist.dat
+2016-08-17 22:57:16 --> 7z Log: = Compressing  Scheduler\q_1.dt
+2016-08-17 22:57:16 --> 7z Log: = Compressing  Scheduler\s_1.dt
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\disk-defrag-setup_176\disk-defrag-setup.exe1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\Universal-USB-Installer-1.9.6._27\Universal-USB-Installer-1.9.6..exe1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64.exe1
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\disk-defrag-setup_176\disk-defrag-setup.exe2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4.4.2.exe2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64.exe2
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\disk-defrag-setup_176\disk-defrag-setup.exe3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4.4.2.exe3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64.exe3
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4.4.2.exe4
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\Universal-USB-Installer-1.9.6._27\Universal-USB-Installer-1.9.6..exe4
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe4
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64.exe4
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4.4.2.exe5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\Universal-USB-Installer-1.9.6._27\Universal-USB-Installer-1.9.6..exe5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64.exe5
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4.4.2.exe6
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\Universal-USB-Installer-1.9.6._27\Universal-USB-Installer-1.9.6..exe6
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe6
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64.exe6
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\disk-defrag-setup_176\disk-defrag-setup.exe7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4.4.2.exe7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\Universal-USB-Installer-1.9.6._27\Universal-USB-Installer-1.9.6..exe7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64.exe7
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4.4.2.exe8
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\Universal-USB-Installer-1.9.6._27\Universal-USB-Installer-1.9.6..exe8
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5.0.24-108355-Win.e.exe8
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\7806_PG444_Win10_Win8.1_Win8_W_181\7806_PG444_Win10_Win8_181.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed_71.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\disk-defrag-setup_176\disk-defrag-setup_176.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6_250.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\ec_menu_103\ec_menu_103.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\etoolz_105\etoolz_105.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  GlobalErrors.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\InputToolsSetup_45\InputToolsSetup_45.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64_344.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\irfanview_plugins_x64_442_setu_346\irfanview_plugins_x64_442_setu_346.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\irfanview_plugins_x64_442_setu_347\irfanview_plugins_x64_442_setu_347.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\iview442_setup_207\iview442_setup_207.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\Login_home_115\Login_home_115.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\1459794215f1_0\log_0.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\tlu_dl_delivery_mp_microsoft_com_130\log_130.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\132_132\log_132.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\downloads_sourceforge_net_133\log_133.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow-1_com_152\log_152.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\www_megadlcenter_com_157\log_157.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\files_downloadnow_com_198\log_198.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\www_songspk_link_3\log_3.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\38-windows-phone-internals-1-2_34\log_34.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\en_miui_com_37\log_37.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\en_miui_com_38\log_38.log
+2016-08-17 22:57:16 --> 7z Log: = Compressing  DwnlData\Tejas\aff_giveawaycrew_com_39\log_39.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\192_168_43_1_55\log_55.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\192_168_43_1_56\log_56.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\down_filepuma_com_81\log_81.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\OCCTPT4.4.2_174\OCCTPT4_174.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\TL-WN821NC_V3_Utility_184\TL-WN821NC_V3_Utility_184.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\TL-WR841N_11.0_231\TL-WR841N_11_231.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\TL-WR841N_V11_150616_229\TL-WR841N_V11_150616_229.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\Universal-USB-Installer-1.9.6._27\Universal-USB-Installer-1_27.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\VirtualBox-5.0.24-108355-Win.e_227\VirtualBox-5_227.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\WDC-20WD5000AZRX-00A8LB0-01-01_163\WDC-20WD5000AZRX-00A8LB0-01-01_163.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\xeoma_win64_66\xeoma_win64_66.log
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\TL-WR841N_11.0_231\TL-WR841N_11.0.pdf2
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\TL-WR841N_11.0_231\TL-WR841N_11.0.pdf3
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\TL-WR841N_11.0_231\TL-WR841N_11.0.pdf4
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\TL-WR841N_11.0_231\TL-WR841N_11.0.pdf5
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed.zip1
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip1
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip1
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip10
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip11
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip11
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip12
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip12
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip13
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip14
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed.zip2
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip2
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed.zip3
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip3
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip3
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed.zip4
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip4
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip4
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed.zip5
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip5
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip5
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed.zip6
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip6
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip6
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\DiscSpeed_71\DiscSpeed.zip7
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip7
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip7
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip8
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\irfanviewplugins_x64_344\irfanviewplugins_x64.zip8
+2016-08-17 22:57:17 --> 7z Log: = Compressing  DwnlData\Tejas\droid-6.01_250\droid-6.01.zip9
+2016-08-17 22:57:17 --> 7z Log: = Everything is Ok
+============================= Backup Session Ended =============================
+
+================================= Exit =======================================
+
+============================= Command Line Check =============================
+2016-08-18 19:53:24 --> Info: No of Command Line Parameters Passed: 0
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager1.0.0
+Module Path: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\IDM Backup Manager.exe
+Is Module 64 bit?: 0
+Dll: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\7-zip32.dll
+OS Type: WIN32_NT
+OS Version: WIN_8
+Service Package: 
+Total Memory: 2 GB
+Available Memory: 635.48 MB
+
+2016-08-18 19:53:24 --> Info: Check Setting File: Found
+2016-08-18 19:53:24 --> Info: Check DLL: Found
+
+============================= Check Profile ==================================
+2016-08-18 19:53:24 --> Info: Finalized Path $AppDataIDMFolder= 	"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-08-18 19:53:24 --> Info: Finalized Path $s_TempPath= 		"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-08-18 19:53:24 --> Info: Finalized Path $DwnlData_Folder= 		"C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\"
+2016-08-18 19:53:24 --> Info: Finalized Path $GrabberData_Folder= 	"C:\Users\Tejas\AppData\Roaming\IDM\GrabberData\"
+2016-08-18 19:53:24 --> Info: Setting File $s_Setting_File= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\SettingFile.ini"
+2016-08-18 19:53:24 --> Info: Log File $s_Log_File= 			"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\LogFile.log"
+2016-08-18 19:53:24 --> Info: Backup Path $s_Backup_Dir= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\IDM Backup Files\"
+2016-08-18 19:53:24 --> Info: INI File $s_ini_File= 			"C:\Users\Tejas\AppData\Local\Temp\idm_guest_Setting.ini"
+2016-08-18 19:53:24 --> Info: Reg File $s_reg_File= 			"C:\Users\Tejas\AppData\Local\Temp\IDMregistry.reg"
+
+2016-08-18 19:53:24 --> Info: Window Created: IDM Backup Manager1.0.0 With Error Code: 0
+
+================================= Exit =======================================
+
+============================= Command Line Check =============================
+2016-08-18 19:55:57 --> Info: No of Command Line Parameters Passed: 0
+
+============================= System Information =============================
+Module Name and Version: IDM Backup Manager1.0.0
+Module Path: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\IDM Backup Manager.exe
+Is Module 64 bit?: 0
+Dll: C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\7-zip32.dll
+OS Type: WIN32_NT
+OS Version: WIN_8
+Service Package: 
+Total Memory: 2 GB
+Available Memory: 605.13 MB
+
+2016-08-18 19:55:57 --> Info: Check Setting File: Found
+2016-08-18 19:55:57 --> Info: Check DLL: Found
+
+============================= Check Profile ==================================
+2016-08-18 19:55:57 --> Info: Finalized Path $AppDataIDMFolder= 	"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-08-18 19:55:57 --> Info: Finalized Path $s_TempPath= 		"C:\Users\Tejas\AppData\Roaming\IDM\"
+2016-08-18 19:55:57 --> Info: Finalized Path $DwnlData_Folder= 		"C:\Users\Tejas\AppData\Roaming\IDM\DwnlData\"
+2016-08-18 19:55:57 --> Info: Finalized Path $GrabberData_Folder= 	"C:\Users\Tejas\AppData\Roaming\IDM\GrabberData\"
+2016-08-18 19:55:57 --> Info: Setting File $s_Setting_File= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\SettingFile.ini"
+2016-08-18 19:55:57 --> Info: Log File $s_Log_File= 			"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\LogFile.log"
+2016-08-18 19:55:57 --> Info: Backup Path $s_Backup_Dir= 		"C:\Users\Tejas\Desktop\PROJECT\trunk\project\IDM\IDM BUILD_10\IDM Backup Files\"
+2016-08-18 19:55:57 --> Info: INI File $s_ini_File= 			"C:\Users\Tejas\AppData\Local\Temp\idm_guest_Setting.ini"
+2016-08-18 19:55:57 --> Info: Reg File $s_reg_File= 			"C:\Users\Tejas\AppData\Local\Temp\IDMregistry.reg"
+
+2016-08-18 19:55:58 --> Info: Window Created: IDM Backup Manager1.0.0 With Error Code: 0
+
+================================= Exit =======================================

@@ -71,33 +71,7 @@ Func _MainBM()
 			Case $GUI_EVENT_CLOSE
 				_onExit()
 
-			Case $h_Checkbox_Password_Backup
-				If GUICtrlRead($h_Checkbox_Password_Backup) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Input_Password_Backup, $GUI_ENABLE)
-					GUICtrlSetData($h_Input_Password_Backup, "")
-				Else
-					GUICtrlSetState($h_Input_Password_Backup, $GUI_DISABLE)
-					GUICtrlSetData($h_Input_Password_Backup, "password")
-				EndIf
 
-
-			Case $h_Checkbox_Password_Restore
-				If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Input_Password_Restore, $GUI_ENABLE)
-					GUICtrlSetData($h_Input_Password_Restore, "")
-				Else
-					GUICtrlSetState($h_Input_Password_Restore, $GUI_DISABLE)
-					GUICtrlSetData($h_Input_Password_Restore, "password")
-				EndIf
-
-			Case $h_Checkbox_Compression_Level_Backup
-				If GUICtrlRead($h_Checkbox_Compression_Level_Backup) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Combo_Compression_Level_Backup, $GUI_ENABLE)
-					GUICtrlSetData($h_Combo_Compression_Level_Backup, "4-Normal Compression")
-				Else
-					GUICtrlSetState($h_Combo_Compression_Level_Backup, $GUI_DISABLE)
-					GUICtrlSetData($h_Combo_Compression_Level_Backup, "1-No Compression")
-				EndIf
 
 			Case $h_Checkbox_Convert_Registry_Restore
 				If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
@@ -648,9 +622,7 @@ Func _ControlUpdateBusy()
 	GUICtrlSetState($h_Input_Backup_Path, $GUI_DISABLE)
 	GUICtrlSetState($h_Button_Browse_Backup, $GUI_DISABLE)
 
-	GUICtrlSetState($h_Checkbox_Password_Backup, $GUI_DISABLE)
 	GUICtrlSetState($h_Input_Password_Backup, $GUI_DISABLE)
-	GUICtrlSetState($h_Checkbox_Compression_Level_Backup, $GUI_DISABLE)
 	GUICtrlSetState($h_Combo_Compression_Level_Backup, $GUI_DISABLE)
 
 	GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_DISABLE)
@@ -667,7 +639,6 @@ Func _ControlUpdateBusy()
 	GUICtrlSetState($h_Input_Restore_Path, $GUI_DISABLE)
 	GUICtrlSetState($h_Button_Browse_Restore, $GUI_DISABLE)
 
-	GUICtrlSetState($h_Checkbox_Password_Restore, $GUI_DISABLE)
 	GUICtrlSetState($h_Input_Password_Restore, $GUI_DISABLE)
 	GUICtrlSetState($h_Checkbox_Convert_Registry_Restore, $GUI_DISABLE)
 	GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_DISABLE)
@@ -696,10 +667,8 @@ Func _ControlUpdateDefault()
 	GUICtrlSetState($h_Input_Backup_Path, $GUI_ENABLE)
 	GUICtrlSetState($h_Button_Browse_Backup, $GUI_ENABLE)
 
-	GUICtrlSetState($h_Checkbox_Password_Backup, $GUI_ENABLE)
-	If GUICtrlRead($h_Checkbox_Password_Backup) = $GUI_CHECKED Then GUICtrlSetState($h_Input_Password_Backup, $GUI_ENABLE)
-	GUICtrlSetState($h_Checkbox_Compression_Level_Backup, $GUI_ENABLE)
-	If GUICtrlRead($h_Checkbox_Compression_Level_Backup) = $GUI_CHECKED Then GUICtrlSetState($h_Combo_Compression_Level_Backup, $GUI_ENABLE)
+	GUICtrlSetState($h_Input_Password_Backup, $GUI_ENABLE)
+	GUICtrlSetState($h_Combo_Compression_Level_Backup, $GUI_ENABLE)
 
 	If GUICtrlRead($h_Checkbox_Full_Backup) = $GUI_CHECKED Then
 		GUICtrlSetState($h_Checkbox_Full_Backup, $GUI_ENABLE)
@@ -727,8 +696,7 @@ Func _ControlUpdateDefault()
 	GUICtrlSetState($h_Input_Restore_Path, $GUI_ENABLE)
 	GUICtrlSetState($h_Button_Browse_Restore, $GUI_ENABLE)
 
-	GUICtrlSetState($h_Checkbox_Password_Restore, $GUI_ENABLE)
-	If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then GUICtrlSetState($h_Input_Password_Restore, $GUI_ENABLE)
+	GUICtrlSetState($h_Input_Password_Restore, $GUI_ENABLE)
 	GUICtrlSetState($h_Checkbox_Convert_Registry_Restore, $GUI_ENABLE)
 	If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_ENABLE)
 
@@ -790,19 +758,13 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("Options", 24, 104, 390, 100)
 	GUICtrlSetFont(-1, 1, 800, 0, "MS Sans Serif")
 
-	$h_Checkbox_Password_Backup = GUICtrlCreateCheckbox("", 38, 130, 13, 17)
+	$h_Input_Password_Backup = GUICtrlCreateInput("", 38, 126, 146, 22, $ES_PASSWORD)
+	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password (Optional)")
+	GUICtrlSetTip(-1, "Enter a password to encrypt this backup. Leave empty for no encryption (default).", "Backup Password", 1, 1)
 
-	$h_Input_Password_Backup = GUICtrlCreateInput("Password", 54, 128, 130, 21, $ES_PASSWORD)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password")
-	GUICtrlSetTip(-1, "Choose Yes If You Want Encryption of Your Backup Files Which Is Required Strong Password", "Backup Password", 1, 1)
-
-	$h_Checkbox_Compression_Level_Backup = GUICtrlCreateCheckbox("", 38, 159, 13, 17)
-
-	$h_Combo_Compression_Level_Backup = GUICtrlCreateCombo("1-No Compression", 54, 157, 130, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-	GUICtrlSetState(-1, $GUI_DISABLE)
+	$h_Combo_Compression_Level_Backup = GUICtrlCreateCombo("1-No Compression", 38, 158, 146, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, "2-Fastest Compression|3-Fast Compression|4-Normal Compression|5-Maximum Compression|6-Ultra Compression", "1-No Compression")
-	GUICtrlSetTip(-1, "Here You Can Set The Compression Level of The Backup Files" & @CRLF & "", "Compression Level", 1, 1)
+	GUICtrlSetTip(-1, "Select backup compression level (default: 1-No Compression).", "Compression Level", 1, 1)
 
 	$h_Checkbox_Full_Backup = GUICtrlCreateCheckbox("Full Backup", 200, 128, 107, 17)
 	GUICtrlSetState(-1, $GUI_CHECKED)
@@ -853,12 +815,9 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("Options", 24, 104, 390, 100)
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
 
-	$h_Checkbox_Password_Restore = GUICtrlCreateCheckbox("", 38, 130, 13, 17)
-
-	$h_Input_Password_Restore = GUICtrlCreateInput("Password", 54, 128, 130, 21, $ES_PASSWORD)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password")
-	GUICtrlSetTip(-1, "Choose Yes If Your backup is Encrypted", "Restore Encryption", 1, 1)
+	$h_Input_Password_Restore = GUICtrlCreateInput("", 38, 126, 146, 22, $ES_PASSWORD)
+	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password (if encrypted)")
+	GUICtrlSetTip(-1, "Enter password if your backup is encrypted (leave empty if not).", "Restore Password", 1, 1)
 
 	$h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("", 38, 159, 13, 17)
 
@@ -1655,19 +1614,16 @@ Func _SwFileInformation()
 		Return SetError(1)
 	EndIf
 
-	;Check Passowrd
-	Local $s_Password
-	If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
-		$s_Password = GUICtrlRead($h_Input_Password_Restore)
+	;Check Password
+	Local $s_Password = GUICtrlRead($h_Input_Password_Restore)
+	If $s_Password <> "" Then
 		If StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Doesn't Contain Double Quote or Single Quote")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
-			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Password Doesn't Contain Double Quote or Single Quote")
 			_ControlUpdateDefault()
 			Return SetError(1)
 		EndIf
-	Else
-		$s_Password = ""
 	EndIf
 
 	;Startup 7z
@@ -1718,24 +1674,16 @@ Func _SwFileInformation()
 		GUISetState(@SW_ENABLE, $hGUI_BM)
 		GUIDelete($FileInformationGUI)
 
-		If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
-			If GUICtrlRead($h_Input_Password_Restore) = "" Then
-				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Enter Password")
-				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-				FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
-				_ControlUpdateDefault()
-				Return SetError(1)
-			Else
-				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Incorrect Password or File May Be Damaged.")
-				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-				FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
-				_ControlUpdateDefault()
-				Return SetError(1)
-			EndIf
-		Else
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Check Checkbox --> Enter Password")
+		If $s_Password = "" Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Backup may be password-protected or file damaged.")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Check Checkbox and Enter The Password")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
+			_ControlUpdateDefault()
+			Return SetError(1)
+		Else
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Incorrect Password or File May Be Damaged.")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+			FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
 			_ControlUpdateDefault()
 			Return SetError(1)
 		EndIf
@@ -2318,12 +2266,8 @@ Func _Backup()
 	Local $s_Backup_File = GUICtrlRead($h_Input_Backup_Path)
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: User Selected Backup to  " & "=" & ' "' & $s_Backup_File & '"')
 
-	Local $s_Compression_Level
-	If GUICtrlRead($h_Checkbox_Compression_Level_Backup) = $GUI_CHECKED Then
-		$s_Compression_Level = GUICtrlRead($h_Combo_Compression_Level_Backup)
-	Else
-		$s_Compression_Level = "1-No Compression"
-	EndIf
+	Local $s_Compression_Level = GUICtrlRead($h_Combo_Compression_Level_Backup)
+	If $s_Compression_Level = "" Then $s_Compression_Level = "1-No Compression"
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Compression Level " & "=" & ' "' & $s_Compression_Level & '"')
 	#EndRegion ;/Define Some variable: $s_Backup_File, $s_Compression_Level--->
 
@@ -2340,25 +2284,17 @@ Func _Backup()
 		Return SetError(1)
 	EndIf
 
-	Local $b_Password, $s_Password
-	If GUICtrlRead($h_Checkbox_Password_Backup) = $GUI_CHECKED Then
-		$s_Password = GUICtrlRead($h_Input_Password_Backup)
-		If $s_Password = "" Then
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password is Empty")
+	Local $b_Password = False, $s_Password = GUICtrlRead($h_Input_Password_Backup)
+	If $s_Password <> "" Then
+		If StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Doesn't Contain Double Quote or Single Quote")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
-			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password is Empty")
-			_ControlUpdateDefault()
-			Return SetError(1)
-		ElseIf StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
-			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
-			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Password Doesn't Contain Double Quote or Single Quote")
 			_ControlUpdateDefault()
 			Return SetError(1)
 		Else
 			$b_Password = True
 		EndIf
-
 	Else
 		$b_Password = False
 		$s_Password = ""
@@ -2682,18 +2618,15 @@ Func _Restore()
 		Return SetError(1)
 	EndIf
 
-	Local $s_Password
-	If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
-		$s_Password = GUICtrlRead($h_Input_Password_Restore)
+	Local $s_Password = GUICtrlRead($h_Input_Password_Restore)
+	If $s_Password <> "" Then
 		If StringInStr($s_Password, """") Or StringInStr($s_Password, '''') Then
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Dosen't Contain Double Quote or Single Quote")
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Password Doesn't Contain Double Quote or Single Quote")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusWarning);StatusWarning
-			FileWriteLine($s_Log_File, _Current_Moment() & "Password Dosen't Contain Double Quote or Single Quote")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Password Doesn't Contain Double Quote or Single Quote")
 			_ControlUpdateDefault()
 			Return SetError(1)
 		EndIf
-	Else
-		$s_Password = ""
 	EndIf
 	#EndRegion ;/Define Some variable: $s_Restore_File
 
@@ -2719,24 +2652,16 @@ Func _Restore()
 
 		If $s_Password = "" Then FileWriteLine($s_Log_File, _Current_Moment() & "Info: Backup Files is Not Password Protected")
 	Else
-		If GUICtrlRead($h_Checkbox_Password_Restore) = $GUI_CHECKED Then
-			If GUICtrlRead($h_Input_Password_Restore) = "" Then
-				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Enter Password")
-				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-				FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
-				_ControlUpdateDefault()
-				Return SetError(1)
-			Else
-				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Incorrect Password or File May Be Damaged.")
-				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-				FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
-				_ControlUpdateDefault()
-				Return SetError(1)
-			EndIf
-		Else
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Check Checkbox --> Enter Password")
+		If $s_Password = "" Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Backup may be password-protected or file damaged.")
 			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Check Checkbox and Enter The Password")
+			FileWriteLine($s_Log_File, _Current_Moment() & "Error: Password Protected Backup Please Enter The Password")
+			_ControlUpdateDefault()
+			Return SetError(1)
+		Else
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Incorrect Password or File May Be Damaged.")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+			FileWriteLine($s_Log_File, _Current_Moment() & "Error: INI File Not Found. INI File Not Found Inside Backup File or Backup File May Be Damaged!")
 			_ControlUpdateDefault()
 			Return SetError(1)
 		EndIf

@@ -90,11 +90,11 @@ Global $foldresHistory_txt_File = $s_AppDataIDMFolder & "foldresHistory.txt"
 Global $sts_list_dat_File = $s_AppDataIDMFolder & "sts_list.dat"
 Global $cnlurllist_dat_File = $s_AppDataIDMFolder & "cnlurllist.dat"
 
-Global $h_Button_Browse_Backup, $h_Checkbox_Password_Backup, $h_Checkbox_Compression_Level_Backup, $h_Checkbox_Full_Backup, $h_Checkbox_Listl_Backup
+Global $h_Button_Browse_Backup, $h_Checkbox_Full_Backup, $h_Checkbox_Listl_Backup
 Global $h_Checkbox_UnFinished_DD_Backup, $h_Checkbox_UnFinished_GD_Backup, $h_Checkbox_UnFinished_SD_Backup, $h_Button_Backup
 Global $h_Input_Password_Backup, $h_Combo_Compression_Level_Backup, $h_Checkbox_UnFinished_HL_Backup, $h_Input_Backup_Path
 
-Global $h_Button_Browse_Restore, $h_Checkbox_Password_Restore, $h_Checkbox_Convert_Registry_Restore, $h_Label_Convert_Registry_Restore
+Global $h_Button_Browse_Restore, $h_Checkbox_Convert_Registry_Restore, $h_Label_Convert_Registry_Restore
 Global $h_Checkbox_UnFinished_DD_Restore, $h_Checkbox_UnFinished_GD_Restore, $h_Checkbox_UnFinished_SD_Restore, $h_Checkbox_UnFinished_HL_Restore
 Global $h_Checkbox_Append_Registry_Restore, $h_Input_Password_Restore, $h_Label_Append_Registry_Restore, $h_Button_Restore, $h_Input_Restore_Path, $h_Button_Restore_Archive_Info
 Global $h_Checkbox_Listl_Restore, $h_Checkbox_Full_Restore

@@ -1,12 +1,14 @@
 v1.1.0 October 3rd, 2026
 
-• Redesigned UI with modern Segoe UI typography and Windows 11 Fluent icons.
-• Modernized Tools tab into a clean 2x2 grid with descriptive tooltips.
-• Streamlined Backup & Restore tabs: removed redundant checkboxes, clean native controls.
-• Replaced legacy Convert Profile and Append/Merge labels with native clickable checkboxes.
-• Symmetrical Help & Support tab with balanced actions and social channels (Facebook, Twitter/X, Instagram).
-• Upgraded build automation with PowerShell build pipeline (build.ps1) and Inno Setup installer.
-• Full compatibility with modern AutoIt v3.3.18+.
+• Unified 7-Tab Architecture: Integrated utility tools directly into main tabs (Downloads, Cleaner, Categories) — eliminating separate popup windows.
+• Embedded Downloads Manager: In-place IDM download list inspector with full search/filtering, folder opening, force join, removal, and multi-format export.
+• Unified Cleaner Tab: Integrated cache/temporary data cleaner and stored password sanitizer with live status and progress tracking.
+• In-place File Categories: Direct configuration of IDM category file extension patterns with one-click presets and IDM defaults.
+• Modernized UI: Redesigned with Segoe UI typography and Windows 11 Fluent icons across all tabs.
+• Streamlined Backup & Restore: Clean native controls with optional password encryption and compression level dropdown.
+• Upgraded Window Layout: Expanded to modern 640x420 dimensions for comfortable spacing and zero tab overflow.
+• Automated Build Pipeline: Multi-target PowerShell build pipeline (build.ps1) with Inno Setup installer packaging.
+• Full compatibility with modern AutoIt v3.3.18+ (0 Au3Check errors, 0 warnings).
 
 v1.0.0 July 15th, 2016
 

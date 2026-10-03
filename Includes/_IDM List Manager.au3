@@ -412,8 +412,8 @@ Func _Analyze()
 		Local $cat_id = _RegRead($s_regpath_IDM & "\" & $var, "categoryID")
 		Local $status = _RegRead($s_regpath_IDM & "\" & $var, "Status")
 
-		If BitAND(GUICtrlRead($MenuItem_View_Categories_list_CatArray), $GUI_CHECKED) Then
-			If BitAND(GUICtrlRead($MenuItem_View_List_AllDownloads), $GUI_CHECKED) Then
+		If $MenuItem_View_Categories_list_CatArray = 0 Or BitAND(GUICtrlRead($MenuItem_View_Categories_list_CatArray), $GUI_CHECKED) Then
+			If $MenuItem_View_List_AllDownloads = 0 Or BitAND(GUICtrlRead($MenuItem_View_List_AllDownloads), $GUI_CHECKED) Then
 				GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 				$no += 1
 			ElseIf BitAND(GUICtrlRead($MenuItem_View_List_FinishedDownloads), $GUI_CHECKED) Then
@@ -435,7 +435,7 @@ Func _Analyze()
 			$i += 1
 		Else
 			If $s_current_selectde_cat = $cat_id Then
-				If BitAND(GUICtrlRead($MenuItem_View_List_AllDownloads), $GUI_CHECKED) Then
+				If $MenuItem_View_List_AllDownloads = 0 Or BitAND(GUICtrlRead($MenuItem_View_List_AllDownloads), $GUI_CHECKED) Then
 					GUICtrlCreateListViewItem($no & "|" & _Name_Get_From_Path($LocalFileName) & _Ext_Get_From_Path($LocalFileName) & "|" & _sGetFileSizeConv($FileSize) & "|" & $var_MIME & "|" & $var & "|" & $var_Url0, $idListView)
 					$no += 1
 				ElseIf BitAND(GUICtrlRead($MenuItem_View_List_FinishedDownloads), $GUI_CHECKED) Then
@@ -582,24 +582,34 @@ Func _get_selected_cat()
 EndFunc   ;==>_get_selected_cat
 
 Func _Disable_Controls()
-	GUISetCursor(15, -1, $hGUI_LM)
+	If IsHWnd($hGUI_LM) Then
+		GUISetCursor(15, -1, $hGUI_LM)
+	Else
+		GUISetCursor(15, -1, $hGUI_BM)
+	EndIf
 	GUICtrlSetState($idListView, $GUI_DISABLE)
-	GUICtrlSetState($MenuItem_File, $GUI_DISABLE)
-	GUICtrlSetState($MenuItem_Edit, $GUI_DISABLE)
-	GUICtrlSetState($MenuItem_Tools, $GUI_DISABLE)
-	GUICtrlSetState($MenuItem_View, $GUI_DISABLE)
-	GUICtrlSetState($MenuItem_Help, $GUI_DISABLE)
+	If $MenuItem_File <> 0 Then GUICtrlSetState($MenuItem_File, $GUI_DISABLE)
+	If $MenuItem_Edit <> 0 Then GUICtrlSetState($MenuItem_Edit, $GUI_DISABLE)
+	If $MenuItem_Tools <> 0 Then GUICtrlSetState($MenuItem_Tools, $GUI_DISABLE)
+	If $MenuItem_View <> 0 Then GUICtrlSetState($MenuItem_View, $GUI_DISABLE)
+	If $MenuItem_Help <> 0 Then GUICtrlSetState($MenuItem_Help, $GUI_DISABLE)
+	If $h_Button_LM_Refresh <> 0 Then GUICtrlSetState($h_Button_LM_Refresh, $GUI_DISABLE)
 EndFunc   ;==>_Disable_Controls
 
 Func _Enable_Controls()
-	GUISetCursor(-1, -1, $hGUI_LM)
+	If IsHWnd($hGUI_LM) Then
+		GUISetCursor(-1, -1, $hGUI_LM)
+	Else
+		GUISetCursor(-1, -1, $hGUI_BM)
+	EndIf
 	GUICtrlSetState($idListView, $GUI_ENABLE)
 
-	GUICtrlSetState($MenuItem_File, $GUI_ENABLE)
-	GUICtrlSetState($MenuItem_Edit, $GUI_ENABLE)
-	GUICtrlSetState($MenuItem_Tools, $GUI_ENABLE)
-	GUICtrlSetState($MenuItem_View, $GUI_ENABLE)
-	GUICtrlSetState($MenuItem_Help, $GUI_ENABLE)
+	If $MenuItem_File <> 0 Then GUICtrlSetState($MenuItem_File, $GUI_ENABLE)
+	If $MenuItem_Edit <> 0 Then GUICtrlSetState($MenuItem_Edit, $GUI_ENABLE)
+	If $MenuItem_Tools <> 0 Then GUICtrlSetState($MenuItem_Tools, $GUI_ENABLE)
+	If $MenuItem_View <> 0 Then GUICtrlSetState($MenuItem_View, $GUI_ENABLE)
+	If $MenuItem_Help <> 0 Then GUICtrlSetState($MenuItem_Help, $GUI_ENABLE)
+	If $h_Button_LM_Refresh <> 0 Then GUICtrlSetState($h_Button_LM_Refresh, $GUI_ENABLE)
 EndFunc   ;==>_Enable_Controls
 
 Func ListView_RClick()

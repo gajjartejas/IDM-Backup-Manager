@@ -24,8 +24,8 @@ Global Const $s_URL_Instagram = "https://www.instagram.com/gajjartejas/"
 
 #Region Global Variables IDM BM
 Global Const $s_Win_Title_BM = "IDM Backup Manager " & $s_Current_Version
-Global Const $i_xWidth_BM = 439
-Global Const $i_yHight_BM = 276
+Global Const $i_xWidth_BM = 640
+Global Const $i_yHight_BM = 420
 Global $i_xWinPos = (@DesktopWidth - $i_xWidth_BM) / 2
 Global $i_yWinPos = (@DesktopHeight - $i_yHight_BM) / 2
 
@@ -99,7 +99,26 @@ Global $h_Checkbox_UnFinished_DD_Restore, $h_Checkbox_UnFinished_GD_Restore, $h_
 Global $h_Checkbox_Append_Registry_Restore, $h_Input_Password_Restore, $h_Label_Append_Registry_Restore, $h_Button_Restore, $h_Input_Restore_Path, $h_Button_Restore_Archive_Info
 Global $h_Checkbox_Listl_Restore, $h_Checkbox_Full_Restore
 
+; Legacy tool button variables (preserved for compatibility)
 Global $h_Button_List_Manager_Tools, $h_Button_Clean_Manager_Tools, $h_Button_Clean_Password_Tools, $h_Button_Cat_Tools
+
+; Tab 3: Downloads Manager
+Global $h_Button_LM_Refresh, $h_Button_LM_OpenFolder, $h_Button_LM_ForceJoin, $h_Button_LM_Remove
+Global $h_Button_LM_Export, $h_Button_LM_Export_Context, $h_MenuItem_LM_Export_HTML, $h_MenuItem_LM_Export_CSV, $h_MenuItem_LM_Export_TXT, $h_MenuItem_LM_Export_IDM
+Global $h_Input_LM_Search, $h_Button_LM_SearchClear
+Global $b_LM_Loaded = False
+
+; Tab 4: Cleaner (Data & Passwords)
+Global $h_Radio_Clean_Custom, $h_Radio_Clean_Full
+Global $h_Checkbox_Clean_DD, $h_Checkbox_Clean_GD, $h_Checkbox_Clean_SD, $h_Checkbox_Clean_HL
+Global $h_Progress_Clean
+Global $h_Button_Clean_Analyze, $h_Button_Clean_Now
+Global $h_Label_PwCleaner_Info, $h_Button_PwCleaner_Refresh, $h_Button_PwCleaner_Clear
+
+; Tab 5: Categories
+Global $h_Checkbox_Cat_Compressed, $h_Checkbox_Cat_Documents, $h_Checkbox_Cat_Music, $h_Checkbox_Cat_Programs, $h_Checkbox_Cat_Video
+Global $h_Input_Cat_Compressed, $h_Input_Cat_Documents, $h_Input_Cat_Music, $h_Input_Cat_Programs, $h_Input_Cat_Video
+Global $h_Button_Cat_Save, $h_Button_Cat_Enhance, $h_Button_Cat_Default
 
 ;
 Global $h_Button_BrowseLogFile_Setting, $h_Button_BrowseLogFile_Setting_Context, $h_Button_BrowseLogFile_Setting_Context0, $h_Button_BrowseLogFile_Setting_Context1
@@ -117,7 +136,7 @@ Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Lab
 Global $h_Button_Website_Help, $h_Button_Help_Help, $h_Button_Licence_Help, $h_Button_Version_History_Help, $h_Button_Forum_Help
 Global $h_Button_Update_Help, $h_Picture_Facebook_About, $h_Picture_Twitter_About, $h_Picture_Instagram_About
 
-Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
+Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5, $h_TabSheet6, $h_TabSheet7
 
 Func _sGetStatusIcon($sIconName, $iFallbackIndex)
 	Local $ScriptDir = @ScriptDir

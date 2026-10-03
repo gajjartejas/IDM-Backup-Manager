@@ -24,25 +24,31 @@ An open-source configuration backup and migration utility written in AutoIt v3 f
 |:---:|:---:|
 | ![Backup Data](Screenshots/01_backup_data.png) | ![Restore Data](Screenshots/02_restore_data.png) |
 
-| Tools & Utilities | Options & Paths |
+| Downloads Manager | Data & Password Cleaner |
 |:---:|:---:|
-| ![Tools](Screenshots/03_tools.png) | ![Options](Screenshots/04_options.png) |
+| ![Downloads Manager](Screenshots/03_downloads.png) | ![Cleaner](Screenshots/04_cleaner.png) |
+
+| File Categories | Options & Paths |
+|:---:|:---:|
+| ![File Categories](Screenshots/05_categories.png) | ![Options](Screenshots/06_options.png) |
 
 <p align="center">
-  <b>Help & Information</b><br>
-  <img src="Screenshots/05_help.png" alt="Help and Information" width="431">
+  <b>Help & Documentation</b><br>
+  <img src="Screenshots/07_help.png" alt="Help and Documentation" width="620">
 </p>
 
 ---
 
 ## 📋 Features
 
-* **Complete Profile Backup**: Backup download lists, incomplete downloads metadata, schedule queues, and custom category rules.
-* **Streamlined Modern UI**: Clean Windows 11 Fluent icons and Segoe UI typography across all tabs.
+* **Unified 7-Tab Architecture**: Direct in-tab integration for Backup Data, Restore Data, Downloads Manager, Cache/Data & Password Cleaner, File Categories, Options, and Help — no popup windows or modals needed.
+* **Embedded Downloads Manager**: Search, inspect, open download folders, force join fragment files, and export download records to CSV, HTML, TXT, or EF2 directly within the main window.
+* **Integrated Data & Password Cleaner**: Analyze and purge temporary download chunks, grabber cache, scheduler logs, and sanitize stored IDM website passwords in one place.
+* **In-Place File Categories**: Configure, enhance with rich presets, or reset IDM download file category extensions without leaving the application.
+* **Streamlined Modern UI**: Windows 11 Fluent icons, Segoe UI typography, and spacious 640x420 layout with zero tab overflow.
 * **Flexible Compression & Encryption**: Optional AES password encryption and configurable 7-Zip compression levels (with high-speed no-compression default).
 * **Cross-System Migration**: Intelligent "Convert Profile Paths" and "Append / Merge" restore options for seamless transfer across PCs or Windows accounts.
-* **Standalone Utility Tools**: Integrated Downloads List Manager, Temporary Data Cleaner, Password Sanitizer, and File Category rules manager.
-* **Modern AutoIt v3.3.18+ Compatibility**: Clean syntax, zero Au3Check errors/warnings, and high DPI friendly layout.
+* **Modern AutoIt v3.3.18+ Compatibility**: Clean syntax, zero Au3Check errors/warnings, and high-DPI friendly layout.
 * **Automated Build Pipeline**: Multi-stage build script (`build.ps1` / `build.bat`) generating portable executables and Inno Setup installers.
 
 ---

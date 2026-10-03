@@ -353,26 +353,133 @@ Func _MainBM()
 			Case $h_Button_Restore
 				_Restore()
 
-			Case $h_Button_Clean_Manager_Tools
-				_SwCleanerGUI()
+			Case $h_Tab1
+				Local $iCurrentTab = GUICtrlRead($h_Tab1)
+				Switch $iCurrentTab
+					Case 2 ; Downloads
+						If Not $b_LM_Loaded Then
+							$b_LM_Loaded = True
+							_Analyze()
+						EndIf
+					Case 3 ; Cleaner
+						_UpdatePwCleanerCount()
+					Case 4 ; Categories
+						_LoadFileCategories()
+				EndSwitch
+
+			; Tab 3: Downloads Manager
+			Case $h_Button_LM_Refresh
+				_Analyze()
+
+			Case $h_Button_LM_OpenFolder
+				_Open_Folder()
+
+			Case $h_Button_LM_ForceJoin
+				If _Join_Fragments() = -2 Then MsgBox(48, "Error", "At Least 2 Fragment Required To Join It.", 0, $hGUI_BM)
+
+			Case $h_Button_LM_Remove
+				_Remove()
+
+			Case $h_Button_LM_Export
+				_ShowMenu($hGUI_BM, $h_Button_LM_Export, $h_Button_LM_Export_Context)
+
+			Case $h_MenuItem_LM_Export_CSV
+				_Expert_CSV()
+
+			Case $h_MenuItem_LM_Export_HTML
+				_Expert_HTML()
+
+			Case $h_MenuItem_LM_Export_TXT
+				_Expert_IDM_TXT()
+
+			Case $h_MenuItem_LM_Export_IDM
+				_Expert_IDM_LIST()
+
+			Case $h_Input_LM_Search
+				_SearchDownloadsList(GUICtrlRead($h_Input_LM_Search))
+
+			Case $h_Button_LM_SearchClear
+				GUICtrlSetData($h_Input_LM_Search, "")
+				_Analyze()
+
+			; Tab 4: Cleaner (Data & Passwords)
+			Case $h_Radio_Clean_Custom
+				GUICtrlSetState($h_Checkbox_Clean_DD, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_Clean_GD, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_Clean_SD, $GUI_ENABLE)
+				GUICtrlSetState($h_Checkbox_Clean_HL, $GUI_ENABLE)
+
+			Case $h_Radio_Clean_Full
+				GUICtrlSetState($h_Checkbox_Clean_DD, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Clean_GD, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Clean_SD, $GUI_DISABLE)
+				GUICtrlSetState($h_Checkbox_Clean_HL, $GUI_DISABLE)
+
+			Case $h_Button_Clean_Analyze
+				_CleanAnalyze()
+
+			Case $h_Button_Clean_Now
+				_CleanExecute()
+
+			Case $h_Button_PwCleaner_Refresh
+				_UpdatePwCleanerCount()
+
+			Case $h_Button_PwCleaner_Clear
+				_ClearAllPasswords()
+
+			; Tab 5: Categories
+			Case $h_Checkbox_Cat_Compressed
+				If GUICtrlRead($h_Checkbox_Cat_Compressed) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Cat_Compressed, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Cat_Compressed, $GUI_DISABLE)
+				EndIf
+
+			Case $h_Checkbox_Cat_Documents
+				If GUICtrlRead($h_Checkbox_Cat_Documents) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Cat_Documents, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Cat_Documents, $GUI_DISABLE)
+				EndIf
+
+			Case $h_Checkbox_Cat_Music
+				If GUICtrlRead($h_Checkbox_Cat_Music) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Cat_Music, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Cat_Music, $GUI_DISABLE)
+				EndIf
+
+			Case $h_Checkbox_Cat_Programs
+				If GUICtrlRead($h_Checkbox_Cat_Programs) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Cat_Programs, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Cat_Programs, $GUI_DISABLE)
+				EndIf
+
+			Case $h_Checkbox_Cat_Video
+				If GUICtrlRead($h_Checkbox_Cat_Video) = $GUI_CHECKED Then
+					GUICtrlSetState($h_Input_Cat_Video, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($h_Input_Cat_Video, $GUI_DISABLE)
+				EndIf
+
+			Case $h_Button_Cat_Save
+				_SaveCategories()
+
+			Case $h_Button_Cat_Enhance
+				_EnhanceCategories()
+
+			Case $h_Button_Cat_Default
+				_RestoreDefaultCategories()
 
 			Case $h_Button_More_Setting
 				_SwMoreSettingGUI()
-
-			Case $h_Button_Clean_Password_Tools
-				_SwPwCleanerGUI()
-
-			Case $h_Button_Cat_Tools
-				_SwFileTypeGUI()
 
 			Case $h_Button_Version_History_Help
 				_SwHistory()
 
 			Case $h_Button_Licence_Help
 				_SwLicense()
-
-			Case $h_Button_List_Manager_Tools
-				_RunILM()
 
 			Case $h_Button_Update_Help
 				_UpdateCheck()
@@ -528,25 +635,34 @@ Func _StartupBM()
 					_CheckIni()
 					_CheckComponment()
 					_LogProfilePaths()
-					_RunILM()
+					_SwBMGUI()
+					GUICtrlSetState($h_TabSheet3, $GUI_SHOW)
+					_Analyze()
+					_MainBM()
 				Case "swdc"
 					_CheckSelfProcess()
 					_CheckIni()
 					_CheckComponment()
 					_LogProfilePaths()
-					_SwCleanerGUI()
+					_SwBMGUI()
+					GUICtrlSetState($h_TabSheet4, $GUI_SHOW)
+					_MainBM()
 				Case "swpwc"
 					_CheckSelfProcess()
 					_CheckIni()
 					_CheckComponment()
 					_LogProfilePaths()
-					_SwPwCleanerGUI()
+					_SwBMGUI()
+					GUICtrlSetState($h_TabSheet4, $GUI_SHOW)
+					_MainBM()
 				Case "swft"
 					_CheckSelfProcess()
 					_CheckIni()
 					_CheckComponment()
 					_LogProfilePaths()
-					_SwFileTypeGUI()
+					_SwBMGUI()
+					GUICtrlSetState($h_TabSheet5, $GUI_SHOW)
+					_MainBM()
 				Case Else
 					If FileExists($CmdLine[1]) Then
 						_CheckSelfProcess()
@@ -736,71 +852,75 @@ Func _SwBMGUI()
 	$hGUI_BM = GUICreate($s_Win_Title_BM, $i_xWidth_BM, $i_yHight_BM, $i_xWinPos, $i_yWinPos)
 	GUISetFont(9, 400, 0, "Segoe UI", $hGUI_BM)
 
-	$h_Tab1 = GUICtrlCreateTab(10, 10, 420, 240)
+	$h_Tab1 = GUICtrlCreateTab(10, 10, 620, 375)
 
 	#Region backup ;==============================================================================================Backup:
 
 	$h_TabSheet1 = GUICtrlCreateTabItem("Backup Data")
 	_AET_TabSetIcon(-1, 1, -2)
-	GUICtrlCreateGroup("Backup Destination", 24, 44, 390, 54)
+	GUICtrlCreateGroup("Backup Destination", 24, 44, 592, 58)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Input_Backup_Path = GUICtrlCreateInput("", 34, 63, 336, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Input_Backup_Path = GUICtrlCreateInput("", 36, 65, 528, 24, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Button_Browse_Backup = GUICtrlCreateButton("", 374, 62, 32, 25)
+	$h_Button_Browse_Backup = GUICtrlCreateButton("", 572, 64, 32, 26)
 	_AET_ButtonSetIcon(-1, 15, 16, 16, 4)
 	GUICtrlSetTip(-1, "Choose destination backup file location (.ibf)", "Select Backup Location", 1, 1)
 
-	GUICtrlCreateGroup("Backup Options", 24, 103, 390, 107)
+	GUICtrlCreateGroup("Backup Options", 24, 110, 592, 185)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	GUICtrlCreateLabel("Password (Optional):", 38, 121, 146, 15)
+	GUICtrlCreateLabel("Password (Optional):", 38, 132, 230, 16)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
-	$h_Input_Password_Backup = GUICtrlCreateInput("", 38, 137, 148, 22, $ES_PASSWORD)
+	$h_Input_Password_Backup = GUICtrlCreateInput("", 38, 150, 230, 24, $ES_PASSWORD)
 	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password (Optional)")
 	GUICtrlSetTip(-1, "Enter a password to encrypt this backup. Leave empty for no encryption (default).", "Backup Password", 1, 1)
 
-	GUICtrlCreateLabel("Compression Level:", 38, 163, 146, 15)
+	GUICtrlCreateLabel("Compression Level:", 38, 192, 230, 16)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
-	$h_Combo_Compression_Level_Backup = GUICtrlCreateCombo("1-No Compression", 38, 179, 148, 24, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	$h_Combo_Compression_Level_Backup = GUICtrlCreateCombo("1-No Compression", 38, 210, 230, 24, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, "2-Fastest Compression|3-Fast Compression|4-Normal Compression|5-Maximum Compression|6-Ultra Compression", "1-No Compression")
 	GUICtrlSetTip(-1, "Select backup compression level (default: 1-No Compression).", "Compression Level", 1, 1)
 
-	$h_Checkbox_Full_Backup = GUICtrlCreateCheckbox("Full Backup", 195, 123, 114, 20)
+	$h_Checkbox_Full_Backup = GUICtrlCreateCheckbox("Full Backup", 310, 136, 130, 20)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlSetTip(-1, "Backup everything including downloads, lists, and settings", "Full Backup", 1, 1)
 
-	$h_Checkbox_Listl_Backup = GUICtrlCreateCheckbox("Only List", 312, 123, 96, 20)
+	$h_Checkbox_Listl_Backup = GUICtrlCreateCheckbox("Only List", 460, 136, 130, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Backup list of downloads without actual data files", "Only List Backup", 1, 1)
 
-	$h_Checkbox_UnFinished_DD_Backup = GUICtrlCreateCheckbox("Downloaded Data", 195, 149, 114, 20)
+	$h_Checkbox_UnFinished_DD_Backup = GUICtrlCreateCheckbox("Downloaded Data", 310, 170, 140, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Backup downloaded files data", "Downloaded Data", 1, 1)
 
-	$h_Checkbox_UnFinished_GD_Backup = GUICtrlCreateCheckbox("Grabber Data", 312, 149, 96, 20)
+	$h_Checkbox_UnFinished_GD_Backup = GUICtrlCreateCheckbox("Grabber Data", 460, 170, 130, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Backup grabber project data", "Grabber Data", 1, 1)
 
-	$h_Checkbox_UnFinished_SD_Backup = GUICtrlCreateCheckbox("Scheduler/Queues", 195, 175, 114, 20)
+	$h_Checkbox_UnFinished_SD_Backup = GUICtrlCreateCheckbox("Scheduler/Queues", 310, 204, 140, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Backup scheduler tasks and queue definitions", "Scheduler & Queues", 1, 1)
 
-	$h_Checkbox_UnFinished_HL_Backup = GUICtrlCreateCheckbox("Other Data", 312, 175, 96, 20)
+	$h_Checkbox_UnFinished_HL_Backup = GUICtrlCreateCheckbox("Other Data", 460, 204, 130, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Backup history, logs, and other IDM data", "Other Data", 1, 1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Button_Backup = GUICtrlCreateButton("  Backup Now", 305, 215, 109, 27)
+	Local $h_Label_Backup_Tip = GUICtrlCreateLabel("💡 Choose destination and optional encryption before creating backup.", 36, 320, 410, 22)
+	GUICtrlSetFont($h_Label_Backup_Tip, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Backup_Tip, 0x666666)
+
+	$h_Button_Backup = GUICtrlCreateButton("  Backup Now", 466, 312, 150, 38)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
+	_AET_ButtonSetIcon(-1, 8, 20, 20, 0)
 	GUICtrlSetTip(-1, "Start IDM backup process now", "Backup Now", 1, 1)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 
@@ -809,161 +929,305 @@ Func _SwBMGUI()
 	#Region Restore ;==============================================================================================Restore:
 	$h_TabSheet2 = GUICtrlCreateTabItem("Restore Data")
 	_AET_TabSetIcon(-1, 10, -11)
-	GUICtrlCreateGroup("Restore Source", 24, 44, 390, 54)
+	GUICtrlCreateGroup("Restore Source", 24, 44, 592, 58)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Input_Restore_Path = GUICtrlCreateInput("", 34, 63, 302, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Input_Restore_Path = GUICtrlCreateInput("", 36, 65, 492, 24, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 
-	$h_Button_Browse_Restore = GUICtrlCreateButton("", 340, 62, 32, 25)
-	_AET_ButtonSetIcon(-1, 2, 16, 16, 4)
-	GUICtrlSetTip(-1, "Browse for backup archive file (.ibf)", "Select Backup File", 1, 1)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-	$h_Button_Restore_Archive_Info = GUICtrlCreateButton("", 376, 62, 32, 25)
+	$h_Button_Restore_Archive_Info = GUICtrlCreateButton("", 536, 64, 32, 26)
 	_AET_ButtonSetIcon(-1, 19, 16, 16, 4)
 	GUICtrlSetTip(-1, "Show information about the selected backup file", "Archive Info", 1, 1)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 
-	GUICtrlCreateGroup("Restore Options", 24, 103, 390, 107)
+	$h_Button_Browse_Restore = GUICtrlCreateButton("", 572, 64, 32, 26)
+	_AET_ButtonSetIcon(-1, 2, 16, 16, 4)
+	GUICtrlSetTip(-1, "Browse for backup archive file (.ibf)", "Select Backup File", 1, 1)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	GUICtrlCreateGroup("Restore Options", 24, 110, 592, 185)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	GUICtrlCreateLabel("Password (if encrypted):", 38, 121, 146, 15)
+	GUICtrlCreateLabel("Password (if encrypted):", 38, 132, 230, 16)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
-	$h_Input_Password_Restore = GUICtrlCreateInput("", 38, 137, 148, 22, $ES_PASSWORD)
+	$h_Input_Password_Restore = GUICtrlCreateInput("", 38, 150, 230, 24, $ES_PASSWORD)
 	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password (if encrypted)")
 	GUICtrlSetTip(-1, "Enter password if your backup archive is encrypted (leave empty if not).", "Restore Password", 1, 1)
 
-	$h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("Convert Profile Paths", 38, 164, 150, 18)
+	$h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("Convert Profile Paths", 38, 192, 230, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetTip(-1, "Adapt profile and download paths when restoring onto a different computer or Windows account.", "Convert Profile", 1, 1)
 	$h_Label_Convert_Registry_Restore = GUICtrlCreateDummy()
 
-	$h_Checkbox_Append_Registry_Restore = GUICtrlCreateCheckbox("Append / Merge Data", 38, 184, 150, 18)
+	$h_Checkbox_Append_Registry_Restore = GUICtrlCreateCheckbox("Append / Merge Data", 38, 222, 230, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetTip(-1, "Merge backup records with existing IDM data instead of replacing existing entries.", "Append/Merge Data", 1, 1)
 	$h_Label_Append_Registry_Restore = GUICtrlCreateDummy()
 
-	$h_Checkbox_Full_Restore = GUICtrlCreateCheckbox("Full Restore", 195, 123, 114, 20)
+	$h_Checkbox_Full_Restore = GUICtrlCreateCheckbox("Full Restore", 310, 136, 130, 20)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlSetTip(-1, "Restore everything from backup archive", "Full Restore", 1, 1)
 
-	$h_Checkbox_Listl_Restore = GUICtrlCreateCheckbox("Only List", 312, 123, 96, 20)
+	$h_Checkbox_Listl_Restore = GUICtrlCreateCheckbox("Only List", 460, 136, 130, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Restore list of downloads without actual data files", "Only List Restore", 1, 1)
 
-	$h_Checkbox_UnFinished_DD_Restore = GUICtrlCreateCheckbox("Downloaded Data", 195, 149, 114, 20)
+	$h_Checkbox_UnFinished_DD_Restore = GUICtrlCreateCheckbox("Downloaded Data", 310, 170, 140, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Restore downloaded files data", "Downloaded Data", 1, 1)
 
-	$h_Checkbox_UnFinished_GD_Restore = GUICtrlCreateCheckbox("Grabber Data", 312, 149, 96, 20)
+	$h_Checkbox_UnFinished_GD_Restore = GUICtrlCreateCheckbox("Grabber Data", 460, 170, 130, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Restore grabber project data", "Grabber Data", 1, 1)
 
-	$h_Checkbox_UnFinished_SD_Restore = GUICtrlCreateCheckbox("Scheduler/Queues", 195, 175, 114, 20)
+	$h_Checkbox_UnFinished_SD_Restore = GUICtrlCreateCheckbox("Scheduler/Queues", 310, 204, 140, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Restore scheduler tasks and queue definitions", "Scheduler & Queues", 1, 1)
 
-	$h_Checkbox_UnFinished_HL_Restore = GUICtrlCreateCheckbox("Other Data", 312, 175, 96, 20)
+	$h_Checkbox_UnFinished_HL_Restore = GUICtrlCreateCheckbox("Other Data", 460, 204, 130, 20)
 	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlSetTip(-1, "Restore history, logs, and other IDM data", "Other Data", 1, 1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Button_Restore = GUICtrlCreateButton("  Restore Now", 305, 215, 109, 27)
+	Local $h_Label_Restore_Tip = GUICtrlCreateLabel("💡 Select an .ibf backup archive to restore IDM settings and download data.", 36, 320, 410, 22)
+	GUICtrlSetFont($h_Label_Restore_Tip, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Restore_Tip, 0x666666)
+
+	$h_Button_Restore = GUICtrlCreateButton("  Restore Now", 466, 312, 150, 38)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
+	_AET_ButtonSetIcon(-1, 8, 20, 20, 0)
 	GUICtrlSetTip(-1, "Start IDM restore process now", "Restore Now", 1, 1)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 
 	#EndRegion Restore ;==============================================================================================Restore:
 
-	#Region Tools ;============================================================================================== Tools:
+	#Region Downloads ;============================================================================================== Downloads:
+	$h_TabSheet3 = GUICtrlCreateTabItem("Downloads")
+	_AET_TabSetIcon(-1, 11, -12)
 
-	$h_TabSheet3 = GUICtrlCreateTabItem("Tools")
-	_AET_TabSetIcon(-1, 12, -13)
+	$h_Button_LM_Refresh = GUICtrlCreateButton("  Refresh", 24, 42, 86, 28)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 17, 16, 16, 0)
+	GUICtrlSetTip(-1, "Refresh and reload downloads list from IDM", "Refresh List", 1, 1)
 
-	GUICtrlCreateGroup("Tools && Utilities", 24, 44, 390, 162)
+	$h_Button_LM_OpenFolder = GUICtrlCreateButton("  Open Folder", 116, 42, 110, 28)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
+	GUICtrlSetTip(-1, "Open folder containing selected downloaded file", "Open Folder", 1, 1)
+
+	$h_Button_LM_ForceJoin = GUICtrlCreateButton("  Force Join", 232, 42, 100, 28)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 12, 16, 16, 0)
+	GUICtrlSetTip(-1, "Join incomplete download file fragments together", "Force Join", 1, 1)
+
+	$h_Button_LM_Remove = GUICtrlCreateButton("  Remove", 338, 42, 86, 28)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 22, 16, 16, 0)
+	GUICtrlSetTip(-1, "Delete selected download entry and files", "Remove Download", 1, 1)
+
+	$h_Button_LM_Export = GUICtrlCreateButton("  Export ▼", 430, 42, 94, 28)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 15, 16, 16, 0)
+	GUICtrlSetTip(-1, "Export downloads list to HTML, CSV, TXT, or IDM format", "Export List", 1, 1)
+	$h_Button_LM_Export_Context = GUICtrlCreateContextMenu($h_Button_LM_Export)
+	$h_MenuItem_LM_Export_CSV = GUICtrlCreateMenuItem("Export to CSV Spreadsheet (.csv)", $h_Button_LM_Export_Context)
+	$h_MenuItem_LM_Export_HTML = GUICtrlCreateMenuItem("Export to HTML Report (.htm)", $h_Button_LM_Export_Context)
+	$h_MenuItem_LM_Export_TXT = GUICtrlCreateMenuItem("Export to IDM Text File (.txt)", $h_Button_LM_Export_Context)
+	$h_MenuItem_LM_Export_IDM = GUICtrlCreateMenuItem("Export to IDM Export List (.ef2)", $h_Button_LM_Export_Context)
+
+	$h_Input_LM_Search = GUICtrlCreateInput("", 24, 76, 554, 24)
+	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Search downloads by name, link, or ID (press Enter or type to filter)...")
+	GUICtrlSetTip(-1, "Type search query and press Enter to filter list", "Filter Downloads", 1, 1)
+
+	$h_Button_LM_SearchClear = GUICtrlCreateButton("✕", 584, 75, 32, 26)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+	GUICtrlSetTip(-1, "Clear search and restore full downloads list", "Clear Filter", 1, 1)
+
+	$idListView = GUICtrlCreateListView("No.|File Name|Size|MIME Type|ID|Download Link", 24, 108, 592, 260)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	$hListView = GUICtrlGetHandle($idListView)
+	_GUICtrlListView_SetExtendedListViewStyle($idListView, BitOR($LVS_EX_DOUBLEBUFFER, $LVS_EX_FULLROWSELECT, $LVS_EX_INFOTIP, $LVS_EX_GRIDLINES, $LVS_EX_HEADERDRAGDROP))
+	_WinAPI_SetWindowTheme($hListView, "Explorer")
+	_GUICtrlListView_SetColumnWidth($idListView, 0, 38)
+	_GUICtrlListView_SetColumnWidth($idListView, 1, 190)
+	_GUICtrlListView_SetColumnWidth($idListView, 2, 75)
+	_GUICtrlListView_SetColumnWidth($idListView, 3, 80)
+	_GUICtrlListView_SetColumnWidth($idListView, 4, 45)
+	_GUICtrlListView_SetColumnWidth($idListView, 5, 155)
+	#EndRegion Downloads ;============================================================================================== Downloads:
+
+	#Region Cleaner ;============================================================================================== Cleaner:
+	$h_TabSheet4 = GUICtrlCreateTabItem("Cleaner")
+	_AET_TabSetIcon(-1, 17, -18)
+
+	GUICtrlCreateGroup("IDM Data && Cache Cleaner", 24, 44, 592, 156)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Button_List_Manager_Tools = GUICtrlCreateButton("  Downloads Manager", 36, 68, 178, 42, $BS_LEFT)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 11, 24, 24, 0)
-	GUICtrlSetTip(-1, "Open IDM List Manager to inspect downloads, join incomplete files, and manage queues.", "Downloads List Manager", 1, 1)
+	$h_Radio_Clean_Custom = GUICtrlCreateRadio("Custom Clean", 38, 66, 110, 20)
+	GUICtrlSetFont(-1, 8.5, 600, 0, "Segoe UI")
+	GUICtrlSetState(-1, $GUI_CHECKED)
 
-	$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("  Data Cleaner", 224, 68, 178, 42, $BS_LEFT)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 17, 24, 24, 0)
-	GUICtrlSetTip(-1, "Clean history records, log files, and unfinished temporary download data.", "Data Cleaner", 1, 1)
+	$h_Radio_Clean_Full = GUICtrlCreateRadio("Full Clean", 158, 66, 100, 20)
+	GUICtrlSetFont(-1, 8.5, 600, 0, "Segoe UI")
 
-	$h_Button_Clean_Password_Tools = GUICtrlCreateButton("  Password Cleaner", 36, 120, 178, 42, $BS_LEFT)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 6, 24, 24, 0)
-	GUICtrlSetTip(-1, "Sanitize and remove saved server and website authentication passwords.", "Password Cleaner", 1, 1)
+	$h_Checkbox_Clean_DD = GUICtrlCreateCheckbox("Downloaded Data (temporary files)", 38, 92, 260, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetState(-1, $GUI_CHECKED)
 
-	$h_Button_Cat_Tools = GUICtrlCreateButton("  File Categories", 224, 120, 178, 42, $BS_LEFT)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 14, 24, 24, 0)
-	GUICtrlSetTip(-1, "Manage file extension rules and automated category mappings in IDM.", "File Categories", 1, 1)
+	$h_Checkbox_Clean_GD = GUICtrlCreateCheckbox("Grabber Project Cache", 320, 92, 260, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 
-	Local $h_Label_Tools_Tip = GUICtrlCreateLabel("💡 Launch standalone utility tools to inspect, clean, or configure IDM.", 36, 174, 366, 20)
-	GUICtrlSetFont($h_Label_Tools_Tip, 8.5, 400, 0, "Segoe UI")
-	GUICtrlSetColor($h_Label_Tools_Tip, 0x555555)
+	$h_Checkbox_Clean_SD = GUICtrlCreateCheckbox("Scheduler && Queue Data", 38, 116, 260, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+
+	$h_Checkbox_Clean_HL = GUICtrlCreateCheckbox("History && Error Logs", 320, 116, 260, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+
+	$h_Progress_Clean = GUICtrlCreateProgress(38, 154, 240, 22)
+
+	$h_Button_Clean_Analyze = GUICtrlCreateButton("  Analyze Size", 295, 148, 140, 34)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 11, 16, 16, 0)
+	GUICtrlSetTip(-1, "Calculate total disk space that can be freed", "Analyze Cleanup Size", 1, 1)
+
+	$h_Button_Clean_Now = GUICtrlCreateButton("  Clean Now", 445, 148, 155, 34)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 17, 16, 16, 0)
+	GUICtrlSetTip(-1, "Permanently delete selected temporary data and cache", "Clean Data Now", 1, 1)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	#EndRegion Tools ;============================================================================================== Tools:
 
-	#Region Setting ;============================================================================================== Setting:
-	$h_TabSheet4 = GUICtrlCreateTabItem("Options")
-	_AET_TabSetIcon(-1, 16, -17)
-
-	GUICtrlCreateGroup("Default Application Paths", 24, 44, 390, 76)
+	GUICtrlCreateGroup("IDM Stored Passwords Sanitizer", 24, 210, 592, 146)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	#Region Setting - BrowseLogFile
-	$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton(" Log File Folder:", 34, 60, 112, 25, $BS_left)
+	$h_Label_PwCleaner_Info = GUICtrlCreateLabel("Checking stored passwords in IDM registry...", 38, 234, 560, 22)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+
+	Local $h_Label_PwTip = GUICtrlCreateLabel("💡 Safely remove saved website and server credentials stored in IDM registry for security.", 38, 260, 560, 20)
+	GUICtrlSetFont($h_Label_PwTip, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_PwTip, 0x666666)
+
+	$h_Button_PwCleaner_Refresh = GUICtrlCreateButton("  Scan Passwords", 280, 298, 145, 36)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 11, 16, 16, 0)
+	GUICtrlSetTip(-1, "Rescan IDM registry for stored authentication passwords", "Scan Passwords", 1, 1)
+
+	$h_Button_PwCleaner_Clear = GUICtrlCreateButton("  Clear All Passwords", 435, 298, 165, 36)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 6, 16, 16, 0)
+	GUICtrlSetTip(-1, "Remove all stored authentication passwords from IDM", "Clear Passwords", 1, 1)
+
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	#EndRegion Cleaner ;============================================================================================== Cleaner:
+
+	#Region Categories ;============================================================================================== Categories:
+	$h_TabSheet5 = GUICtrlCreateTabItem("Categories")
+	_AET_TabSetIcon(-1, 14, -15)
+
+	GUICtrlCreateGroup("File Extension Categories in IDM", 24, 44, 592, 255)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+
+	Local $h_Label_Cat_Desc = GUICtrlCreateLabel("Configure file extension patterns that IDM automatically organizes into download categories:", 38, 66, 560, 18)
+	GUICtrlSetFont($h_Label_Cat_Desc, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Cat_Desc, 0x444444)
+
+	$h_Checkbox_Cat_Compressed = GUICtrlCreateCheckbox("Compressed", 38, 92, 110, 22)
+	GUICtrlSetFont(-1, 8.5, 600, 0, "Segoe UI")
+	$h_Input_Cat_Compressed = GUICtrlCreateInput("", 152, 92, 450, 23)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetState(-1, $GUI_DISABLE)
+
+	$h_Checkbox_Cat_Documents = GUICtrlCreateCheckbox("Documents", 38, 122, 110, 22)
+	GUICtrlSetFont(-1, 8.5, 600, 0, "Segoe UI")
+	$h_Input_Cat_Documents = GUICtrlCreateInput("", 152, 122, 450, 23)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetState(-1, $GUI_DISABLE)
+
+	$h_Checkbox_Cat_Music = GUICtrlCreateCheckbox("Music", 38, 152, 110, 22)
+	GUICtrlSetFont(-1, 8.5, 600, 0, "Segoe UI")
+	$h_Input_Cat_Music = GUICtrlCreateInput("", 152, 152, 450, 23)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetState(-1, $GUI_DISABLE)
+
+	$h_Checkbox_Cat_Programs = GUICtrlCreateCheckbox("Programs", 38, 182, 110, 22)
+	GUICtrlSetFont(-1, 8.5, 600, 0, "Segoe UI")
+	$h_Input_Cat_Programs = GUICtrlCreateInput("", 152, 182, 450, 23)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetState(-1, $GUI_DISABLE)
+
+	$h_Checkbox_Cat_Video = GUICtrlCreateCheckbox("Video", 38, 212, 110, 22)
+	GUICtrlSetFont(-1, 8.5, 600, 0, "Segoe UI")
+	$h_Input_Cat_Video = GUICtrlCreateInput("", 152, 212, 450, 23)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetState(-1, $GUI_DISABLE)
+
+	Local $h_Label_Cat_Hint = GUICtrlCreateLabel("💡 Separate extensions with spaces (e.g. zip rar 7z doc pdf mp3 mp4). Check box to edit.", 38, 248, 560, 20)
+	GUICtrlSetFont($h_Label_Cat_Hint, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Cat_Hint, 0x666666)
+
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$h_Button_Cat_Save = GUICtrlCreateButton("  Save Changes", 34, 315, 150, 38)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 15, 16, 16, 0)
+	GUICtrlSetTip(-1, "Save checked category extension lists into IDM", "Save Categories", 1, 1)
+
+	$h_Button_Cat_Enhance = GUICtrlCreateButton("  Add Extra File Types", 198, 315, 195, 38)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 13, 16, 16, 0)
+	GUICtrlSetTip(-1, "Populate checked categories with comprehensive file extension presets", "Enhance Extensions", 1, 1)
+
+	$h_Button_Cat_Default = GUICtrlCreateButton("  Restore IDM Defaults", 406, 315, 200, 38)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 17, 16, 16, 0)
+	GUICtrlSetTip(-1, "Restore checked categories to default IDM file extensions", "Reset Categories", 1, 1)
+	#EndRegion Categories ;============================================================================================== Categories:
+
+	#Region Setting ;============================================================================================== Setting:
+	$h_TabSheet6 = GUICtrlCreateTabItem("Options")
+	_AET_TabSetIcon(-1, 16, -17)
+
+	GUICtrlCreateGroup("Default Application Paths", 24, 44, 592, 96)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+
+	$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton(" Log File Folder:", 36, 64, 130, 26, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 	$h_Button_BrowseLogFile_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseLogFile_Setting)
 	$h_Button_BrowseLogFile_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseLogFile_Setting_Context)
 	$h_Button_BrowseLogFile_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseLogFile_Setting_Context)
 
-	$h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 150, 61, 254, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 172, 65, 430, 24, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_LogFile_Setting))
-	#EndRegion Setting - BrowseLogFile
 
-	#Region Setting - BrowseDataBackupFolder
-	$h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton(" Backup Folder:", 34, 88, 112, 25, $BS_left)
+	$h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton(" Backup Folder:", 36, 98, 130, 26, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 	$h_Button_BrowseDataBackupFolder_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseDataBackupFolder_Setting)
 	$h_Button_BrowseDataBackupFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseDataBackupFolder_Setting_Context)
 	$h_Button_BrowseDataBackupFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseDataBackupFolder_Setting_Context)
 
-	$h_Label_BrowseDataBackupFolder_Setting = GUICtrlCreateInput($s_Backup_Dir, 150, 89, 254, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Label_BrowseDataBackupFolder_Setting = GUICtrlCreateInput($s_Backup_Dir, 172, 99, 430, 24, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseDataBackupFolder_Setting))
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	#EndRegion Setting - BrowseDataBackupFolder
 
-	#Region Setting - BrowseAppDataFolder
-	GUICtrlCreateGroup("Default IDM Profile Paths", 24, 124, 390, 78)
+	GUICtrlCreateGroup("Default IDM Profile Paths", 24, 148, 592, 100)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton(" AppData Folder:", 34, 140, 112, 25, $BS_left)
+	$h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton(" AppData Folder:", 36, 170, 130, 26, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 	$h_Button_BrowseAppDataFolder_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseAppDataFolder_Setting)
 	$h_Button_BrowseAppDataFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseAppDataFolder_Setting_Context)
 	$h_Button_BrowseAppDataFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseAppDataFolder_Setting_Context)
 
-	$h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 150, 141, 254, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 172, 171, 430, 24, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseAppDataFolder_Setting))
-	#EndRegion Setting - BrowseAppDataFolder
 
-	#Region Setting - TempDataFolder
-	$h_Button_TempDataFolder_Setting = GUICtrlCreateButton(" Temp Folder:", 34, 168, 112, 25, $BS_left)
+	$h_Button_TempDataFolder_Setting = GUICtrlCreateButton(" Temp Folder:", 36, 204, 130, 26, $BS_left)
 	GUICtrlSetTip(-1, _
 			"Temporary directory is required for storing file parts during download." & @CRLF & _
 			"If you have several physical drives on your computer, you should select" & @CRLF & _
@@ -974,8 +1238,7 @@ Func _SwBMGUI()
 	$h_Button_TempDataFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_TempDataFolder_Setting_Context)
 	$h_Button_TempDataFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_TempDataFolder_Setting_Context)
 
-	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateCombo("", 150, 169, 254, 120, BitOR($GUI_SS_DEFAULT_COMBO, $CBS_DROPDOWN))
-	#Region Set Data
+	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateCombo("", 172, 205, 430, 120, BitOR($GUI_SS_DEFAULT_COMBO, $CBS_DROPDOWN))
 	Local $s_all_DwnlData_Folder = _aGetTempPathFolderEx()
 	Local $i = 0
 	If Not @error Then
@@ -984,7 +1247,6 @@ Func _SwBMGUI()
 		Next
 	EndIf
 	GUICtrlSetData($h_Label_DwnlDataFolder_Setting, $s_TempPath, $s_TempPath)
-	#EndRegion Set Data
 
 	GUICtrlSetTip($h_Label_DwnlDataFolder_Setting, _
 			"DwnlData Folder: " & @CRLF & _
@@ -994,92 +1256,105 @@ Func _SwBMGUI()
 			$GrabberData_Folder)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	#EndRegion Setting - TempDataFolder
 
-	Local $h_Label_Options_Tip = GUICtrlCreateLabel("💡 Tip: Right-click buttons for options", 34, 220, 230, 18)
+	Local $h_Label_Options_Tip = GUICtrlCreateLabel("💡 Tip: Right-click path buttons for quick options (Browse or Open in Explorer)", 36, 264, 560, 20)
 	GUICtrlSetFont($h_Label_Options_Tip, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetColor($h_Label_Options_Tip, 0x666666)
 
-	$h_Button_Open_Log_Setting = GUICtrlCreateButton("", 270, 215, 32, 26)
-	_AET_ButtonSetIcon(-1, 18, 16, 16, 4)
+	$h_Button_Open_Log_Setting = GUICtrlCreateButton("  View Log", 34, 308, 130, 36)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 18, 16, 16, 0)
 	GUICtrlSetTip(-1, "Open the application log file in text editor", "Open Log", 1, 1)
 
-	$h_Button_Associate_Setting = GUICtrlCreateButton("", 306, 215, 32, 26)
-	_AET_ButtonSetIcon(-1, 14, 16, 16, 4)
+	$h_Button_Associate_Setting = GUICtrlCreateButton("  Associate .ibf", 176, 308, 140, 36)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 14, 16, 16, 0)
 	GUICtrlSetTip(-1, "Associate .ibf file extension with IDM Backup Manager", "File Association", 1, 1)
 
-	$h_Button_More_Setting = GUICtrlCreateButton("", 342, 215, 32, 26)
-	_AET_ButtonSetIcon(-1, 16, 16, 16, 4)
+	$h_Button_More_Setting = GUICtrlCreateButton("  Preferences", 328, 308, 130, 36)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 16, 16, 16, 0)
 	GUICtrlSetTip(-1, "Configure additional application preferences", "More Settings", 1, 1)
 
-	$h_Button_RestoreDefault_Setting = GUICtrlCreateButton("", 378, 215, 32, 26)
-	_AET_ButtonSetIcon(-1, 17, 16, 16, 4)
+	$h_Button_RestoreDefault_Setting = GUICtrlCreateButton("  Reset Defaults", 470, 308, 146, 36)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 17, 16, 16, 0)
 	GUICtrlSetTip(-1, "Reset all settings back to default values", "Reset Defaults", 1, 1)
 
-	GUICtrlCreateTabItem("")
 	#EndRegion Setting ;============================================================================================== Setting:
 
 	#Region Help ;============================================================================================== Help:
 
-	$h_TabSheet5 = GUICtrlCreateTabItem("Help")
+	$h_TabSheet7 = GUICtrlCreateTabItem("Help")
 	_AET_TabSetIcon(-1, 4, -5)
 
-	GUICtrlCreateGroup("Help && Information", 24, 44, 390, 150)
+	GUICtrlCreateGroup("Help && Documentation", 24, 44, 592, 160)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Button_Help_Help = GUICtrlCreateButton("  User Guide && FAQ", 36, 64, 178, 34, $BS_left)
+	$h_Button_Help_Help = GUICtrlCreateButton("  User Guide && FAQ", 36, 66, 270, 36, $BS_left)
 	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 4, 20, 20, 0)
 	GUICtrlSetTip(-1, "Open User Guide and FAQ documentation", "Documentation", 1, 1)
 
-	$h_Button_Version_History_Help = GUICtrlCreateButton("  Version History", 224, 64, 178, 34, $BS_left)
+	$h_Button_Version_History_Help = GUICtrlCreateButton("  Version History", 318, 66, 284, 36, $BS_left)
 	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 7, 20, 20, 0)
 	GUICtrlSetTip(-1, "View full changelog and release history", "Version History", 1, 1)
 
-	$h_Button_Licence_Help = GUICtrlCreateButton("  License Agreement", 36, 104, 178, 34, $BS_left)
+	$h_Button_Licence_Help = GUICtrlCreateButton("  License Agreement", 36, 108, 270, 36, $BS_left)
 	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 6, 20, 20, 0)
 	GUICtrlSetTip(-1, "View open source license terms", "License Agreement", 1, 1)
 
-	$h_Button_Forum_Help = GUICtrlCreateButton("  Feedback && Issues", 224, 104, 178, 34, $BS_left)
+	$h_Button_Forum_Help = GUICtrlCreateButton("  Feedback && Issues", 318, 108, 284, 36, $BS_left)
 	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 3, 20, 20, 0)
 	GUICtrlSetTip(-1, "Report bugs or request new features on GitHub", "Feedback & Issues", 1, 1)
 
-	$h_Button_Website_Help = GUICtrlCreateButton("  Project Website", 36, 144, 178, 34, $BS_left)
+	$h_Button_Website_Help = GUICtrlCreateButton("  Project Website", 36, 150, 270, 36, $BS_left)
 	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 5, 20, 20, 0)
 	GUICtrlSetTip(-1, "Visit official GitHub repository", "Project Website", 1, 1)
 
-	$h_Button_Update_Help = GUICtrlCreateButton("  Check for Updates", 224, 144, 178, 34, $BS_left)
+	$h_Button_Update_Help = GUICtrlCreateButton("  Check for Updates", 318, 150, 284, 36, $BS_left)
 	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 13, 20, 20, 0)
 	GUICtrlSetTip(-1, "Check online for newer versions of IDM Backup Manager", "Check for Updates", 1, 1)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	Local $h_Label_Help_Title = GUICtrlCreateLabel("IDM Backup Manager v" & $s_Current_Version, 36, 205, 230, 18)
+	GUICtrlCreateGroup("About IDM Backup Manager", 24, 214, 592, 142)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+
+	Local $h_Label_Help_Title = GUICtrlCreateLabel("IDM Backup Manager v" & $s_Current_Version, 38, 238, 300, 22)
 	GUICtrlSetFont($h_Label_Help_Title, 9, 600, 0, "Segoe UI")
 
-	Local $h_Label_Help_Sub = GUICtrlCreateLabel("By Tejas Gajjar  •  Connect && Follow:", 36, 222, 230, 16)
+	Local $h_Label_Help_Sub = GUICtrlCreateLabel("By Tejas Gajjar  •  Open Source Utility", 38, 262, 300, 18)
 	GUICtrlSetFont($h_Label_Help_Sub, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetColor($h_Label_Help_Sub, 0x666666)
 
-	$h_Picture_Facebook_About = GUICtrlCreatePic("", 284, 204, 36, 36, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	Local $h_Label_Help_Social = GUICtrlCreateLabel("Connect && Follow:", 38, 296, 120, 18)
+	GUICtrlSetFont($h_Label_Help_Social, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Help_Social, 0x666666)
+
+	$h_Picture_Facebook_About = GUICtrlCreatePic("", 160, 290, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Connect on Facebook", "Facebook", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "facebooklogo")
 
-	$h_Picture_Twitter_About = GUICtrlCreatePic("", 328, 204, 36, 36, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	$h_Picture_Twitter_About = GUICtrlCreatePic("", 202, 290, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Follow on Twitter / X", "Twitter / X", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "twitterlogo")
 
-	$h_Picture_Instagram_About = GUICtrlCreatePic("", 372, 204, 36, 36, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	$h_Picture_Instagram_About = GUICtrlCreatePic("", 244, 290, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Follow on Instagram", "Instagram", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "instagramlogo")
+
+	Local $h_Label_License_Tag = GUICtrlCreateLabel("Licensed under the MIT License", 320, 262, 280, 18)
+	GUICtrlSetFont($h_Label_License_Tag, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_License_Tag, 0x888888)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion Help ;============================================================================================== Help:
@@ -1087,13 +1362,17 @@ Func _SwBMGUI()
 	GUICtrlCreateTabItem("")
 
 	#Region Info Label
-	Local $aParts[2] = [400, 650]
-	Local $aText[2] = ["INFO: Ready", @TAB & ""]
+	Local $aParts[2] = [500, -1]
+	Local $aText[2] = ["INFO: Ready", ""]
 	$h_Status_Info = _GUICtrlStatusBar_Create($hGUI_BM, $aParts, $aText)
 	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo)
+	$h_Status_Info_LM = $h_Status_Info
 	#EndRegion Info Label
 
 	#EndRegion ### END Koda GUI section ###
+	GUIRegisterMsg($WM_NOTIFY, "WM_NOTIFY")
+	_LoadFileCategories()
+	_UpdatePwCleanerCount()
 	GUISetState(@SW_SHOW)
 	FileWriteLine($s_Log_File, _Current_Moment() & "Info: Window Created: " & $s_Win_Title_BM & " With Error Code: " & @error)
 EndFunc   ;==>_SwBMGUI
@@ -1207,374 +1486,261 @@ Func _SwMoreSettingGUI()
 	GUIDelete($More_Setting_GUI)
 EndFunc   ;==>_SwMoreSettingGUI
 
-Func _SwCleanerGUI()
-	GUISetState(@SW_DISABLE, $hGUI_BM)
+#Region Integrated Tools Helper Functions
 
-	Local $ChildixWidth = 202
-	Local $ChildiyHight = 259
-	Local $sizea = WinGetPos($s_Win_Title_BM)
-	If @error Then
-		;If windows not Found Place it to centre
-		Local $size[2] = [(@DesktopWidth - $ChildixWidth) / 2, (@DesktopHeight - $ChildiyHight) / 2]
-	Else
-		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
+Func _SearchDownloadsList($sText)
+	If $sText = "" Then
+		_Analyze()
+		Return
 	EndIf
-
-	Local $Clean_GUI = GUICreate("IDM Cleaner", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
-
-	GUICtrlCreateGroup("Options", 5, 60, 190, 150)
-	Local $Clena_DD = GUICtrlCreateCheckbox("Download Data", 20, 80, 97, 17)
-	Local $Clean_GD = GUICtrlCreateCheckbox("Grabber Data", 20, 105, 97, 17)
-	Local $Clean_SD = GUICtrlCreateCheckbox("Scheduler Data", 20, 130, 97, 17)
-	Local $Clean_HL = GUICtrlCreateCheckbox("Clean History and Logs", 20, 155, 137, 17)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-	GUICtrlCreateGroup("Clean Mode", 5, 5, 190, 55)
-	Local $Custom_Clean = GUICtrlCreateRadio("Custom Clean", 17, 29, 88, 17)
-	GUICtrlSetState(-1, $GUI_CHECKED)
-	Local $Full_Clean = GUICtrlCreateRadio("Full Clean", 117, 29, 68, 17)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-	Local $Progress1 = GUICtrlCreateProgress(10, 225, 96, 21)
-
-	Local $Button_Clean = GUICtrlCreateButton("", 155, 215, 40, 40)
-	_AET_ButtonSetIcon(-1, 9, 32, 32, 0)
-	GUICtrlSetTip(-1, "Clean The Files/Folders", "Clean", 1, 1)
-
-	Local $Button_Analyze = GUICtrlCreateButton("", 110, 215, 40, 40)
-	_AET_ButtonSetIcon(-1, 11, 32, 32, 0)
-	GUICtrlSetTip(-1, "Analyze Size of Files/Folders To Clean", "Analyze", 1, 1)
-	GUISetState(@SW_SHOW)
-	FileWriteLine($s_Log_File, "")
-	FileWriteLine($s_Log_File, "============================= IDM Cleaner Started =============================")
-	Local $nMsg
+	_GUICtrlListView_BeginUpdate($idListView)
+	Local $i = 0
 	While 1
-		$nMsg = GUIGetMsg()
-		Switch $nMsg
-			Case $GUI_EVENT_CLOSE
-				ExitLoop
-
-			Case $Custom_Clean
-				GUICtrlSetState($Clena_DD, $GUI_ENABLE)
-				GUICtrlSetState($Clean_GD, $GUI_ENABLE)
-				GUICtrlSetState($Clean_SD, $GUI_ENABLE)
-				GUICtrlSetState($Clean_HL, $GUI_ENABLE)
-
-			Case $Full_Clean
-				GUICtrlSetState($Clena_DD, $GUI_DISABLE)
-				GUICtrlSetState($Clean_GD, $GUI_DISABLE)
-				GUICtrlSetState($Clean_SD, $GUI_DISABLE)
-				GUICtrlSetState($Clean_HL, $GUI_DISABLE)
-
-			Case $Button_Analyze
-				_ProgressMarquee_Start($Progress1)
-				If GUICtrlRead($Full_Clean) = $GUI_CHECKED Then
-					$aData[0] = $DwnlData_Folder & @UserName & "\"
-					$aData[1] = $Grabber_Folder
-					$aData[2] = $GrabberData_Folder & @UserName & "\"
-					$aData[3] = $Scheduler_Folder
-
-					$aData[4] = $UrlHistory_txt_File
-					$aData[5] = $UrlHistory2_txt_File
-					$aData[6] = $GlobalErrors_log_File
-					$aData[7] = $urlexclist_dat_File
-					$aData[8] = $defextmap_dat_File
-					$aData[9] = $foldresHistory_txt_File
-					$aData[10] = $sts_list_dat_File
-					$aData[11] = $cnlurllist_dat_File
-				Else
-					_ResetDataAray($aData)
-					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $aData[0] = $DwnlData_Folder & @UserName & "\"
-					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then
-						$aData[1] = $Grabber_Folder
-						$aData[2] = $GrabberData_Folder & @UserName & "\"
-					EndIf
-					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $aData[3] = $Scheduler_Folder
-					If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
-						$aData[4] = $UrlHistory_txt_File
-						$aData[5] = $UrlHistory2_txt_File
-						$aData[6] = $GlobalErrors_log_File
-						$aData[7] = $urlexclist_dat_File
-						$aData[8] = $defextmap_dat_File
-						$aData[9] = $foldresHistory_txt_File
-						$aData[10] = $sts_list_dat_File
-						$aData[11] = $cnlurllist_dat_File
-					EndIf
-				EndIf ;==>clean
-
-				_ProgressMarquee_Stop($Progress1, 1)
-				Local $sSize = _sGetFileSizeConv(_iGetFileSize($aData))
-
-				MsgBox(64, "Info", $sSize & " Will Removed.", 0, $Clean_GUI)
-
-			Case $Button_Clean
-				FileWriteLine($s_Log_File, "")
-				FileWriteLine($s_Log_File, "============================= Cleaning Started =============================")
-				If GUICtrlRead($Full_Clean) = $GUI_CHECKED Then
-					$aData[0] = $DwnlData_Folder & @UserName & "\"
-					$aData[1] = $Grabber_Folder
-					$aData[2] = $GrabberData_Folder & @UserName & "\"
-					$aData[3] = $Scheduler_Folder
-
-					$aData[4] = $UrlHistory_txt_File
-					$aData[5] = $UrlHistory2_txt_File
-					$aData[6] = $GlobalErrors_log_File
-					$aData[7] = $urlexclist_dat_File
-					$aData[8] = $defextmap_dat_File
-					$aData[9] = $foldresHistory_txt_File
-					$aData[10] = $sts_list_dat_File
-					$aData[11] = $cnlurllist_dat_File
-				Else
-					_ResetDataAray($aData)
-					If GUICtrlRead($Clena_DD) = $GUI_CHECKED Then $aData[0] = $DwnlData_Folder & @UserName & "\"
-					If GUICtrlRead($Clean_GD) = $GUI_CHECKED Then
-						$aData[1] = $Grabber_Folder
-						$aData[2] = $GrabberData_Folder & @UserName & "\"
-					EndIf
-					If GUICtrlRead($Clean_SD) = $GUI_CHECKED Then $aData[3] = $Scheduler_Folder
-					If GUICtrlRead($Clean_HL) = $GUI_CHECKED Then
-						$aData[4] = $UrlHistory_txt_File
-						$aData[5] = $UrlHistory2_txt_File
-						$aData[6] = $GlobalErrors_log_File
-						$aData[7] = $urlexclist_dat_File
-						$aData[8] = $defextmap_dat_File
-						$aData[9] = $foldresHistory_txt_File
-						$aData[10] = $sts_list_dat_File
-						$aData[11] = $cnlurllist_dat_File
-					EndIf
-				EndIf
-
-				_ProgressMarquee_Start($Progress1)
-				$sSize = _sGetFileSizeConv(_iGetFileSize($aData))
-
-				Local $iMsgBoxAnswer = MsgBox(36, "Conform", $sSize & " Will Removed. Continue?", 0, $Clean_GUI)
-				_ProgressMarquee_Stop($Progress1, 1)
-
-				If $iMsgBoxAnswer = 6 Then
-					_ProgressMarquee_Start($Progress1)
-					Local $sLockedFiles = _iFileOrFolderRemove($aData)
-					_ProgressMarquee_Stop($Progress1, 1)
-
-					If $sLockedFiles <> "" Then
-						MsgBox(16, "Warning", "Some File(s) Could Not Removed. View Log For More Information.", 0, $Clean_GUI)
-
-						Local $sLockedFile = StringSplit($sLockedFiles, @CRLF, 1)
-						For $i = 1 To $sLockedFile[0] - 1
-							FileWriteLine($s_Log_File, _Current_Moment() & "Warning: File Could Not Deleted= " & '"' & $sLockedFile[$i] & '"')
-						Next
-
-					EndIf
-
-					For $i = 0 To 3
-						If Not FileExists($aData[$i]) Then DirCreate($aData[$i])
-					Next
-
-					MsgBox(64, "Done", "Done.", 0, $Clean_GUI)
-					If $b_RestartIDM Then _RunIDMexe()
-				EndIf
-				FileWriteLine($s_Log_File, "============================= Cleaning Ended =============================")
-				FileWriteLine($s_Log_File, "")
-		EndSwitch
+		If $i >= _GUICtrlListView_GetItemCount($hListView) Then ExitLoop
+		If Not StringInStr(_GUICtrlListView_GetItemTextString($hListView, $i), $sText) Then
+			_GUICtrlListView_DeleteItem($hListView, $i)
+		Else
+			$i += 1
+		EndIf
 	WEnd
-	GUISetState(@SW_ENABLE, $hGUI_BM)
-	GUIDelete($Clean_GUI)
-EndFunc   ;==>_SwCleanerGUI
+	_GUICtrlListView_EndUpdate($idListView)
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: " & _GUICtrlListView_GetItemCount($hListView) & " item(s) matching """ & $sText & """")
+EndFunc   ;==>_SearchDownloadsList
 
-Func _SwPwCleanerGUI()
-	GUISetState(@SW_DISABLE, $hGUI_BM)
-
-	Local $ChildixWidth = 178
-	Local $ChildiyHight = 60
-	Local $sizea = WinGetPos($s_Win_Title_BM)
-	If @error Then
-		;If windows not Found Place it to centre
-		Local $size[2] = [(@DesktopWidth - $ChildixWidth) / 2, (@DesktopHeight - $ChildiyHight) / 2]
-	Else
-		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
-	EndIf
-
-	Local $pwCleaner_GUI = GUICreate("Password Cleaner", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
-	Local $k = 1
-	Local $j = 0
-	Local $sInfoLabelText = "Total " & $j & " Password Found."
-	Local $var
+Func _UpdatePwCleanerCount()
+	Local $k = 1, $j = 0, $var
 	While 1
 		$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
 		If @error <> 0 Then ExitLoop
 		If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then $j += 1
-		$sInfoLabelText = "Total " & $j & " Password Found."
 		$k += 1
 	WEnd
-	Local $h_Lable_Info_pwCleaner = GUICtrlCreateLabel($sInfoLabelText, 10, 6, 155, 17)
-	Local $h_Button_ClearAll_pwCleaner = GUICtrlCreateButton("Clear All", 10, 24, 75, 25)
-	If $j = 0 Then GUICtrlSetState(-1, $GUI_DISABLE)
-	Local $h_Button_Close_pwCleaner = GUICtrlCreateButton("Close", 90, 24, 75, 25)
-	GUISetState(@SW_SHOW)
+	GUICtrlSetData($h_Label_PwCleaner_Info, "Total " & $j & " saved authentication password(s) found in IDM registry.")
+	If $j = 0 Then
+		GUICtrlSetState($h_Button_PwCleaner_Clear, $GUI_DISABLE)
+	Else
+		GUICtrlSetState($h_Button_PwCleaner_Clear, $GUI_ENABLE)
+	EndIf
+EndFunc   ;==>_UpdatePwCleanerCount
 
-	Local $nMsg
+Func _ClearAllPasswords()
+	Local $iAns = MsgBox(36, "Confirm Password Cleanup", "Are you sure you want to remove all saved server and website authentication passwords from IDM?", 0, $hGUI_BM)
+	If $iAns <> 6 Then Return
+	Local $k = 1, $j = 0, $var
 	While 1
-		$nMsg = GUIGetMsg()
-		Switch $nMsg
-
-			Case $GUI_EVENT_CLOSE, $h_Button_Close_pwCleaner
-				ExitLoop
-
-			Case $h_Button_ClearAll_pwCleaner
-				$k = 1
-				$j = 0
-				While 1
-					$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
-					If @error <> 0 Then ExitLoop
-					If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then
-						_RegDelete($s_regpath_IDM & "\Passwords\" & $var, "EncPassword")
-						$j += 1
-					EndIf
-					$sInfoLabelText = "Removing " & $k - 1 & " Password(s)."
-					GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
-					$k += 1
-				WEnd
-				$sInfoLabelText = "Total " & $j & " Password(s) Removed."
-				GUICtrlSetData($h_Lable_Info_pwCleaner, $sInfoLabelText)
-				GUICtrlSetState($h_Button_ClearAll_pwCleaner, $GUI_DISABLE)
-				If $b_RestartIDM Then _RunIDMexe()
-		EndSwitch
+		$var = RegEnumKey($s_regpath_IDM & "\Passwords", $k)
+		If @error <> 0 Then ExitLoop
+		If _RegValueExists($s_regpath_IDM & "\Passwords\" & $var, "EncPassword") Then
+			_RegDelete($s_regpath_IDM & "\Passwords\" & $var, "EncPassword")
+			$j += 1
+		EndIf
+		$k += 1
 	WEnd
+	GUICtrlSetData($h_Label_PwCleaner_Info, "Total " & $j & " password(s) successfully removed.")
+	GUICtrlSetState($h_Button_PwCleaner_Clear, $GUI_DISABLE)
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: " & $j & " password(s) removed.")
+	If $b_RestartIDM Then _RunIDMexe()
+EndFunc   ;==>_ClearAllPasswords
 
-	GUISetState(@SW_ENABLE, $hGUI_BM)
-	GUIDelete($pwCleaner_GUI)
+Func _CleanAnalyze()
+	_ProgressMarquee_Start($h_Progress_Clean)
+	Local $aCleanData[12]
+	If GUICtrlRead($h_Radio_Clean_Full) = $GUI_CHECKED Then
+		$aCleanData[0] = $DwnlData_Folder & @UserName & "\"
+		$aCleanData[1] = $Grabber_Folder
+		$aCleanData[2] = $GrabberData_Folder & @UserName & "\"
+		$aCleanData[3] = $Scheduler_Folder
+		$aCleanData[4] = $UrlHistory_txt_File
+		$aCleanData[5] = $UrlHistory2_txt_File
+		$aCleanData[6] = $GlobalErrors_log_File
+		$aCleanData[7] = $urlexclist_dat_File
+		$aCleanData[8] = $defextmap_dat_File
+		$aCleanData[9] = $foldresHistory_txt_File
+		$aCleanData[10] = $sts_list_dat_File
+		$aCleanData[11] = $cnlurllist_dat_File
+	Else
+		_ResetDataAray($aCleanData)
+		If GUICtrlRead($h_Checkbox_Clean_DD) = $GUI_CHECKED Then $aCleanData[0] = $DwnlData_Folder & @UserName & "\"
+		If GUICtrlRead($h_Checkbox_Clean_GD) = $GUI_CHECKED Then
+			$aCleanData[1] = $Grabber_Folder
+			$aCleanData[2] = $GrabberData_Folder & @UserName & "\"
+		EndIf
+		If GUICtrlRead($h_Checkbox_Clean_SD) = $GUI_CHECKED Then $aCleanData[3] = $Scheduler_Folder
+		If GUICtrlRead($h_Checkbox_Clean_HL) = $GUI_CHECKED Then
+			$aCleanData[4] = $UrlHistory_txt_File
+			$aCleanData[5] = $UrlHistory2_txt_File
+			$aCleanData[6] = $GlobalErrors_log_File
+			$aCleanData[7] = $urlexclist_dat_File
+			$aCleanData[8] = $defextmap_dat_File
+			$aCleanData[9] = $foldresHistory_txt_File
+			$aCleanData[10] = $sts_list_dat_File
+			$aCleanData[11] = $cnlurllist_dat_File
+		EndIf
+	EndIf
+
+	_ProgressMarquee_Stop($h_Progress_Clean, 1)
+	Local $sSize = _sGetFileSizeConv(_iGetFileSize($aCleanData))
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Analysis complete. " & $sSize & " of temporary data found.")
+	MsgBox(64, "Analysis Result", $sSize & " can be cleaned.", 0, $hGUI_BM)
+EndFunc   ;==>_CleanAnalyze
+
+Func _CleanExecute()
+	Local $aCleanData[12]
+	If GUICtrlRead($h_Radio_Clean_Full) = $GUI_CHECKED Then
+		$aCleanData[0] = $DwnlData_Folder & @UserName & "\"
+		$aCleanData[1] = $Grabber_Folder
+		$aCleanData[2] = $GrabberData_Folder & @UserName & "\"
+		$aCleanData[3] = $Scheduler_Folder
+		$aCleanData[4] = $UrlHistory_txt_File
+		$aCleanData[5] = $UrlHistory2_txt_File
+		$aCleanData[6] = $GlobalErrors_log_File
+		$aCleanData[7] = $urlexclist_dat_File
+		$aCleanData[8] = $defextmap_dat_File
+		$aCleanData[9] = $foldresHistory_txt_File
+		$aCleanData[10] = $sts_list_dat_File
+		$aCleanData[11] = $cnlurllist_dat_File
+	Else
+		_ResetDataAray($aCleanData)
+		If GUICtrlRead($h_Checkbox_Clean_DD) = $GUI_CHECKED Then $aCleanData[0] = $DwnlData_Folder & @UserName & "\"
+		If GUICtrlRead($h_Checkbox_Clean_GD) = $GUI_CHECKED Then
+			$aCleanData[1] = $Grabber_Folder
+			$aCleanData[2] = $GrabberData_Folder & @UserName & "\"
+		EndIf
+		If GUICtrlRead($h_Checkbox_Clean_SD) = $GUI_CHECKED Then $aCleanData[3] = $Scheduler_Folder
+		If GUICtrlRead($h_Checkbox_Clean_HL) = $GUI_CHECKED Then
+			$aCleanData[4] = $UrlHistory_txt_File
+			$aCleanData[5] = $UrlHistory2_txt_File
+			$aCleanData[6] = $GlobalErrors_log_File
+			$aCleanData[7] = $urlexclist_dat_File
+			$aCleanData[8] = $defextmap_dat_File
+			$aCleanData[9] = $foldresHistory_txt_File
+			$aCleanData[10] = $sts_list_dat_File
+			$aCleanData[11] = $cnlurllist_dat_File
+		EndIf
+	EndIf
+
+	Local $sSize = _sGetFileSizeConv(_iGetFileSize($aCleanData))
+	Local $iAns = MsgBox(36, "Confirm Clean", $sSize & " will be removed. Continue?", 0, $hGUI_BM)
+	If $iAns <> 6 Then Return
+
+	FileWriteLine($s_Log_File, "")
+	FileWriteLine($s_Log_File, "============================= Cleaning Started =============================")
+	_ProgressMarquee_Start($h_Progress_Clean)
+	Local $sLockedFiles = _iFileOrFolderRemove($aCleanData)
+	_ProgressMarquee_Stop($h_Progress_Clean, 1)
+
+	If $sLockedFiles <> "" Then
+		MsgBox(16, "Warning", "Some file(s) could not be removed. View Log for more information.", 0, $hGUI_BM)
+		Local $sLockedFile = StringSplit($sLockedFiles, @CRLF, 1)
+		For $i = 1 To $sLockedFile[0] - 1
+			FileWriteLine($s_Log_File, _Current_Moment() & "Warning: File Could Not Deleted= " & '"' & $sLockedFile[$i] & '"')
+		Next
+	EndIf
+
+	For $i = 0 To 3
+		If Not FileExists($aCleanData[$i]) Then DirCreate($aCleanData[$i])
+	Next
+
+	FileWriteLine($s_Log_File, "============================= Cleaning Ended =============================")
+	FileWriteLine($s_Log_File, "")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Cleaning completed.")
+	MsgBox(64, "Cleaning Done", "Selected files and cache have been cleaned.", 0, $hGUI_BM)
+	If $b_RestartIDM Then _RunIDMexe()
+EndFunc   ;==>_CleanExecute
+
+Func _LoadFileCategories()
+	Local $sComp = _RegRead($s_regpath_IDM & "\FoldersTree\Compressed", "mask")
+	If @error Or $sComp = "0" Or $sComp = 0 Or StringStripWS($sComp, 8) = "" Then $sComp = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
+	Local $sDocs = _RegRead($s_regpath_IDM & "\FoldersTree\Documents", "mask")
+	If @error Or $sDocs = "0" Or $sDocs = 0 Or StringStripWS($sDocs, 8) = "" Then $sDocs = "doc pdf ppt pps docx pptx"
+	Local $sMusic = _RegRead($s_regpath_IDM & "\FoldersTree\Music", "mask")
+	If @error Or $sMusic = "0" Or $sMusic = 0 Or StringStripWS($sMusic, 8) = "" Then $sMusic = "mp3 wav wma mpa ram ra aac aif m4a"
+	Local $sProgs = _RegRead($s_regpath_IDM & "\FoldersTree\Programs", "mask")
+	If @error Or $sProgs = "0" Or $sProgs = 0 Or StringStripWS($sProgs, 8) = "" Then $sProgs = "exe msi"
+	Local $sVideo = _RegRead($s_regpath_IDM & "\FoldersTree\Video", "mask")
+	If @error Or $sVideo = "0" Or $sVideo = 0 Or StringStripWS($sVideo, 8) = "" Then $sVideo = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg"
+
+	GUICtrlSetData($h_Input_Cat_Compressed, $sComp)
+	GUICtrlSetData($h_Input_Cat_Documents, $sDocs)
+	GUICtrlSetData($h_Input_Cat_Music, $sMusic)
+	GUICtrlSetData($h_Input_Cat_Programs, $sProgs)
+	GUICtrlSetData($h_Input_Cat_Video, $sVideo)
+EndFunc   ;==>_LoadFileCategories
+
+Func _SaveCategories()
+	Local $iSaved = 0
+	If GUICtrlRead($h_Checkbox_Cat_Compressed) = $GUI_CHECKED Then
+		_RegWrite($s_regpath_IDM & "\FoldersTree\Compressed\", "mask", $REG_SZ, GUICtrlRead($h_Input_Cat_Compressed))
+		$iSaved += 1
+	EndIf
+	If GUICtrlRead($h_Checkbox_Cat_Documents) = $GUI_CHECKED Then
+		_RegWrite($s_regpath_IDM & "\FoldersTree\Documents\", "mask", $REG_SZ, GUICtrlRead($h_Input_Cat_Documents))
+		$iSaved += 1
+	EndIf
+	If GUICtrlRead($h_Checkbox_Cat_Music) = $GUI_CHECKED Then
+		_RegWrite($s_regpath_IDM & "\FoldersTree\Music\", "mask", $REG_SZ, GUICtrlRead($h_Input_Cat_Music))
+		$iSaved += 1
+	EndIf
+	If GUICtrlRead($h_Checkbox_Cat_Programs) = $GUI_CHECKED Then
+		_RegWrite($s_regpath_IDM & "\FoldersTree\Programs\", "mask", $REG_SZ, GUICtrlRead($h_Input_Cat_Programs))
+		$iSaved += 1
+	EndIf
+	If GUICtrlRead($h_Checkbox_Cat_Video) = $GUI_CHECKED Then
+		_RegWrite($s_regpath_IDM & "\FoldersTree\Video\", "mask", $REG_SZ, GUICtrlRead($h_Input_Cat_Video))
+		$iSaved += 1
+	EndIf
+
+	GUICtrlSetData($h_Button_Cat_Save, "Saved!")
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: " & $iSaved & " category rule(s) saved to IDM.")
+	Sleep(600)
+	GUICtrlSetData($h_Button_Cat_Save, "  Save Changes")
+	If $b_RestartIDM Then _RunIDMexe()
+EndFunc   ;==>_SaveCategories
+
+Func _EnhanceCategories()
+	Local $s_Enhance_Compressed = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z 001 cab xz txz lzma tar cpio bzip2 tbz2 tbz gzip tgz tpz z taz lzh lha rpm deb vhd wim swm fat ntfs xar squashfs ifu ifc dgca yz1 rk miniso iso isz bin cue mds mdf nrg ashdisc b6t b6i b5t b5i bwt bwi lcd ccd img dvd 000 daa cdi cif xmf xmd pdi dmg timg hfs ncd pxi p2i rif rdf gi uif vc4 fcd vcd ima bif flp c2d dao tao p01 md1 xa VaporCD gcd ixa vdi"
+	Local $s_Enhance_Documents = "doc pdf ppt pps docx pptx docm dotx dotm rtf odt wri wpd wps xps djvu ps chm accdb mdb adp mda accda mde accde ade xl* xlsx xlsm xlsb xlam xltx xltm xls xlt xla xlw xsn xsf infopathxml onetoc2 one onepkg pptm ppsx ppsm potx pot potm odp thmx pub"
+	Local $s_Enhance_Music = "mp3 wav wma mpa ram ra aac aif m4a 3ga 669 a52 ac3 adt adts aifc aiff amr aob ape awb caf cda dts flac it m4p mid mka mlp mod mp1 mp2 mpc oga oma qcp rmi s3m spx thd tta voc vqf w64 wv xm"
+	Local $s_Enhance_Programs = "exe msi jar jad dll bpl cpl scr ocx msstyles mui"
+	Local $s_Enhance_Video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg 3g2 3gp 3gp2 3gpp amv divx drc dv f4v gxf m1v m2v m2t m2ts mkv mp2v mp4v mpeg1 mpeg2 mpeg4 mpv2 mts mtv mxf mxg nsv nuv ogg ogm ogx rec rmvb tod ts tts vob vro"
+
+	If GUICtrlRead($h_Checkbox_Cat_Compressed) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Compressed, $s_Enhance_Compressed)
+	If GUICtrlRead($h_Checkbox_Cat_Documents) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Documents, $s_Enhance_Documents)
+	If GUICtrlRead($h_Checkbox_Cat_Music) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Music, $s_Enhance_Music)
+	If GUICtrlRead($h_Checkbox_Cat_Programs) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Programs, $s_Enhance_Programs)
+	If GUICtrlRead($h_Checkbox_Cat_Video) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Video, $s_Enhance_Video)
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Enhanced file type definitions loaded. Click 'Save Changes' to apply.")
+EndFunc   ;==>_EnhanceCategories
+
+Func _RestoreDefaultCategories()
+	Local $s_Default_Compressed = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
+	Local $s_Default_Documents = "doc pdf ppt pps docx pptx"
+	Local $s_Default_Music = "mp3 wav wma mpa ram ra aac aif m4a"
+	Local $s_Default_Programs = "exe msi"
+	Local $s_Default_Video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg"
+
+	If GUICtrlRead($h_Checkbox_Cat_Compressed) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Compressed, $s_Default_Compressed)
+	If GUICtrlRead($h_Checkbox_Cat_Documents) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Documents, $s_Default_Documents)
+	If GUICtrlRead($h_Checkbox_Cat_Music) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Music, $s_Default_Music)
+	If GUICtrlRead($h_Checkbox_Cat_Programs) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Programs, $s_Default_Programs)
+	If GUICtrlRead($h_Checkbox_Cat_Video) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Cat_Video, $s_Default_Video)
+	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Default IDM categories loaded. Click 'Save Changes' to apply.")
+EndFunc   ;==>_RestoreDefaultCategories
+
+; Compatibility wrappers
+Func _SwCleanerGUI()
+	GUICtrlSetState($h_TabSheet4, $GUI_SHOW)
+EndFunc   ;==>_SwCleanerGUI
+
+Func _SwPwCleanerGUI()
+	GUICtrlSetState($h_TabSheet4, $GUI_SHOW)
 EndFunc   ;==>_SwPwCleanerGUI
 
 Func _SwFileTypeGUI()
-	GUISetState(@SW_DISABLE, $hGUI_BM)
-
-	Local $ChildixWidth = 477
-	Local $ChildiyHight = 218
-	Local $sizea = WinGetPos($s_Win_Title_BM)
-	If @error Then
-		;If windows not Found Place it to centre
-		Local $size[2] = [(@DesktopWidth - $ChildixWidth) / 2, (@DesktopHeight - $ChildiyHight) / 2]
-	Else
-		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
-	EndIf
-
-	Local $FileTypeGUI = GUICreate("Add Extra Filetype By Categories", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
-
-	Local $s_Default_Compressed_FileTypeGUI = "zip rar r0* r1* arj gz sit sitx sea ace bz2 7z"
-	Local $s_Default_Documents_FileTypeGUI = "doc pdf ppt pps docx pptx"
-	Local $s_Default_Music_FileTypeGUI = "mp3 wav wma mpa ram ra aac aif m4a"
-	Local $s_Default_Programs_FileTypeGUI = "exe msi"
-	Local $s_Default_Video_FileTypeGUI = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg"
-
-	Local $s_Enhance_Compressed_FileTypeGUI = $s_Default_Compressed_FileTypeGUI & " 001 cab xz txz lzma tar cpio bzip2 tbz2 tbz gzip tgz tpz z taz lzh lha rpm deb vhd wim swm fat ntfs xar squashfs ifu ifc dgca yz1 rk miniso iso isz bin cue mds mdf nrg ashdisc b6t b6i b5t b5i bwt bwi lcd ccd img dvd 000 daa cdi cif xmf xmd pdi dmg timg hfs ncd pxi p2i rif rdf gi uif vc4 fcd vcd ima bif flp c2d dao tao p01 md1 xa VaporCD gcd ixa vdi"
-	Local $s_Enhance_Documents_FileTypeGUI = $s_Default_Documents_FileTypeGUI & " docm dotx dotm rtf odt wri wpd wps xps djvu ps chm accdb mdb adp mda accda mde accde ade xl* xlsx xlsm xlsb xlam xltx xltm xls xlt xla xlw xsn xsf infopathxml onetoc2 one onepkg pptm ppsx ppsm potx pot potm odp thmx pub"
-	Local $s_Enhance_Music_FileTypeGUI = $s_Default_Music_FileTypeGUI & " 3ga 669 a52 ac3 adt adts aifc aiff amr aob ape awb caf cda dts flac it m4p mid mka mlp mod mp1 mp2 mpc oga oma qcp rmi s3m spx thd tta voc vqf w64 wv xm"
-	Local $s_Enhance_Programs_FileTypeGUI = $s_Default_Programs_FileTypeGUI & " jar jad dll bpl cpl scr ocx msstyles mui"
-	Local $s_Enhance_Video_FileTypeGUI = $s_Default_Video_FileTypeGUI & " 3g2 3gp 3gp2 3gpp amv divx drc dv f4v gxf m1v m2v m2t m2ts mkv mp2v mp4v mpeg1 mpeg2 mpeg4 mpv2 mts mtv mxf mxg nsv nuv ogg ogm ogx rec rmvb tod ts tts vob vro"
-
-	Local $s_Current_Compressed_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Compressed", "mask")
-	If @error Then $s_Current_Compressed_FileTypeGUI = ""
-	Local $s_Current_Documents_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Documents", "mask")
-	If @error Then $s_Current_Documents_FileTypeGUI = ""
-	Local $s_Current_Music_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Music", "mask")
-	If @error Then $s_Current_Music_FileTypeGUI = ""
-	Local $s_Current_Programs_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Programs", "mask")
-	If @error Then $s_Current_Programs_FileTypeGUI = ""
-	Local $s_Current_Video_FileTypeGUI = _RegRead($s_regpath_IDM & "\FoldersTree\Video", "mask")
-	If @error Then $s_Current_Video_FileTypeGUI = ""
-
-	Local $h_Checkbox_Compressed_FileTypeGUI = GUICtrlCreateCheckbox("Compressed", 15, 12, 97, 17)
-	Local $h_Checkbox_Documents_FileTypeGUI = GUICtrlCreateCheckbox("Documents", 15, 42, 97, 17)
-	Local $h_Checkbox_Music_FileTypeGUI = GUICtrlCreateCheckbox("Music", 15, 72, 97, 17)
-	Local $h_Checkbox_Programs_FileTypeGUI = GUICtrlCreateCheckbox("Programs", 15, 102, 97, 17)
-	Local $h_Checkbox_Video_FileTypeGUI = GUICtrlCreateCheckbox("Video", 15, 132, 97, 17)
-
-	Local $h_Input_Compressed_FileTypeGUI = GUICtrlCreateInput($s_Current_Compressed_FileTypeGUI, 115, 12, 351, 21)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	Local $h_Input_Documents_FileTypeGUI = GUICtrlCreateInput($s_Current_Documents_FileTypeGUI, 115, 42, 351, 21)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	Local $h_Input_Music_FileTypeGUI = GUICtrlCreateInput($s_Current_Music_FileTypeGUI, 115, 72, 351, 21)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	Local $h_Input_Programs_FileTypeGUI = GUICtrlCreateInput($s_Current_Programs_FileTypeGUI, 115, 102, 351, 21)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	Local $h_Input_Video_FileTypeGUI = GUICtrlCreateInput($s_Current_Video_FileTypeGUI, 115, 132, 351, 21)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-
-	Local $h_Button_Save_FileTypeGUI = GUICtrlCreateButton("Save Checked", 15, 162, 110, 43)
-	Local $h_Button_Enhance_FileTypeGUI = GUICtrlCreateButton("Add/Enhance Extra File Types", 130, 162, 110, 43, $BS_MULTILINE)
-	Local $h_Button_Default_FileTypeGUI = GUICtrlCreateButton("Restore Default File Types", 245, 162, 110, 43, $BS_MULTILINE)
-	Local $h_Button_Close_FileTypeGUI = GUICtrlCreateButton("Close", 358, 162, 110, 43, $BS_MULTILINE)
-	GUISetState(@SW_SHOW)
-
-	Local $nMsg
-	While 1
-		$nMsg = GUIGetMsg()
-		Switch $nMsg
-			Case $GUI_EVENT_CLOSE, $h_Button_Close_FileTypeGUI
-				ExitLoop
-
-			Case $h_Checkbox_Compressed_FileTypeGUI
-				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Input_Compressed_FileTypeGUI, $GUI_ENABLE)
-				Else
-					GUICtrlSetState($h_Input_Compressed_FileTypeGUI, $GUI_DISABLE)
-				EndIf
-			Case $h_Checkbox_Documents_FileTypeGUI
-				If GUICtrlRead($h_Checkbox_Documents_FileTypeGUI) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Input_Documents_FileTypeGUI, $GUI_ENABLE)
-				Else
-					GUICtrlSetState($h_Input_Documents_FileTypeGUI, $GUI_DISABLE)
-				EndIf
-			Case $h_Checkbox_Music_FileTypeGUI
-				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Input_Music_FileTypeGUI, $GUI_ENABLE)
-				Else
-					GUICtrlSetState($h_Input_Music_FileTypeGUI, $GUI_DISABLE)
-				EndIf
-			Case $h_Checkbox_Programs_FileTypeGUI
-				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Input_Programs_FileTypeGUI, $GUI_ENABLE)
-				Else
-					GUICtrlSetState($h_Input_Programs_FileTypeGUI, $GUI_DISABLE)
-				EndIf
-			Case $h_Checkbox_Video_FileTypeGUI
-				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Input_Video_FileTypeGUI, $GUI_ENABLE)
-				Else
-					GUICtrlSetState($h_Input_Video_FileTypeGUI, $GUI_DISABLE)
-				EndIf
-
-			Case $h_Button_Save_FileTypeGUI
-				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Compressed\", "mask", $REG_SZ, GUICtrlRead($h_Input_Compressed_FileTypeGUI))
-				If GUICtrlRead($h_Checkbox_Documents_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Documents\", "mask", $REG_SZ, GUICtrlRead($h_Input_Documents_FileTypeGUI))
-				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Music\", "mask", $REG_SZ, GUICtrlRead($h_Input_Music_FileTypeGUI))
-				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Programs\", "mask", $REG_SZ, GUICtrlRead($h_Input_Programs_FileTypeGUI))
-				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then _RegWrite($s_regpath_IDM & "\FoldersTree\Video\", "mask", $REG_SZ, GUICtrlRead($h_Input_Video_FileTypeGUI))
-				GUICtrlSetState($h_Button_Save_FileTypeGUI, $GUI_DISABLE)
-				GUICtrlSetData($h_Button_Save_FileTypeGUI, "Done!")
-				Sleep(500)
-				GUICtrlSetState($h_Button_Save_FileTypeGUI, $GUI_ENABLE)
-				GUICtrlSetData($h_Button_Save_FileTypeGUI, "Save")
-				If $b_RestartIDM Then _RunIDMexe()
-
-			Case $h_Button_Enhance_FileTypeGUI
-				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Compressed_FileTypeGUI, $s_Enhance_Compressed_FileTypeGUI)
-				If GUICtrlRead($h_Checkbox_Documents_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Documents_FileTypeGUI, $s_Enhance_Documents_FileTypeGUI)
-				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Music_FileTypeGUI, $s_Enhance_Music_FileTypeGUI)
-				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Programs_FileTypeGUI, $s_Enhance_Programs_FileTypeGUI)
-				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Video_FileTypeGUI, $s_Enhance_Video_FileTypeGUI)
-
-			Case $h_Button_Default_FileTypeGUI
-				If GUICtrlRead($h_Checkbox_Compressed_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Compressed_FileTypeGUI, $s_Default_Compressed_FileTypeGUI)
-				If GUICtrlRead($h_Checkbox_Documents_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Documents_FileTypeGUI, $s_Default_Documents_FileTypeGUI)
-				If GUICtrlRead($h_Checkbox_Music_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Music_FileTypeGUI, $s_Default_Music_FileTypeGUI)
-				If GUICtrlRead($h_Checkbox_Programs_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Programs_FileTypeGUI, $s_Default_Programs_FileTypeGUI)
-				If GUICtrlRead($h_Checkbox_Video_FileTypeGUI) = $GUI_CHECKED Then GUICtrlSetData($h_Input_Video_FileTypeGUI, $s_Default_Video_FileTypeGUI)
-		EndSwitch
-	WEnd
-
-	GUISetState(@SW_ENABLE, $hGUI_BM)
-	GUIDelete($FileTypeGUI)
+	GUICtrlSetState($h_TabSheet5, $GUI_SHOW)
 EndFunc   ;==>_SwFileTypeGUI
+
+#EndRegion Integrated Tools Helper Functions
 
 Func _SwFileInformation()
 

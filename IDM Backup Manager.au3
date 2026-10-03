@@ -859,27 +859,32 @@ Func _SwBMGUI()
 	$h_TabSheet3 = GUICtrlCreateTabItem("Tools")
 	_AET_TabSetIcon(-1, 12, -13)
 
-	GUICtrlCreateGroup("Tools", 24, 44, 390, 160)
-	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
+	GUICtrlCreateGroup("Tools & Utilities", 24, 44, 390, 162)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Button_List_Manager_Tools = GUICtrlCreateButton("Downloads List Manager", 45, 64, 80, 60, $BS_MULTILINE)
-	GUICtrlSetTip(-1, "Download List Manager is allow to use Join Unfinished Downloaded Files, Remove Download From List and much more.")
+	$h_Button_List_Manager_Tools = GUICtrlCreateButton("  Downloads Manager", 36, 68, 178, 42, $BS_LEFT)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 11, 24, 24, 0)
+	GUICtrlSetTip(-1, "Open IDM List Manager to inspect downloads, join incomplete files, and manage queues.", "Downloads List Manager", 1, 1)
 
-	$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("Data Cleaner", 135, 64, 80, 60, $BS_MULTILINE)
-	GUICtrlSetTip(-1, "Clean History, Logs and Unfinished Download Data.")
+	$h_Button_Clean_Manager_Tools = GUICtrlCreateButton("  Data Cleaner", 224, 68, 178, 42, $BS_LEFT)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 17, 24, 24, 0)
+	GUICtrlSetTip(-1, "Clean history records, log files, and unfinished temporary download data.", "Data Cleaner", 1, 1)
 
-	$h_Button_Clean_Password_Tools = GUICtrlCreateButton("Sites Logins Password Cleaner", 225, 64, 80, 60, $BS_MULTILINE)
-	GUICtrlSetTip(-1, "Clean Password For Server/Sites.")
+	$h_Button_Clean_Password_Tools = GUICtrlCreateButton("  Password Cleaner", 36, 120, 178, 42, $BS_LEFT)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 6, 24, 24, 0)
+	GUICtrlSetTip(-1, "Sanitize and remove saved server and website authentication passwords.", "Password Cleaner", 1, 1)
 
-	$h_Button_Cat_Tools = GUICtrlCreateButton("Add Extra File Types in Categories", 315, 64, 80, 60, $BS_MULTILINE)
-	GUICtrlSetTip(-1, "Add Extra File Types in Categories")
+	$h_Button_Cat_Tools = GUICtrlCreateButton("  File Categories", 224, 120, 178, 42, $BS_LEFT)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 14, 24, 24, 0)
+	GUICtrlSetTip(-1, "Manage file extension rules and automated category mappings in IDM.", "File Categories", 1, 1)
 
-
-	$h_Button_Make_Portable_Tools = GUICtrlCreateButton("More Tools Coming Soon...", 45, 132, 80, 60, $BS_MULTILINE)
-;~ 	GUICtrlSetTip(-1, "Make Internet Download Manager Portable")
-	GUICtrlSetState($h_Button_Make_Portable_Tools, $GUI_DISABLE)
-
-	ConsoleWrite($h_Button_Make_Portable_Tools & @CRLF)
+	Local $h_Label_Tools_Tip = GUICtrlCreateLabel("💡 Launch standalone utility tools to inspect, clean, or configure IDM.", 36, 174, 366, 20)
+	GUICtrlSetFont($h_Label_Tools_Tip, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Tools_Tip, 0x555555)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion Tools ;============================================================================================== Tools:

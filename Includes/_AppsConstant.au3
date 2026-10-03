@@ -99,7 +99,7 @@ Global $h_Checkbox_UnFinished_DD_Restore, $h_Checkbox_UnFinished_GD_Restore, $h_
 Global $h_Checkbox_Append_Registry_Restore, $h_Input_Password_Restore, $h_Label_Append_Registry_Restore, $h_Button_Restore, $h_Input_Restore_Path, $h_Button_Restore_Archive_Info
 Global $h_Checkbox_Listl_Restore, $h_Checkbox_Full_Restore
 
-Global $h_Button_List_Manager_Tools, $h_Button_Clean_Manager_Tools, $h_Button_Clean_Password_Tools, $h_Button_Cat_Tools,$h_Button_Make_Portable_Tools
+Global $h_Button_List_Manager_Tools, $h_Button_Clean_Manager_Tools, $h_Button_Clean_Password_Tools, $h_Button_Cat_Tools
 
 ;
 Global $h_Button_BrowseLogFile_Setting, $h_Button_BrowseLogFile_Setting_Context, $h_Button_BrowseLogFile_Setting_Context0, $h_Button_BrowseLogFile_Setting_Context1

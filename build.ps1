@@ -1,9 +1,7 @@
 [CmdletBinding()]
 param (
-    [ValidateSet('x86', 'x64')]
-    [string]$Arch = 'x86',
-
-    [switch]$NoInstaller
+    [switch]$NoInstaller,
+    [switch]$NoZip
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,12 +9,17 @@ $ScriptDir = $PSScriptRoot
 $SourceFile = Join-Path $ScriptDir "IDM Backup Manager.au3"
 $IconFile = Join-Path $ScriptDir "Resources\icon.ico"
 $OutputDir = Join-Path $ScriptDir "bin"
-$OutputFile = Join-Path $OutputDir "IDM Backup Manager.exe"
+$DistDir = Join-Path $ScriptDir "dist"
+$OutputFileX86 = Join-Path $OutputDir "IDM Backup Manager.exe"
+$OutputFileX64 = Join-Path $OutputDir "IDM Backup Manager_x64.exe"
 $InstallerScript = Join-Path $ScriptDir "Build\installer.iss"
-$InstallerOutputFile = Join-Path $OutputDir "IDM_Backup_Manager_Setup.exe"
+$SetupOutputX86 = Join-Path $OutputDir "IDM_Backup_Manager_v1.1.0_x86_Setup.exe"
+$SetupOutputX64 = Join-Path $OutputDir "IDM_Backup_Manager_v1.1.0_x64_Setup.exe"
+$ZipOutputX86 = Join-Path $OutputDir "IDM_Backup_Manager_v1.1.0_x86.zip"
+$ZipOutputX64 = Join-Path $OutputDir "IDM_Backup_Manager_v1.1.0_x64.zip"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "         IDM Backup Manager - Build Pipeline" -ForegroundColor Cyan
+Write-Host "    IDM Backup Manager - Unified 4-Package Build Pipeline" -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 # 1. Locate AutoIt Installation
@@ -47,7 +50,7 @@ Write-Host "[OK] Found AutoIt3 at: $AutoItRoot" -ForegroundColor Green
 Write-Host "[*] Running syntax validation with Au3Check..." -ForegroundColor Yellow
 $IncludesDir = Join-Path $ScriptDir "Includes"
 
-$CheckProcess = Start-Process -FilePath $Au3Check -ArgumentList "-I `"$IncludesDir`" `"$SourceFile`"" -NoNewWindow -PassThru -Wait
+$CheckProcess = Start-Process -FilePath $Au3Check -ArgumentList "-I `"$IncludesDir`" `"$SourceFile`" -q" -NoNewWindow -PassThru -Wait
 if ($CheckProcess.ExitCode -ne 0) {
     Write-Error "Au3Check reported errors! Build aborted."
     exit $CheckProcess.ExitCode
@@ -82,8 +85,7 @@ if (-not (Test-Path $Dll64)) {
     }
 }
 
-# 4. Compile Application
-# Look for AutoIt3Wrapper (embeds all resources, icons, and metadata)
+# 4. Compile Application (Both x86 and x64)
 $WrapperDirs = @(
     "$AutoItRoot\SciTE\AutoIt3Wrapper\AutoIt3Wrapper.au3",
     "$AutoItRoot\SciTE\AutoIt3Wrapper\AutoIt3Wrapper.exe"
@@ -96,13 +98,12 @@ foreach ($path in $WrapperDirs) {
     }
 }
 
-# Make sure old output binary is removed to ensure fresh build
-if (Test-Path $OutputFile) {
-    Remove-Item $OutputFile -Force -ErrorAction SilentlyContinue
-}
+# Clear previous binaries
+Remove-Item $OutputFileX86 -Force -ErrorAction SilentlyContinue
+Remove-Item $OutputFileX64 -Force -ErrorAction SilentlyContinue
 
 if ($WrapperPath) {
-    Write-Host "[*] Compiling with AutoIt3Wrapper (embedding all resource icons & metadata)..." -ForegroundColor Yellow
+    Write-Host "[*] Compiling x86 and x64 with AutoIt3Wrapper..." -ForegroundColor Yellow
     $AutoItExe = Join-Path $AutoItRoot "AutoIt3.exe"
     if ($WrapperPath.EndsWith(".au3")) {
         $CompileProcess = Start-Process -FilePath $AutoItExe -ArgumentList "`"$WrapperPath`" /in `"$SourceFile`"" -NoNewWindow -PassThru -Wait
@@ -110,41 +111,28 @@ if ($WrapperPath) {
         $CompileProcess = Start-Process -FilePath $WrapperPath -ArgumentList "/in `"$SourceFile`"" -NoNewWindow -PassThru -Wait
     }
 } else {
-    Write-Host "[*] Compiling $SourceFile ($Arch)..." -ForegroundColor Yellow
-    $CompileArgs = "/in `"$SourceFile`" /out `"$OutputFile`""
-    if (Test-Path $IconFile) {
-        $CompileArgs += " /icon `"$IconFile`""
-    }
-    if ($Arch -eq 'x64') {
-        $CompileArgs += " /x64"
-    } else {
-        $CompileArgs += " /x86"
-    }
-    $CompileArgs += " /comp 4"
-
-    $CompileProcess = Start-Process -FilePath $Aut2exe -ArgumentList $CompileArgs -NoNewWindow -PassThru -Wait
+    Write-Host "[*] Compiling x86 binary with Aut2exe..." -ForegroundColor Yellow
+    Start-Process -FilePath $Aut2exe -ArgumentList "/in `"$SourceFile`" /out `"$OutputFileX86`" /icon `"$IconFile`" /x86 /comp 4" -NoNewWindow -PassThru -Wait
+    Write-Host "[*] Compiling x64 binary with Aut2exe..." -ForegroundColor Yellow
+    Start-Process -FilePath $Aut2exe -ArgumentList "/in `"$SourceFile`" /out `"$OutputFileX64`" /icon `"$IconFile`" /x64 /comp 4" -NoNewWindow -PassThru -Wait
 }
 
-if (-not (Test-Path $OutputFile)) {
-    Write-Error "Compilation failed!"
+if (-not (Test-Path $OutputFileX86) -or -not (Test-Path $OutputFileX64)) {
+    Write-Error "Compilation failed! Missing output executables."
     exit 1
 }
 
-# Ensure Resources and documentation files are mirrored into output directory for portable / standalone use
+# Copy documentation & assets to bin
 Copy-Item -Path (Join-Path $ScriptDir "Resources") -Destination $OutputDir -Recurse -Force
 Copy-Item -Path (Join-Path $ScriptDir "History.txt") -Destination $OutputDir -Force
 Copy-Item -Path (Join-Path $ScriptDir "CmdLine.txt") -Destination $OutputDir -Force
 Copy-Item -Path (Join-Path $ScriptDir "LICENSE") -Destination $OutputDir -Force
+Copy-Item -Path (Join-Path $ScriptDir "LICENSE-7ZIP.txt") -Destination $OutputDir -Force
 
-$FileSize = (Get-Item $OutputFile).Length
-$FileHash = (Get-FileHash $OutputFile -Algorithm SHA256).Hash
+Write-Host "[OK] x86 Binary compiled: $OutputFileX86 ($([math]::Round((Get-Item $OutputFileX86).Length / 1KB, 1)) KB)" -ForegroundColor Green
+Write-Host "[OK] x64 Binary compiled: $OutputFileX64 ($([math]::Round((Get-Item $OutputFileX64).Length / 1KB, 1)) KB)" -ForegroundColor Green
 
-Write-Host "[OK] Application compiled successfully:" -ForegroundColor Green
-Write-Host "     Binary: $OutputFile" -ForegroundColor White
-Write-Host "     Size  : $([math]::Round($FileSize / 1KB, 2)) KB" -ForegroundColor White
-Write-Host "     SHA256: $FileHash" -ForegroundColor White
-
-# 5. Build Windows Setup Installer with Inno Setup
+# 5. Build Windows Setup Installers (x86 and x64) with Inno Setup
 if (-not $NoInstaller -and (Test-Path $InstallerScript)) {
     Write-Host "`n[*] Checking for Inno Setup compiler..." -ForegroundColor Yellow
     $InnoDirs = @(
@@ -168,24 +156,87 @@ if (-not $NoInstaller -and (Test-Path $InstallerScript)) {
 
     if ($IsccExe) {
         Write-Host "[OK] Found Inno Setup at: $IsccExe" -ForegroundColor Green
-        Write-Host "[*] Building Windows installer package..." -ForegroundColor Yellow
-        $InnoProcess = Start-Process -FilePath $IsccExe -ArgumentList "`"$InstallerScript`"" -NoNewWindow -PassThru -Wait
-        if ($InnoProcess.ExitCode -eq 0 -and (Test-Path $InstallerOutputFile)) {
-            $SetupSize = (Get-Item $InstallerOutputFile).Length
-            $SetupHash = (Get-FileHash $InstallerOutputFile -Algorithm SHA256).Hash
-            Write-Host "[OK] Installer built successfully:" -ForegroundColor Green
-            Write-Host "     Setup : $InstallerOutputFile" -ForegroundColor White
-            Write-Host "     Size  : $([math]::Round($SetupSize / 1MB, 2)) MB" -ForegroundColor White
-            Write-Host "     SHA256: $SetupHash" -ForegroundColor White
-        } else {
-            Write-Warning "Inno Setup compiler exited with code $($InnoProcess.ExitCode)."
+
+        # Build x86 Setup
+        Write-Host "[*] Building x86 Windows installer..." -ForegroundColor Yellow
+        Start-Process -FilePath $IsccExe -ArgumentList "/DAppArch=x86 `"$InstallerScript`"" -NoNewWindow -PassThru -Wait
+        if (Test-Path $SetupOutputX86) {
+            Write-Host "[OK] Built: $SetupOutputX86 ($([math]::Round((Get-Item $SetupOutputX86).Length / 1MB, 2)) MB)" -ForegroundColor Green
+        }
+
+        # Build x64 Setup
+        Write-Host "[*] Building x64 Windows installer..." -ForegroundColor Yellow
+        Start-Process -FilePath $IsccExe -ArgumentList "/DAppArch=x64 `"$InstallerScript`"" -NoNewWindow -PassThru -Wait
+        if (Test-Path $SetupOutputX64) {
+            Write-Host "[OK] Built: $SetupOutputX64 ($([math]::Round((Get-Item $SetupOutputX64).Length / 1MB, 2)) MB)" -ForegroundColor Green
         }
     } else {
-        Write-Host "[i] Inno Setup (ISCC.exe) not found. Skipping installer package build." -ForegroundColor DarkGray
-        Write-Host "    (Install via 'winget install JRSoftware.InnoSetup -e' to enable setup builds)" -ForegroundColor DarkGray
+        Write-Warning "Inno Setup (ISCC.exe) not found. Skipping installer package build."
     }
 }
 
+# 6. Package Standalone ZIP Releases (x86 and x64)
+if (-not $NoZip) {
+    Write-Host "`n[*] Packaging Standalone Portable ZIP Releases..." -ForegroundColor Yellow
+
+    # Staging x86
+    $StageX86 = Join-Path $DistDir "x86"
+    if (Test-Path $StageX86) { Remove-Item $StageX86 -Recurse -Force }
+    New-Item -ItemType Directory -Path $StageX86 | Out-Null
+
+    Copy-Item -Path $OutputFileX86 -Destination (Join-Path $StageX86 "IDM Backup Manager.exe") -Force
+    Copy-Item -Path $Dll32 -Destination (Join-Path $StageX86 "7-zip32.dll") -Force
+    Copy-Item -Path (Join-Path $ScriptDir "LICENSE") -Destination $StageX86 -Force
+    Copy-Item -Path (Join-Path $ScriptDir "LICENSE-7ZIP.txt") -Destination $StageX86 -Force
+    Copy-Item -Path (Join-Path $ScriptDir "History.txt") -Destination $StageX86 -Force
+    Copy-Item -Path (Join-Path $ScriptDir "CmdLine.txt") -Destination $StageX86 -Force
+    Copy-Item -Path (Join-Path $ScriptDir "Help") -Destination $StageX86 -Recurse -Force
+    Copy-Item -Path (Join-Path $ScriptDir "Resources") -Destination $StageX86 -Recurse -Force
+
+    Remove-Item $ZipOutputX86 -Force -ErrorAction SilentlyContinue
+    Compress-Archive -Path "$StageX86\*" -DestinationPath $ZipOutputX86 -Force
+    Write-Host "[OK] Built Portable ZIP (x86): $ZipOutputX86 ($([math]::Round((Get-Item $ZipOutputX86).Length / 1MB, 2)) MB)" -ForegroundColor Green
+
+    # Staging x64
+    $StageX64 = Join-Path $DistDir "x64"
+    if (Test-Path $StageX64) { Remove-Item $StageX64 -Recurse -Force }
+    New-Item -ItemType Directory -Path $StageX64 | Out-Null
+
+    Copy-Item -Path $OutputFileX64 -Destination (Join-Path $StageX64 "IDM Backup Manager.exe") -Force
+    Copy-Item -Path $Dll64 -Destination (Join-Path $StageX64 "7-zip64.dll") -Force
+    Copy-Item -Path (Join-Path $ScriptDir "LICENSE") -Destination $StageX64 -Force
+    Copy-Item -Path (Join-Path $ScriptDir "LICENSE-7ZIP.txt") -Destination $StageX64 -Force
+    Copy-Item -Path (Join-Path $ScriptDir "History.txt") -Destination $StageX64 -Force
+    Copy-Item -Path (Join-Path $ScriptDir "CmdLine.txt") -Destination $StageX64 -Force
+    Copy-Item -Path (Join-Path $ScriptDir "Help") -Destination $StageX64 -Recurse -Force
+    Copy-Item -Path (Join-Path $ScriptDir "Resources") -Destination $StageX64 -Recurse -Force
+
+    Remove-Item $ZipOutputX64 -Force -ErrorAction SilentlyContinue
+    Compress-Archive -Path "$StageX64\*" -DestinationPath $ZipOutputX64 -Force
+    Write-Host "[OK] Built Portable ZIP (x64): $ZipOutputX64 ($([math]::Round((Get-Item $ZipOutputX64).Length / 1MB, 2)) MB)" -ForegroundColor Green
+}
+
+# 7. Release Summary
 Write-Host "`n==========================================================" -ForegroundColor Green
-Write-Host "[OK] BUILD PIPELINE COMPLETE!" -ForegroundColor Green
+Write-Host "                RELEASE ARTIFACTS SUMMARY" -ForegroundColor Green
 Write-Host "==========================================================" -ForegroundColor Green
+
+$Artifacts = @(
+    $ZipOutputX86,
+    $ZipOutputX64,
+    $SetupOutputX86,
+    $SetupOutputX64
+)
+
+foreach ($art in $Artifacts) {
+    if (Test-Path $art) {
+        $item = Get-Item $art
+        $hash = (Get-FileHash $art -Algorithm SHA256).Hash
+        $sizeMB = [math]::Round($item.Length / 1MB, 2)
+        Write-Host "File  : $($item.Name)" -ForegroundColor White
+        Write-Host "Size  : $sizeMB MB" -ForegroundColor DarkGray
+        Write-Host "SHA256: $hash" -ForegroundColor DarkGray
+        Write-Host "----------------------------------------------------------" -ForegroundColor DarkGray
+    }
+}
+Write-Host "[OK] ALL 4 PACKAGES BUILT SUCCESSFULLY!" -ForegroundColor Green

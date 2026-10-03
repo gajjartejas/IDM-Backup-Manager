@@ -88,14 +88,12 @@ Run either of the automated build scripts:
 
 - **PowerShell**:
   ```powershell
-  # Builds both portable executable and Inno Setup installer (if installed)
+  # Builds all 4 packages (x86 & x64 Portable ZIPs + x86 & x64 Installers)
   .\build.ps1
 
-  # Build 64-bit architecture
-  .\build.ps1 -Arch x64
-
-  # Build standalone executable only (skip setup installer)
+  # Skip installer or ZIP generation if desired
   .\build.ps1 -NoInstaller
+  .\build.ps1 -NoZip
   ```
 
 - **Command Prompt**:
@@ -106,8 +104,9 @@ Run either of the automated build scripts:
 The build pipeline will:
 1. Automatically locate your local AutoIt installation.
 2. Run syntax verification with `Au3Check.exe` (verifies 0 errors / 0 warnings).
-3. Compile the executable into `bin\IDM Backup Manager.exe` with embedded icon and metadata.
-4. Compile the Windows setup installer into `bin\IDM_Backup_Manager_Setup.exe` via Inno Setup 6.
+3. Compile both x86 and x64 executables with embedded Fluent icons, manifest, and metadata.
+4. Build x86 and x64 Windows Setup installers (`.exe`) via Inno Setup 6.
+5. Package standalone portable ZIP archives (`.zip`) bundled with platform-specific 7-Zip archiver DLLs, documentation, and licenses.
 
 ---
 

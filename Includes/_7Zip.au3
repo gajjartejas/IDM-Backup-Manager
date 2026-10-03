@@ -183,6 +183,8 @@ Func _7ZipGetDll()
 		$7zDll = $ScriptDir & $sDllName
 	ElseIf FileExists($ScriptDir & "bin\" & $sDllName) Then
 		$7zDll = $ScriptDir & "bin\" & $sDllName
+	ElseIf FileExists($ScriptDir & "7-zip.dll") Then
+		$7zDll = $ScriptDir & "7-zip.dll"
 	Else
 		$7zDll = $ScriptDir & $sDllName
 	EndIf

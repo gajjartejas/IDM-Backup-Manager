@@ -2,9 +2,11 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=Resources\icon.ico
 #AutoIt3Wrapper_Outfile=bin\IDM Backup Manager.exe
+#AutoIt3Wrapper_Outfile_x64=bin\IDM Backup Manager_x64.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_UseX64=n
+#AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_Res_Description=IDM Backup Manager
 #AutoIt3Wrapper_Res_Fileversion=1.1.0.0
 #AutoIt3Wrapper_Res_ProductVersion=1.1.0.0

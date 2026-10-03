@@ -8,6 +8,7 @@ v1.1.0 October 3rd, 2026
 • Streamlined Backup & Restore: Clean native controls with optional password encryption and compression level dropdown.
 • Upgraded Window Layout: Expanded to modern 640x420 dimensions for comfortable spacing and zero tab overflow.
 • Automated Build Pipeline: Multi-target PowerShell build pipeline (build.ps1) with Inno Setup installer packaging.
+• Non-Blocking Background Update Check: Added option in Preferences to check for updates asynchronously in background without freezing the UI thread.
 • Full compatibility with modern AutoIt v3.3.18+ (0 Au3Check errors, 0 warnings).
 
 v1.0.0 July 15th, 2016

@@ -71,6 +71,13 @@ EndIf
 Global $b_AppendLog_File = 1
 Global $b_RestartIDM = 0
 Global $b_OpenFolder = 1
+Global $b_CheckUpdate_Background = 1
+
+; Asynchronous background update check tracking (non-blocking)
+Global $h_Update_Download = -1
+Global $s_Update_FilePath = @TempDir & "\update.txt"
+Global $b_Update_Silent = False
+Global $i_Update_StartTime = 0
 
 Global $s_AppDataIDMFolder = _sGetAppDataIDMFolder() ;contain back "\"
 Global $s_TempPath = _sGetTempPathFolder() ;contain back "\"

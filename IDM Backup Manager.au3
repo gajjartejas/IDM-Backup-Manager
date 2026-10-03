@@ -64,6 +64,7 @@ _StartupBM()
 
 #Region Main
 Func _MainBM()
+	If $b_CheckUpdate_Background Then _UpdateCheck(True)
 	While 1
 		$nMsg = GUIGetMsg()
 		Switch $nMsg
@@ -530,6 +531,7 @@ Func _CheckIni()
 		$b_RestartIDM = Number(IniRead($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM))
 
 		$b_OpenFolder = Number(IniRead($s_Setting_File, "More Setting", "Open_Folder", $b_OpenFolder))
+		$b_CheckUpdate_Background = Number(IniRead($s_Setting_File, "More Setting", "CheckUpdate_Background", $b_CheckUpdate_Background))
 	Else
 		If Not BitOR(FileExists(@AppDataDir & "\IDM Backup Manager"), DirCreate(@AppDataDir & "\IDM Backup Manager")) Then MsgBox(16, "Warning", "Log File NOT Created. Please Choose Other Location. (Setting--> LogFile)")
 		_SwLicense()
@@ -1423,8 +1425,8 @@ Func _SwMoreSettingGUI()
 	#Region ### START Koda GUI section ###
 	GUISetState(@SW_DISABLE, $hGUI_BM)
 
-	Local $ChildixWidth = 351
-	Local $ChildiyHight = 141
+	Local $ChildixWidth = 360
+	Local $ChildiyHight = 180
 	Local $sizea = WinGetPos($s_Win_Title_BM)
 	If @error Then
 		;If windows not Found Place it to centre
@@ -1433,16 +1435,29 @@ Func _SwMoreSettingGUI()
 		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
 	EndIf
 
-	Local $More_Setting_GUI = GUICreate("More Setting", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
+	Local $More_Setting_GUI = GUICreate("Preferences", $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
+	GUISetFont(9, 400, 0, "Segoe UI", $More_Setting_GUI)
 
-	GUICtrlCreateGroup("Setting", 10, 10, 330, 116)
-	Local $h_AppendLog_Setting = GUICtrlCreateCheckbox("Append Log", 20, 30, 313, 17)
+	GUICtrlCreateGroup("Application Preferences", 10, 8, 340, 160)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+	Local $h_AppendLog_Setting = GUICtrlCreateCheckbox("Append Log File", 20, 28, 315, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	If $b_AppendLog_File Then GUICtrlSetState($h_AppendLog_Setting, $GUI_CHECKED)
-	Local $h_RestortIDM_Setting = GUICtrlCreateCheckbox("Auto Restart IDM after Restore/(Tool Section)", 20, 50, 313, 17)
+
+	Local $h_RestortIDM_Setting = GUICtrlCreateCheckbox("Auto Restart IDM after Restore / Tools", 20, 52, 315, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	If $b_RestartIDM Then GUICtrlSetState($h_RestortIDM_Setting, $GUI_CHECKED)
-	Local $h_OpenFolder_Setting = GUICtrlCreateCheckbox("Open Folder after Backup", 20, 70, 313, 17)
+
+	Local $h_OpenFolder_Setting = GUICtrlCreateCheckbox("Open Destination Folder after Backup", 20, 76, 315, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	If $b_OpenFolder Then GUICtrlSetState($h_OpenFolder_Setting, $GUI_CHECKED)
-	Local $h_Close = GUICtrlCreateButton("Close", 256, 96, 75, 25)
+
+	Local $h_CheckUpdate_Setting = GUICtrlCreateCheckbox("Check for updates in background (non-blocking)", 20, 100, 315, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	If $b_CheckUpdate_Background Then GUICtrlSetState($h_CheckUpdate_Setting, $GUI_CHECKED)
+
+	Local $h_Close = GUICtrlCreateButton("Close", 255, 128, 85, 28)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUISetState(@SW_SHOW)
 	#EndRegion ### END Koda GUI section ###
@@ -1478,6 +1493,15 @@ Func _SwMoreSettingGUI()
 				Else
 					IniWrite($s_Setting_File, "More Setting", "Open_Folder", 0)
 					$b_OpenFolder = 0
+				EndIf
+
+			Case $h_CheckUpdate_Setting
+				If GUICtrlRead($h_CheckUpdate_Setting) = $GUI_CHECKED Then
+					IniWrite($s_Setting_File, "More Setting", "CheckUpdate_Background", 1)
+					$b_CheckUpdate_Background = 1
+				Else
+					IniWrite($s_Setting_File, "More Setting", "CheckUpdate_Background", 0)
+					$b_CheckUpdate_Background = 0
 				EndIf
 
 		EndSwitch
@@ -2124,6 +2148,11 @@ Func _RunIDMexe()
 EndFunc   ;==>_RunIDMexe
 
 Func _onExit()
+	If $h_Update_Download <> -1 Then
+		InetClose($h_Update_Download)
+		$h_Update_Download = -1
+		If FileExists($s_Update_FilePath) Then FileDelete($s_Update_FilePath)
+	EndIf
 	Local $WinPos = WinGetPos($hGUI_BM)
 	IniWrite($s_Setting_File, "Position", "x", $WinPos[0])
 	IniWrite($s_Setting_File, "Position", "y", $WinPos[1])
@@ -2214,69 +2243,136 @@ Func _SwHistory()
 	EndIf
 EndFunc   ;==>_SwHistory
 
-Func _UpdateCheck()
-	_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Checking Update Please Wait...")
-	_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
+Func _CompareVersions($sV1, $sV2)
+	Local $a1 = StringSplit($sV1, ".", 2)
+	Local $a2 = StringSplit($sV2, ".", 2)
+	Local $m = UBound($a1)
+	If UBound($a2) > $m Then $m = UBound($a2)
+	For $i = 0 To $m - 1
+		Local $n1 = 0
+		If $i < UBound($a1) Then $n1 = Number($a1[$i])
+		Local $n2 = 0
+		If $i < UBound($a2) Then $n2 = Number($a2[$i])
+		If $n1 > $n2 Then Return 1
+		If $n1 < $n2 Then Return -1
+	Next
+	Return 0
+EndFunc   ;==>_CompareVersions
 
-
-	If _IsInternetConnectedEx() Then
-
-		; Save the downloaded file to the temporary folder.
-		Local $sFilePath = @TempDir & "\update.txt"
-
-		If FileExists($sFilePath) Then FileDelete($sFilePath)
-
-		; Download the file in the background with the selected option of 'force a reload from the remote site.'
-		Local $hDownload = InetGet($s_URL_Update, $sFilePath, $INET_FORCERELOAD, $INET_DOWNLOADBACKGROUND)
-
-		; Wait for the download to complete by monitoring when the 2nd index value of InetGetInfo returns True.
-		Do
-			Sleep(250)
-		Until InetGetInfo($hDownload, $INET_DOWNLOADCOMPLETE)
-
-		If @error Then
-			If FileExists($sFilePath) Then FileDelete($sFilePath)
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
-			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-			Return
-		EndIf
-
-		; Close the handle returned by InetGet.
-		InetClose($hDownload)
-
-		Local $hFileOpen = FileOpen($sFilePath, $FO_READ)
-
-		If $hFileOpen = -1 Then
-			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
-			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-			Return
-		EndIf
-
-		; Read the contents of the file using the handle returned by FileOpen.
-		Local $sFileRead = FileRead($hFileOpen)
-		Local $sDownloadedVersion = StringStripWS(BinaryToString($sFileRead), 3)
-
-		Switch $sDownloadedVersion
-			Case ""
-				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
-				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", "0.9.8", "0.9.9", "1.0.0", $s_Current_Version
-				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: You Have Most Recent Version.")
-				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled);StatusCompled
-			Case Else
-				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & $sDownloadedVersion)
-				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
-				ShellExecute($s_URL_Releases)
-		EndSwitch
-
-		; Delete the file.
-		If FileExists($sFilePath) Then FileDelete($sFilePath)
-
-	Else
-		_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Internet Connection Could Not Found")
-		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
+Func _UpdateCheck($bSilent = False)
+	If $h_Update_Download <> -1 Then
+		If Not $bSilent Then _GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Update check already in progress...")
+		Return
 	EndIf
+
+	If Not _IsInternetConnectedEx() Then
+		If Not $bSilent Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Internet Connection Could Not Be Found")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError)
+		EndIf
+		Return
+	EndIf
+
+	If FileExists($s_Update_FilePath) Then FileDelete($s_Update_FilePath)
+
+	$b_Update_Silent = $bSilent
+	$i_Update_StartTime = TimerInit()
+
+	If Not $b_Update_Silent Then
+		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Checking for updates in background...")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo)
+		If $h_Button_Update_Help <> 0 Then
+			GUICtrlSetData($h_Button_Update_Help, "  Checking...")
+			GUICtrlSetState($h_Button_Update_Help, $GUI_DISABLE)
+		EndIf
+	EndIf
+
+	; Launch asynchronous background download on OS background worker thread (non-blocking)
+	$h_Update_Download = InetGet($s_URL_Update, $s_Update_FilePath, $INET_FORCERELOAD, $INET_DOWNLOADBACKGROUND)
+	AdlibRegister("_UpdateCheck_Monitor", 250)
 EndFunc   ;==>_UpdateCheck
+
+Func _UpdateCheck_Monitor()
+	If $h_Update_Download = -1 Then
+		AdlibUnRegister("_UpdateCheck_Monitor")
+		Return
+	EndIf
+
+	Local $bComplete = InetGetInfo($h_Update_Download, $INET_DOWNLOADCOMPLETE)
+	Local $bTimeout = (TimerDiff($i_Update_StartTime) > 10000)
+
+	If Not $bComplete And Not $bTimeout Then Return
+
+	; Download finished or timed out
+	AdlibUnRegister("_UpdateCheck_Monitor")
+	InetClose($h_Update_Download)
+	$h_Update_Download = -1
+
+	; Re-enable Help button if it was disabled
+	If $h_Button_Update_Help <> 0 Then
+		GUICtrlSetData($h_Button_Update_Help, "  Check for Updates")
+		GUICtrlSetState($h_Button_Update_Help, $GUI_ENABLE)
+	EndIf
+
+	If $bTimeout Or Not FileExists($s_Update_FilePath) Then
+		If FileExists($s_Update_FilePath) Then FileDelete($s_Update_FilePath)
+		If Not $b_Update_Silent Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Update check timed out or server unavailable.")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError)
+		EndIf
+		Return
+	EndIf
+
+	Local $hFileOpen = FileOpen($s_Update_FilePath, $FO_READ)
+	If $hFileOpen = -1 Then
+		If FileExists($s_Update_FilePath) Then FileDelete($s_Update_FilePath)
+		If Not $b_Update_Silent Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Could not read update information.")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError)
+		EndIf
+		Return
+	EndIf
+
+	Local $sFileRead = FileRead($hFileOpen)
+	FileClose($hFileOpen)
+	If FileExists($s_Update_FilePath) Then FileDelete($s_Update_FilePath)
+
+	Local $sDownloadedVersion = StringStripWS(BinaryToString($sFileRead), 3)
+	If $sDownloadedVersion = "" Then $sDownloadedVersion = StringStripWS($sFileRead, 3)
+
+	If $sDownloadedVersion = "" Then
+		If Not $b_Update_Silent Then
+			_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Invalid version response from server.")
+			_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError)
+		EndIf
+		Return
+	EndIf
+
+	Local $iComp = _CompareVersions($sDownloadedVersion, $s_Current_Version)
+	If $iComp > 0 Then
+		; New update available!
+		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: New version v" & $sDownloadedVersion & " available! Click to update.")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo)
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: New version found online: v" & $sDownloadedVersion)
+		If Not $b_Update_Silent Then
+			Local $iAns = MsgBox(BitOR($MB_YESNO, $MB_ICONINFORMATION), "Update Available", _
+					"A new version of IDM Backup Manager is available:" & @CRLF & @CRLF & _
+					"• Current Version: v" & $s_Current_Version & @CRLF & _
+					"• Latest Version : v" & $sDownloadedVersion & @CRLF & @CRLF & _
+					"Would you like to open the GitHub Releases page now to download it?", 0, $hGUI_BM)
+			If $iAns = $IDYES Then ShellExecute($s_URL_Releases)
+		EndIf
+	Else
+		; Up to date!
+		_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: You have the most recent version (v" & $s_Current_Version & ").")
+		_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled)
+		FileWriteLine($s_Log_File, _Current_Moment() & "Info: Version check completed. Up to date (v" & $s_Current_Version & ").")
+		If Not $b_Update_Silent Then
+			MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "Up to Date", _
+					"You are using the latest version of IDM Backup Manager (v" & $s_Current_Version & ").", 0, $hGUI_BM)
+		EndIf
+	EndIf
+EndFunc   ;==>_UpdateCheck_Monitor
 
 Func _ShellInstall()
 	Local $iMsgBoxAnswer = MsgBox(36, "Associate IBF File?", "Would you like to associate ibf(IDM Backup File)?", 0, $hGUI_BM)
@@ -2425,6 +2521,7 @@ Func _WriteINI()
 	IniWrite($s_Setting_File, "More Setting", "Append_Log_File", $b_AppendLog_File) ;Boolean
 	IniWrite($s_Setting_File, "More Setting", "Restart_IDM", $b_RestartIDM)
 	IniWrite($s_Setting_File, "More Setting", "Open_Folder", $b_OpenFolder)
+	IniWrite($s_Setting_File, "More Setting", "CheckUpdate_Background", $b_CheckUpdate_Background)
 EndFunc   ;==>_WriteINI
 
 Func _OpenLog()

@@ -48,6 +48,7 @@ An open-source configuration backup and migration utility written in AutoIt v3 f
 * **Streamlined Modern UI**: Windows 11 Fluent icons, Segoe UI typography, and spacious 640x420 layout with zero tab overflow.
 * **Flexible Compression & Encryption**: Optional AES password encryption and configurable 7-Zip compression levels (with high-speed no-compression default).
 * **Cross-System Migration**: Intelligent "Convert Profile Paths" and "Append / Merge" restore options for seamless transfer across PCs or Windows accounts.
+* **Non-Blocking Background Update Checking**: Asynchronous background network thread for checking updates without blocking or freezing the user interface, with configurable startup background check in Preferences.
 * **Modern AutoIt v3.3.18+ Compatibility**: Clean syntax, zero Au3Check errors/warnings, and high-DPI friendly layout.
 * **Automated Build Pipeline**: Multi-stage build script (`build.ps1` / `build.bat`) generating portable executables and Inno Setup installers.
 

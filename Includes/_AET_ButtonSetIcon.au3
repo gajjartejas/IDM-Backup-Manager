@@ -46,25 +46,26 @@ EndFunc   ;==>_AET_GetResourcePath
 Func _AET_ButtonSetIcon($hWnd, $iIndex, $iWidth, $iHeight, $iAlign)
 	Local $hImageList = _GUIImageList_Create($iWidth, $iHeight, 5, 3)
 	Local $iAdded = -1
-	If @Compiled Then
-		$iAdded = _GUIImageList_AddIcon($hImageList, @ScriptFullPath, $iIndex, True)
-	EndIf
-	If $iAdded = -1 And $iIndex >= 1 And $iIndex <= 23 Then
+	If $iIndex >= 1 And $iIndex <= 23 Then
 		Local $sIconPath = _AET_GetResourcePath($g_aAET_IconFiles[$iIndex])
 		If FileExists($sIconPath) Then
-			_GUIImageList_AddIcon($hImageList, $sIconPath, 0, True)
+			$iAdded = _GUIImageList_AddIcon($hImageList, $sIconPath, 0, True)
 		EndIf
+	EndIf
+	If $iAdded = -1 And @Compiled Then
+		_GUIImageList_AddIcon($hImageList, @ScriptFullPath, $iIndex, True)
 	EndIf
 	_GUICtrlButton_SetImageList($hWnd, $hImageList, $iAlign)
 EndFunc   ;==>_AET_ButtonSetIcon
 
-Func _AET_TabSetIcon($iTabCtrl, $iIconIndex, $iResourceIndex)
-	If @Compiled Then
+Func _AET_TabSetIcon($iTabCtrl, $iIconIndex, $iResourceIndex = 0)
+	Local $sIconPath = ""
+	If $iIconIndex >= 1 And $iIconIndex <= 23 Then
+		$sIconPath = _AET_GetResourcePath($g_aAET_IconFiles[$iIconIndex])
+	EndIf
+	If FileExists($sIconPath) Then
+		GUICtrlSetImage($iTabCtrl, $sIconPath)
+	ElseIf @Compiled And $iResourceIndex <> 0 Then
 		GUICtrlSetImage($iTabCtrl, @ScriptFullPath, $iResourceIndex)
-	Else
-		Local $sIconPath = _AET_GetResourcePath($g_aAET_IconFiles[$iIconIndex])
-		If FileExists($sIconPath) Then
-			GUICtrlSetImage($iTabCtrl, $sIconPath)
-		EndIf
 	EndIf
 EndFunc   ;==>_AET_TabSetIcon

@@ -130,11 +130,11 @@ if (-not (Test-Path $OutputFile)) {
     exit 1
 }
 
-# Ensure Resources folder is also mirrored into output directory for portable / standalone use
-$DestResources = Join-Path $OutputDir "Resources"
-if (-not (Test-Path $DestResources)) {
-    Copy-Item -Path (Join-Path $ScriptDir "Resources") -Destination $OutputDir -Recurse -Force
-}
+# Ensure Resources and documentation files are mirrored into output directory for portable / standalone use
+Copy-Item -Path (Join-Path $ScriptDir "Resources") -Destination $OutputDir -Recurse -Force
+Copy-Item -Path (Join-Path $ScriptDir "History.txt") -Destination $OutputDir -Force
+Copy-Item -Path (Join-Path $ScriptDir "CmdLine.txt") -Destination $OutputDir -Force
+Copy-Item -Path (Join-Path $ScriptDir "LICENSE") -Destination $OutputDir -Force
 
 $FileSize = (Get-Item $OutputFile).Length
 $FileHash = (Get-FileHash $OutputFile -Algorithm SHA256).Hash

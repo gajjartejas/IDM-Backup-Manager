@@ -20,8 +20,27 @@ Global Const $i_yHight_BM = 276
 Global $i_xWinPos = (@DesktopWidth - $i_xWidth_BM) / 2
 Global $i_yWinPos = (@DesktopHeight - $i_yHight_BM) / 2
 
-Global Const $s_History_File = @ScriptDir & "\history.txt"
-Global Const $s_License_File = @ScriptDir & "\License.txt"
+Func _sGetHistoryFile()
+	Local $ScriptDir = @ScriptDir
+	If StringRight($ScriptDir, 1) <> "\" Then $ScriptDir &= "\"
+	If FileExists($ScriptDir & "History.txt") Then Return $ScriptDir & "History.txt"
+	If FileExists($ScriptDir & "history.txt") Then Return $ScriptDir & "history.txt"
+	If FileExists($ScriptDir & "..\History.txt") Then Return $ScriptDir & "..\History.txt"
+	Return $ScriptDir & "History.txt"
+EndFunc
+
+Func _sGetLicenseFile()
+	Local $ScriptDir = @ScriptDir
+	If StringRight($ScriptDir, 1) <> "\" Then $ScriptDir &= "\"
+	If FileExists($ScriptDir & "LICENSE") Then Return $ScriptDir & "LICENSE"
+	If FileExists($ScriptDir & "License.txt") Then Return $ScriptDir & "License.txt"
+	If FileExists($ScriptDir & "..\LICENSE") Then Return $ScriptDir & "..\LICENSE"
+	If FileExists($ScriptDir & "..\License.txt") Then Return $ScriptDir & "..\License.txt"
+	Return $ScriptDir & "LICENSE"
+EndFunc
+
+Global Const $s_History_File = _sGetHistoryFile()
+Global Const $s_License_File = _sGetLicenseFile()
 
 Global Const $s_ini_File = @TempDir & "\" & "idm_guest_Setting.ini"
 Global Const $s_reg_File = @TempDir & "\IDMregistry.reg"
@@ -91,12 +110,25 @@ Global $h_Button_Update_Help, $h_Picture_Facebook_About, $h_Picture_Twitter_Abou
 
 Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
 
+Func _sGetStatusIcon($sIconName, $iFallbackIndex)
+	Local $ScriptDir = @ScriptDir
+	If StringRight($ScriptDir, 1) <> "\" Then $ScriptDir &= "\"
+	Local $sPath = $ScriptDir & "Resources\" & $sIconName
+	If Not FileExists($sPath) Then $sPath = $ScriptDir & "..\Resources\" & $sIconName
+	If FileExists($sPath) Then
+		Return _WinAPI_ShellExtractIcon($sPath, 0, 16, 16)
+	ElseIf @Compiled Then
+		Return _WinAPI_ShellExtractIcon(@ScriptFullPath, $iFallbackIndex, 16, 16)
+	EndIf
+	Return 0
+EndFunc
+
 Global $h_Status_Info
-Global $hIcons_StatusInfo = _WinAPI_ShellExtractIcon(@ScriptFullPath, 19, 16, 16)
-Global $hIcons_StatusWarning = _WinAPI_ShellExtractIcon(@ScriptFullPath, 20, 16, 16)
-Global $hIcons_StatusCompled = _WinAPI_ShellExtractIcon(@ScriptFullPath, 21, 16, 16)
-Global $hIcons_StatusError = _WinAPI_ShellExtractIcon(@ScriptFullPath, 22, 16, 16)
-Global $hIcons_StatusWorking = _WinAPI_ShellExtractIcon(@ScriptFullPath, 23, 16, 16)
+Global $hIcons_StatusInfo = _sGetStatusIcon("StatusInfo.ico", 19)
+Global $hIcons_StatusWarning = _sGetStatusIcon("StatusWarning.ico", 20)
+Global $hIcons_StatusCompled = _sGetStatusIcon("StatusCompled.ico", 21)
+Global $hIcons_StatusError = _sGetStatusIcon("StatusError.ico", 22)
+Global $hIcons_StatusWorking = _sGetStatusIcon("StatusWorking.ico", 23)
 
 Global $nMsg
 Global $hGUI_BM
@@ -156,8 +188,12 @@ EndFunc   ;==>_sGetTempPathFolder
 Func _SwHelp()
 	If FileExists(@ScriptDir & "\Help.chm") Then
 		ShellExecute(@ScriptDir & "\Help.chm")
+	ElseIf FileExists(@ScriptDir & "\..\Help\Help.docx") Then
+		ShellExecute(@ScriptDir & "\..\Help\Help.docx")
+	ElseIf FileExists(@ScriptDir & "\Help\Help.docx") Then
+		ShellExecute(@ScriptDir & "\Help\Help.docx")
 	Else
-		ShellExecute("http://www.tejasgajjar.in/p/idm-backup-manager.html")
+		ShellExecute("https://github.com/gajjartejas/IDM-Backup-Manager#readme")
 	EndIf
 EndFunc   ;==>_SwHelp
 

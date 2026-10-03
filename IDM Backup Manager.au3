@@ -410,10 +410,10 @@ Func _MainBM()
 				_SwHelp()
 
 			Case $h_Button_Website_Help
-				ShellExecute("http://www.tejasgajjar.in")
+				ShellExecute("https://github.com/gajjartejas/IDM-Backup-Manager")
 
 			Case $h_Button_Forum_Help
-				ShellExecute("http://www.tejasgajjar.in/p/idm-backup-manager.html")
+				ShellExecute("https://github.com/gajjartejas/IDM-Backup-Manager/issues")
 
 			Case $h_Button_Associate_Setting
 				_ShellInstall()
@@ -2078,7 +2078,7 @@ Func _UpdateCheck()
 			Case Else
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($sFileRead))
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
-				ShellExecute("http://www.tejasgajjar.in/p/idm-backup-manager.html")
+				ShellExecute("https://github.com/gajjartejas/IDM-Backup-Manager/releases")
 		EndSwitch
 
 		; Delete the file.

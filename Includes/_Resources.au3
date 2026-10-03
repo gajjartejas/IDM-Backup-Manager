@@ -182,7 +182,27 @@ Func _ResourceSetImageToCtrl($CtrlId, $ResName, $ResType = 10, $DLL = -1) ; $RT_
 	Local $ResData, $nSize, $hData, $pData, $pStream, $pBitmap, $hBitmap
 
 	$ResData = _ResourceGet($ResName, $ResType, 0, $DLL)
-	If @error Then Return SetError(1, 0, 0)
+	If @error Then
+		Local $ScriptDir = @ScriptDir
+		If StringRight($ScriptDir, 1) <> "\" Then $ScriptDir &= "\"
+		Local $sFilePath = ""
+		If FileExists($ScriptDir & "Resources\" & $ResName & ".jpg") Then
+			$sFilePath = $ScriptDir & "Resources\" & $ResName & ".jpg"
+		ElseIf FileExists($ScriptDir & "..\Resources\" & $ResName & ".jpg") Then
+			$sFilePath = $ScriptDir & "..\Resources\" & $ResName & ".jpg"
+		ElseIf $ResName = "facebooklogo" Then
+			If FileExists($ScriptDir & "Resources\facebook.jpg") Then $sFilePath = $ScriptDir & "Resources\facebook.jpg"
+			If FileExists($ScriptDir & "..\Resources\facebook.jpg") Then $sFilePath = $ScriptDir & "..\Resources\facebook.jpg"
+		ElseIf $ResName = "twitterlogo" Then
+			If FileExists($ScriptDir & "Resources\twitter.jpg") Then $sFilePath = $ScriptDir & "Resources\twitter.jpg"
+			If FileExists($ScriptDir & "..\Resources\twitter.jpg") Then $sFilePath = $ScriptDir & "..\Resources\twitter.jpg"
+		EndIf
+		If $sFilePath <> "" Then
+			GUICtrlSetImage($CtrlId, $sFilePath)
+			Return 1
+		EndIf
+		Return SetError(1, 0, 0)
+	EndIf
 	$nSize = @extended
 
 	If $ResType = $RT_BITMAP Then

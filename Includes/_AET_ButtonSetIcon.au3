@@ -5,8 +5,66 @@
 #include <GuiButton.au3>
 #endregion    ;************ Includes ************
 
+Global $g_aAET_IconFiles[24] = [ _
+	"", _
+	"Backup.ico", _
+	"open.ico", _
+	"Forum.ico", _
+	"Help.ico", _
+	"Internet.ico", _
+	"License.ico", _
+	"History.ico", _
+	"Ok.ico", _
+	"ok32.ico", _
+	"Restore.ico", _
+	"search.ico", _
+	"Tool.ico", _
+	"Update.ico", _
+	"FileType.ico", _
+	"Save.ico", _
+	"Setting.ico", _
+	"refresh.ico", _
+	"Log.ico", _
+	"StatusInfo.ico", _
+	"StatusWarning.ico", _
+	"StatusCompled.ico", _
+	"StatusError.ico", _
+	"StatusWorking.ico" _
+]
+
+Func _AET_GetResourcePath($sFileName)
+	Local $ScriptDir = @ScriptDir
+	If StringRight($ScriptDir, 1) <> "\" Then $ScriptDir &= "\"
+	If FileExists($ScriptDir & "Resources\" & $sFileName) Then
+		Return $ScriptDir & "Resources\" & $sFileName
+	ElseIf FileExists($ScriptDir & "..\Resources\" & $sFileName) Then
+		Return $ScriptDir & "..\Resources\" & $sFileName
+	EndIf
+	Return $ScriptDir & "Resources\" & $sFileName
+EndFunc   ;==>_AET_GetResourcePath
+
 Func _AET_ButtonSetIcon($hWnd, $iIndex, $iWidth, $iHeight, $iAlign)
 	Local $hImageList = _GUIImageList_Create($iWidth, $iHeight, 5, 3)
-	_GUIImageList_AddIcon($hImageList, @ScriptFullPath, $iIndex, True)
+	Local $iAdded = -1
+	If @Compiled Then
+		$iAdded = _GUIImageList_AddIcon($hImageList, @ScriptFullPath, $iIndex, True)
+	EndIf
+	If $iAdded = -1 And $iIndex >= 1 And $iIndex <= 23 Then
+		Local $sIconPath = _AET_GetResourcePath($g_aAET_IconFiles[$iIndex])
+		If FileExists($sIconPath) Then
+			_GUIImageList_AddIcon($hImageList, $sIconPath, 0, True)
+		EndIf
+	EndIf
 	_GUICtrlButton_SetImageList($hWnd, $hImageList, $iAlign)
 EndFunc   ;==>_AET_ButtonSetIcon
+
+Func _AET_TabSetIcon($iTabCtrl, $iIconIndex, $iResourceIndex)
+	If @Compiled Then
+		GUICtrlSetImage($iTabCtrl, @ScriptFullPath, $iResourceIndex)
+	Else
+		Local $sIconPath = _AET_GetResourcePath($g_aAET_IconFiles[$iIconIndex])
+		If FileExists($sIconPath) Then
+			GUICtrlSetImage($iTabCtrl, $sIconPath)
+		EndIf
+	EndIf
+EndFunc   ;==>_AET_TabSetIcon

@@ -9,6 +9,31 @@
 #AutoIt3Wrapper_Res_ProductVersion=1.1.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2012-2016, Gajjar Tejas
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Backup.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\open.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Forum.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Help.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Internet.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\License.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\History.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Ok.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\ok32.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Restore.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\search.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Tool.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Update.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\FileType.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Save.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Setting.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\refresh.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\Log.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\StatusInfo.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\StatusWarning.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\StatusCompled.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\StatusError.ico
+#AutoIt3Wrapper_Res_Icon_Add=Resources\StatusWorking.ico
+#AutoIt3Wrapper_Res_File_Add=Resources\facebook.jpg, rt_rcdata, facebooklogo
+#AutoIt3Wrapper_Res_File_Add=Resources\twitter.jpg, rt_rcdata, twitterlogo
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #Region Includes
@@ -747,7 +772,7 @@ Func _SwBMGUI()
 	#Region backup ;==============================================================================================Backup:
 
 	$h_TabSheet1 = GUICtrlCreateTabItem("Backup Data")
-	GUICtrlSetImage(-1, @ScriptFullPath, -2)
+	_AET_TabSetIcon(-1, 1, -2)
 	GUICtrlCreateGroup("Backup Location", 24, 44, 390, 55)
 	GUICtrlSetFont(-1, 2, 800, 0, "MS Sans Serif")
 
@@ -804,7 +829,7 @@ Func _SwBMGUI()
 
 	#Region Restore ;==============================================================================================Restore:
 	$h_TabSheet2 = GUICtrlCreateTabItem("Restore Data")
-	GUICtrlSetImage(-1, @ScriptFullPath, -11)
+	_AET_TabSetIcon(-1, 10, -11)
 	GUICtrlCreateGroup("Restore Location", 24, 44, 390, 55)
 	GUICtrlSetFont(-1, 2, 800, 0, "MS Sans Serif")
 
@@ -869,7 +894,7 @@ Func _SwBMGUI()
 	#Region Tools ;============================================================================================== Tools:
 
 	$h_TabSheet3 = GUICtrlCreateTabItem("Tools")
-	GUICtrlSetImage(-1, @ScriptFullPath, -13)
+	_AET_TabSetIcon(-1, 12, -13)
 
 	GUICtrlCreateGroup("Tools", 24, 44, 390, 160)
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
@@ -898,7 +923,7 @@ Func _SwBMGUI()
 
 	#Region Setting ;============================================================================================== Setting:
 	$h_TabSheet4 = GUICtrlCreateTabItem("Options")
-	GUICtrlSetImage(-1, @ScriptFullPath, -17)
+	_AET_TabSetIcon(-1, 16, -17)
 
 	GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
 
@@ -995,7 +1020,7 @@ Func _SwBMGUI()
 	#Region Help ;============================================================================================== Help:
 
 	$h_TabSheet5 = GUICtrlCreateTabItem("Help")
-	GUICtrlSetImage(-1, @ScriptFullPath, -5)
+	_AET_TabSetIcon(-1, 4, -5)
 
 	GUICtrlCreateGroup("Help and Update", 24, 44, 390, 160)
 	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")

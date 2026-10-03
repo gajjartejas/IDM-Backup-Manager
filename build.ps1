@@ -82,24 +82,58 @@ if (-not (Test-Path $Dll64)) {
     }
 }
 
-# 4. Compile with Aut2exe
-Write-Host "[*] Compiling $SourceFile ($Arch)..." -ForegroundColor Yellow
-
-$CompileArgs = "/in `"$SourceFile`" /out `"$OutputFile`""
-if (Test-Path $IconFile) {
-    $CompileArgs += " /icon `"$IconFile`""
+# 4. Compile Application
+# Look for AutoIt3Wrapper (embeds all resources, icons, and metadata)
+$WrapperDirs = @(
+    "$AutoItRoot\SciTE\AutoIt3Wrapper\AutoIt3Wrapper.au3",
+    "$AutoItRoot\SciTE\AutoIt3Wrapper\AutoIt3Wrapper.exe"
+)
+$WrapperPath = $null
+foreach ($path in $WrapperDirs) {
+    if (Test-Path $path) {
+        $WrapperPath = $path
+        break
+    }
 }
-if ($Arch -eq 'x64') {
-    $CompileArgs += " /x64"
+
+# Make sure old output binary is removed to ensure fresh build
+if (Test-Path $OutputFile) {
+    Remove-Item $OutputFile -Force -ErrorAction SilentlyContinue
+}
+
+if ($WrapperPath) {
+    Write-Host "[*] Compiling with AutoIt3Wrapper (embedding all resource icons & metadata)..." -ForegroundColor Yellow
+    $AutoItExe = Join-Path $AutoItRoot "AutoIt3.exe"
+    if ($WrapperPath.EndsWith(".au3")) {
+        $CompileProcess = Start-Process -FilePath $AutoItExe -ArgumentList "`"$WrapperPath`" /in `"$SourceFile`"" -NoNewWindow -PassThru -Wait
+    } else {
+        $CompileProcess = Start-Process -FilePath $WrapperPath -ArgumentList "/in `"$SourceFile`"" -NoNewWindow -PassThru -Wait
+    }
 } else {
-    $CompileArgs += " /x86"
-}
-$CompileArgs += " /comp 4"
+    Write-Host "[*] Compiling $SourceFile ($Arch)..." -ForegroundColor Yellow
+    $CompileArgs = "/in `"$SourceFile`" /out `"$OutputFile`""
+    if (Test-Path $IconFile) {
+        $CompileArgs += " /icon `"$IconFile`""
+    }
+    if ($Arch -eq 'x64') {
+        $CompileArgs += " /x64"
+    } else {
+        $CompileArgs += " /x86"
+    }
+    $CompileArgs += " /comp 4"
 
-$CompileProcess = Start-Process -FilePath $Aut2exe -ArgumentList $CompileArgs -NoNewWindow -PassThru -Wait
-if ($CompileProcess.ExitCode -ne 0 -or -not (Test-Path $OutputFile)) {
+    $CompileProcess = Start-Process -FilePath $Aut2exe -ArgumentList $CompileArgs -NoNewWindow -PassThru -Wait
+}
+
+if (-not (Test-Path $OutputFile)) {
     Write-Error "Compilation failed!"
     exit 1
+}
+
+# Ensure Resources folder is also mirrored into output directory for portable / standalone use
+$DestResources = Join-Path $OutputDir "Resources"
+if (-not (Test-Path $DestResources)) {
+    Copy-Item -Path (Join-Path $ScriptDir "Resources") -Destination $OutputDir -Recurse -Force
 }
 
 $FileSize = (Get-Item $OutputFile).Length

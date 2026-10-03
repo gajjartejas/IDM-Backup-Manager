@@ -18,13 +18,32 @@ An open-source configuration backup and migration utility written in AutoIt v3 f
 
 ---
 
+## 📸 Screenshots
+
+| Backup Data | Restore Data |
+|:---:|:---:|
+| ![Backup Data](Screenshots/01_backup_data.png) | ![Restore Data](Screenshots/02_restore_data.png) |
+
+| Tools & Utilities | Options & Paths |
+|:---:|:---:|
+| ![Tools](Screenshots/03_tools.png) | ![Options](Screenshots/04_options.png) |
+
+<p align="center">
+  <b>Help & Information</b><br>
+  <img src="Screenshots/05_help.png" alt="Help and Information" width="431">
+</p>
+
+---
+
 ## 📋 Features
 
 * **Complete Profile Backup**: Backup download lists, incomplete downloads metadata, schedule queues, and custom category rules.
-* **Multi-Profile Support**: Manage multiple backup archives and restore them across machines or clean OS reinstalls.
-* **Password Sanitizer**: Clean stored server and site authentication credentials prior to sharing or migrating configuration profiles.
-* **Modern AutoIt v3.3.18+ Compatibility**: Updated syntax, standard includes, and error-free Au3Check validation.
-* **Automated Build Pipeline**: Includes PowerShell (`build.ps1`) and CMD (`build.bat`) build automation.
+* **Streamlined Modern UI**: Clean Windows 11 Fluent icons and Segoe UI typography across all tabs.
+* **Flexible Compression & Encryption**: Optional AES password encryption and configurable 7-Zip compression levels (with high-speed no-compression default).
+* **Cross-System Migration**: Intelligent "Convert Profile Paths" and "Append / Merge" restore options for seamless transfer across PCs or Windows accounts.
+* **Standalone Utility Tools**: Integrated Downloads List Manager, Temporary Data Cleaner, Password Sanitizer, and File Category rules manager.
+* **Modern AutoIt v3.3.18+ Compatibility**: Clean syntax, zero Au3Check errors/warnings, and high DPI friendly layout.
+* **Automated Build Pipeline**: Multi-stage build script (`build.ps1` / `build.bat`) generating portable executables and Inno Setup installers.
 
 ---
 
@@ -35,6 +54,7 @@ An open-source configuration backup and migration utility written in AutoIt v3 f
 ├── Forms/                    # Koda Form Designer definitions (.kxf)
 ├── Includes/                 # Modular AutoIt helper libraries (.au3)
 ├── Resources/                # Application icons, GUI bitmaps, and assets
+├── Screenshots/              # High-resolution application GUI previews
 ├── Help/                     # User documentation and manual (.docx, .htm, images)
 ├── Build/                    # Inno Setup open-source installer script (installer.iss)
 ├── build.ps1                 # Automated PowerShell compilation & packaging pipeline

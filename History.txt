@@ -1,77 +1,87 @@
+v1.1.0 October 3rd, 2026
+
+â€¢ Redesigned UI with modern Segoe UI typography and Windows 11 Fluent icons.
+â€¢ Modernized Tools tab into a clean 2x2 grid with descriptive tooltips.
+â€¢ Streamlined Backup & Restore tabs: removed redundant checkboxes, clean native controls.
+â€¢ Replaced legacy Convert Profile and Append/Merge labels with native clickable checkboxes.
+â€¢ Symmetrical Help & Support tab with balanced actions and social channels (Facebook, Twitter/X, Instagram).
+â€¢ Upgraded build automation with PowerShell build pipeline (build.ps1) and Inno Setup installer.
+â€¢ Full compatibility with modern AutoIt v3.3.18+.
+
 v1.0.0 July 15th, 2016
 
-• Minor Bug Fixes related to restore in profile conversion.
+â€¢ Minor Bug Fixes related to restore in profile conversion.
 
 v0.9.9 January 26th, 2016
 
-• Minor Bug Fixes.
-• Added Backup File Information.
-• Some icons Changed.
-• Improved Backup.
+â€¢ Minor Bug Fixes.
+â€¢ Added Backup File Information.
+â€¢ Some icons Changed.
+â€¢ Improved Backup.
 
 v0.9.8 December 28th, 2014
 
-• Fixed IDM Restart.
-• Fixed Restore taking too long time on High Compressed Backup File.
-• Fixed Sound Directory Dose not Backup in Custom Mode.
-• Fixed IDM GrabberData Folder Dose not Backup in Custom Profile Mode.
-• Added Command Line Support.
-• Added Custom Component Restore.
-• Added Append/Merge Profile on Restore.
-• Added Open Folder after Backup.
-• Added Status bar with Icons.
-• Added Automatically Detect All Possible IDM Temporary Directory.
-• Improved Data Cleaner.
-• Improved Profile Conversion.
+â€¢ Fixed IDM Restart.
+â€¢ Fixed Restore taking too long time on High Compressed Backup File.
+â€¢ Fixed Sound Directory Dose not Backup in Custom Mode.
+â€¢ Fixed IDM GrabberData Folder Dose not Backup in Custom Profile Mode.
+â€¢ Added Command Line Support.
+â€¢ Added Custom Component Restore.
+â€¢ Added Append/Merge Profile on Restore.
+â€¢ Added Open Folder after Backup.
+â€¢ Added Status bar with Icons.
+â€¢ Added Automatically Detect All Possible IDM Temporary Directory.
+â€¢ Improved Data Cleaner.
+â€¢ Improved Profile Conversion.
 
 v0.9.7 April 13th, 2013
 
-• Fixed IDM Temporary Directory Dose not Backup in Custom Mode.
-• Fixed Log File Generation.
-• Fixed Backup taking too long time.
-• Added Support on manually Restore/Backup files and registry (List of Downloads).
-• Added Sites login password cleaner.
-• Added to add extra file types in IDM Categories.
-• Added manually profile backup and restore.
-• Improved Profile Conversion.
+â€¢ Fixed IDM Temporary Directory Dose not Backup in Custom Mode.
+â€¢ Fixed Log File Generation.
+â€¢ Fixed Backup taking too long time.
+â€¢ Added Support on manually Restore/Backup files and registry (List of Downloads).
+â€¢ Added Sites login password cleaner.
+â€¢ Added to add extra file types in IDM Categories.
+â€¢ Added manually profile backup and restore.
+â€¢ Improved Profile Conversion.
 
 v0.9.6 December 31th, 2012
 
-• Added List Backup Mode without Data Backup
-• Added association to IDM Backup File (*.ibf)
-• Fixed Crash IDM Backup Manager under corrupted backup file.
-• Fixed Backup does not successful under windows xp due to 7z.dll is not include.
-• Fixed Continuous Preventing UAC under Admin account while backing up IDM.
-• Some Minor Change
+â€¢ Added List Backup Mode without Data Backup
+â€¢ Added association to IDM Backup File (*.ibf)
+â€¢ Fixed Crash IDM Backup Manager under corrupted backup file.
+â€¢ Fixed Backup does not successful under windows xp due to 7z.dll is not include.
+â€¢ Fixed Continuous Preventing UAC under Admin account while backing up IDM.
+â€¢ Some Minor Change
 
 v0.9.5 November 23rd, 2012
 
-• Added x64 bit Operating System Support
-• Some Minor Change
+â€¢ Added x64 bit Operating System Support
+â€¢ Some Minor Change
 
 v0.9.4 November 11th, 2012
 
-• Removed UAC. (Multi user now supported)
-• Added icons.
-• Added Menu bar to IDM List Manager.
-• Added Filter By Downloads and By Categories to IDM List Manager.
-• Added Search Functionality to IDM List Manager.
+â€¢ Removed UAC. (Multi user now supported)
+â€¢ Added icons.
+â€¢ Added Menu bar to IDM List Manager.
+â€¢ Added Filter By Downloads and By Categories to IDM List Manager.
+â€¢ Added Search Functionality to IDM List Manager.
 
 v0.9.3 October 20th, 2012
 
-• Added List Backup Mode without Data Backup
-• Added associate IDM Backup File (*.ibf)
-• Fixed Crash IDM Backup Manager under corrupted backup file.
-• Fixed Backup does not successful under windows xp due to 7z.dll is not include.
-• Fixed Continuous Preventing UAC under Admin account while backing up IDM.
-• Some Minor Change
+â€¢ Added List Backup Mode without Data Backup
+â€¢ Added associate IDM Backup File (*.ibf)
+â€¢ Fixed Crash IDM Backup Manager under corrupted backup file.
+â€¢ Fixed Backup does not successful under windows xp due to 7z.dll is not include.
+â€¢ Fixed Continuous Preventing UAC under Admin account while backing up IDM.
+â€¢ Some Minor Change
 
 v0.9.2 June 30th, 2012
 
-• Fixed Some Bugs
-• Added Fade in/out Transparent Windows
-• Improved Functionality
+â€¢ Fixed Some Bugs
+â€¢ Added Fade in/out Transparent Windows
+â€¢ Improved Functionality
 
 v0.9.1 June 25th, 2012
 
-• Initial Release
+â€¢ Initial Release

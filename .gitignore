@@ -1,0 +1,26 @@
+# Binaries and compiled libraries
+*.exe
+*.dll
+*.sys
+*.bin
+*.msi
+
+# Compressed archives
+*.7z
+*.zip
+*.rar
+*.tar
+*.gz
+
+# Personal / Registry dumps
+*.reg
+
+# Windows / OS metadata
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Third party utilities and build outputs
+[Uu]tilities/
+[Oo]utput/
+*-cache/

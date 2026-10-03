@@ -100,7 +100,8 @@ To keep the Git repository lightweight and free of tracked binary blobs, third-p
 
 ## 📄 License
 
-This software is released under the ISC / Permissive Open Source License. See [LICENSE](LICENSE) for full details.
+* **IDM Backup Manager**: Released under the ISC / Permissive Open Source License. See [LICENSE](LICENSE) for full details.
+* **7-Zip Compression Engine**: The `7-zip32.dll` and `7-zip64.dll` libraries are distributed under the terms of the GNU LGPL (Lesser General Public License) + unRAR restriction. See [LICENSE-7ZIP.txt](LICENSE-7ZIP.txt) for licensing terms.
 
 ```
 Copyright (c) 2012-2016, Gajjar Tejas

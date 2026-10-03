@@ -46,6 +46,7 @@ Source: "..\bin\7-zip32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\7-zip64.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; Documentation & Changelog
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\LICENSE-7ZIP.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\History.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\CmdLine.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; Help & Documentation Files

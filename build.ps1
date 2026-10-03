@@ -67,21 +67,31 @@ $Dll64 = Join-Path $OutputDir "7-zip64.dll"
 $ReleaseBase = "https://github.com/gajjartejas/IDM-Backup-Manager/releases/download/v1.1.0"
 
 if (-not (Test-Path $Dll32)) {
-    Write-Host "[*] Downloading 7-zip32.dll from release..." -ForegroundColor Yellow
+    Write-Host "[*] Extracting 7-zip32.dll from release package..." -ForegroundColor Yellow
     try {
-        Invoke-WebRequest -Uri "$ReleaseBase/7-zip32.dll" -OutFile $Dll32 -UseBasicParsing
-        Write-Host "[OK] Downloaded 7-zip32.dll" -ForegroundColor Green
+        $tempZip = Join-Path $env:TEMP "idmbm_x86_temp.zip"
+        Invoke-WebRequest -Uri "$ReleaseBase/IDM_Backup_Manager_v1.1.0_x86.zip" -OutFile $tempZip -UseBasicParsing
+        $tempExtract = Join-Path $env:TEMP "idmbm_x86_extract"
+        Expand-Archive -Path $tempZip -DestinationPath $tempExtract -Force
+        Copy-Item (Join-Path $tempExtract "7-zip32.dll") -Destination $Dll32 -Force
+        Remove-Item $tempZip, $tempExtract -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Host "[OK] Extracted 7-zip32.dll" -ForegroundColor Green
     } catch {
-        Write-Warning "Failed to download 7-zip32.dll: $_"
+        Write-Warning "Failed to acquire 7-zip32.dll: $_"
     }
 }
 if (-not (Test-Path $Dll64)) {
-    Write-Host "[*] Downloading 7-zip64.dll from release..." -ForegroundColor Yellow
+    Write-Host "[*] Extracting 7-zip64.dll from release package..." -ForegroundColor Yellow
     try {
-        Invoke-WebRequest -Uri "$ReleaseBase/7-zip64.dll" -OutFile $Dll64 -UseBasicParsing
-        Write-Host "[OK] Downloaded 7-zip64.dll" -ForegroundColor Green
+        $tempZip = Join-Path $env:TEMP "idmbm_x64_temp.zip"
+        Invoke-WebRequest -Uri "$ReleaseBase/IDM_Backup_Manager_v1.1.0_x64.zip" -OutFile $tempZip -UseBasicParsing
+        $tempExtract = Join-Path $env:TEMP "idmbm_x64_extract"
+        Expand-Archive -Path $tempZip -DestinationPath $tempExtract -Force
+        Copy-Item (Join-Path $tempExtract "7-zip64.dll") -Destination $Dll64 -Force
+        Remove-Item $tempZip, $tempExtract -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Host "[OK] Extracted 7-zip64.dll" -ForegroundColor Green
     } catch {
-        Write-Warning "Failed to download 7-zip64.dll: $_"
+        Write-Warning "Failed to acquire 7-zip64.dll: $_"
     }
 }
 

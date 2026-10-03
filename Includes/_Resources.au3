@@ -196,6 +196,9 @@ Func _ResourceSetImageToCtrl($CtrlId, $ResName, $ResType = 10, $DLL = -1) ; $RT_
 		ElseIf $ResName = "twitterlogo" Then
 			If FileExists($ScriptDir & "Resources\twitter.jpg") Then $sFilePath = $ScriptDir & "Resources\twitter.jpg"
 			If FileExists($ScriptDir & "..\Resources\twitter.jpg") Then $sFilePath = $ScriptDir & "..\Resources\twitter.jpg"
+		ElseIf $ResName = "instagramlogo" Then
+			If FileExists($ScriptDir & "Resources\instagram.jpg") Then $sFilePath = $ScriptDir & "Resources\instagram.jpg"
+			If FileExists($ScriptDir & "..\Resources\instagram.jpg") Then $sFilePath = $ScriptDir & "..\Resources\instagram.jpg"
 		EndIf
 		If $sFilePath <> "" Then
 			GUICtrlSetImage($CtrlId, $sFilePath)

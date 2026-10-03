@@ -34,6 +34,7 @@
 #AutoIt3Wrapper_Res_Icon_Add=Resources\StatusWorking.ico
 #AutoIt3Wrapper_Res_File_Add=Resources\facebook.jpg, rt_rcdata, facebooklogo
 #AutoIt3Wrapper_Res_File_Add=Resources\twitter.jpg, rt_rcdata, twitterlogo
+#AutoIt3Wrapper_Res_File_Add=Resources\instagram.jpg, rt_rcdata, instagramlogo
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #Region Includes
@@ -423,6 +424,9 @@ Func _MainBM()
 
 			Case $h_Picture_Twitter_About
 				ShellExecute($s_URL_Twitter)
+
+			Case $h_Picture_Instagram_About
+				ShellExecute($s_URL_Instagram)
 
 		EndSwitch
 	WEnd
@@ -1047,18 +1051,20 @@ Func _SwBMGUI()
 	;GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
 	;_ResourceSetImageToCtrl(-1, "contactme")
 
-	$h_Picture_Facebook_About = GUICtrlCreatePic("", 330, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	$h_Picture_Facebook_About = GUICtrlCreatePic("", 286, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Connect to Facebook", "Facebook", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "facebooklogo")
 
-	$h_Picture_Twitter_About = GUICtrlCreatePic("", 374, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	$h_Picture_Twitter_About = GUICtrlCreatePic("", 330, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Connect to Twitter", "Twitter", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "twitterlogo")
 
-	;GUICtrlCreatePic("D:\Pictures\Saved Pictures\facebook-logo-new-old-comparison.jpg", 286, 206, 40, 40)
-	;GUICtrlSetTip(-1, "Connect to Facebook", "Facebook", 1, 1)
+	$h_Picture_Instagram_About = GUICtrlCreatePic("", 374, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	GUICtrlSetTip(-1, "Connect to Instagram", "Instagram", 1, 1)
+	GUICtrlSetCursor(-1, 0)
+	_ResourceSetImageToCtrl(-1, "instagramlogo")
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion Help ;============================================================================================== Help:

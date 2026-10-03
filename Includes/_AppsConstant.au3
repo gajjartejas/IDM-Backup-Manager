@@ -18,6 +18,7 @@ Global Const $s_URL_Releases = "https://github.com/gajjartejas/IDM-Backup-Manage
 Global Const $s_URL_Update = "https://raw.githubusercontent.com/gajjartejas/IDM-Backup-Manager/main/version.txt"
 Global Const $s_URL_Facebook = "https://www.facebook.com/gajjartejas26"
 Global Const $s_URL_Twitter = "https://twitter.com/gajjartejas"
+Global Const $s_URL_Instagram = "https://www.instagram.com/gajjartejas/"
 
 #EndRegion Common
 
@@ -114,7 +115,7 @@ Global $h_Button_Open_Log_Setting, $h_Button_Associate_Setting, $h_Button_More_S
 Global $h_Label_LogFile_Setting, $h_Label_BrowseDataBackupFolder_Setting, $h_Label_BrowseAppDataFolder_Setting, $h_Label_DwnlDataFolder_Setting
 
 Global $h_Button_Website_Help, $h_Button_Help_Help, $h_Button_Licence_Help, $h_Button_Version_History_Help, $h_Button_Forum_Help
-Global $h_Button_Update_Help, $h_Picture_Facebook_About, $h_Picture_Twitter_About
+Global $h_Button_Update_Help, $h_Picture_Facebook_About, $h_Picture_Twitter_About, $h_Picture_Instagram_About
 
 Global $h_Tab1, $h_TabSheet1, $h_TabSheet2, $h_TabSheet3, $h_TabSheet4, $h_TabSheet5
 

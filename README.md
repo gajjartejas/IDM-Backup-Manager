@@ -102,6 +102,7 @@ To keep the Git repository lightweight and free of tracked binary blobs, third-p
 * **Bug Reports & Feature Requests**: [GitHub Issues](https://github.com/gajjartejas/IDM-Backup-Manager/issues)
 * **Author Twitter**: [@gajjartejas](https://twitter.com/gajjartejas)
 * **Author Facebook**: [gajjartejas26](https://www.facebook.com/gajjartejas26)
+* **Author Instagram**: [@gajjartejas](https://www.instagram.com/gajjartejas/)
 
 ---
 

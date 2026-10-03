@@ -41,6 +41,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 ; Main Executable
 Source: "..\bin\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+; 7-Zip Compression Engine DLLs
+Source: "..\bin\7-zip32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\7-zip64.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; Documentation & Changelog
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\History.txt"; DestDir: "{app}"; Flags: ignoreversion

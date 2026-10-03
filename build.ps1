@@ -54,9 +54,32 @@ if ($CheckProcess.ExitCode -ne 0) {
 }
 Write-Host "[OK] Syntax check passed (0 errors)." -ForegroundColor Green
 
-# 3. Create Output Directory
+# 3. Create Output Directory & Ensure 7-Zip Dependencies
 if (-not (Test-Path $OutputDir)) {
     New-Item -ItemType Directory -Path $OutputDir | Out-Null
+}
+
+$Dll32 = Join-Path $OutputDir "7-zip32.dll"
+$Dll64 = Join-Path $OutputDir "7-zip64.dll"
+$ReleaseBase = "https://github.com/gajjartejas/IDM-Backup-Manager/releases/download/v1.1.0"
+
+if (-not (Test-Path $Dll32)) {
+    Write-Host "[*] Downloading 7-zip32.dll from release..." -ForegroundColor Yellow
+    try {
+        Invoke-WebRequest -Uri "$ReleaseBase/7-zip32.dll" -OutFile $Dll32 -UseBasicParsing
+        Write-Host "[OK] Downloaded 7-zip32.dll" -ForegroundColor Green
+    } catch {
+        Write-Warning "Failed to download 7-zip32.dll: $_"
+    }
+}
+if (-not (Test-Path $Dll64)) {
+    Write-Host "[*] Downloading 7-zip64.dll from release..." -ForegroundColor Yellow
+    try {
+        Invoke-WebRequest -Uri "$ReleaseBase/7-zip64.dll" -OutFile $Dll64 -UseBasicParsing
+        Write-Host "[OK] Downloaded 7-zip64.dll" -ForegroundColor Green
+    } catch {
+        Write-Warning "Failed to download 7-zip64.dll: $_"
+    }
 }
 
 # 4. Compile with Aut2exe

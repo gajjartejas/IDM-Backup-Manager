@@ -174,14 +174,17 @@ Func _7ZipGetDll()
 	Local $ScriptDir = @ScriptDir
 	If StringRight($ScriptDir, 1) <> "\" Then $ScriptDir &= "\"
 
-	If @OSArch = "X64" Then
-		If @AutoItX64 Then
-			$7zDll = $ScriptDir & "7-zip64.dll";64os on 64autoit
-		Else
-			$7zDll = $ScriptDir & "7-zip32.dll" ;64os on 32autoit
-		EndIf
+	Local $sDllName = "7-zip32.dll"
+	If @OSArch = "X64" And @AutoItX64 Then
+		$sDllName = "7-zip64.dll"
+	EndIf
+
+	If FileExists($ScriptDir & $sDllName) Then
+		$7zDll = $ScriptDir & $sDllName
+	ElseIf FileExists($ScriptDir & "bin\" & $sDllName) Then
+		$7zDll = $ScriptDir & "bin\" & $sDllName
 	Else
-		$7zDll = $ScriptDir & "7-zip32.dll" ;32os on 32autoit
+		$7zDll = $ScriptDir & $sDllName
 	EndIf
 	Return $7zDll
 EndFunc   ;==>_7ZipGetDll

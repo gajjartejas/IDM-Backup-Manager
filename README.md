@@ -83,17 +83,18 @@ The build pipeline will:
 
 ---
 
-## 📦 Optional External Dependencies
+## 📦 External Dependencies & 7-Zip Engine
 
-To maintain compliance with open-source repository guidelines and prevent antivirus heuristic false positives, external third-party binary tools have been excluded from this source repository. If compiling or running specific compression features from source:
+To keep the Git repository lightweight and free of tracked binary blobs, third-party binary libraries are excluded from source control:
 
-1. **7-Zip Command Line & DLLs (`7z.exe`, `7-zip32.dll`, `7-zip64.dll`)**:
-   - Download the official package from [7-Zip.org](https://www.7-zip.org/).
-   - Place `7-zip32.dll` and `7-zip64.dll` into the project root or your system PATH.
-2. **UPX Executable Packer (`upx.exe`)**:
-   - If you want to compress compiled binaries, download UPX from [upx.github.io](https://upx.github.io/).
-3. **Resource Hacker (`ResHacker.exe`)**:
-   - If customizing embedded application resources, obtain Resource Hacker directly from [Angus Johnson's official site](http://www.angusj.com/resourcehacker/).
+1. **7-Zip Compression Libraries (`7-zip32.dll`, `7-zip64.dll`)**:
+   - **Automated**: The build script (`build.ps1` / `build.bat`) automatically downloads the verified 7-Zip archiver DLLs directly from the project release assets into `bin\` if not present.
+   - **Packaged**: The Inno Setup installer packages these DLLs alongside the main application executable, ensuring the installed program runs out-of-the-box.
+   - **Direct Download**: If building offline or setting up manually, download them from the [v1.1.0 Release Assets](https://github.com/gajjartejas/IDM-Backup-Manager/releases/tag/v1.1.0) and place them in the `bin/` directory.
+
+2. **Optional Tools**:
+   - **UPX Executable Packer (`upx.exe`)**: If compressing compiled binaries, obtain UPX from [upx.github.io](https://upx.github.io/).
+   - **Resource Hacker (`ResHacker.exe`)**: If customizing resource icons, obtain it from [Angus Johnson's official site](http://www.angusj.com/resourcehacker/).
 
 ---
 

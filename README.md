@@ -2,6 +2,7 @@
 
 [![Language: AutoIt](https://img.shields.io/badge/Language-AutoIt%20v3-blue.svg)](https://www.autoitscript.com/)
 [![License: ISC](https://img.shields.io/badge/License-ISC-green.svg)](LICENSE)
+[![GitHub Downloads](https://img.shields.io/github/downloads/gajjartejas/IDM-Backup-Manager/total.svg?logo=github&color=blue)](https://github.com/gajjartejas/IDM-Backup-Manager/releases)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
 [![Compatible: AutoIt v3.3.18+](https://img.shields.io/badge/Compatible-AutoIt%20v3.3.18%2B-blueviolet.svg)]()
 
@@ -119,9 +120,9 @@ To keep the Git repository lightweight and free of tracked binary blobs, third-p
    - **Packaged**: The Inno Setup installer packages these DLLs alongside the main application executable, ensuring the installed program runs out-of-the-box.
    - **Direct Download**: If building offline or setting up manually, download them from the [v1.1.0 Release Assets](https://github.com/gajjartejas/IDM-Backup-Manager/releases/tag/v1.1.0) and place them in the `bin/` directory.
 
-2. **Optional Tools**:
-   - **UPX Executable Packer (`upx.exe`)**: If compressing compiled binaries, obtain UPX from [upx.github.io](https://upx.github.io/).
-   - **Resource Hacker (`ResHacker.exe`)**: If customizing resource icons, obtain it from [Angus Johnson's official site](http://www.angusj.com/resourcehacker/).
+2. **Security & Packaging Architecture**:
+   - **Zero Antivirus False Positives**: This project intentionally **avoids UPX packing** (`#AutoIt3Wrapper_UseUpx=n`). Modern security heuristics frequently flag UPX-packed binaries as false positives (`Heur.Bzc`, `Trojan:Win32/Wacatac`). Instead, we use AutoIt3Wrapper level 4 bytecode compression and Inno Setup's native `lzma2/max` solid compression.
+   - **Native Resource Embedding**: All application icons, bitmaps, and version metadata are compiled natively via `AutoIt3Wrapper` directives during build time — eliminating manual manipulation with Resource Hacker.
 
 ## 🌐 Community & Author
 

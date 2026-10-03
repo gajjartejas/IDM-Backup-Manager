@@ -3,6 +3,7 @@
 #AutoIt3Wrapper_Icon=Resources\icon.ico
 #AutoIt3Wrapper_Outfile=bin\IDM Backup Manager.exe
 #AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_UseX64=n
 #AutoIt3Wrapper_Res_Description=IDM Backup Manager
 #AutoIt3Wrapper_Res_Fileversion=1.1.0.0

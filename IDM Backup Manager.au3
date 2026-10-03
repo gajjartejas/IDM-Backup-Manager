@@ -75,20 +75,16 @@ Func _MainBM()
 
 			Case $h_Checkbox_Convert_Registry_Restore
 				If GUICtrlRead($h_Checkbox_Convert_Registry_Restore) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_ENABLE)
-					GUICtrlSetData($h_Label_Convert_Registry_Restore, "Convert Profile(Enabled)")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Convert profile paths enabled for cross-system restore")
 				Else
-					GUICtrlSetState($h_Label_Convert_Registry_Restore, $GUI_DISABLE)
-					GUICtrlSetData($h_Label_Convert_Registry_Restore, "Convert Profile(Disabled)")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Convert profile paths disabled")
 				EndIf
 
 			Case $h_Checkbox_Append_Registry_Restore
 				If GUICtrlRead($h_Checkbox_Append_Registry_Restore) = $GUI_CHECKED Then
-					GUICtrlSetState($h_Label_Append_Registry_Restore, $GUI_ENABLE)
-					GUICtrlSetData($h_Label_Append_Registry_Restore, "Append/Merge(Enabled)")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Append/Merge enabled (preserve existing profile)")
 				Else
-					GUICtrlSetState($h_Label_Append_Registry_Restore, $GUI_DISABLE)
-					GUICtrlSetData($h_Label_Append_Registry_Restore, "Append/Merge(Disabled)")
+					_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Append/Merge disabled (overwrite existing entries)")
 				EndIf
 
 			Case $h_Checkbox_Full_Backup
@@ -738,6 +734,7 @@ Func _SwBMGUI()
 	#Region ### START Koda GUI section ###
 
 	$hGUI_BM = GUICreate($s_Win_Title_BM, $i_xWidth_BM, $i_yHight_BM, $i_xWinPos, $i_yWinPos)
+	GUISetFont(9, 400, 0, "Segoe UI", $hGUI_BM)
 
 	$h_Tab1 = GUICtrlCreateTab(10, 10, 420, 240)
 
@@ -745,50 +742,66 @@ Func _SwBMGUI()
 
 	$h_TabSheet1 = GUICtrlCreateTabItem("Backup Data")
 	_AET_TabSetIcon(-1, 1, -2)
-	GUICtrlCreateGroup("Backup Location", 24, 44, 390, 55)
-	GUICtrlSetFont(-1, 2, 800, 0, "MS Sans Serif")
+	GUICtrlCreateGroup("Backup Destination", 24, 44, 390, 54)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Input_Backup_Path = GUICtrlCreateInput("", 33, 64, 336, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Input_Backup_Path = GUICtrlCreateInput("", 34, 63, 336, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Button_Browse_Backup = GUICtrlCreateButton("", 376, 63, 30, 23)
+	$h_Button_Browse_Backup = GUICtrlCreateButton("", 374, 62, 32, 25)
 	_AET_ButtonSetIcon(-1, 15, 16, 16, 4)
-	GUICtrlSetTip(-1, "Save Backup File")
+	GUICtrlSetTip(-1, "Choose destination backup file location (.ibf)", "Select Backup Location", 1, 1)
 
-	GUICtrlCreateGroup("Options", 24, 104, 390, 100)
-	GUICtrlSetFont(-1, 1, 800, 0, "MS Sans Serif")
+	GUICtrlCreateGroup("Backup Options", 24, 103, 390, 107)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Input_Password_Backup = GUICtrlCreateInput("", 38, 126, 146, 22, $ES_PASSWORD)
+	GUICtrlCreateLabel("Password (Optional):", 38, 121, 146, 15)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	$h_Input_Password_Backup = GUICtrlCreateInput("", 38, 137, 148, 22, $ES_PASSWORD)
 	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password (Optional)")
 	GUICtrlSetTip(-1, "Enter a password to encrypt this backup. Leave empty for no encryption (default).", "Backup Password", 1, 1)
 
-	$h_Combo_Compression_Level_Backup = GUICtrlCreateCombo("1-No Compression", 38, 158, 146, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	GUICtrlCreateLabel("Compression Level:", 38, 163, 146, 15)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	$h_Combo_Compression_Level_Backup = GUICtrlCreateCombo("1-No Compression", 38, 179, 148, 24, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, "2-Fastest Compression|3-Fast Compression|4-Normal Compression|5-Maximum Compression|6-Ultra Compression", "1-No Compression")
 	GUICtrlSetTip(-1, "Select backup compression level (default: 1-No Compression).", "Compression Level", 1, 1)
 
-	$h_Checkbox_Full_Backup = GUICtrlCreateCheckbox("Full Backup", 200, 128, 107, 17)
+	$h_Checkbox_Full_Backup = GUICtrlCreateCheckbox("Full Backup", 202, 123, 104, 20)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_CHECKED)
-	GUICtrlSetTip(-1, "Backup Every Thing")
-	$h_Checkbox_Listl_Backup = GUICtrlCreateCheckbox("Only List Backup", 310, 128, 97, 17)
+	GUICtrlSetTip(-1, "Backup everything including downloads, lists, and settings", "Full Backup", 1, 1)
+
+	$h_Checkbox_Listl_Backup = GUICtrlCreateCheckbox("Only List", 310, 123, 98, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Backup List of Downloads Without Backing Up Data")
-	$h_Checkbox_UnFinished_DD_Backup = GUICtrlCreateCheckbox("Downloaded Data", 200, 149, 107, 17)
+	GUICtrlSetTip(-1, "Backup list of downloads without actual data files", "Only List Backup", 1, 1)
+
+	$h_Checkbox_UnFinished_DD_Backup = GUICtrlCreateCheckbox("Downloaded Data", 202, 149, 104, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Backup Downloaded Data")
-	$h_Checkbox_UnFinished_GD_Backup = GUICtrlCreateCheckbox("Grabber Data", 310, 149, 97, 17)
+	GUICtrlSetTip(-1, "Backup downloaded files data", "Downloaded Data", 1, 1)
+
+	$h_Checkbox_UnFinished_GD_Backup = GUICtrlCreateCheckbox("Grabber Data", 310, 149, 98, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Backup Grabber Data")
-	$h_Checkbox_UnFinished_SD_Backup = GUICtrlCreateCheckbox("Scheduler/Queues", 200, 170, 107, 17)
+	GUICtrlSetTip(-1, "Backup grabber project data", "Grabber Data", 1, 1)
+
+	$h_Checkbox_UnFinished_SD_Backup = GUICtrlCreateCheckbox("Scheduler/Queues", 202, 175, 104, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Backup Scheduler and Queues")
-	$h_Checkbox_UnFinished_HL_Backup = GUICtrlCreateCheckbox("Other Data", 310, 170, 97, 17)
+	GUICtrlSetTip(-1, "Backup scheduler tasks and queue definitions", "Scheduler & Queues", 1, 1)
+
+	$h_Checkbox_UnFinished_HL_Backup = GUICtrlCreateCheckbox("Other Data", 310, 175, 98, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Backup History, Logs and Sound")
+	GUICtrlSetTip(-1, "Backup history, logs, and other IDM data", "Other Data", 1, 1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Button_Backup = GUICtrlCreateButton("Backup Now", 319, 217, 95, 25)
+	$h_Button_Backup = GUICtrlCreateButton("  Backup Now", 305, 215, 109, 27)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
-	GUICtrlSetTip(-1, "Backup Now")
+	GUICtrlSetTip(-1, "Start IDM backup process now", "Backup Now", 1, 1)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 
 	#EndRegion backup ;==============================================================================================Backup:
@@ -796,61 +809,76 @@ Func _SwBMGUI()
 	#Region Restore ;==============================================================================================Restore:
 	$h_TabSheet2 = GUICtrlCreateTabItem("Restore Data")
 	_AET_TabSetIcon(-1, 10, -11)
-	GUICtrlCreateGroup("Restore Location", 24, 44, 390, 55)
-	GUICtrlSetFont(-1, 2, 800, 0, "MS Sans Serif")
+	GUICtrlCreateGroup("Restore Source", 24, 44, 390, 54)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Input_Restore_Path = GUICtrlCreateInput("", 33, 64, 306, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Input_Restore_Path = GUICtrlCreateInput("", 34, 63, 302, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 
-	$h_Button_Browse_Restore = GUICtrlCreateButton("", 346, 63, 30, 23)
+	$h_Button_Browse_Restore = GUICtrlCreateButton("", 340, 62, 32, 25)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 4)
-	GUICtrlSetTip(-1, "Browse For Restore File")
+	GUICtrlSetTip(-1, "Browse for backup archive file (.ibf)", "Select Backup File", 1, 1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Button_Restore_Archive_Info = GUICtrlCreateButton("", 380, 63, 30, 23)
+	$h_Button_Restore_Archive_Info = GUICtrlCreateButton("", 376, 62, 32, 25)
 	_AET_ButtonSetIcon(-1, 19, 16, 16, 4)
-	GUICtrlSetTip(-1, "Show information about backup file")
+	GUICtrlSetTip(-1, "Show information about the selected backup file", "Archive Info", 1, 1)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 
+	GUICtrlCreateGroup("Restore Options", 24, 103, 390, 107)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	GUICtrlCreateGroup("Options", 24, 104, 390, 100)
-	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
-
-	$h_Input_Password_Restore = GUICtrlCreateInput("", 38, 126, 146, 22, $ES_PASSWORD)
+	GUICtrlCreateLabel("Password (if encrypted):", 38, 121, 146, 15)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	$h_Input_Password_Restore = GUICtrlCreateInput("", 38, 137, 148, 22, $ES_PASSWORD)
 	GUICtrlSendMsg(-1, $EM_SETCUEBANNER, True, "Password (if encrypted)")
-	GUICtrlSetTip(-1, "Enter password if your backup is encrypted (leave empty if not).", "Restore Password", 1, 1)
+	GUICtrlSetTip(-1, "Enter password if your backup archive is encrypted (leave empty if not).", "Restore Password", 1, 1)
 
-	$h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("", 38, 159, 13, 17)
+	$h_Checkbox_Convert_Registry_Restore = GUICtrlCreateCheckbox("Convert Profile Paths", 38, 164, 150, 18)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetTip(-1, "Adapt profile and download paths when restoring onto a different computer or Windows account.", "Convert Profile", 1, 1)
+	$h_Label_Convert_Registry_Restore = GUICtrlCreateDummy()
 
-	$h_Label_Convert_Registry_Restore = GUICtrlCreateLabel("Convert Profile(Disabled)", 54, 161, 130, 17)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Choose Yes If Destination Backup is another System" & @CRLF & @CRLF & _
-			"EXAMPLE:" & @CRLF & _
-			"In case of If You Want To Restore Backup of Cybercafe to Your Home PC", "Convert Profile", 1, 1)
+	$h_Checkbox_Append_Registry_Restore = GUICtrlCreateCheckbox("Append / Merge Data", 38, 184, 150, 18)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetTip(-1, "Merge backup records with existing IDM data instead of replacing existing entries.", "Append/Merge Data", 1, 1)
+	$h_Label_Append_Registry_Restore = GUICtrlCreateDummy()
 
-	$h_Checkbox_Append_Registry_Restore = GUICtrlCreateCheckbox("", 38, 180, 13, 17)
-	$h_Label_Append_Registry_Restore = GUICtrlCreateLabel("Append/Merge(Disabled)", 54, 182, 130, 17)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "This will not remove existing profile. It will append data if possible and then merge.", "Append/Merge Data", 1, 1)
-
-	$h_Checkbox_Full_Restore = GUICtrlCreateCheckbox("Full Restore", 200, 128, 107, 17)
+	$h_Checkbox_Full_Restore = GUICtrlCreateCheckbox("Full Restore", 202, 123, 104, 20)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_CHECKED)
-	$h_Checkbox_Listl_Restore = GUICtrlCreateCheckbox("Only List Restore", 310, 128, 97, 17)
+	GUICtrlSetTip(-1, "Restore everything from backup archive", "Full Restore", 1, 1)
+
+	$h_Checkbox_Listl_Restore = GUICtrlCreateCheckbox("Only List", 310, 123, 98, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Checkbox_UnFinished_DD_Restore = GUICtrlCreateCheckbox("Downloaded Data", 200, 149, 107, 17)
+	GUICtrlSetTip(-1, "Restore list of downloads without actual data files", "Only List Restore", 1, 1)
+
+	$h_Checkbox_UnFinished_DD_Restore = GUICtrlCreateCheckbox("Downloaded Data", 202, 149, 104, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Checkbox_UnFinished_GD_Restore = GUICtrlCreateCheckbox("Grabber Data", 310, 149, 97, 17)
+	GUICtrlSetTip(-1, "Restore downloaded files data", "Downloaded Data", 1, 1)
+
+	$h_Checkbox_UnFinished_GD_Restore = GUICtrlCreateCheckbox("Grabber Data", 310, 149, 98, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Checkbox_UnFinished_SD_Restore = GUICtrlCreateCheckbox("Scheduler/Queues", 200, 170, 107, 17)
+	GUICtrlSetTip(-1, "Restore grabber project data", "Grabber Data", 1, 1)
+
+	$h_Checkbox_UnFinished_SD_Restore = GUICtrlCreateCheckbox("Scheduler/Queues", 202, 175, 104, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	$h_Checkbox_UnFinished_HL_Restore = GUICtrlCreateCheckbox("Other Data", 310, 170, 97, 17)
+	GUICtrlSetTip(-1, "Restore scheduler tasks and queue definitions", "Scheduler & Queues", 1, 1)
+
+	$h_Checkbox_UnFinished_HL_Restore = GUICtrlCreateCheckbox("Other Data", 310, 175, 98, 20)
+	GUICtrlSetFont(-1, 8.5, 400, 0, "Segoe UI")
 	GUICtrlSetState(-1, $GUI_DISABLE)
+	GUICtrlSetTip(-1, "Restore history, logs, and other IDM data", "Other Data", 1, 1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Button_Restore = GUICtrlCreateButton("Restore Now", 319, 217, 95, 25)
+	$h_Button_Restore = GUICtrlCreateButton("  Restore Now", 305, 215, 109, 27)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 8, 16, 16, 0)
-	GUICtrlSetTip(-1, "Restore Now")
+	GUICtrlSetTip(-1, "Start IDM restore process now", "Restore Now", 1, 1)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-
 
 	#EndRegion Restore ;==============================================================================================Restore:
 
@@ -893,47 +921,49 @@ Func _SwBMGUI()
 	$h_TabSheet4 = GUICtrlCreateTabItem("Options")
 	_AET_TabSetIcon(-1, 16, -17)
 
-	GUICtrlCreateGroup("Default Application Path", 24, 44, 390, 80)
+	GUICtrlCreateGroup("Default Application Paths", 24, 44, 390, 76)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
 	#Region Setting - BrowseLogFile
-	$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton(" Log File Folder:", 32, 60, 107, 25, $BS_left)
+	$h_Button_BrowseLogFile_Setting = GUICtrlCreateButton(" Log File Folder:", 34, 60, 112, 25, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 	$h_Button_BrowseLogFile_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseLogFile_Setting)
 	$h_Button_BrowseLogFile_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseLogFile_Setting_Context)
 	$h_Button_BrowseLogFile_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseLogFile_Setting_Context)
 
-	$h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 144, 64, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Label_LogFile_Setting = GUICtrlCreateInput($s_Log_File, 150, 61, 254, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_LogFile_Setting))
 	#EndRegion Setting - BrowseLogFile
 
 	#Region Setting - BrowseDataBackupFolder
-	$h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton(" Backup Folder:", 32, 92, 107, 25, $BS_left)
+	$h_Button_BrowseDataBackupFolder_Setting = GUICtrlCreateButton(" Backup Folder:", 34, 88, 112, 25, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 	$h_Button_BrowseDataBackupFolder_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseDataBackupFolder_Setting)
 	$h_Button_BrowseDataBackupFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseDataBackupFolder_Setting_Context)
 	$h_Button_BrowseDataBackupFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseDataBackupFolder_Setting_Context)
 
-	$h_Label_BrowseDataBackupFolder_Setting = GUICtrlCreateInput($s_Backup_Dir, 144, 96, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Label_BrowseDataBackupFolder_Setting = GUICtrlCreateInput($s_Backup_Dir, 150, 89, 254, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseDataBackupFolder_Setting))
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion Setting - BrowseDataBackupFolder
 
 	#Region Setting - BrowseAppDataFolder
-	GUICtrlCreateGroup("Default IDM Profile", 24, 128, 393, 81)
+	GUICtrlCreateGroup("Default IDM Profile Paths", 24, 124, 390, 78)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton(" AppData Folder:", 32, 146, 107, 25, $BS_left)
+	$h_Button_BrowseAppDataFolder_Setting = GUICtrlCreateButton(" AppData Folder:", 34, 140, 112, 25, $BS_left)
 	_AET_ButtonSetIcon(-1, 2, 16, 16, 0)
 	$h_Button_BrowseAppDataFolder_Setting_Context = GUICtrlCreateContextMenu($h_Button_BrowseAppDataFolder_Setting)
 	$h_Button_BrowseAppDataFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_BrowseAppDataFolder_Setting_Context)
 	$h_Button_BrowseAppDataFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_BrowseAppDataFolder_Setting_Context)
 
-	$h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 144, 150, 265, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
+	$h_Label_BrowseAppDataFolder_Setting = GUICtrlCreateInput($s_AppDataIDMFolder, 150, 141, 254, 23, BitOR($GUI_SS_DEFAULT_INPUT, $ES_READONLY))
 	GUICtrlSetTip(-1, GUICtrlRead($h_Label_BrowseAppDataFolder_Setting))
 	#EndRegion Setting - BrowseAppDataFolder
 
 	#Region Setting - TempDataFolder
-	$h_Button_TempDataFolder_Setting = GUICtrlCreateButton(" Temp Folder:", 32, 178, 107, 25, $BS_left)
+	$h_Button_TempDataFolder_Setting = GUICtrlCreateButton(" Temp Folder:", 34, 168, 112, 25, $BS_left)
 	GUICtrlSetTip(-1, _
 			"Temporary directory is required for storing file parts during download." & @CRLF & _
 			"If you have several physical drives on your computer, you should select" & @CRLF & _
@@ -944,7 +974,7 @@ Func _SwBMGUI()
 	$h_Button_TempDataFolder_Setting_Context0 = GUICtrlCreateMenuItem("Select Folder...", $h_Button_TempDataFolder_Setting_Context)
 	$h_Button_TempDataFolder_Setting_Context1 = GUICtrlCreateMenuItem("Open Folder Location", $h_Button_TempDataFolder_Setting_Context)
 
-	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateCombo("", 144, 182, 265, 17, BitOR($GUI_SS_DEFAULT_COMBO, $CBS_SIMPLE))
+	$h_Label_DwnlDataFolder_Setting = GUICtrlCreateCombo("", 150, 169, 254, 120, BitOR($GUI_SS_DEFAULT_COMBO, $CBS_DROPDOWN))
 	#Region Set Data
 	Local $s_all_DwnlData_Folder = _aGetTempPathFolderEx()
 	Local $i = 0
@@ -966,21 +996,25 @@ Func _SwBMGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion Setting - TempDataFolder
 
-	$h_Button_Open_Log_Setting = GUICtrlCreateButton("", 274, 216, 30, 23)
+	Local $h_Label_Options_Tip = GUICtrlCreateLabel("💡 Tip: Right-click folder buttons for quick actions", 34, 220, 230, 18)
+	GUICtrlSetFont($h_Label_Options_Tip, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Options_Tip, 0x666666)
+
+	$h_Button_Open_Log_Setting = GUICtrlCreateButton("", 270, 215, 32, 26)
 	_AET_ButtonSetIcon(-1, 18, 16, 16, 4)
-	GUICtrlSetTip(-1, "Open Log File")
+	GUICtrlSetTip(-1, "Open the application log file in text editor", "Open Log", 1, 1)
 
-	$h_Button_Associate_Setting = GUICtrlCreateButton("", 310, 216, 30, 23)
+	$h_Button_Associate_Setting = GUICtrlCreateButton("", 306, 215, 32, 26)
 	_AET_ButtonSetIcon(-1, 14, 16, 16, 4)
-	GUICtrlSetTip(-1, "Association .IBF File")
+	GUICtrlSetTip(-1, "Associate .ibf file extension with IDM Backup Manager", "File Association", 1, 1)
 
-	$h_Button_More_Setting = GUICtrlCreateButton("", 346, 216, 30, 23)
+	$h_Button_More_Setting = GUICtrlCreateButton("", 342, 215, 32, 26)
 	_AET_ButtonSetIcon(-1, 16, 16, 16, 4)
-	GUICtrlSetTip(-1, "More Setting")
+	GUICtrlSetTip(-1, "Configure additional application preferences", "More Settings", 1, 1)
 
-	$h_Button_RestoreDefault_Setting = GUICtrlCreateButton("", 382, 216, 30, 23)
+	$h_Button_RestoreDefault_Setting = GUICtrlCreateButton("", 378, 215, 32, 26)
 	_AET_ButtonSetIcon(-1, 17, 16, 16, 4)
-	GUICtrlSetTip(-1, "Restore Default Setting")
+	GUICtrlSetTip(-1, "Reset all settings back to default values", "Reset Defaults", 1, 1)
 
 	GUICtrlCreateTabItem("")
 	#EndRegion Setting ;============================================================================================== Setting:
@@ -990,43 +1024,60 @@ Func _SwBMGUI()
 	$h_TabSheet5 = GUICtrlCreateTabItem("Help")
 	_AET_TabSetIcon(-1, 4, -5)
 
-	GUICtrlCreateGroup("Help and Update", 24, 44, 390, 160)
-	GUICtrlSetFont(-1, 8, 800, 0, "MS Sans Serif")
+	GUICtrlCreateGroup("Help & Information", 24, 44, 390, 150)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Button_Website_Help = GUICtrlCreateButton("  Website", 37, 126, 100, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 5, 24, 24, 0)
+	$h_Button_Help_Help = GUICtrlCreateButton("  User Guide & FAQ", 36, 64, 178, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 4, 20, 20, 0)
+	GUICtrlSetTip(-1, "Open User Guide and FAQ documentation", "Documentation", 1, 1)
 
-	$h_Button_Help_Help = GUICtrlCreateButton("  Help", 37, 66, 100, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 4, 24, 24, 0)
+	$h_Button_Version_History_Help = GUICtrlCreateButton("  Version History", 224, 64, 178, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 7, 20, 20, 0)
+	GUICtrlSetTip(-1, "View full changelog and release history", "Version History", 1, 1)
 
-	$h_Button_Licence_Help = GUICtrlCreateButton("  License", 37, 96, 100, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 6, 24, 24, 0)
+	$h_Button_Licence_Help = GUICtrlCreateButton("  License Agreement", 36, 104, 178, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 6, 20, 20, 0)
+	GUICtrlSetTip(-1, "View open source license terms", "License Agreement", 1, 1)
 
-	$h_Button_Version_History_Help = GUICtrlCreateButton("  View Version History", 146, 66, 230, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 7, 24, 24, 0)
+	$h_Button_Forum_Help = GUICtrlCreateButton("  Feedback & Issues", 224, 104, 178, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 3, 20, 20, 0)
+	GUICtrlSetTip(-1, "Report bugs or request new features on GitHub", "Feedback & Issues", 1, 1)
 
-	$h_Button_Forum_Help = GUICtrlCreateButton("  Request New Features or Bug Report", 146, 96, 230, 30, $BS_left)
-	_AET_ButtonSetIcon(-1, 3, 24, 24, 0)
+	$h_Button_Website_Help = GUICtrlCreateButton("  Project Website", 36, 144, 178, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 5, 20, 20, 0)
+	GUICtrlSetTip(-1, "Visit official GitHub repository", "Project Website", 1, 1)
 
-	$h_Button_Update_Help = GUICtrlCreateButton("  Check For Updated Version", 146, 126, 230, 30, $BS_left);1111
-	_AET_ButtonSetIcon(-1, 13, 24, 24, 0)
+	$h_Button_Update_Help = GUICtrlCreateButton("  Check for Updates", 224, 144, 178, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 13, 20, 20, 0)
+	GUICtrlSetTip(-1, "Check online for newer versions of IDM Backup Manager", "Check for Updates", 1, 1)
 
-	;$h_Picture_About = GUICtrlCreatePic("", 260, 55, 150, 145)
-	;GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
-	;_ResourceSetImageToCtrl(-1, "contactme")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$h_Picture_Facebook_About = GUICtrlCreatePic("", 286, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
-	GUICtrlSetTip(-1, "Connect to Facebook", "Facebook", 1, 1)
+	Local $h_Label_Help_Title = GUICtrlCreateLabel("IDM Backup Manager v" & $s_Current_Version, 36, 205, 230, 18)
+	GUICtrlSetFont($h_Label_Help_Title, 9, 600, 0, "Segoe UI")
+
+	Local $h_Label_Help_Sub = GUICtrlCreateLabel("By Tejas Gajjar  •  Connect & Follow:", 36, 222, 230, 16)
+	GUICtrlSetFont($h_Label_Help_Sub, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Help_Sub, 0x666666)
+
+	$h_Picture_Facebook_About = GUICtrlCreatePic("", 284, 204, 36, 36, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	GUICtrlSetTip(-1, "Connect on Facebook", "Facebook", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "facebooklogo")
 
-	$h_Picture_Twitter_About = GUICtrlCreatePic("", 330, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
-	GUICtrlSetTip(-1, "Connect to Twitter", "Twitter", 1, 1)
+	$h_Picture_Twitter_About = GUICtrlCreatePic("", 328, 204, 36, 36, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	GUICtrlSetTip(-1, "Follow on Twitter / X", "Twitter / X", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "twitterlogo")
 
-	$h_Picture_Instagram_About = GUICtrlCreatePic("", 374, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
-	GUICtrlSetTip(-1, "Connect to Instagram", "Instagram", 1, 1)
+	$h_Picture_Instagram_About = GUICtrlCreatePic("", 372, 204, 36, 36, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	GUICtrlSetTip(-1, "Follow on Instagram", "Instagram", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "instagramlogo")
 

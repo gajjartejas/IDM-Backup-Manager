@@ -2,7 +2,8 @@
 
 [![Language: AutoIt](https://img.shields.io/badge/Language-AutoIt%20v3-blue.svg)](https://www.autoitscript.com/)
 [![License: ISC](https://img.shields.io/badge/License-ISC-green.svg)](LICENSE)
-[![Status: Historical Archive](https://img.shields.io/badge/Status-Historical%20Archive%20(2013--2016)-orange.svg)]()
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
+[![Compatible: AutoIt v3.3.18+](https://img.shields.io/badge/Compatible-AutoIt%20v3.3.18%2B-blueviolet.svg)]()
 
 An open-source configuration backup and migration utility written in AutoIt v3 for managing download queues, categories, temporary directories, and configuration settings.
 
@@ -22,39 +23,65 @@ An open-source configuration backup and migration utility written in AutoIt v3 f
 * **Complete Profile Backup**: Backup download lists, incomplete downloads metadata, schedule queues, and custom category rules.
 * **Multi-Profile Support**: Manage multiple backup archives and restore them across machines or clean OS reinstalls.
 * **Password Sanitizer**: Clean stored server and site authentication credentials prior to sharing or migrating configuration profiles.
-* **Modular Codebase**: Contains the complete historical development progression (Builds 1 through 11) developed between 2013 and 2016.
+* **Modern AutoIt v3.3.18+ Compatibility**: Updated syntax, standard includes, and error-free Au3Check validation.
+* **Automated Build Pipeline**: Includes PowerShell (`build.ps1`) and CMD (`build.bat`) build automation.
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-├── IDM BUILD_11/             # Latest production release version (v1.0.0 / v1.1.0)
-│   ├── IDM Backup Manager.au3 # Main AutoIt v3 script
-│   ├── Forms/                # Koda Form Designer definitions (.kxf)
-│   ├── Includes/             # Core AutoIt helper libraries (.au3)
-│   ├── Resources/            # Application icons and GUI assets
-│   ├── Help/                 # Documentation and user manuals
-│   └── License.txt           # Build license notice
-├── IDM BUILD_1/ to 10/       # Chronological development revisions (Builds 1–10)
-├── Extra/                    # Release notes and auxiliary packaging specs
-└── idm1/ to idm final_3/     # Early prototypes and legacy versions
+├── IDM Backup Manager.au3    # Main application entry point script
+├── Forms/                    # Koda Form Designer definitions (.kxf)
+├── Includes/                 # Modular AutoIt helper libraries (.au3)
+├── Resources/                # Application icons, GUI bitmaps, and assets
+├── Help/                     # User documentation and manual (.docx, .htm, images)
+├── Build/                    # Advanced Installer configuration (.aip)
+├── build.ps1                 # Automated PowerShell compilation & verification script
+├── build.bat                 # One-click Windows batch compilation launcher
+├── History.txt               # Chronological version changelog
+├── CmdLine.txt               # Command line arguments specification
+├── LICENSE                   # Open-source ISC license
+├── README.md                 # Project documentation
+└── .gitignore                # Git ignore rules for build artifacts & temp files
 ```
 
 ---
 
-## 🛠️ Prerequisites & Building from Source
+## 🛠️ Building from Source
 
 ### Requirements
-* [AutoIt v3](https://www.autoitscript.com/site/autoit/downloads/) (v3.3.8 or newer)
-* [SciTE4AutoIt3](https://www.autoitscript.com/site/autoit-script-editor/) (recommended for editing and compilation)
+* [AutoIt v3](https://www.autoitscript.com/site/autoit/downloads/) (v3.3.8 or v3.3.18+ installed)
+* [SciTE4AutoIt3](https://www.autoitscript.com/site/autoit-script-editor/) (optional, for editing)
 
-### External Tools (Optional)
-To maintain compliance with open-source repository guidelines and prevent antivirus heuristic false positives, external binary tools have been excluded from this repository. If compiling or running specific compression features from source:
+### One-Click Build
+Run either of the automated build scripts:
+
+- **PowerShell**:
+  ```powershell
+  .\build.ps1
+  ```
+  *(or for 64-bit: `.\build.ps1 -Arch x64`)*
+
+- **Command Prompt**:
+  ```cmd
+  build.bat
+  ```
+
+The build pipeline will:
+1. Automatically locate your local AutoIt installation.
+2. Run syntax verification with `Au3Check.exe` (verifies 0 errors / 0 warnings).
+3. Compile the executable into `bin\IDM Backup Manager.exe` with embedded icon and metadata.
+
+---
+
+## 📦 Optional External Dependencies
+
+To maintain compliance with open-source repository guidelines and prevent antivirus heuristic false positives, external third-party binary tools have been excluded from this source repository. If compiling or running specific compression features from source:
 
 1. **7-Zip Command Line & DLLs (`7z.exe`, `7-zip32.dll`, `7-zip64.dll`)**:
    - Download the official package from [7-Zip.org](https://www.7-zip.org/).
-   - Place `7-zip32.dll` and `7-zip64.dll` into the respective `IDM BUILD_11/` or your system directory.
+   - Place `7-zip32.dll` and `7-zip64.dll` into the project root or your system PATH.
 2. **UPX Executable Packer (`upx.exe`)**:
    - If you want to compress compiled binaries, download UPX from [upx.github.io](https://upx.github.io/).
 3. **Resource Hacker (`ResHacker.exe`)**:

@@ -24,3 +24,5 @@ Desktop.ini
 [Uu]tilities/
 [Oo]utput/
 *-cache/
+bin/
+dist/

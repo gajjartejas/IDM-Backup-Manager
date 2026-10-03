@@ -268,24 +268,4 @@ def draw_status_working(draw, img):
     draw.arc([50, 50, 206, 206], start=45, end=300, fill="#FFFFFF", width=24)
 draw_fluent("StatusWorking", draw_status_working)
 
-# 20. Modern Social Logos
-def draw_social(name, bg_color, draw_symbol):
-    img = Image.new("RGB", (256, 256), bg_color)
-    draw = ImageDraw.Draw(img)
-    draw_symbol(draw)
-    img = img.resize((40, 40), Image.Resampling.LANCZOS)
-    img.save(os.path.join(RESOURCES_DIR, f"{name}.jpg"), quality=95)
-    print(f"Saved {name}.jpg")
-
-draw_social("facebook", "#1877F2", lambda d: (
-    d.rounded_rectangle([130, 40, 180, 230], radius=10, fill="#FFFFFF"),
-    d.rounded_rectangle([80, 95, 210, 145], radius=10, fill="#FFFFFF")
-))
-
-draw_social("twitter", "#1DA1F2", lambda d: (
-    d.ellipse([60, 60, 196, 196], outline="#FFFFFF", width=24),
-    d.line([(80, 80), (176, 176)], fill="#FFFFFF", width=24),
-    d.line([(176, 80), (80, 176)], fill="#FFFFFF", width=24)
-))
-
 print("All modern flat Windows 11 icons generated successfully!")

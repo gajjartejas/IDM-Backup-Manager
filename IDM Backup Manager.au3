@@ -410,19 +410,19 @@ Func _MainBM()
 				_SwHelp()
 
 			Case $h_Button_Website_Help
-				ShellExecute("https://github.com/gajjartejas/IDM-Backup-Manager")
+				ShellExecute($s_URL_Website)
 
 			Case $h_Button_Forum_Help
-				ShellExecute("https://github.com/gajjartejas/IDM-Backup-Manager/issues")
+				ShellExecute($s_URL_Issues)
 
 			Case $h_Button_Associate_Setting
 				_ShellInstall()
 
 			Case $h_Picture_Facebook_About
-				ShellExecute("https://www.facebook.com/gajjartejas26")
+				ShellExecute($s_URL_Facebook)
 
 			Case $h_Picture_Twitter_About
-				ShellExecute("https://www.twitter.com/gajjartejas")
+				ShellExecute($s_URL_Twitter)
 
 		EndSwitch
 	WEnd
@@ -1047,12 +1047,14 @@ Func _SwBMGUI()
 	;GUICtrlSetTip(-1, "Dedicated to my lovely classmates!", "Love You!", 1, 1)
 	;_ResourceSetImageToCtrl(-1, "contactme")
 
-	$h_Picture_Facebook_About = GUICtrlCreatePic("", 330, 206, 40, 40)
+	$h_Picture_Facebook_About = GUICtrlCreatePic("", 330, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Connect to Facebook", "Facebook", 1, 1)
+	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "facebooklogo")
 
-	$h_Picture_Twitter_About = GUICtrlCreatePic("", 374, 206, 40, 40)
+	$h_Picture_Twitter_About = GUICtrlCreatePic("", 374, 206, 40, 40, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Connect to Twitter", "Twitter", 1, 1)
+	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "twitterlogo")
 
 	;GUICtrlCreatePic("D:\Pictures\Saved Pictures\facebook-logo-new-old-comparison.jpg", 286, 206, 40, 40)
@@ -2040,7 +2042,7 @@ Func _UpdateCheck()
 		If FileExists($sFilePath) Then FileDelete($sFilePath)
 
 		; Download the file in the background with the selected option of 'force a reload from the remote site.'
-		Local $hDownload = InetGet("http://www.geocities.ws/gajjartejas/IDM_Backup_Manager/v0.9.1/update.txt", $sFilePath, $INET_FORCERELOAD, $INET_DOWNLOADBACKGROUND)
+		Local $hDownload = InetGet($s_URL_Update, $sFilePath, $INET_FORCERELOAD, $INET_DOWNLOADBACKGROUND)
 
 		; Wait for the download to complete by monitoring when the 2nd index value of InetGetInfo returns True.
 		Do
@@ -2067,18 +2069,19 @@ Func _UpdateCheck()
 
 		; Read the contents of the file using the handle returned by FileOpen.
 		Local $sFileRead = FileRead($hFileOpen)
+		Local $sDownloadedVersion = StringStripWS(BinaryToString($sFileRead), 3)
 
-		Switch BinaryToString($sFileRead)
+		Switch $sDownloadedVersion
 			Case ""
 				_GUICtrlStatusBar_SetText($h_Status_Info, "Error: Time Out! Or server May be Unviable")
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusError);StatusError
-			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", "0.9.8", "0.9.9", $s_Current_Version
+			Case "0.9.1", "0.9.2", "0.9.3", "0.9.4", "0.9.5", "0.9.6", "0.9.7", "0.9.8", "0.9.9", "1.0.0", $s_Current_Version
 				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: You Have Most Recent Version.")
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusCompled);StatusCompled
 			Case Else
-				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & BinaryToString($sFileRead))
+				_GUICtrlStatusBar_SetText($h_Status_Info, "INFO: Download Following Version: " & $sDownloadedVersion)
 				_GUICtrlStatusBar_SetIcon($h_Status_Info, 0, $hIcons_StatusInfo);StatusInfo
-				ShellExecute("https://github.com/gajjartejas/IDM-Backup-Manager/releases")
+				ShellExecute($s_URL_Releases)
 		EndSwitch
 
 		; Delete the file.

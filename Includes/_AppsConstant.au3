@@ -8,13 +8,21 @@
 
 #Region Common
 Global Const $s_regpath_IDM = "HKEY_CURRENT_USER\Software\DownloadManager"
-Global Const $s_Current_Version = "1.0.0"
+Global Const $s_Current_Version = "1.1.0"
 Global Const $IS_PORTABLE = True
+
+; Application URLs & Endpoints
+Global Const $s_URL_Website = "https://github.com/gajjartejas/IDM-Backup-Manager"
+Global Const $s_URL_Issues = "https://github.com/gajjartejas/IDM-Backup-Manager/issues"
+Global Const $s_URL_Releases = "https://github.com/gajjartejas/IDM-Backup-Manager/releases"
+Global Const $s_URL_Update = "https://raw.githubusercontent.com/gajjartejas/IDM-Backup-Manager/main/version.txt"
+Global Const $s_URL_Facebook = "https://www.facebook.com/gajjartejas26"
+Global Const $s_URL_Twitter = "https://twitter.com/gajjartejas"
 
 #EndRegion Common
 
 #Region Global Variables IDM BM
-Global Const $s_Win_Title_BM = "IDM Backup Manager" & $s_Current_Version
+Global Const $s_Win_Title_BM = "IDM Backup Manager " & $s_Current_Version
 Global Const $i_xWidth_BM = 439
 Global Const $i_yHight_BM = 276
 Global $i_xWinPos = (@DesktopWidth - $i_xWidth_BM) / 2
@@ -136,7 +144,7 @@ Global $aData[15]
 #EndRegion Global Variables IDM BM
 
 #Region global Variables
-Global $s_Win_Title_LM = "IDM List Manager" & $s_Current_Version & "(Beta)"
+Global $s_Win_Title_LM = "IDM List Manager " & $s_Current_Version & " (Beta)"
 Global Enum $idExplore = 1000, $idJoin, $idDetails, $idRemove, $idGoto
 Global $i_xWidth_LM = 570, $i_yHight_LM = 150
 Global $hGUI_LM, $MenuItem_list_Catagories_[1], $fChange = False
@@ -193,7 +201,7 @@ Func _SwHelp()
 	ElseIf FileExists(@ScriptDir & "\Help\Help.docx") Then
 		ShellExecute(@ScriptDir & "\Help\Help.docx")
 	Else
-		ShellExecute("https://github.com/gajjartejas/IDM-Backup-Manager#readme")
+		ShellExecute($s_URL_Website & "#readme")
 	EndIf
 EndFunc   ;==>_SwHelp
 

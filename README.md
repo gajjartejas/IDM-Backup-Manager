@@ -96,6 +96,13 @@ To keep the Git repository lightweight and free of tracked binary blobs, third-p
    - **UPX Executable Packer (`upx.exe`)**: If compressing compiled binaries, obtain UPX from [upx.github.io](https://upx.github.io/).
    - **Resource Hacker (`ResHacker.exe`)**: If customizing resource icons, obtain it from [Angus Johnson's official site](http://www.angusj.com/resourcehacker/).
 
+## 🌐 Community & Author
+
+* **Project Repository**: [GitHub (gajjartejas/IDM-Backup-Manager)](https://github.com/gajjartejas/IDM-Backup-Manager)
+* **Bug Reports & Feature Requests**: [GitHub Issues](https://github.com/gajjartejas/IDM-Backup-Manager/issues)
+* **Author Twitter**: [@gajjartejas](https://twitter.com/gajjartejas)
+* **Author Facebook**: [gajjartejas26](https://www.facebook.com/gajjartejas26)
+
 ---
 
 ## 📄 License

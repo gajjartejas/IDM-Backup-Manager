@@ -213,7 +213,10 @@ if (-not $NoZip) {
 
     Remove-Item $ZipOutputX64 -Force -ErrorAction SilentlyContinue
     Compress-Archive -Path "$StageX64\*" -DestinationPath $ZipOutputX64 -Force
-    Write-Host "[OK] Built Portable ZIP (x64): $ZipOutputX64 ($([math]::Round((Get-Item $ZipOutputX64).Length / 1MB, 2)) MB)" -ForegroundColor Green
+    # Clean up staging directory
+    if (Test-Path $DistDir) {
+        Remove-Item $DistDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
 }
 
 # 7. Release Summary

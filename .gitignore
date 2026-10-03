@@ -1,3 +1,7 @@
+# ==========================================
+# IDM Backup Manager - Git Ignore Rules
+# ==========================================
+
 # Binaries and compiled libraries
 *.exe
 *.dll
@@ -15,12 +19,38 @@
 # Personal / Registry dumps
 *.reg
 
-# Windows / OS metadata
+# Temporary & Editor backup files
+*.bak
+*.tmp
+*.temp
+*~
+*.log
+*.ini
+_IS*.tmp
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# IDE & Editor metadata
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Windows & OS metadata
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+.DS_Store
 
-# Third party utilities and build outputs
+# Build outputs and staging directories
 [Uu]tilities/
 [Oo]utput/
 *-cache/

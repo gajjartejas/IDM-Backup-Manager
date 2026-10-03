@@ -1101,8 +1101,8 @@ EndFunc   ;==>_SwBMGUI
 Func _SwEditGUI($sTXTFile, $s_Title)
 	GUISetState(@SW_DISABLE, $hGUI_BM)
 
-	Local $ChildixWidth = 491
-	Local $ChildiyHight = 310
+	Local $ChildixWidth = 520
+	Local $ChildiyHight = 360
 	Local $sizea = WinGetPos($s_Win_Title_BM)
 	If @error Then
 		;If windows not Found Place it to centre
@@ -1110,14 +1110,23 @@ Func _SwEditGUI($sTXTFile, $s_Title)
 	Else
 		Local $size[2] = [$sizea[0] + $i_xWidth_BM / 2 - $ChildixWidth / 2, $sizea[1] + $i_yHight_BM / 2 - $ChildiyHight / 2]
 	EndIf
-;~ IsHWnd
-	Local $Help_GUI = GUICreate($s_Title, $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
 
-	GUICtrlCreateEdit("", 10, 10, 470, 250, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
-	GUICtrlSetData(-1, FileRead($sTXTFile))
-	Local $Close = GUICtrlCreateButton("Close", 408, 265, 75, 25)
+	Local $Help_GUI = GUICreate($s_Title, $ChildixWidth, $ChildiyHight, $size[0], $size[1], BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), BitOR($WS_EX_TOOLWINDOW, $WS_EX_WINDOWEDGE), $hGUI_BM)
+	GUISetFont(9, 400, 0, "Segoe UI", $Help_GUI)
+
+	Local $sContent = FileRead($sTXTFile)
+	$sContent = StringRegExpReplace($sContent, "(\r\n|\r|\n)", @CRLF)
+
+	Local $hEdit = GUICtrlCreateEdit($sContent, 12, 12, $ChildixWidth - 24, $ChildiyHight - 60, BitOR($WS_VSCROLL, $ES_AUTOVSCROLL, $ES_READONLY, $ES_MULTILINE))
+	GUICtrlSetFont($hEdit, 9.5, 400, 0, "Segoe UI")
+	GUICtrlSendMsg($hEdit, $EM_SETSEL, -1, 0)
+
+	Local $Close = GUICtrlCreateButton("Close", $ChildixWidth - 96, $ChildiyHight - 38, 84, 28)
+	GUICtrlSetFont($Close, 9, 400, 0, "Segoe UI")
+	GUICtrlSetState($Close, $GUI_FOCUS)
+
 	GUISetIcon(@ScriptFullPath, 0, $Help_GUI)
-	GUISetState(@SW_SHOW)
+	GUISetState(@SW_SHOW, $Help_GUI)
 	Local $nMsg
 	While 1
 		$nMsg = GUIGetMsg()

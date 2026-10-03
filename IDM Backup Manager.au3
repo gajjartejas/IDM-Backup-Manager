@@ -1291,73 +1291,110 @@ Func _SwBMGUI()
 	$h_TabSheet7 = GUICtrlCreateTabItem("Help")
 	_AET_TabSetIcon(-1, 4, -5)
 
-	GUICtrlCreateGroup("Help && Documentation", 24, 44, 592, 160)
+	; Top Hero Card: Application Identity & Updates
+	GUICtrlCreateGroup("About IDM Backup Manager", 24, 44, 592, 96)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	$h_Button_Help_Help = GUICtrlCreateButton("  User Guide && FAQ", 36, 66, 270, 36, $BS_left)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 4, 20, 20, 0)
-	GUICtrlSetTip(-1, "Open User Guide and FAQ documentation", "Documentation", 1, 1)
+	Local $s_Help_AppIcon = _AET_GetResourcePath("icon.ico")
+	If Not FileExists($s_Help_AppIcon) And @Compiled Then $s_Help_AppIcon = @ScriptFullPath
+	Local $h_Icon_About_App = GUICtrlCreateIcon($s_Help_AppIcon, -1, 40, 68, 48, 48)
 
-	$h_Button_Version_History_Help = GUICtrlCreateButton("  Version History", 318, 66, 284, 36, $BS_left)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 7, 20, 20, 0)
-	GUICtrlSetTip(-1, "View full changelog and release history", "Version History", 1, 1)
+	Local $h_Label_Help_Title = GUICtrlCreateLabel("IDM Backup Manager", 102, 65, 290, 24)
+	GUICtrlSetFont($h_Label_Help_Title, 12, 700, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Help_Title, 0x1A1A1A)
 
-	$h_Button_Licence_Help = GUICtrlCreateButton("  License Agreement", 36, 108, 270, 36, $BS_left)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 6, 20, 20, 0)
-	GUICtrlSetTip(-1, "View open source license terms", "License Agreement", 1, 1)
+	Local $h_Label_Help_Ver = GUICtrlCreateLabel("Version " & $s_Current_Version & "  •  Open Source  •  MIT License", 102, 91, 310, 18)
+	GUICtrlSetFont($h_Label_Help_Ver, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Help_Ver, 0x555555)
 
-	$h_Button_Forum_Help = GUICtrlCreateButton("  Feedback && Issues", 318, 108, 284, 36, $BS_left)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 3, 20, 20, 0)
-	GUICtrlSetTip(-1, "Report bugs or request new features on GitHub", "Feedback & Issues", 1, 1)
+	Local $h_Label_Help_Author = GUICtrlCreateLabel("Created by Tejas Gajjar  •  © 2012–2026", 102, 111, 310, 18)
+	GUICtrlSetFont($h_Label_Help_Author, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Help_Author, 0x777777)
 
-	$h_Button_Website_Help = GUICtrlCreateButton("  Project Website", 36, 150, 270, 36, $BS_left)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
-	_AET_ButtonSetIcon(-1, 5, 20, 20, 0)
-	GUICtrlSetTip(-1, "Visit official GitHub repository", "Project Website", 1, 1)
-
-	$h_Button_Update_Help = GUICtrlCreateButton("  Check for Updates", 318, 150, 284, 36, $BS_left)
-	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	$h_Button_Update_Help = GUICtrlCreateButton("  Check for Updates", 426, 68, 176, 36)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 	_AET_ButtonSetIcon(-1, 13, 20, 20, 0)
 	GUICtrlSetTip(-1, "Check online for newer versions of IDM Backup Manager", "Check for Updates", 1, 1)
 
+	Local $h_Label_Update_Status = GUICtrlCreateLabel("Stay up to date with new releases", 426, 110, 176, 16, $SS_CENTER)
+	GUICtrlSetFont($h_Label_Update_Status, 8, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Update_Status, 0x777777)
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	GUICtrlCreateGroup("About IDM Backup Manager", 24, 214, 592, 142)
+	; Left Card: Documentation & Guides
+	GUICtrlCreateGroup("Documentation && Guides", 24, 148, 290, 208)
 	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
 
-	Local $h_Label_Help_Title = GUICtrlCreateLabel("IDM Backup Manager v" & $s_Current_Version, 38, 238, 300, 22)
-	GUICtrlSetFont($h_Label_Help_Title, 9, 600, 0, "Segoe UI")
+	Local $h_Label_DocsIntro = GUICtrlCreateLabel("User documentation and release history:", 36, 168, 266, 18)
+	GUICtrlSetFont($h_Label_DocsIntro, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_DocsIntro, 0x666666)
 
-	Local $h_Label_Help_Sub = GUICtrlCreateLabel("By Tejas Gajjar  •  Open Source Utility", 38, 262, 300, 18)
-	GUICtrlSetFont($h_Label_Help_Sub, 8.5, 400, 0, "Segoe UI")
-	GUICtrlSetColor($h_Label_Help_Sub, 0x666666)
+	$h_Button_Help_Help = GUICtrlCreateButton("  User Guide && FAQ", 36, 192, 266, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 4, 18, 18, 0)
+	GUICtrlSetTip(-1, "Open User Guide and FAQ documentation", "Documentation", 1, 1)
 
-	Local $h_Label_Help_Social = GUICtrlCreateLabel("Connect && Follow:", 38, 296, 120, 18)
-	GUICtrlSetFont($h_Label_Help_Social, 8.5, 400, 0, "Segoe UI")
-	GUICtrlSetColor($h_Label_Help_Social, 0x666666)
+	$h_Button_Version_History_Help = GUICtrlCreateButton("  Version History && Notes", 36, 232, 266, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 7, 18, 18, 0)
+	GUICtrlSetTip(-1, "View full changelog and release history", "Version History", 1, 1)
 
-	$h_Picture_Facebook_About = GUICtrlCreatePic("", 160, 290, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	$h_Button_Licence_Help = GUICtrlCreateButton("  License Agreement (MIT)", 36, 272, 266, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 6, 18, 18, 0)
+	GUICtrlSetTip(-1, "View open source license terms", "License Agreement", 1, 1)
+
+	Local $h_Label_Docs_Tip = GUICtrlCreateLabel("Tip: All documentation is stored locally in Help folder", 36, 322, 266, 18)
+	GUICtrlSetFont($h_Label_Docs_Tip, 8, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Docs_Tip, 0x777777)
+
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	; Right Card: Community & Support
+	GUICtrlCreateGroup("Community && Support", 326, 148, 290, 208)
+	GUICtrlSetFont(-1, 9, 600, 0, "Segoe UI")
+
+	Local $h_Label_OnlineIntro = GUICtrlCreateLabel("Official repository, issues && social channels:", 338, 168, 266, 18)
+	GUICtrlSetFont($h_Label_OnlineIntro, 8.5, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_OnlineIntro, 0x666666)
+
+	$h_Button_Website_Help = GUICtrlCreateButton("  GitHub Repository", 338, 192, 266, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 5, 18, 18, 0)
+	GUICtrlSetTip(-1, "Visit official GitHub repository", "Project Website", 1, 1)
+
+	$h_Button_Forum_Help = GUICtrlCreateButton("  Feedback && Bug Reports", 338, 232, 266, 34, $BS_left)
+	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
+	_AET_ButtonSetIcon(-1, 3, 18, 18, 0)
+	GUICtrlSetTip(-1, "Report bugs or request new features on GitHub", "Feedback & Issues", 1, 1)
+
+	Local $h_Label_Help_Connect = GUICtrlCreateLabel("Follow Developer:", 338, 274, 136, 16)
+	GUICtrlSetFont($h_Label_Help_Connect, 8.5, 600, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Help_Connect, 0x444444)
+
+	Local $h_Label_Help_Follow = GUICtrlCreateLabel("News, updates && tools", 338, 292, 136, 16)
+	GUICtrlSetFont($h_Label_Help_Follow, 8, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Help_Follow, 0x777777)
+
+	$h_Picture_Facebook_About = GUICtrlCreatePic("", 484, 274, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Connect on Facebook", "Facebook", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "facebooklogo")
 
-	$h_Picture_Twitter_About = GUICtrlCreatePic("", 202, 290, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	$h_Picture_Twitter_About = GUICtrlCreatePic("", 524, 274, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Follow on Twitter / X", "Twitter / X", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "twitterlogo")
 
-	$h_Picture_Instagram_About = GUICtrlCreatePic("", 244, 290, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
+	$h_Picture_Instagram_About = GUICtrlCreatePic("", 564, 274, 32, 32, BitOR($GUI_SS_DEFAULT_PIC, $SS_NOTIFY))
 	GUICtrlSetTip(-1, "Follow on Instagram", "Instagram", 1, 1)
 	GUICtrlSetCursor(-1, 0)
 	_ResourceSetImageToCtrl(-1, "instagramlogo")
 
-	Local $h_Label_License_Tag = GUICtrlCreateLabel("Licensed under the MIT License", 320, 262, 280, 18)
-	GUICtrlSetFont($h_Label_License_Tag, 8.5, 400, 0, "Segoe UI")
-	GUICtrlSetColor($h_Label_License_Tag, 0x888888)
+	Local $h_Label_Social_Tip = GUICtrlCreateLabel("Open source project licensed under the MIT License", 338, 322, 266, 18)
+	GUICtrlSetFont($h_Label_Social_Tip, 8, 400, 0, "Segoe UI")
+	GUICtrlSetColor($h_Label_Social_Tip, 0x777777)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	#EndRegion Help ;============================================================================================== Help:

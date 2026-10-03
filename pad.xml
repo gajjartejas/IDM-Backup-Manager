@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XML_DIZ_INFO>
+	<MASTER_PAD_VERSION_INFO>
+		<PAD_VERSION>3.11</PAD_VERSION>
+		<MASTER_PAD_EDITOR>Antigravity PAD Generator</MASTER_PAD_EDITOR>
+		<MASTER_PAD_INFO>Portable Application Description (PAD) Specification</MASTER_PAD_INFO>
+	</MASTER_PAD_VERSION_INFO>
+
+	<Company_Info>
+		<Company_Name>Gajjar Tejas</Company_Name>
+		<Address_1></Address_1>
+		<Address_2></Address_2>
+		<City_Town></City_Town>
+		<State_Province></State_Province>
+		<Zip_Postal_Code></Zip_Postal_Code>
+		<Country>India</Country>
+		<Company_WebSite_URL>https://github.com/gajjartejas</Company_WebSite_URL>
+		<Contact_Info>
+			<Author_First_Name>Tejas</Author_First_Name>
+			<Author_Last_Name>Gajjar</Author_Last_Name>
+			<Author_Email>gajjartejas@users.noreply.github.com</Author_Email>
+			<Contact_First_Name>Tejas</Contact_First_Name>
+			<Contact_Last_Name>Gajjar</Contact_Last_Name>
+			<Contact_Email>gajjartejas@users.noreply.github.com</Contact_Email>
+		</Contact_Info>
+		<Support_Info>
+			<Sales_Email></Sales_Email>
+			<Support_Email>gajjartejas@users.noreply.github.com</Support_Email>
+			<General_Email>gajjartejas@users.noreply.github.com</General_Email>
+			<Sales_Phone></Sales_Phone>
+			<Support_Phone></Support_Phone>
+			<General_Phone></General_Phone>
+			<Fax_Phone></Fax_Phone>
+		</Support_Info>
+	</Company_Info>
+
+	<Program_Info>
+		<Program_Name>IDM Backup Manager</Program_Name>
+		<Program_Version>1.1.0</Program_Version>
+		<Program_Release_Month>10</Program_Release_Month>
+		<Program_Release_Day>03</Program_Release_Day>
+		<Program_Release_Year>2026</Program_Release_Year>
+		<Program_Cost_Dollars>0.00</Program_Cost_Dollars>
+		<Program_Cost_Other_Code></Program_Cost_Other_Code>
+		<Program_Cost_Other></Program_Cost_Other>
+		<Program_Type>Freeware</Program_Type>
+		<Program_Release_Status>Major Update</Program_Release_Status>
+		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
+		<Program_OS_Support>Win2000,WinXP,WinVista,WinVista x64,Win7 x32,Win7 x64,Windows 8,Windows 10,Windows 11</Program_OS_Support>
+		<Program_Language>English</Program_Language>
+		<Program_Change_Info>Refactored standard project structure, AutoIt v3.3.18+ compatibility modernization, Inno Setup installer integration, and automated 7-Zip archiver dependency management.</Program_Change_Info>
+		<Program_Specific_Category>Utilities</Program_Specific_Category>
+		<Program_Category_Class>System Utilities :: Backup &amp; Restore</Program_Category_Class>
+		<Program_System_Requirements>Windows XP or later, Internet Download Manager installed</Program_System_Requirements>
+		<File_Info>
+			<File_Size_Bytes>4074789</File_Size_Bytes>
+			<File_Size_K>3979</File_Size_K>
+			<File_Size_MB>3.89</File_Size_MB>
+		</File_Info>
+		<Expire_Info>
+			<Has_Expire_Info>N</Has_Expire_Info>
+			<Expire_Count></Expire_Count>
+			<Expire_Based_On></Expire_Based_On>
+			<Expire_Other_Info></Expire_Other_Info>
+			<Expire_Month></Expire_Month>
+			<Expire_Day></Expire_Day>
+			<Expire_Year></Expire_Year>
+		</Expire_Info>
+	</Program_Info>
+
+	<Program_Descriptions>
+		<English>
+			<Keywords>IDM, Internet Download Manager, backup, restore, configuration, download queue, migration, queue manager, password cleaner, data cleaner, 7-zip</Keywords>
+			<Char_Desc_45>Backup &amp; restore tool for IDM configuration.</Char_Desc_45>
+			<Char_Desc_80>Automated configuration, queue, and profile backup utility for IDM.</Char_Desc_80>
+			<Char_Desc_250>IDM Backup Manager is a lightweight open-source utility that backs up and restores download queues, incomplete downloads metadata, schedule queues, custom categories, and application configurations across systems.</Char_Desc_250>
+			<Char_Desc_450>IDM Backup Manager is an open-source backup and migration solution for Internet Download Manager. It simplifies transferring download queues, unfinished file segments, custom categories, site rules, and application configurations between computers or across clean OS reinstalls. Includes built-in password sanitization, data cleaning utilities, and command-line automation support.</Char_Desc_450>
+			<Char_Desc_2000>IDM Backup Manager is a free and open-source utility written in AutoIt designed to easily back up, manage, and restore Internet Download Manager (IDM) configuration data, queues, and profiles.
+
+Whether migrating to a new computer, performing a clean Windows reinstallation, or protecting complex scheduled download queues and customized category configurations, IDM Backup Manager ensures all your settings and metadata are securely preserved and effortlessly restored.
+
+Key Features:
+- Complete Profile Backup: Archive download lists, incomplete downloads metadata, scheduler settings, and category associations into compressed 7-Zip packages.
+- Multi-Profile Management: Maintain multiple backup archives and easily switch or restore configuration states on demand.
+- Privacy &amp; Password Sanitizer: Clean stored site credentials and server authentication data before sharing or transferring configuration files.
+- Command-Line Automation: Full support for command-line parameters to automate backup and restore operations within scheduled batch tasks or maintenance scripts.
+- Data Cleaner &amp; List Manager: Clean obsolete temporary files and inspect or export active download lists to CSV and HTML formats.
+- Safe &amp; Clean: 100% open-source (ISC licensed), free of adware, spyware, toolbars, or third-party telemetry.
+
+Disclaimer: IDM Backup Manager is an independent open-source configuration utility not affiliated with or endorsed by Tonec Inc.</Char_Desc_2000>
+		</English>
+	</Program_Descriptions>
+
+	<Web_Info>
+		<Application_URLs>
+			<Application_Info_URL>https://github.com/gajjartejas/IDM-Backup-Manager</Application_Info_URL>
+			<Application_Order_URL>https://github.com/gajjartejas/IDM-Backup-Manager</Application_Order_URL>
+			<Application_Screenshot_URL>https://raw.githubusercontent.com/gajjartejas/IDM-Backup-Manager/main/Help/htm/Help_files/image001.png</Application_Screenshot_URL>
+			<Application_Icon_URL>https://raw.githubusercontent.com/gajjartejas/IDM-Backup-Manager/main/Resources/icon.ico</Application_Icon_URL>
+			<Application_XML_File_URL>https://raw.githubusercontent.com/gajjartejas/IDM-Backup-Manager/main/pad.xml</Application_XML_File_URL>
+		</Application_URLs>
+		<Download_URLs>
+			<Primary_Download_URL>https://github.com/gajjartejas/IDM-Backup-Manager/releases/download/v1.1.0/IDM_Backup_Manager_Setup.exe</Primary_Download_URL>
+			<Secondary_Download_URL>https://github.com/gajjartejas/IDM-Backup-Manager/releases/latest</Secondary_Download_URL>
+			<Additional_Download_URL_1>https://github.com/gajjartejas/IDM-Backup-Manager/archive/refs/tags/v1.1.0.zip</Additional_Download_URL_1>
+		</Download_URLs>
+	</Web_Info>
+
+	<Permissions>
+		<Distribution_Permissions>Freeware. Permission is granted to redistribute this software in its original setup executable format across free software download websites, magazines, and repositories without alteration.</Distribution_Permissions>
+		<EULA>https://raw.githubusercontent.com/gajjartejas/IDM-Backup-Manager/main/LICENSE</EULA>
+	</Permissions>
+</XML_DIZ_INFO>

@@ -79,6 +79,7 @@ The build pipeline will:
 1. Automatically locate your local AutoIt installation.
 2. Run syntax verification with `Au3Check.exe` (verifies 0 errors / 0 warnings).
 3. Compile the executable into `bin\IDM Backup Manager.exe` with embedded icon and metadata.
+4. Compile the Windows setup installer into `bin\IDM_Backup_Manager_Setup.exe` via Inno Setup 6.
 
 ---
 

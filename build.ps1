@@ -1,7 +1,9 @@
 [CmdletBinding()]
 param (
     [ValidateSet('x86', 'x64')]
-    [string]$Arch = 'x86'
+    [string]$Arch = 'x86',
+
+    [switch]$NoInstaller
 )
 
 $ErrorActionPreference = 'Stop'
@@ -10,6 +12,8 @@ $SourceFile = Join-Path $ScriptDir "IDM Backup Manager.au3"
 $IconFile = Join-Path $ScriptDir "Resources\icon.ico"
 $OutputDir = Join-Path $ScriptDir "bin"
 $OutputFile = Join-Path $OutputDir "IDM Backup Manager.exe"
+$InstallerScript = Join-Path $ScriptDir "Build\installer.iss"
+$InstallerOutputFile = Join-Path $OutputDir "IDM_Backup_Manager_Setup.exe"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "         IDM Backup Manager - Build Pipeline" -ForegroundColor Cyan
@@ -78,9 +82,53 @@ if ($CompileProcess.ExitCode -ne 0 -or -not (Test-Path $OutputFile)) {
 $FileSize = (Get-Item $OutputFile).Length
 $FileHash = (Get-FileHash $OutputFile -Algorithm SHA256).Hash
 
-Write-Host "==========================================================" -ForegroundColor Green
-Write-Host "[OK] BUILD SUCCESSFUL!" -ForegroundColor Green
-Write-Host "    Output: $OutputFile" -ForegroundColor White
-Write-Host "    Size  : $([math]::Round($FileSize / 1KB, 2)) KB" -ForegroundColor White
-Write-Host "    SHA256: $FileHash" -ForegroundColor White
+Write-Host "[OK] Application compiled successfully:" -ForegroundColor Green
+Write-Host "     Binary: $OutputFile" -ForegroundColor White
+Write-Host "     Size  : $([math]::Round($FileSize / 1KB, 2)) KB" -ForegroundColor White
+Write-Host "     SHA256: $FileHash" -ForegroundColor White
+
+# 5. Build Windows Setup Installer with Inno Setup
+if (-not $NoInstaller -and (Test-Path $InstallerScript)) {
+    Write-Host "`n[*] Checking for Inno Setup compiler..." -ForegroundColor Yellow
+    $InnoDirs = @(
+        "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe",
+        "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+        "${env:ProgramFiles}\Inno Setup 6\ISCC.exe"
+    )
+
+    $IsccExe = $null
+    foreach ($path in $InnoDirs) {
+        if (Test-Path $path) {
+            $IsccExe = $path
+            break
+        }
+    }
+
+    if (-not $IsccExe) {
+        $cmd = Get-Command iscc -ErrorAction SilentlyContinue
+        if ($cmd) { $IsccExe = $cmd.Source }
+    }
+
+    if ($IsccExe) {
+        Write-Host "[OK] Found Inno Setup at: $IsccExe" -ForegroundColor Green
+        Write-Host "[*] Building Windows installer package..." -ForegroundColor Yellow
+        $InnoProcess = Start-Process -FilePath $IsccExe -ArgumentList "`"$InstallerScript`"" -NoNewWindow -PassThru -Wait
+        if ($InnoProcess.ExitCode -eq 0 -and (Test-Path $InstallerOutputFile)) {
+            $SetupSize = (Get-Item $InstallerOutputFile).Length
+            $SetupHash = (Get-FileHash $InstallerOutputFile -Algorithm SHA256).Hash
+            Write-Host "[OK] Installer built successfully:" -ForegroundColor Green
+            Write-Host "     Setup : $InstallerOutputFile" -ForegroundColor White
+            Write-Host "     Size  : $([math]::Round($SetupSize / 1MB, 2)) MB" -ForegroundColor White
+            Write-Host "     SHA256: $SetupHash" -ForegroundColor White
+        } else {
+            Write-Warning "Inno Setup compiler exited with code $($InnoProcess.ExitCode)."
+        }
+    } else {
+        Write-Host "[i] Inno Setup (ISCC.exe) not found. Skipping installer package build." -ForegroundColor DarkGray
+        Write-Host "    (Install via 'winget install JRSoftware.InnoSetup -e' to enable setup builds)" -ForegroundColor DarkGray
+    }
+}
+
+Write-Host "`n==========================================================" -ForegroundColor Green
+Write-Host "[OK] BUILD PIPELINE COMPLETE!" -ForegroundColor Green
 Write-Host "==========================================================" -ForegroundColor Green

@@ -36,8 +36,8 @@ An open-source configuration backup and migration utility written in AutoIt v3 f
 ├── Includes/                 # Modular AutoIt helper libraries (.au3)
 ├── Resources/                # Application icons, GUI bitmaps, and assets
 ├── Help/                     # User documentation and manual (.docx, .htm, images)
-├── Build/                    # Advanced Installer configuration (.aip)
-├── build.ps1                 # Automated PowerShell compilation & verification script
+├── Build/                    # Inno Setup open-source installer script (installer.iss)
+├── build.ps1                 # Automated PowerShell compilation & packaging pipeline
 ├── build.bat                 # One-click Windows batch compilation launcher
 ├── History.txt               # Chronological version changelog
 ├── CmdLine.txt               # Command line arguments specification
@@ -52,6 +52,7 @@ An open-source configuration backup and migration utility written in AutoIt v3 f
 
 ### Requirements
 * [AutoIt v3](https://www.autoitscript.com/site/autoit/downloads/) (v3.3.8 or v3.3.18+ installed)
+* [Inno Setup 6](https://jrsoftware.org/isinfo.php) (optional, for building the Windows Setup installer: `winget install JRSoftware.InnoSetup -e`)
 * [SciTE4AutoIt3](https://www.autoitscript.com/site/autoit-script-editor/) (optional, for editing)
 
 ### One-Click Build
@@ -59,9 +60,15 @@ Run either of the automated build scripts:
 
 - **PowerShell**:
   ```powershell
+  # Builds both portable executable and Inno Setup installer (if installed)
   .\build.ps1
+
+  # Build 64-bit architecture
+  .\build.ps1 -Arch x64
+
+  # Build standalone executable only (skip setup installer)
+  .\build.ps1 -NoInstaller
   ```
-  *(or for 64-bit: `.\build.ps1 -Arch x64`)*
 
 - **Command Prompt**:
   ```cmd
